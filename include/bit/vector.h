@@ -23,7 +23,7 @@ namespace bit {
 /// @brief  A class for vectors over GF(2), the space of two elements {0,1} with arithmetic done mod 2.
 /// @tparam Block We pack the elements of the bit-vector into an array of unsigned integers of this type.
 /// @tparam Allocator The memory manager that is used to allocate/deallocate space for the blocks as needed.
-template<std::unsigned_integral Block = uint64_t, typename Allocator = std::allocator<Block>>
+template<std::unsigned_integral Block = std::uint64_t, typename Allocator = std::allocator<Block>>
 class vector {
 public:
     /// @brief The allocator type used for memory management.
@@ -112,7 +112,7 @@ public:
         if (!is_clean) clean();
     }
 
-    /// @brief Create a bit-vector of size @c n by copying the bits of a constant block value over and over again.
+    /// @brief Create a bit-vector of size @c n by repeatedly copying the bits of a constant block value.
     /// @param n The size of the bit-vector to create.
     /// @param b All the blocks in the bit-vector have this value (bar the final one which will be masked for size).
     constexpr explicit vector(std::size_t n, Block b) : m_size(n), m_store(blocks_needed(n), b)
@@ -1626,7 +1626,8 @@ private:
 
         // Some magic to interleave the respective halves with zeros.
         for (auto i = bits_per_block / 4; i > 0; i /= 2) {
-            Block mask = all_set / (1 << i | 1);
+            Block div  = (1 << i | 1);
+            Block mask = all_set / div;
             lo = (lo ^ (lo << i)) & mask;
             hi = (hi ^ (hi << i)) & mask;
         }
