@@ -1,0 +1,152 @@
+---
+title: "`bit::vector` --- String Encodings"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to encode a bit-vector in various string formats.
+
+```cpp
+std::string
+to_string(std::string_view pre  = "",
+          std::string_view post = "",
+          std::string_view sep  = "",
+          char off='0', char on='1') const;         // <1>
+
+std::string
+to_bit_order(char off='0', char on='1') const;      // <2>
+
+std::string
+to_pretty_string(char off='0', char on='1') const;  // <3>
+
+std::string
+to_hex() const;                                     // <4>
+
+std::string
+to_polynomial(std::string_view var = "x") const;    // <5>
+```
+1. Returns a binary-string representation using the given characters for set and unset elements.
+2. Returns a binary-string representation in _bit-order_ using the given characters for set and unset elements.
+3. Returns a formatted representation e.g. `[1 1 0 1 0 1]`.
+4. Returns a hex-string representation.
+5. Interpret the elements of the bit-vector as the coefficients of a polynomial and get a string representation of that polynomial.
+
+### Method Arguments
+Argument    | Description
+--------    | -----------
+`pre`       | Prefix for the return string --- not used for hex-strings or bit-ordered strings.
+`post`      | Postfix for the return string --- not used for hex-strings or bit-ordered strings.
+`sep`       | Separator between elements --- not used for hex-strings or bit-ordered strings.
+`on`, `off` | The characters used for set and unset elements --- not used for hex-strings.
+`var`       | When we interpret a bit-vector as the coefficients of a polynomial, we use `x` for the variable, but you can override that by setting `var`.
+: {.bordered .striped .hover .responsive tbl-colwidths="[20,80]"}
+
+By default, `v.to_string()` will return something like `"100101"` but by setting the `pre`, `post`, and `sep`, parameters, one can get `"[1, 0, 0, 1, 0, 1]"`.
+
+For that same bit-vector `v.to_bit_order()` will return `"101001"`, i.e., the low-order bit on the right and the high-order element on the left!
+
+For that same bit-vector `v.to_polynomial()` will return `"1 + x^3 + x^5"`.
+
+## Character Encodings
+
+{{< include _encoding.qmd >}}
+
+## Example: To Binary
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector v(16, [](size_t k) { return (k + 1) % 2; });        // <1>
+    std::cout << "v:    " << v.to_string() << '\n';                 // <2>
+    std::cout << "v:    " << v.to_bit_order() << '\n';              // <3>
+    std::cout << "v:    " << v.to_bit_order('.', '-') << '\n';      // <4>
+    std::cout << "v:    " << v.to_pretty_string() << '\n';          // <5>
+    std::cout << "v:    " << v.to_string("{", "}", ", ") << '\n';   // <6>
+    std::cout << "v(x): " << v.to_polynomial() << '\n';             // <7>
+}
+```
+1. `v` has all the even elements set to 1.
+2. Printing `v` in _vector_order_ using the default 0's and 1's for the element values. v~0~ is on the left.
+3. Printing `v` in _bit_order_ using the default 0's and 1's for the element values. v~0~ is on the right.
+4. Printing `v` in _bit_order_ using dots and dashes for the element values. v~0~ is on the right.
+5. Printing `v` in a more formatted, element-by-element style.
+6. Printing `v` in a custom formatted style.
+7. Printing `v` as a polynomial in `x`.
+
+[Output]{.bt}
+```bash
+v:    1010101010101010
+v:    0101010101010101
+v:    .-.-.-.-.-.-.-.-
+v:    [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0]
+v:    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}
+v(x): 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14
+```
+
+## Example: To Hex
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v5 = bit::vector<>::ones(5);
+    auto v6 = bit::vector<>::ones(6);
+    auto v7 = bit::vector<>::ones(7);
+    auto v8 = bit::vector<>::ones(8);
+    auto v9 = bit::vector<>::ones(9);
+    std::cout << "v5: " << v5.to_string() << "\t hex: " << v5.to_hex() << '\n';
+    std::cout << "v6: " << v6.to_string() << "\t hex: " << v6.to_hex() << '\n';
+    std::cout << "v7: " << v7.to_string() << "\t hex: " << v7.to_hex() << '\n';
+    std::cout << "v8: " << v8.to_string() << "\t hex: " << v8.to_hex() << '\n';
+    std::cout << "v9: " << v9.to_string() << "\t hex: " << v9.to_hex() << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+v5: 11111        hex: 0xF1_2
+v6: 111111       hex: 0xF3_4
+v7: 1111111      hex: 0xF7_8
+v8: 11111111     hex: 0xFF
+v9: 111111111    hex: 0xFF1_2
+```
+
+## Example: From Hex
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v5 = bit::vector<>::random(5);             // <1>
+    auto v6 = bit::vector<>::random(6);
+    auto v7 = bit::vector<>::random(7);
+    auto v8 = bit::vector<>::random(8);
+    auto v9 = bit::vector<>::random(9);
+
+    auto u5 = bit::vector<>::from(v5.to_hex());     // <2>
+    auto u6 = bit::vector<>::from(v6.to_hex());
+    auto u7 = bit::vector<>::from(v7.to_hex());
+    auto u8 = bit::vector<>::from(v8.to_hex());
+    auto u9 = bit::vector<>::from(v9.to_hex());
+
+    std::cout << "v5 " << v5 << "\t\t u5 " << *u5 << (v5 == *u5 ? "\t match " : "\t FAIL") << '\n';
+    std::cout << "v6 " << v6 << "\t u6 " << *u6 << (v6 == *u6 ? "\t match " : "\t FAIL") << '\n';
+    std::cout << "v7 " << v7 << "\t u7 " << *u7 << (v7 == *u7 ? "\t match " : "\t FAIL") << '\n';
+    std::cout << "v8 " << v8 << "\t u8 " << *u8 << (v8 == *u8 ? "\t match " : "\t FAIL") << '\n';
+    std::cout << "v9 " << v9 << "\t u9 " << *u9 << (v9 == *u9 ? "\t match " : "\t FAIL") << '\n';
+}
+```
+1. Set up some bit-vectors of various lengths with random 50-50 fills.
+2. Convert the bit-vectors to hex-strings and use those to construct bit-vectors.
+   Check that the two sets of vectors match.
+
+[Output (varies from run to run)]{.bt}
+```bash
+v5 [0 0 1 1 0]           u5 [0 0 1 1 0]          match
+v6 [1 0 1 1 1 0]         u6 [1 0 1 1 1 0]        match
+v7 [0 1 1 0 0 1 1]       u7 [0 1 1 0 0 1 1]      match
+v8 [1 1 1 1 1 0 0 0]     u8 [1 1 1 1 1 0 0 0]    match
+v9 [0 0 0 0 0 0 0 0 1]   u9 [0 0 0 0 0 0 0 0 1]  match
+```
+
+### See Also
+[`vector::stream<<`] \
+[`vector::stream>>`]

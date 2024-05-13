@@ -1,0 +1,91 @@
+---
+title: "`bit::vector` --- Special Unit Bit-Vectors"
+---
+
+{{< include /content/_common.qmd >}}
+
+Instance methods that return some special unit bit-vectors:
+
+```cpp
+constexpr bit::vector unit_floor(bool trimmed = true) const;   // <1>
+constexpr bit::vector unit_ceil(bool trimmed = true) const;    // <2>
+```
+1. Return a unit bit-vector with a single `1` at the location of our final set bit.
+2. Return a unit bit-vector with a single `1` at one slot past the location of our final set bit.
+
+If the `trimmed` argument is `true`, the returned bit-vector will be as small as possible.
+Otherwise, in the first method, the returned bit-vector will be identical to our size; in the second method, it will be one larger than that.
+
+In the first method, we will return an empty vector if there are no set bits.
+
+These methods are analogous to the standard library functions [`std::bit_ceil`] and [`std::bit_floor`] that work on unsigned integers.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t   n = 4;
+    bit::vector<> v(n);
+
+    std::cout << "Smallest possible unit floor bit-vectors:\n";
+    v.reset();
+    for (std::size_t i = 0; i < n+1; v.set(i), ++i)
+        std::cout << v << ".unit_floor():      " << v.unit_floor() << "\n";
+    std::cout << "\n";
+
+    std::cout << "Fixed size unit floor bit-vectors:\n";
+    v.reset();
+    for (std::size_t i = 0; i < n+1; v.set(i), ++i)
+        std::cout << v << ".unit_floor(false): " << v.unit_floor(false) << "\n";
+    std::cout << "\n";
+
+    std::cout << "Smallest possible unit ceiling bit-vectors:\n";
+    v.reset();
+    for (std::size_t i = 0; i < n+1; v.set(i), ++i)
+        std::cout << v << ".unit_ceil():       " << v.unit_ceil() << "\n";
+    std::cout << "\n";
+
+    std::cout << "Fixed size unit ceiling bit-vectors:\n";
+    v.reset();
+    for (std::size_t i = 0; i < n+1; v.set(i), ++i)
+        std::cout << v << ".unit_ceil(false):  " << v.unit_ceil(false) << "\n";
+}
+```
+
+[Output]{.bt}
+```bash
+Smallest possible unit floor bit-vectors:
+[0 0 0 0].unit_floor():      []
+[1 0 0 0].unit_floor():      [1]
+[1 1 0 0].unit_floor():      [0 1]
+[1 1 1 0].unit_floor():      [0 0 1]
+[1 1 1 1].unit_floor():      [0 0 0 1]
+
+Fixed size unit floor bit-vectors:
+[0 0 0 0].unit_floor(false): []
+[1 0 0 0].unit_floor(false): [1 0 0 0]
+[1 1 0 0].unit_floor(false): [0 1 0 0]
+[1 1 1 0].unit_floor(false): [0 0 1 0]
+[1 1 1 1].unit_floor(false): [0 0 0 1]
+
+Smallest possible unit ceiling bit-vectors:
+[0 0 0 0].unit_ceil():       [1]
+[1 0 0 0].unit_ceil():       [0 1]
+[1 1 0 0].unit_ceil():       [0 0 1]
+[1 1 1 0].unit_ceil():       [0 0 0 1]
+[1 1 1 1].unit_ceil():       [0 0 0 0 1]
+
+Fixed size unit ceiling bit-vectors:
+[0 0 0 0].unit_ceil(false):  [1 0 0 0 0]
+[1 0 0 0].unit_ceil(false):  [0 1 0 0 0]
+[1 1 0 0].unit_ceil(false):  [0 0 1 0 0]
+[1 1 1 0].unit_ceil(false):  [0 0 0 1 0]
+[1 1 1 1].unit_ceil(false):  [0 0 0 0 1]
+```
+
+### See Also
+[`vector::first_set`] \
+[`vector::final_set`] \
+[`std::bit_floor`] \
+[`std::bit_ceil`]

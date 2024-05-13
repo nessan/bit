@@ -1,0 +1,255 @@
+---
+title: "`bit::vector` --- Copying Bits"
+---
+
+{{< include /content/_common.qmd >}}
+
+We supply several `copy` functions.
+
+They all have the general form `bit::copy(src, dst)` where the `src` argument(s) is the source of bits and the `dst` arguments(s) is the destination for those bits.
+
+## To Bit-Vectors
+
+One set of `copy` functions overwrites a destination bit-vector with bits sourced from an unsigned word, a collection of unsigned words, or a `std::bitset`:
+
+```cpp
+template<std::unsigned_integral Src, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(Src src, bit::vector<Block, Alloc> &dst);                         // <1>
+
+template<typename Iter, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(Iter src_b, Iter src_e, bit::vector<Block, Alloc> &dst);          // <2>
+
+template<std::unsigned_integral Src, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(std::initializer_list<Src> src, bit::vector<Block, Alloc> &dst);  // <3>
+
+template<std::unsigned_integral Src, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(const std::vector<Src> &src, bit::vector<Block, Alloc> &dst);     // <4>
+
+template<std::unsigned_integral Src, std::size_t N, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(const std::array<Src,N> &src, bit::vector<Block, Alloc> &dst);    // <5>
+
+template<std::size_t N, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(const std::bitset<N> &src, bit::vector<Block, Alloc> &dst);       // <6>
+```
+1. Overwrites `dst` with the bits from a single word `src`, which is some unsigned integer type.
+2. Overwrites `dst` with the bits from an iteration where the `value_type` of the iterator is some unsigned integer type.
+3. Overwrites `dst` with the bits from an initializer-style list of unsigned integers.
+4. Overwrites `dst` with the bits from a vector of unsigned integers.
+5. Overwrites `dst` with the bits from a fixed array of unsigned integers.
+6. Overwrites `dst` with the bits from a `std::bitset`.
+
+::: {.callout-note}
+# These resize the destination
+These functions all resize the destination bit-vector to make it absorb all the source bits.
+:::
+
+## From Bit-Vectors
+
+Another set of `copy` functions uses a bit-vector as the source of bits to fill various destinations --- unsigned words, collections of unsigned words, or a `std::bitset`:
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc, std::unsigned_integral Dst>
+constexpr void
+copy(const vector<Block, Alloc> &src, Dst &dst);                  // <1>
+
+template<std::unsigned_integral Block, typename Alloc, typename Iter>
+constexpr void
+copy(const vector<Block, Alloc> &src, Iter dst_b, Iter dst_e);    // <2>
+
+template<std::unsigned_integral Block, typename Alloc, std::unsigned_integral Dst, std::size_t N>
+constexpr void
+copy(const vector<Block, Alloc> &src, std::array<Dst, N> &dst);   // <3>
+
+template<std::unsigned_integral Block, typename Alloc, std::unsigned_integral Dst>
+constexpr void
+copy(const vector<Block, Alloc> &src, std::vector<Dst> &dst);     // <4>
+
+template<std::size_t N, std::unsigned_integral Block, typename Alloc>
+constexpr void
+copy(const vector<Block, Alloc> &src, std::bitset<N> &dst);       // <5>
+```
+1. Initializes word `dst` to zero and then fills it with as many bits as possible from the `src` bit-vector.
+2. Initializes an iteration of unsigned integers to zeros and fills them with as many bits as possible from the `src` bit-vector.
+3. Initializes an array of unsigned integers to zeros and fills it with as many bits as possible from the `src` bit-vector.
+4. Initializes a vector of unsigned integers to zeros and fills it with as many bits as possible from the `src` bit-vector.
+5. Sets all the bits in a `std::bitset` to zero and then fills it with as many bits as possible from the `src` bit-vector.
+
+::: {.callout-note}
+# These do *not* resize the destination
+These functions do *_not_* resize the destination.
+We start sourcing bits from the beginning of the bit-vector.
+We stop when we run out of source bits or have no more space to put the bits.
+Note that the destination gets initialized to all zeros.
+Thus, if the source bit-vector is empty, the destination will be returned filled with zeros.
+:::
+
+In many applications, we use these `copy` functions to flip back and forth between bit-space and word-space.
+
+In word-space, the sources and destinations are often a `std::vector` or a `std::array`, so we supply specializations for those collections --- one could get by just using the versions of `copy` that take iterators.
+
+## Copying ALL bits from a bit-vector
+One final `copy` type function takes all the bits from a bit-vector and uses them to fill a vector of words of some unsigned type.
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc, std::unsigned_integral Dst>
+constexpr void
+copy_all(const vector<Block, Alloc> &src, std::vector<Dst> &dst);
+```
+As the name suggests, this copy function first resizes the destination vector to accommodate all the bits in the source bit-vector and then copies them.
+
+## Template Parameters
+
+Parameter   | Description
+---------   | -----------
+`Src`       | The type of unsigned integers whose bits will fill the destination bit-vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can add the bits from a list of 32-bit unsigned integers while the storage scheme for the bit-vector remains the default 64-bit type.
+`Dst`       | The type of unsigned integers getting set from the bits in the source bit-vector. There is _no_ requirement that `Dst` and `Block` are the same. For example, we can fill an array of 32-bit unsigned integers while the storage scheme for the bit-vector remains the default 64-bit type.
+`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` and `std::cend(collection)` `Iter::value_type` should be some unsigned integer type, but it need not match the `Block` type.
+
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+[Example --- Overwriting a bit-vector with the bits from unsigned words]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector v;                              // <1>
+    std::cout << "v: " << v << '\n';
+    bit::copy(uinteight_t(0), v);                   // <2>
+    std::cout << "v: " << v << '\n';
+    bit::copy({uinteight_t(255), uinteight_t(0)}, v);   // <3>
+    std::cout << "v: " << v << '\n';
+    std::vector<uinteight_t> vec{255, 0};           // <4>
+    bit::copy(vec, v);
+    std::cout << "v: " << v << '\n';
+    bit::copy(vec.cbegin(), vec.cend(), v);     // <5>
+    std::cout << "v: " << v << '\n';
+    std::bitset<eight> bs(255);                     // <6>
+    bit::copy(bs, v);
+    std::cout << "v: " << v << '\n';
+}
+```
+1. Default constructor makes an empty vector.
+2. Fills with eight 0-bits.
+3. Fill with a list of eight 1-bits and eight 0-bits.
+4. Fills with a `std::vector` with eight 1-bits and eight 0-bits.
+5. Fills with a `std::vector` with eight 1-bits and eight 0-bits using the usual iterators.
+6. Fills with a `std::bitset` with eight 1-bits.
+
+[Output]{.bt}
+```bash
+v:
+v: 00000000
+v: 1111111100000000
+v: 1111111100000000
+v: 1111111100000000
+v: 11111111
+```
+
+[Example --- Overwriting a unsigned word(s) with the bits from a bit-vector]{.bt}
+```cpp
+#include <bit/bit.h>
+
+/// @brief Print a `std::array` to a stream which defaults to @c std::cout
+template<typename T, std::size_t N>
+void print(const std::array<T, N> &v, std::ostream &os = std::cout)
+{
+    if (N == 0) { os << "[]"; return; }
+    os << "[";
+    for (std::size_t i = 0; i < N - 1; ++i) os << v[i] << ", ";
+    os << v[N - 1] << "]\n";
+}
+
+/// @brief Print a `std::vector` to a stream which defaults to @c std::cout
+template<typename T>
+void print(const std::vector<T> &v, std::ostream &os = std::cout)
+{
+    auto n = v.size();
+    if (n == 0) { os << "[]"; return; }
+    os << "[";
+    for (std::size_t i = 0; i < n - 1; ++i) os << v[i] << ", ";
+    os << v[n - 1] << "]\n";
+}
+
+int main()
+{
+    using Block = uint8_t;
+
+    auto v = bit::vector<Block>::ones(77);
+    std::cout << "bit::vector: " << v.to_string() << "\n";
+    std::cout << "Copying that bit-vector to words of various types:\n";
+    uint16_t word16;  bit::copy(v, word16);
+    std::cout << "uint16_t:    " << word16 << '\n';
+    uint32_t word32;  bit::copy(v, word32);
+    std::cout << "uint32_t:    " << word32 << '\n';
+    uint64_t word64;  bit::copy(v, word64);
+    std::cout << "uint64_t:    " << word64 << '\n';
+    std::cout << std::endl;
+
+    std::cout << "bit::vector: " << v.to_string() << "\n";
+    std::cout << "Copying that bit-vector to a std::array of words of various types:\n";
+    constexpr std::size_t N = 4;
+    std::array<uint16_t, N> arr16; bit::copy(v, arr16);
+    std::cout << "std::array<uint16_t,4>: "; print(arr16);
+    std::array<uint32_t, N> arr32; bit::copy(v, arr32);
+    std::cout << "std::array<uint32_t,4>: "; print(arr32);
+    std::array<uint64_t, N> arr64; bit::copy(v, arr64);
+    std::cout << "std::array<uint64_t,4>: "; print(arr64);
+    std::cout << std::endl;
+
+    std::cout << "bit::vector: " << v.to_string() << "\n";
+    std::cout << "Copying that bit-vector to a std::vector of words of various types:\n";
+    std::vector<uint16_t> vec16(N); bit::copy(v, vec16);
+    std::cout << "std::vector<uint16_t>: "; print(vec16);
+    std::vector<uint32_t> vec32(N); bit::copy(v, vec32);
+    std::cout << "std::vector<uint32_t>: "; print(vec32);
+    std::vector<uint64_t> vec64(N); bit::copy(v, vec64);
+    std::cout << "std::vector<uint64_t>: "; print(vec64);
+    std::cout << std::endl;
+
+    std::cout << "bit::vector: " << v.to_string() << "\n";
+    std::cout << "Copying ALL of that bit-vector to a std::vector of words of various types:\n";
+    bit::copy_all(v, vec16);
+    std::cout << "std::vector<uint16_t>: "; print(vec16);
+    bit::copy_all(v, vec32);
+    std::cout << "std::vector<uint32_t>: "; print(vec32);
+    bit::copy_all(v, vec64);
+    std::cout << "std::vector<uint64_t>: "; print(vec64);
+    std::cout << std::endl;
+}
+```
+
+[Output]{.bt}
+```bash
+bit::vector: 11111111111111111111111111111111111111111111111111111111111111111111111111111
+Copying that bit-vector to words of various types:
+uint16_t:    65535
+uint32_t:    4294967295
+uint64_t:    1eight446744073709551615
+
+bit::vector: 11111111111111111111111111111111111111111111111111111111111111111111111111111
+Copying that bit-vector to a std::array of words of various types:
+std::array<uint16_t,4>: [65535, 65535, 65535, 65535]
+std::array<uint32_t,4>: [4294967295, 4294967295, 8191, 0]
+std::array<uint64_t,4>: [1eight446744073709551615, 8191, 0, 0]
+
+bit::vector: 11111111111111111111111111111111111111111111111111111111111111111111111111111
+Copying that bit-vector to a std::vector of words of various types:
+std::vector<uint16_t>: [65535, 65535, 65535, 65535]
+std::vector<uint32_t>: [4294967295, 4294967295, 8191, 0]
+std::vector<uint64_t>: [1eight446744073709551615, 8191, 0, 0]
+
+bit::vector: 11111111111111111111111111111111111111111111111111111111111111111111111111111
+Copying ALL of that bit-vector to a std::vector of words of various types:
+std::vector<uint16_t>: [65535, 65535, 65535, 65535, 8191]
+std::vector<uint32_t>: [4294967295, 4294967295, 8191]
+std::vector<uint64_t>: [1eight446744073709551615, 8191]
+```
+
+### See Also
+[`vector::append`]

@@ -1,0 +1,40 @@
+---
+title: "`bit::vector` --- Storage Capacity"
+---
+
+{{< include /content/_common.qmd >}}
+
+How many elements can a bit-vector store in its current state?
+
+```cpp
+constexpr std::size_t capacity() const;   // <1>
+constexpr std::size_t unused() const;     // <2>
+```
+1. Returns the number of elements the bit-vector can store in its current state.
+2. Returns the spare capacity in the bit-vector in its current state, i.e., `capacity() - size()`.
+
+We may not be using all the storage for some bit-vectors.
+For example, if we construct a small `bit::vector` with, say, eight elements and use the default `Block` of `uint64_t`, we will have at least a single storage block, so a capacity of 64.
+Thus, there are 56 spare slots --- we can append 56 more elements to the vector before allocating more storage.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::checker_board(8);
+    std::cout << "bit::vector "     << v            << ": ";
+    std::cout << "size "            << v.size()     << ", ";
+    std::cout << "capacity "        << v.capacity() << ", ";
+    std::cout << "unused capacity " << v.unused()   << ".\n";
+}
+```
+
+[Output]{.bt}
+```bash
+bit::vector [0 1 0 1 0 1 0 1]: size 8, capacity 64, unused capacity 56
+```
+
+### See Also
+[`vector::reserve`] \
+[`vector::description`]

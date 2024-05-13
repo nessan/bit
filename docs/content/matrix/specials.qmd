@@ -1,0 +1,157 @@
+---
+title: "`bit::matrix` --- Create Special Bit-Matrices"
+---
+
+{{< include /content/_common.qmd >}}
+
+We supply factory methods to construct some special well-known bit-matrices.
+
+```cpp
+static constexpr bit::matrix
+ones(std::size_t r, std::size_t c);                          //  <1>
+static constexpr bit::matrix
+ones(std::size_t n);                                         //  <2>
+
+static constexpr bit::matrix
+zeros(std::size_t r, std::size_t c);                         //  <3>
+static constexpr bit::matrix
+zeros(std::size_t n);                                        //  <4>
+
+static constexpr bit::matrix
+checker_board(std::size_t r, std::size_t c, int first = 1);  //  <5>
+static constexpr bit::matrix
+checker_board(std::size_t n, int first = 1);                 //  <6>
+
+static constexpr bit::matrix
+identity(std::size_t n);                                     //  <7>
+
+static constexpr bit::matrix
+shift(std::size_t n, int p = -1);                            //  <8>
+
+static constexpr bit::matrix
+rotate(std::size_t n, int p = -1);                           //  <9>
+```
+1. Returns an `r x c` bit-matrix where _all_ the elements are set to 1.
+2. Returns an `n x n` square bit-matrix where _all_ the elements are set to 1.
+3. Returns an `r x c` bit-matrix where _all_ the elements are set to 0.
+4. Returns an `n x n` square bit-matrix where _all_ the elements are set to 0.
+5. Returns an `r x c` bit-matrix where the elements form a checker-board pattern.
+6. Returns an `n x n` square bit-matrix where the elements form a checker-board pattern.
+7. Returns the `n x n` identity bit-matrix (ones on the diagonal, other elements all zero).
+8. Returns the `n x n` bit-matrix that shifts a bit-vector by `p` slots to the right if `p > 0` and the left if `p < 0`.
+9. Returns the `n x n` bit-matrix that rotates a bit-vector by `p` slots to the right if `p > 0` and the left if `p < 0`.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto ones = bit::matrix<>::ones(4);
+    std::cout << "The all-set matrix:\n" << ones << "\n\n";
+
+    auto ident = bit::matrix<>::identity(8);
+    std::cout << "The identity matrix:\n" << ident << "\n\n";
+
+    auto shiftr = bit::matrix<>::shift(8, 1);
+    std::cout << "The shift right one place matrix:\n" << shiftr << "\n\n";
+
+    auto shiftl = bit::matrix<>::shift(8, -1);
+    std::cout << "The shift left one place matrix:\n" << shiftl << "\n\n";
+
+    auto rotr= bit::matrix<>::rotate(8, 1);
+    std::cout << "The rotate right one place matrix:\n" << rotr << "\n\n";
+
+    auto rotl = bit::matrix<>::rotate(8, -1);
+    std::cout << "The rotate left one place matrix:\n" << rotl << "\n\n";
+
+    auto u = bit::vector<>::ones(8);
+    std::cout << "Product identity matrix with " << u << " yields " << dot(ident,  u) << '\n';
+    std::cout << "Product shiftr matrix with   " << u << " yields " << dot(shiftr, u) << '\n';
+    std::cout << "Product shiftl matrix with   " << u << " yields " << dot(shiftl, u) << '\n';
+
+    u[0] = 0;
+    std::cout << "Product rotr matrix with     " << u << " yields " << dot(rotr,   u) << '\n';
+    std::cout << "Product rotl matrix with     " << u << " yields " << dot(rotl,   u) << "\n\n";
+
+    auto C1 = bit::matrix<>::checker_board(4,1);
+    auto C0 = bit::matrix<>::checker_board(4,0);
+    std::cout << "Two checker-board matrices:\n";
+    bit::print(C0, C1);
+}
+```
+
+[Output]{.bt}
+```bash
+The all-set matrix:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+
+The identity matrix:
+│1 0 0 0 0 0 0 0│
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+│0 0 0 0 0 0 1 0│
+│0 0 0 0 0 0 0 1│
+
+The shift right one place matrix:
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+│0 0 0 0 0 0 1 0│
+│0 0 0 0 0 0 0 1│
+│0 0 0 0 0 0 0 0│
+
+The shift left one place matrix:
+│0 0 0 0 0 0 0 0│
+│1 0 0 0 0 0 0 0│
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+│0 0 0 0 0 0 1 0│
+
+The rotate right one place matrix:
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+│0 0 0 0 0 0 1 0│
+│0 0 0 0 0 0 0 1│
+│1 0 0 0 0 0 0 0│
+
+The rotate left one place matrix:
+│0 0 0 0 0 0 0 1│
+│1 0 0 0 0 0 0 0│
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+│0 0 0 0 0 0 1 0│
+
+Product identity matrix with [1 1 1 1 1 1 1 1] yields [1 1 1 1 1 1 1 1]
+Product shiftr matrix with   [1 1 1 1 1 1 1 1] yields [1 1 1 1 1 1 1 0]
+Product shiftl matrix with   [1 1 1 1 1 1 1 1] yields [0 1 1 1 1 1 1 1]
+Product rotr matrix with     [0 1 1 1 1 1 1 1] yields [1 1 1 1 1 1 1 0]
+Product rotl matrix with     [0 1 1 1 1 1 1 1] yields [1 0 1 1 1 1 1 1]
+
+Two checker-board matrices:
+0101    1010
+1010    0101
+0101    1010
+1010    0101
+```
+
+### See Also
+[`matrix::is_zero`] \
+[`matrix::is_ones`] \
+[`matrix::is_identity`]

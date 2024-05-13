@@ -1,0 +1,44 @@
+---
+title: "`bit::vector` --- Resize a Bit-Vector"
+---
+
+{{< include /content/_common.qmd >}}
+
+Resize a bit-vector initializing added elements to 0.
+
+```cpp
+constexpr bit::vector &resize(std::size_t n);
+```
+
+If `n < size()`, the bit-vector is reduced in size to the first `n` elements. +
+If `n > size()`, extra 0's are appended to the bit-vector to get it up to size `n`.
+
+This method returns a reference to `*this` so it can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<uint8_t>::checker_board(8);                                        // <1>
+    std::cout << v << ":\t\t size " << v.size() << ", capacity " << v.capacity() << '\n';
+    v.resize(12);                                                                           // <2>
+    std::cout << v << ":\t size "   << v.size() << ", capacity " << v.capacity()  << '\n';
+    v.resize(8);                                                                            // <3>
+    std::cout <<  v << ":\t\t size " << v.size() << ",capacity " << v.capacity() << '\n';
+}
+```
+1. Construct a bit-vector of size eight where the underlying block size is just 8 bits.
+2. Resize the bit-vector to have twelve elements where the extra four are all 0.
+3. Resize the bit-vector back down to the original eight elements.
+
+[Output]{.bt}
+```bash
+[1 0 1 0 1 0 1 0]:               size 8,  capacity 8
+[1 0 1 0 1 0 1 0 0 0 0 0]:       size 12, capacity 16
+[1 0 1 0 1 0 1 0]:               size 8,  capacity 16
+```
+
+### See Also
+[`vector::reserve`] \
+[`vector::description`]

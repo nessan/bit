@@ -1,0 +1,525 @@
+---
+title: "Danilevsky's Algorithm"
+filters:
+    - pseudocode
+---
+
+{{< include /content/_common.qmd >}}
+
+## Abstract
+
+[Danilevsky's algorithm] is a method to compute the coefficients of the [characteristic polynomial] for a square matrix.
+
+It isn't well known, so we review how it works for real-valued matrices.
+
+We then go on to explain how it applies explicitly to bit-matrices, i.e., matrices over [GF(2)], the simplest [Galois field] with just two elements 0 & 1 where addition/subtraction and multiplication/division operations are all done mod two which keeps everything closed in the set $\{0,1\}$.
+
+## Characteristic Polynomials
+
+Recall that $\lambda$ is an _eigenvalue_ of $A$, an $n \times n$ matrix, if there is an non-zero vector $v$ (an _eigenvector_) such that:
+$$
+  A \cdot v = \lambda v.
+$$
+Solving that equation is equivalent to finding solutions for the linear system
+$$
+  (A - \lambda I) v = 0.
+$$
+which has solutions if and only if $A - \lambda I$ is singular so
+$$
+   |A - \lambda I| = 0
+$$
+where we are using $|\cdot|$ to denote the determinant.
+
+The characteristic polynomial of $A$ is defined by the determinant $|A - \lambda I|$ thought of as a function of $\lambda$:
+$$
+  c(\lambda) = |A - \lambda I|.
+$$
+Expanding the determinant, you can explicitly get a few of the terms in this polynomial as
+$$
+  c(\lambda) = (-\lambda)^n  + tr(A)(-\lambda)^{n-1} + \cdots + \det(A)
+$$
+where $tr(A)$ is the trace of the matrix $A$.
+However, it is not practical to compute all the terms in the polynomial by brute force expansion like this.
+
+Even if we have all the coefficients in the characteristic polynomial, getting the eigenvalues means solving
+$$
+  c(\lambda) = 0.
+$$
+However, extracting the roots of a high-order polynomial is very difficult.
+For this reason, the method is only practical for the small matrices that turn up in homework exercises!
+
+However, the [characteristic polynomial] is a valuable structure for other purposes.
+For one thing, the well-known [Cayley Hamilton] theorem tells us that the characteristic polynomial is an [annihilating polynomial] for the matrix.
+Thus
+$$
+  c(A) = 0.
+$$
+This result is helpful in various applications.
+For this reason, we are still interested in computing the coefficients $c_i$ of the characteristic polynomial written as
+$$
+  c(\lambda) = \lambda^n + c_{n-1} \lambda^{n-1} + \cdots + c_1 \lambda + c_0.
+$$
+(where without loss of generality, we take $c_n = 1$)
+
+## Companion Matrices
+
+Investigating square matrices of size $n$ led us to consider polynomials of order $n$.
+How about the reverse?
+If you have an arbitrary polynomial of the form
+$$
+  c(\lambda) = \lambda^n + c_{n-1} \lambda^{n-1} + \cdots + c_1 \lambda + c_0.
+$$
+Is there a matrix with that as its characteristic polynomial?
+
+Here is one we will show works:
+$$
+C =
+\begin{bmatrix}
+-c_{n-1} & -c_{n-2} & -c_{n-3} & \ldots & & -c_2 & -c_1 & -c_0 \\
+1        & 0        & 0        & \ldots & & 0    & 0    & 0    \\
+0        & 1        & 0        & \ldots & & 0    & 0    & 0    \\
+         &          &          & \ldots                        \\
+0        & 0        & 0        & \ldots & & 1    & 0    & 0    \\
+0        & 0        & 0        & \ldots & & 0    & 1    & 0
+\end{bmatrix}
+$$
+This $C$ has ones on the sub-diagonal and the polynomial coefficients (with a minus sign) along the first row.
+It is an upper [Hessenberg] matrix.
+
+Computing the determinant is difficult for all but the smallest _general_ matrices.
+However, getting the determinant for _triangular_ matrices is trivial, as you only need to multiply the elements on the diagonal.
+[Hessenberg] matrices are _almost_ triangular and also quite amenable when it comes to computing determinants.
+
+To see that our $C$ has the characteristic polynomial, we want to consider the determinant:
+$$
+|\lambda I - C| =
+\begin{vmatrix}
+\lambda+c_{n-1}     & c_{n-2}  & c_{n-3} & \ldots & & c_2 & c_1      & c_0    \\
+1        & \lambda  & 0                  & \ldots & & 0    & 0       & 0      \\
+0        & 1        & \lambda            & \ldots & & 0    & 0       & 0      \\
+         &          &                    & \ldots                             \\
+0        & 0        & 0                  & \ldots & & 1    & \lambda & 0      \\
+0        & 0        & 0                  & \ldots & & 0    & 1       & \lambda
+\end{vmatrix}
+$$
+When you expand that determinant by the first row, then you get
+$$
+(\lambda + c_{n-1})
+\begin{vmatrix}
+& \lambda  & 0                  & \ldots & & 0    & 0       & 0      \\
+& 1        & \lambda            & \ldots & & 0    & 0       & 0      \\
+&          &                    & \ldots                             \\
+& 0        & 0                  & \ldots & & 1    & \lambda & 0      \\
+& 0        & 0                  & \ldots & & 0    & 1       & \lambda
+\end{vmatrix}
++ c_{n-2}
+\begin{vmatrix}
+& 1  & 0                        & \ldots & & 0    & 0       & 0      \\
+& 0        & \lambda            & \ldots & & 0    & 0       & 0      \\
+&          &                    & \ldots                             \\
+& 0        & 0                  & \ldots & & 1    & \lambda & 0      \\
+& 0        & 0                  & \ldots & & 0    & 1       & \lambda
+\end{vmatrix}
++ \dots
++ c_0
+\begin{vmatrix}
+& 1        & 0                  & \ldots & & 0    & 0       & 0         \\
+& 0        & 1                  & \ldots & & 0    & 0       & 0         \\
+&          &                    & \ldots                                \\
+& 0        & 0                  & \ldots & &      & 1       & \lambda   \\
+& 0        & 0                  & \ldots & & 0    & 0       & 1
+\end{vmatrix}
+$$
+The [co-factors] are all $(n-1) \times (n-1)$ triangular so have readily computed determinants which means that:
+$$
+|\lambda I - C| =  (\lambda + c_{n-1}) \lambda^{n-1} + c_{n-2} \lambda^{n-2} + \cdots + c_0.
+$$
+That is exactly the form we want.
+
+::: {.callout-note}
+You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row.
+That is the version seen in some expositions.
+:::
+
+$C$ is a "`companion`" for the polynomial $c(\lambda)$ and is known as a [companion matrix].
+
+### Frobenius Form
+
+First, note that you can create many others once you have a matrix (like the $C$ above) with the desired characteristic polynomial.
+The reason is that [similar matrices] all have the same characteristic polynomial.
+So if $M$ is any invertible $n \times n$ matrix, then $M^{-1} \cdot C \cdot M$ will have the same characteristic polynomial as $C$.
+
+Now let $A$ be an arbitrary $n \times n$ matrix.
+
+A natural question then is whether you can find some invertible $M$ such that $C = M^{-1} \cdot A \cdot M$ is in [companion matrix] form. If so, you can read the characteristic polynomial coefficients for $A$ off the top row of $C$.
+
+Generally, this isn't quite possible, but instead, you can always get to [Frobenius form].
+A Frobenius form matrix is block-diagonal, where each block is a [companion matrix].
+
+So there is always some $M$ such that
+$$
+A = M^{-1} \cdot F \cdot M.
+$$
+And the matrix $F$ has the block-diagonal form
+$$
+F =
+\begin{bmatrix}
+C_0 & 0   & 0 & \ldots & 0 & 0 \\
+0   & C_1 & 0 & \ldots & 0 & 0 \\
+    &     &   & \ldots         \\
+0   & 0   & 0 & \ldots & 0 & C_{k-1}
+\end{bmatrix}
+$$
+and each of the $k$ diagonal blocks is a [companion matrix].
+
+You can read off the coefficients of each block to get a set of characteristic polynomials $c_i(\lambda)$ for $i = 0, \ldots, k-1$.
+Then the characteristic polynomial of $F$ and hence by similarity, $A$ is just:
+$$
+c(\lambda) = \prod_{i = 0}^{k-1} c_i(\lambda).
+$$
+
+If $A$ is an arbitrary real-valued $n \times n$ matrix, [Danilevsky's algorithm] applies a sequence of similarity transformations that, step by step, efficiently moves it to [Frobenius form].
+
+
+## Danilevsky for Real Matrices
+
+We will describe how the algorithm works for an $n \times n$ matrix $A$ with elements in $\R$.
+The algorithm can be written as
+
+$$
+A = A_1 \rightarrow A_2 \rightarrow \ldots \rightarrow A_n
+$$
+where that final matrix, $A_n$, is in Frobenius form.
+At each stage, $A_{k+1}$ is constructed from its predecessor $A_{k}$ via a similarity transformation:
+$$
+A_{k+1} = M^{-1}_{k} \cdot A_k \cdot M_k.
+$$
+Here "$\cdot$" denotes matrix multiplication.
+
+The algorithm is efficient because we can readily construct the $M_k$'s and their inverses.
+Moreover, they are  _sparse_ matrices, meaning those two matrix multiplications can be performed quickly in $O(n^2)$ operations instead of the usual $O(n^3)$.
+
+Starting with a general matrix such as
+
+$$
+A := A_1 =
+\begin{bmatrix}
+a_{11} & a_{12} & a_{13} & \ldots & a_{1n-2} & a_{1n-1} & a_{1n} \\
+a_{21} & a_{22} & a_{23} & \ldots & a_{2n-2} & a_{2n-1} & a_{2n} \\
+& & & \ldots \\
+& & & \ldots \\
+a_{n-11} & a_{n-12} & a_{n-13} & \ldots & a_{n-1n-2} & a_{n-1n-1} & a_{n-1n} \\
+a_{n1} & a_{n2} & a_{n3} & \ldots & a_{nn-2} & a_{nn-1} & a_{nn}
+\end{bmatrix}
+$$
+
+we would love to get to the companion matrix form
+
+$$
+A_n =
+\begin{bmatrix}
+c_1 & c_2 & c_3 & \ldots & & c_{n-2} & c_{n-1} & c_{n} \\
+1 & 0 & 0 & \ldots & & 0 & 0 & 0 \\
+& & & \ldots \\
+& & & \ldots \\
+0 & 0 & 0 & \ldots & & 1 & 0 & 0 \\
+0 & 0 & 0 & \ldots & & 0 & 1 & 0 \\
+\end{bmatrix}
+$$
+
+The characteristic polynomial for $A$ is then
+
+$$
+c(\lambda) = 1 + c_1 \lambda + c_2 \lambda^2 + \cdots + c_{n-1} \lambda^{n-1} + c_{n} \lambda^{n}.
+$$
+
+To get things rolling, we need to construct a matrix $M$ such that $A \cdot M$ is one step closer to companion matrix form (we are dropping the subscripts on the matrices—in a computer implementation the matrices mostly just get updated in-place anyway).
+
+Our aim is to find $M$ so that $B := A \cdot M$ has the form
+
+$$
+\begin{bmatrix}
+b_{11} & b_{12} & b_{13} & \ldots & b_{1n-2} & b_{1n-1} & b_{1n} \\
+b_{21} & b_{22} & b_{23} & \ldots & b_{2n-2} & b_{2n-1} & b_{2n} \\
+& & & \ldots \\
+& & & \ldots \\
+b_{n-11} & b_{n-12} & b_{n-13} & \ldots & b_{n-1n-2} & b_{n-1n-1} & b_{n-1n} \\
+0 & 0 & 0 & \ldots & 0 & 1 & 0
+\end{bmatrix}
+$$
+
+Assuming that $a_{nn-1} \neq 0$, an appropriate $M$ is
+
+$$
+M =
+\begin{bmatrix}
+1 & 0 & 0 & \ldots & 0 & 0 & 0 \\
+0 & 1 & 0 & \ldots & 0 & 0 & 0 \\
+& & & \ldots \\
+& & & \ldots \\
+\frac{-a_{n1}}{a_{nn-1}} & \frac{-a_{n2}}{a_{nn-1}} & \frac{-a_{n3}}{a_{nn-1}} & \ldots & \frac{-a_{nn-2}}{a_{nn-1}} & \frac{1}{a_{nn-1}} & \frac{-a_{nn}}{a_{nn-1}} \\
+0 & 0 & 0 & \ldots & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+That is, $M$ is simply the identity matrix with the $(n-1)$'st row replaced as shown.
+With a bit of staring, you should be able to convince yourself that $B = A \cdot M$ will indeed have a final row in Frobenius form.
+
+Note that each column $l$ in $M$ has at most two non-zero elements namely $M_{ll}$ and $M_{n-1l}$
+This means that the elements of $B$  are computed efficiently by considering just a couple of terms instead of the usual $n$.
+
+$$
+b_{ij} = \sum_{l=1}^{n} a_{il}m_{lj} = a_{ij}m_{jj} + a_{in-1}m_{n-1j}
+$$
+
+So
+
+$$
+b_{ij} = a_{ij} - a_{in-1} \frac{a_{nj}}{a_{nn-1}} \text{ for columns } j \ne n-1,
+$$
+
+and
+
+$$
+b_{in-1} = \frac{a_{in-1}}{a_{nn-1}} \text{ for column } n-1.
+$$
+
+Note that as promised $b_{nj} = 0 \text{ if} j \ne n-1$ and that $b_{nn-1} = 1$.
+
+Of course, $B = A \cdot M$ is *not* similar the original matrix $A$ but $M^{-1} \cdot A \cdot M$ is.
+
+Fortunately $M^{-1}$ is also readily computed
+
+$$
+M^{-1} =
+\begin{bmatrix}
+1 & 0 & 0 & \ldots & 0 & 0 & 0 \\
+0 & 1 & 0 & \ldots & 0 & 0 & 0 \\
+& & & \ldots \\
+& & & \ldots \\
+a_{n1} & a_{n2} & a_{n3} & \ldots & a_{nn-2} & a_{nn-1} & a_{nn} \\
+0 & 0 & 0 & \ldots & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+From the form of $M^{-1}$, it is clear that the $n$'th row of $C := M^{-1} \cdot B$ is just the same as the $n$'th row of $B$, so it will be in Frobenius form.
+
+Moreover, once again, $M^{-1}$ has at most two non-zero terms in each column.
+Therefore, the matrix product can also be computed very efficiently:
+
+$$
+c_{ij} = \sum_{l=1}^{n} m_{il} b_{lj} = m_{ii} b_{ij} = b_{ij} \text{ if } i \ne n-1
+$$
+
+while
+
+$$
+c_{n-1j} = \sum_{l=1}^{n} m_{n-1l} b_{lj} = \sum_{l=1}^{n} a_{nl} b_{lj}
+$$
+
+Thus $C = M^{-1} \cdot A \cdot M$ is similar to $A$ but one step closer to companion matrix form, _and_ happily, the elements of $C$ can be efficiently computed using just $O(n^2)$ operations.
+If everything goes well, we can repeat these operations for $n$ steps to arrive at the required Frobenius form shown above.
+We hit a snag if $a_{nn-1} = 0$, but we will deal with that below.
+
+
+### The Algorithm
+
+. Initialize a counter $k$ to $n$ and $A$ to the input matrix.
+
+. If $a_{kk-1} = 0$, look for an earlier element in the same row that is not zero.
+That is, look for $j < k-1$ where $a_{kj} \ne 0$. \
+On success, swap the rows *and* columns $j$ and $k-1$ of $A$. \
+Row and column swaps like that are permutation transformations that preserve the eigen-structure. \
+
+. If by now $a_{kk-1} \ne 0$:
+
+.. Capture row $k$ of the matrix $A$ by setting $m = \text{row}_k(A)$. \
+Note that by assumption $m_{k-1} = a_{kk-1} \ne 0$.
+
+.. Compute the elements of $B$ for rows $i = 1, ..., k-1$ as follows:
+$$
+b_{ij} =
+\begin{cases}
+  a_{ij} -  a_{ik-1}\frac{m_j}{m_{k-1}} & \text{ if } j \ne k-1 \\
+  \frac{a_{ik-1}}{m_{k-1}}              & \text{ if } j = k-1
+\end{cases}
+$$
+You don't need any later rows of $B$.
+
+.. Update $A$ for all columns $j = 1, \ldots, n$ as follows:
+$$
+\begin{aligned}
+a_{ij}   &=  b_{ij} \text{ for } i = 1, \ldots, k-2, \\
+a_{k-1j} &= \sum_{l=1}^{n} m_l b_{lj} = m \cdot \text{col}_j(B) \\
+a_{kj}   &=
+\begin{cases}
+  0 & \text { for } j \ne k-1 \\
+  1 & \text { for } j = k-1
+\end{cases}
+\end{aligned}
+$$
+That last step puts row $k$ of $A$ into companion matrix form--the later rows of $A$ are already there.
+
+.. If $k > 1$, then $k \leftarrow k-1$, and we go back to step 1. Otherwise, we are finished.
+
+. If $a_{kk-1} = 0$ even after trying the search in step 2 then we cannot perform step 3. +
+The current $A$ matrix must then have the following form:
++
+$$
+A =
+\begin{bmatrix}
+a_{11}  & a_{12} & \ldots & a_{1k-1} & a_{1k} & a_{1k+1} & \ldots & a_{1n-1} & a_{1n} \\
+a_{21}  & a_{22} & \ldots & a_{2k-1} & a_{2k} & a_{2k+1} & \ldots & a_{2n-1} & a_{2n} \\
+\vdots  & \vdots & \vdots & \vdots   & \vdots & \vdots   & \vdots & \vdots   & \vdots \\
+0       & 0      & \ldots & 0        & a_{kk} & a_{kk+1} & \ldots & a_{kn-1} & a_{kn} \\
+0       & 0      & \ldots & 0        & 1      & 0        & \ldots & 0        & 0      \\
+\vdots  & \vdots & \vdots & \vdots   & \vdots & \vdots   & \vdots & \vdots   & \vdots \\
+0       & 0      & \ldots & 0        & 0      & 0        & \ldots & 1        & 0
+\end{bmatrix} :=
+\begin{bmatrix}
+A_1 & A_2 \\
+0   & A_3
+\end{bmatrix}
+$$
++
+So if $I_n$ represents the $n \times n$ identity matrix then:
++
+$$
+\det(\lambda I_n - A) = \det(\lambda I_{k-1} - A_1) \det(\lambda I_{n-k+1} - A_3).
+$$
++
+Hence the characteristic polynomial $c_A(x)$ we are after is the product of two other characteristic polynomials:
++
+$$
+c_A(x) = c_{A_1}(x) c_{A_3}(x)
+$$
++
+and as $A_3$ is already in companion form we can easily read off the coefficients for $c_{A_3}(x)$
++
+$$
+c_{A_3}(x) = 1 + a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
+$$
++
+The algorithm just stores those coefficients and recurses using $A_1$ as the smaller $(k-1) \times (k-1)$  input matrix.
++
+It can then convolve the coefficients of $c_{A_1}(x)$ and $c_{A_3}(x)$ to return the coefficients for $c_{A}(x)$.
+
+::: {.callout-note}
+# There are no badly conditioned matrices in $\FF$
+In the case of real valued matrices it can be that $a_{kk-1}$ is non-zero but still small.
+Division by very small floating point numbers should be avoided as those operations tend to be [ill-conditioned](https://en.wikipedia.org/wiki/Floating-point_arithmetic).
+For that reason, step 2. might always be performed to find the $a_{kj}$ for $j < k-1$ that is largest in absolute value and then do the suggested row and column swaps to move that element into the all important $(k,k-1)$ slot.
+:::
+
+## Danilevsky for Bit-Matrices
+
+In the case of bit-matrices, or in more formal math-speak, matrices with elements in $\FF$, the input matrix $A$ is all zeros or ones.
+Moreover, the usual addition and multiplication operators are performed modulo 2 so everything remains in the limited set $\{0,1\}$. In $\mathbb{F_2}$ we can replace addition with the logical XOR operator and multiplication with the logical AND operator.
+
+Note that in $\mathbb{F_2}$ we have $1+1 = 2 \rightarrow 0$ so the additive inverse of 1 is 1.
+And of course as usual, the additive inverse of 0 is 0.
+This means that in $\mathbb{F_2}$ negation is a no-op and any term like $-b$ can just be replaced with $b$.
+
+We always have $1 * 1 = 1$ so the multiplicative inverse of $1$ is just $1$.
+Also just like $\mathbb{R}$, the element $0$ has no multiplicative inverse in $\mathbb{F_2}$ either--you still cannot divide by zero.
+This means that if $a, b \in \mathbb{F_2}$ then a term like $a/b$ makes no sense if $b=0$ but otherwise $a/b = a$.
+
+Let's reconsider that very first step we took above to move our matrix $A$ closer to Frobenius form.
+That involved finding a matrix $M$ such that $B = A \cdot M$ had its final row in the required format.
+
+Taking into account that now all the matrices are boolean and assuming that $a_{nn-1} = 1$ then the appropriate $M$ is:
+
+$$
+M =
+\begin{bmatrix}
+1 & 0 & 0 & \ldots & 0 & 0 & 0 \\
+0 & 1 & 0 & \ldots & 0 & 0 & 0 \\
+& & & \ldots \\
+& & & \ldots \\
+a_{n1} & a_{n2} & a_{n3} & \ldots & a_{nn-2} & a_{nn-1} & a_{nn} \\
+0 & 0 & 0 & \ldots & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+That is, $M$ is just the identity matrix with the $(n-1)$'st row replaced with that row from $A$.
+
+Moreover, using the fact that for any  $x \in \mathbb{F}_2$ we always have $x + x = 2x = 0$, it is  is easy to verify that $M^{-1} = M$.
+
+So $C := M \cdot A \cdot M$ will be _similar_ to $A$ and one step closer to Frobenius form and, because $M$ is simple and sparse, those two matrix multiplications can be performed very efficiently in $O(n^2)$ operations.
+
+The full algorithm for matrices over $\mathbb{R}$ also works for matrices over $\mathbb{F_2}$.
+As before, it proceeds in a sequence of steps that move $A$ closer to companion/Frobenius matrix form at the end of each one.
+
+### The Algorithm
+
+. Initialize a counter $k$ to $n$ and $A$ to the input matrix.
+
+. If $a_{kk-1} = 0$ look for an earlier element in the same row that is 1.
+That is, look for $j < k-1$ where $a_{kj} = 1$. +
+If we are successful then swap both the _rows and columns_ $j$ and $k-1$ of $A$. +
+Row and column swaps like that are permutation transformations and those preserve the eigen-structure.
+
+. If by now $a_{kk-1} = 1$:
+
+.. Capture the elements from row $k$ of the matrix $A$ by setting $m_ = \text{row}_k(A)$. +
+Note that by assumption $m_{k-1} = a_{kk-1} = 1$.
+
+.. Compute the elements of $B$ for rows $i = 1, ..., k-1$ as follows:
++
+$$
+b_{ij} =
+\begin{cases}
+  a_{ij} -  a_{ik-1}\frac{m_j}{m_{k-1}} = a_{ij} + a_{ik-1} m_j & \text{ if } j \ne k-1 \\
+  \frac{a_{ik-1}}{m_{k-1}} = a_{ik-1}                           & \text{ if } j = k-1
+\end{cases}
+$$
+
+.. Update $A$ for all columns $j = 1, \ldots, n$ as follows:
++
+$$
+\begin{aligned}
+a_{ij}   &=  b_{ij} \text{ for } i = 1, \ldots, k-2, \\
+a_{k-1j} &= \sum_{l=1}^{n} m_l b_{lj} = m \cdot \text{col}_j(B) \\
+a_{kj}   &=
+\begin{cases}
+  0 & \text { for } j \ne k-1 \\
+  1 & \text { for } j = k-1
+\end{cases}
+\end{aligned}
+$$
++
+That last step puts row $k$ of $A$ into Frobenius form--the later rows of $A$ are already there.
+
+.. If $k > 1$ then $k \leftarrow k-1$ and we go back to step 1, otherwise we are done.
+
+. If $a_{kk-1} = 0$ even after trying the search in step 2 then we cannot perform step 3. +
+Just like before, in this case the current $A$ matrix must have the following form:
++
+$$
+A =
+\begin{bmatrix}
+A_1 & A_2 \\
+0   & A_3
+\end{bmatrix}
+$$
+hence the characteristic polynomial $c_A(x)$ we are after is the product of two other characteristic polynomials:
++
+$$
+c_A(x) = c_{A_1}(x) c_{A_3}(x)
+$$
++
+and as $A_3$ is already in Frobenius form we can easily read off the coefficients for $c_{A_3}(x)$:
++
+$$
+c_{A_3}(x) = 1+ a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
+$$
++
+The algorithm will store those coefficients and recurse using $A_1$ as the smaller $(k-1) \times (k-1)$  input matrix.
++
+It can then convolve the coefficients of $c_{A_1}(x)$ and $c_{A_3}(x)$ to return the coefficients for $c_{A}(x)$.
+
+::: {.callout-note}
+# Recursion is to be expected here
+In $\FF$ any matrix element can only be $0$ or $1$.
+Therefore, all things being equal, you'd expect to have to perform the recursive fourth step half the time.
+:::

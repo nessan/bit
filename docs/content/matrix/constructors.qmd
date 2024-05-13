@@ -1,0 +1,248 @@
+---
+title: "`bit::matrix` --- Construction"
+---
+
+{{< include /content/_common.qmd >}}
+
+Constructors for a bit-matrix.
+
+```cpp
+constexpr
+bit::matrix(std::size_t r, std::size_t c);                      // <1>
+
+constexpr
+bit::matrix(std::size_t n = 0);                                 // <2>
+
+constexpr
+bit::matrix(const vector_type &v,
+            std::size_t r = 1, bool by_rows = true);            // <3>
+
+constexpr
+bit::matrix(const vector_type &u,
+            const vector_type &v, bool product = true);         // <4>
+
+explicit constexpr
+bit::matrix(std::size_t r, std::size_t c,
+            std::invocable<std::size_t, std::size_t> auto f);   // <5>
+
+explicit constexpr
+bit::matrix(std::size_t n, <std::size_t, std::size_t> auto f);  // <6>
+
+explicit
+bit::matrix(std::string &src, bool bit_order = false);          // <7>
+```
+1.  Construct an `r x c` bit-matrix initialized to 0. \
+    If _either_ parameter is zero, the bit-matrix will be 0 x 0.
+2.  Construct an `n x n` square bit-matrix with all elements initialized to 0. \
+    Default construction creates an empty 0 x 0 bit-matrix.
+3.  Reshape a bit-vector into a bit-matrix with `r` rows.
+    The constructor uses _all_ the elements of the bit-vector, so`r` must divide `v.size()` evenly! \
+    If `r = 1`the constructed bit-matrix has a single row; if `r = 0`, it will have a single column instead. \
+    By default, `v` stores the elements of the bit-matrix by rows.
+    If `by_rows == false`, then `v` stores the elements by columns.
+4.  Construct a bit-matrix from the outer product or outer sum of two bit-vectors. \
+    If `u.size() == m` and `v.size() == n`, the resulting bit-matrix will be `m x n`. \
+    If `product == true` then `mat(i, j) = u(i) & v(j)`. \
+    If `product == false` then `mat(i, j) = u(i) ^ v(j)`.
+5. Construct an `r x c` bit-matrix filled using a function call for each index pair `(i, j)`.
+6. Construct an `n x n` square bit-matrix filled using a function call for each index pair `(i, j)`.
+7. Construct a bit-matrix from a string that contains the elements row by row. +
+    Newlines, white spaces, commas, or semi-colons must separate the rows.
+    Each row should be encoded in a string as documented in the [`vector::constructors`] page.
+
+::: {.callout-note}
+# Exceptions
+If parse errors exist, these methods throw a `std::invalid_argument` exception.
+:::
+
+###  Method Arguments
+
+Argument    | Description
+--------    | -----------
+`r`         | The number of rows required in the bit-matrix.
+`c`         | The number of columns required in the bit-matrix.
+`n`         | The number of rows & columns required in a square bit-matrix.
+`f`         | This function will be called as `f(i, j)` for $i \in 0,\ldots,m-1,  \; j \in 0,\ldots,n-1$. A non-zero return sets the corresponding element in the bit-matrix to 1.
+`bit_order` | Defaults to `false`, but if present and set to `true`, then binary strings for the rows will have the lowest bits on the right. The parameter is ignored for hex-strings.
+
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+[Example --- Construction from non-string data]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix m0;                 // <1>
+    bit::matrix m1(3, 5);           // <2>
+    bit::matrix m2(4);              // <3>
+
+    std::cout << "matrix:       \n" << m0 << "\n";
+    std::cout << "matrix(3, 5): \n" << m1 << "\n\n";
+    std::cout << "matrix(4):    \n" << m2 << "\n\n";
+
+    bit::vector u(16, [](std::size_t i) { return (i + 1) % 2; }); // <4>
+    std::cout << "Constructing a bit-matrix by reshaping bit-vector u: " << u << "\n";
+    bit::matrix m3(u, 2);           // <5>
+    bit::matrix m4(u, 4);           // <6>
+    bit::matrix m5(u, 4, false);    // <7>
+    std::cout << "matrix(u, 2) \n"        << m3 << "\n\n";
+    std::cout << "matrix(u, 2, true) \n"  << m4 << "\n\n";
+    std::cout << "matrix(u, 4, false) \n" << m5 << "\n\n";
+
+    u.resize(6);
+    auto v = bit::vector::ones(4);
+    std::cout << "Constructing a bit-matrix from the outer product and sum of bit-vector u: "
+              << u << " and v: " << v << "\n";
+    bit::matrix m6(u, v);           // <8>
+    bit::matrix m7(u, v, false);    // <9>
+    std::cout << "matrix(u, v, true) \n"  << m6 << "\n\n";
+    std::cout << "matrix(u, v, false) \n" << m7 << "\n\n";
+
+    bit::matrix m8(8, [](size_t i, size_t) { return (i + 1) % 2; }); // <9>
+    std::cout << "matrix(lambda) \n" << m8 << "\n";
+}
+```
+1. Default constructor makes an empty bit-matrix.
+2. 3 x 5 bit-matrix initialized to all zeros.
+3. 4 x 4 square bit-matrix initialized to all zeros.
+4. Bit-matrix from a bit-vector reshaped into two rows.
+5. Bit-matrix from a bit-vector reshaped into four rows.
+6. Bit-matrix from a bit-vector reshaped into four rows where the bit-vector stores the elements column by column.
+7. Bit-matrix from the outer product of two bit-vectors.
+8. Bit-matrix from the outer sum of two bit-vectors.
+9. Bit-matrix from a lambda that sets the even rows to all ones and odd rows to all zeros.
+
+[Output]{.bt}
+```bash
+matrix:
+[]
+matrix(3, 5):
+│0 0 0 0 0│
+│0 0 0 0 0│
+│0 0 0 0 0│
+
+matrix(4):
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+
+Constructing a bit-matrix by reshaping bit-vector u: [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0]
+matrix(u, 2)
+│1 0 1 0 1 0 1 0│
+│1 0 1 0 1 0 1 0│
+
+matrix(u, 2, true)
+│1 0 1 0│
+│1 0 1 0│
+│1 0 1 0│
+│1 0 1 0│
+
+matrix(u, 4, false)
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+
+Constructing a bit-matrix from the outer product and sum of bit-vector u: [1 0 1 0 1 0] and v: [1 1 1 1]
+matrix(u, v, true)
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+
+matrix(u, v, false)
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+
+matrix(lambda)
+│1 1 1 1 1 1 1 1│
+│0 0 0 0 0 0 0 0│
+│1 1 1 1 1 1 1 1│
+│0 0 0 0 0 0 0 0│
+│1 1 1 1 1 1 1 1│
+│0 0 0 0 0 0 0 0│
+│1 1 1 1 1 1 1 1│
+│0 0 0 0 0 0 0 0│
+```
+
+[Example --- Construction from strings]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix m1("111 000 111");              // <1>
+    bit::matrix m2("0b111 0b000 0b111");        // <2>
+    bit::matrix m3("0x111;0x000;0x111");        // <3>
+    bit::matrix m4("0x1, 0x1, 0x1");            // <4>
+    bit::matrix m5("0x1_8;0x1_8;0x1_8");        // <5>
+    bit::matrix m6("0x1_4;0x1_4;0x1_4");        // <6>
+    bit::matrix m7("0x1_2;0x1_2;0x1_2");        // <7>
+
+    std::cout << "m1: \n" << m1 << "\n\n";
+    std::cout << "m2: \n" << m2 << "\n\n";
+    std::cout << "m3: \n" << m3 << "\n\n";
+    std::cout << "m4: \n" << m4 << "\n\n";
+    std::cout << "m5: \n" << m5 << "\n\n";
+    std::cout << "m6: \n" << m6 << "\n\n";
+    std::cout << "m7: \n" << m7 << "\n\n";
+}
+```
+1. Construction from strings separated by white space.
+All characters are 0's and 1's, so we interpret each element as a binary number.
+1. Construction from the same binary strings, each with a binary prefix `"0b"`.
+2. Construction from the same digits, but each is now interpreted as a hex character thanks to the `"0x"` prefix.
+Here, semi-colons separate rows.
+1. Construction where the final characters have no suffix, so by default, are parsed as a hex/base-16 number.
+Here, commas separate rows.
+1. Construction where the final characters have a suffix `"_8"` so are parsed as base-8 numbers.
+2. Construction where the final characters have a suffix `"_4"` so are parsed as base-4 numbers.
+3. Construction where the final characters have a suffix `"_2"` so are parsed as base-2 numbers.
+
+[Output]{.bt}
+```bash
+m1:
+│1 1 1│
+│0 0 0│
+│1 1 1│
+
+m2:
+│1 1 1│
+│0 0 0│
+│1 1 1│
+
+m3:
+│1 0 0 0 1 0 0 0 1 0 0 0│
+│0 0 0 0 0 0 0 0 0 0 0 0│
+│1 0 0 0 1 0 0 0 1 0 0 0│
+
+m4:
+│1 0 0 0│
+│1 0 0 0│
+│1 0 0 0│
+
+m5:
+│1 0 0│
+│1 0 0│
+│1 0 0│
+
+m6:
+│1 0│
+│1 0│
+│1 0│
+
+m7:
+│1│
+│1│
+│1│
+```
+
+### See Also
+[`vector::constructors`] \
+[`matrix::to_string`]

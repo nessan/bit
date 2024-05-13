@@ -1,0 +1,85 @@
+---
+title: "`bit::matrix` --- Element Access"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to access the rows, the columns, and the individual elements/bits in a bit-matrix.
+
+```cpp
+constexpr bool
+operator()(std::size_t i, std::size_t j);   // <1>
+
+constexpr bool
+test(std::size_t i, std::size_t j) const;   // <2>
+
+constexpr bit::vector::reference
+operator()(std::size_t i, std::size_t j);   // <3>
+
+constexpr const bit::vector&
+row(std::size_t i) const;                   // <4>
+
+constexpr bit::vector&
+row(std::size_t i);
+
+constexpr const bit::vector&
+operator[](std::size_t i) const;            // <5>
+
+constexpr bit::vector&
+operator[](std::size_t i);
+
+constexpr bit::vector
+col(std::size_t j) const;                   // <6>
+```
+1. Accesses the element at `(i, j)`.
+2. Another way to access element `(i, j)`.
+3. Returns an object of type [`vector::reference`] that lets you write to slot `(i, j)`.
+4. Read-only & read-write access to the elements in row `i` of a bit-matrix.
+5. Synonyms for the `row(i)` methods to allow for alternate "`C`" style indexing a la `matrix[i][j]`.
+6. Read-only access to the elements in column `i` of a bit-matrix.
+
+::: {.callout-warning}
+# Range checks
+In general, these methods do *not* check whether an index is in bounds, and if it isn't, the behavior is undefined (but bound to be wrong!)
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 4;
+    auto mat = bit::matrix<>::random(n);
+    std::cout << "bit::matrix:\n";
+    std::cout << mat << '\n';
+    std::cout << "By rows ...\n";
+    for (std::size_t i = 0; i < n; ++i)
+        std::cout << "Row " << i << ": " << mat[i] << '\n';
+    std::cout << "By columns ...\n";
+    for (std::size_t i = 0; i < n; ++i)
+        std::cout << "Col " << i << ": " << mat.col(i) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+bit::matrix:
+│0 1 1 0│
+│0 1 0 0│
+│0 1 1 0│
+│0 1 0 0│
+By rows ...
+Row 0: [0 1 1 0]
+Row 1: [0 1 0 0]
+Row 2: [0 1 1 0]
+Row 3: [0 1 0 0]
+By columns ...
+Col 0: [0 0 0 0]
+Col 1: [1 1 1 1]
+Col 2: [1 0 1 0]
+```
+
+### See Also
+[`vector::reference`] \
+[`bit_assert`]

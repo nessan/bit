@@ -1,0 +1,55 @@
+---
+title: "`bit::vector` --- Descriptive Data"
+---
+
+{{< include /content/_common.qmd >}}
+
+We can output some descriptive data about a bit-vector to a stream.
+The data is used primarily for debugging purposes.
+
+```cpp
+constexpr void description(std::ostream &s, +
+                           const std::string &head = "", +
+                           const std::string &foot = "\n") const;   // <1>
+constexpr void description(const std::string &head = "", +
+                           const std::string &foot = "\n") const;   // <2>
+```
+1. Prints data to an arbitrary stream.
+2. Prints the same data to `std::cout`.
+
+You can send along some arbitrary text that gets prepended or appended to the description of the bit-vector.
+See the example below.
+
+::: {.callout-warning}
+# Don't depend on the format
+The format of the output may change from time to time.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v25 = bit::vector<>::random(32, 0.25);     // <1>
+    v25.description("Random fill with p = 0.25");
+}
+```
+1. bit::vector of size 32 randomly filled where the probability of getting set elements is 25%.
+
+[Output (varies from run to run)]{.bt}
+```bash
+Random fill with p = 0.25::     # <1>
+bit-vector: 10010000000000000100001001000001
+as hex-string:      90002428
+number of bits:     32
+number of set bits: 6
+bit capacity:       64
+unused capacity:    32
+bits-per-block:     64
+blocks used:        1
+blocks capacity:    1
+```
+1. The optional user-supplied header line.
+
+### See Also
+[`vector::to_string`]

@@ -1,0 +1,128 @@
+---
+title: "`bit::matrix` --- Construction from Strings"
+---
+
+{{< include /content/_common.qmd >}}
+
+We provide a factory method that attempts to parse a string as a bit-matrix. \
+Of course, that isn't always possible, so this factory method returns a [`std::optional`].
+
+```cpp
+static std::optional<bit::matrix>
+from(std::string_view src, bool bit_order = false);   // <1>
+```
+1. Attempts to parse a bit-matrix from a string and returns `std::nullopt` on failure.
+
+::: {.callout-note}
+# Bit-matrices are stored by row
+The input string should hold the bit-matrix row by row.
+Newlines, white spaces, commas, or semi-colons must separate the rows.
+Each row should be encoded in a string as documented in the [`vector::constructors`] page.
+:::
+
+[Example --- Binary strings]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m1 = bit::matrix<>::from("0b111 0b000 0b111");        // <1>
+    auto m2 = bit::matrix<>::from("111 000 111");              // <2>
+    auto m3 = bit::matrix<>::from("0b111.0b000.0b111");        // <3>
+
+    std::cout << "m1:\n" << (m1 ? m1->to_string() : "FAILED TO PARSE") << "\n\n";
+    std::cout << "m2:\n" << (m2 ? m2->to_string() : "FAILED TO PARSE") << "\n\n";
+    std::cout << "m3:\n" << (m3 ? m3->to_string() : "FAILED TO PARSE") << "\n";
+}
+```
+1. The row strings are each prefixed by '0b', so each is encoded as a binary string.
+2. In this case, there is no prefix, but the string is all zeros and ones, so we _assume_ the rows are in a binary encoding.
+3. This is a string with a deliberate error--the row separator is invalid.
+
+[Output]{.bt}
+```bash
+m1:
+111
+000
+111
+
+m2:
+111
+000
+111
+
+m3:                 # <1>
+FAILED TO PARSE
+```
+1. The last string cannot be interpreted as a valid bit-vector.
+
+[Example --- Hex strings]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    auto m0 = bit::matrix<>::from("0b111  0b000   0b111"); // <1>
+    auto m1 = bit::matrix<>::from("0x111  0x000   0x111"); // <2>
+    auto m2 = bit::matrix<>::from("0x1    0x1     0x1");   // <3>
+    auto m3 = bit::matrix<>::from("0x1_8  0x1_8   0x1_8"); // <4>
+    auto m4 = bit::matrix<>::from("0x1_4  0x1_4   0x1_4"); // <5>
+    auto m5 = bit::matrix<>::from("0x1_2  0x1_2   0x1_2"); // <6>
+
+    if (m0) std::cout << "m0:\n" << *m0 << "\n\n";
+    if (m1) std::cout << "m1:\n" << *m1 << "\n\n";
+    if (m2) std::cout << "m2:\n" << *m2 << "\n\n";
+    if (m3) std::cout << "m3:\n" << *m3 << "\n\n";
+    if (m4) std::cout << "m4:\n" << *m4 << "\n\n";
+    if (m5) std::cout << "m5:\n" << *m5 << "\n";
+}
+```
+1. Each row string is prefixed by '0b', so interpreted as binary.
+2. This string has the same digits, but thanks to the '0x' prefix, each row will be interpreted as a hex string.
+3. Construction where the row characters have no suffix, so by default, parsed as hex/base-16 numbers.
+4. Construction where the row characters have a suffix `"_8"`, so parsed as base-8 numbers.
+5. Construction where the row characters have a suffix `"_4"`, so parsed as base-4 numbers.
+6. Construction where the row characters have a suffix `"_2"`, so parsed as base-2 numbers.
+
+[Output]{.bt}
+```bash
+m0:                                 # <1>
+│1 1 1│
+│0 0 0│
+│1 1 1│
+
+m1:                                 # <2>
+│1 0 0 0 1 0 0 0 1 0 0 0│
+│0 0 0 0 0 0 0 0 0 0 0 0│
+│1 0 0 0 1 0 0 0 1 0 0 0│
+
+m2:                                 # <3>
+│1 0 0 0│
+│1 0 0 0│
+│1 0 0 0│
+
+m3:                                # <4>
+│1 0 0│
+│1 0 0│
+│1 0 0│
+
+m4:                                 # <5>
+│1 0│
+│1 0│
+│1 0│
+
+m5:                                 # <6>
+│1│
+│1│
+│1│
+```
+1. Rows are binary strings, so each character is a single element in the bit-vector row.
+2. Same digits but now in hex, so each character is four elements in the bit-vector row.
+3. The final '1' is interpreted as 1 base 16 by default.
+4. The final '1_8' is interpreted as 1 base 8.
+5. The final '1_4' is interpreted as 1 base 4.
+6. The final '1_2' is interpreted as 1 base 2.
+
+### See Also
+[`matrix::constructors`]  \
+[`matrix::to_string`]     \
+[`vector::to_string`]

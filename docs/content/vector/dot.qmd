@@ -1,0 +1,56 @@
+---
+title: "`bit::vector` --- Dot Product for Bit-Vectors"
+---
+
+{{< include /content/_common.qmd >}}
+
+Compute the _dot product_ of two equal-sized bit-vectors.
+
+```cpp
+constexpr bool dot(const bit::vector &v);       // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr bool
+dot(const bit::vector<Block, Allocator> &u,     // <2>
+    const bit::vector<Block, Allocator> &v);
+```
+1. Instance method that returns the dot product of this bit-vector with another equal-sized bit-vector `v`.
+2. Non-member function that returns the dot product of two equal-sized bit-vectors `u` and `v`.
+
+The dot product is defined by
+$$
+\mathbf{u} \cdot \mathbf{v} = \sum_i u_i v_i.
+$$
+In the case of bit-vectors, products are replaced by logical `AND` and sums by the logical `XOR` operation.
+
+The dot product is a critical operation in linear algebra, so it is fortunate that `AND`'ing and `XOR`'ing for bit-vectors can be done efficiently over blocks of elements simultaneously.
+
+The required result is just the one-liner `(lhs & rhs).parity()`.
+
+::: {.callout-warning}
+# Size checking
+The two vectors in question must be of the same size. \
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> u("01111110");
+    bit::vector<> v("10101010");
+
+    auto u_str = u.to_string();
+    auto v_str = v.to_string();
+
+    std::cout << "bit::dot(" << u_str << ", " << v_str << ") = " << bit::dot(u, v) << '\n';
+    std::cout << u_str << ".dot(" << v_str << ") = " << u.dot(v) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+bit::dot(01111110, 10101010) = 1
+01111110.dot(10101010) = 1
+```

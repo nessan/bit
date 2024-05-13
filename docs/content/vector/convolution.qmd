@@ -1,0 +1,62 @@
+---
+title: "`bit::vector` --- Convolutions"
+---
+
+{{< include /content/_common.qmd >}}
+
+Computes the _convolution_ of two bit-vectors either using an instance method or a non-member function.
+
+```cpp
+constexpr bit::vector convolution(const bit::vector &v);        // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr bit::vector<Block, Allocator>
+convolution(const bit::vector<Block, Allocator> &u,             // <2>
+            const bit::vector<Block, Allocator> &v);
+```
+1. Instance method that returns the convolution of this bit-vector instance with another bit-vector `v`.
+2. Non-member function that returns the convolution of the two bit-vectors `u` and `v`.
+
+
+If $\mathbf{u}$ has size $m$ and $\mathbf{v}$ has size $n$ then these methods return a bit-vector $\mathbf{w}$ of size $m+n-1$ whose elements are given by the formula
+$$
+w_k = \sum_j u_j v_{k - j + 1}.
+$$
+The sum is over all values of $j$ such that the indices for $u$ and $v$ in that formula are valid.
+In the case of bit-vectors, products are replaced by logical `AND` and sums by the logical `XOR` operation.
+
+One use for convolution is to do polynomial multiplication: \
+Interpreting $u_i$ and $v_i$ as the polynomial coefficients:
+$$
+\begin{align}
+u(x) &= u_0 + u_1 x + \cdots + u_{m-1} x^{m-1} \\
+v(x) &= v_0 + v_1 x + \cdots + v_{n-1} x^{n-1}
+\end{align}
+$$
+then the $w_k$ are the coefficients for the product polynomial
+
+$$
+ u(x) v(x) \equiv w(x) = w_0 + w_1 x + \cdots + w_{m+n-1} x^{m+n-1}.
+$$
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto u = bit::vector<>::ones(3);
+    auto v = bit::vector<>::ones(2);
+    std::cout << u << " convolved with " << v << " yields " << bit::convolution(u, v) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+[1 1 1] convolved with [1 1] yields [1 0 0 1]
+```
+Note, in terms of polynomials, we are computing the product:
+$$
+(1 + x + x^2)(1+ x) = 1 + 2x + 2x^2 + x^3.
+$$
+However, in $\FF$, all arithmetic is mod 2, so the two middle terms are zero for all $x$.
+Hence the product polynomial in $\FF$ is $1 + x^3$ and we get the coefficients `[1 0 0 1]` exactly as shown.

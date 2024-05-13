@@ -1,0 +1,59 @@
+---
+title: "`bit::vector` --- Polynomials Over GF(2)"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a function that evaluates a polynomial over GF(2).
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+constexpr bool
+polynomial_sum(const bit::vector<Block, Allocator> &p, bool x);
+```
+
+The polynomial coefficients are stored in the bit-vector `p`. +
+Returns the value of the polynomial at the point `x`.
+$$
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1}.
+$$
+In GF(2), arithmetic is mod 2, which means that
+$$
+p(x) = p_0 + p_1 x + p_2 x + \cdots + p_{n-1} x.
+$$
+If $x = 0$, this is just `p[0]`, while if $x = 1$, it is the count of ones (mod 2) in the bit-vector `p`.
+
+::: {.callout-warning}
+# Empty polynomials are not allowed
+Calling this method for an empty polynomial is likely a mistake and will be flagged as such if the `BIT_DEBUG` flag is set a compile time.
+If that compiler flag isn't set the method will always return `false`.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector  p1(16, [](size_t k) { return (k + 1) % 2; });
+    bit::vector  p2(17, [](size_t k) { return (k + 1) % 2; });
+    std::cout << "Polynomial: " << p1.to_polynomial() << '\n'
+              << "    evaluated at 0 = "  << polynomial_sum(p1, false) << '\n'
+              << "    evaluated at 1 = "  << polynomial_sum(p1, true)  << '\n';
+    std::cout << "Polynomial: " <<  p2.to_polynomial() << '\n'
+              << "    evaluated at 0 = "  << polynomial_sum(p2, false) << '\n'
+              << "    evaluated at 1 = "  << polynomial_sum(p2, true)  << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Polynomial: 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14
+    evaluated at 0 = 1
+    evaluated at 1 = 0
+Polynomial: 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14 + x^16
+    evaluated at 0 = 1
+    evaluated at 1 = 1
+```
+
+### See Also
+[`vector::count`]

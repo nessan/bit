@@ -1,0 +1,88 @@
+---
+title: "`bit::gauss` --- Construction"
+---
+
+{{< include /content/_common.qmd >}}
+
+```cpp
+gauss(const bit::matrix &A, const bit::vector &b);       // <1>
+
+gauss
+gauss_for(const bit::matrix &A, const bit::vector &b);   // <2>
+```
+1. Instance constructor.
+2. Non-member factory constructor.
+
+These construct a `gauss` object for the system $A \cdot x = b$ where $A$ is a _square_ bit-matrix, and $b$ is a bit-vector of the same size as there are rows in $A$.
+
+On construction, a `gauss` computes the [reduced row-echelon form]  of $A$ by using [elementary row operations].
+It performs the same operations to a copy of the input bit-vector $b$.
+Once done, it can readily compute the rank of $A$, check the system for consistency, calculate the number of free variables, etc.
+
+::: {.callout-note}
+# Efficiency
+If $A$ is $n \times n$, then construction is an $\mathcal{O}(n^3)$ operation (though due to the nature of $\FF$, things are done in blocks at a time).
+There are potentially sub-cubic ways of doing this work using various block-iterative methods that have not yet been implemented.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto b = bit::vector<>::random(m);
+    std::cout << "Solving the system A.x = b for the following A & b:\n";
+    print(A, b);
+
+    // Create a solver object for the system
+    auto solver = bit::gauss(A, b);
+
+    // Print some general information
+    std::cout << "Number of equations in the system: " << solver.equation_count() << '\n';
+    std::cout << "Rank of the matrix A:              " << solver.rank()           << '\n';
+    std::cout << "Number of free variables:          " << solver.free_count()     << '\n';
+    std::cout << "Number of solutions to A.x = b:    " << solver.solution_count() << '\n';
+
+    // Also have a look at the echelon form of A and the equivalently transformed b
+    std::cout << "The echelon forms of A & b are:\n";
+    print(solver.lhs(), solver.rhs());
+}
+```
+
+[Output (depends on the values of the random inputs)]{.bt}
+```bash
+Solving the system A.x = b for the following A & b:
+011100100101    0
+000111011100    1
+111101000011    1
+010000111110    1
+110011110000    1
+101100100100    1
+011010110010    0
+010010000111    1
+101110110001    0
+001100101110    1
+100000011010    1
+111111010100    1
+Number of equations in the system: 12
+Rank of the matrix A:              11
+Number of free variables:          1
+Number of solutions to A.x = b:    2
+The echelon forms of A & b are:
+100000000000    1
+010000000000    0
+001000000000    1
+000100000000    0
+000010000100    0
+000001000000    0
+000000100100    1
+000000010000    1
+000000001000    0
+000000000010    1
+000000000001    0
+000000000000    0
+```

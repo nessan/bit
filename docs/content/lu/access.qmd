@@ -1,0 +1,81 @@
+---
+title: "`bit::lu` --- Access"
+---
+
+{{< include /content/_common.qmd >}}
+
+If `lu` was constructed from the bit-matrix $A$, these methods provide read-only access to the unit lower triangular bit-matrix $L$ and the upper triangular bit-matrix $U$ where
+$$
+P \cdot A = L \cdot U
+$$
+and $P$ is a permutation matrix --- see [`lu::permutation_vector`].
+
+```cpp
+bit::matrix L()  const;     // <1>
+bit::matrix U()  const;     // <2>
+bit::matrix LU() const;     // <3>
+```
+1. Returns a copy of $L$ as a stand-alone unit lower triangular bit-matrix.
+2. Returns a copy of $U$ as a stand-alone upper triangular bit-matrix.
+3. Returns the bit-matrices $L$ and $U$ packed into a single bit-matrix.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto lu = bit::lu(A);
+    auto L = lu.L();
+    auto U = lu.U();
+    std::cout << "bit::matrix A, L, and U:\n";
+    bit::print(A, L, U);
+    std::cout << "A is singular? " << (lu.singular() ? "YES" : "NO") << "\n";
+
+    // Check that P.A = L.U
+    auto PA = A;
+    lu.permute(PA);
+    auto LU = bit::dot(L,U);
+    std::cout << "P.A and L.U:\n";
+    bit::print(PA, LU);
+    std::cout << "P.A == L.U? " << (PA == LU ? "YES" : "NO") << "\n";
+}
+```
+
+[Output (depends on the values of the random inputs)]{.bt}
+```bash
+bit::matrix A, L, and U:
+001111101100    100000000000    111001010000
+111001010000    110000000000    011001100000
+111000011010    001000000000    001111101100
+000111100101    000100000000    000111100101
+100000110000    101010000000    000010111010
+110110101110    100001000000    000001001010
+110100000110    101000100000    000000010010
+011100110101    011100010000    000000010100
+101101101111    111010001000    000000001001
+010101110011    011011001100    000000000110
+010001111101    010110001010    000000000011
+001001000011    001101000001    000000000000
+A is singular? YES
+P.A and L.U:
+111001010000    111001010000
+100000110000    100000110000
+001111101100    001111101100
+000111100101    000111100101
+110100000110    110100000110
+111000011010    111000011010
+110110101110    110110101110
+010001111101    010001111101
+101101101111    101101101111
+010101110011    010101110011
+011100110101    011100110101
+001001000011    001001000011
+P.A == L.U? YES
+```
+
+### See Also
+[`lu::constructors`] \
+[`lu::permutation_vector`]

@@ -1,0 +1,289 @@
+<!-- Shortcuts and links used throughout the documentation -->
+
+<!-- Some math shortcuts we use frequently in the documentation -->
+$$
+\newcommand{FF}{\mathbb{F}_2}
+\newcommand{R}{\mathbb{R}}
+$$
+
+<!-- Our check/assert macros and compiler flags that control them -->
+[`BIT_DEBUG`]:                          /content/bit_assert/index.qmd#compiler-flags
+[`BIT_NDEBUG`]:                         /content/bit_assert/index.qmd#compiler-flags
+[`bit_assert`]:                         /content/bit_assert/index.qmd
+[`bit_debug_assert`]:                   /content/bit_assert/index.qmd
+[`bit_always_assert`]:                  /content/bit_assert/index.qmd
+
+<!-- Formatted links to the pages for the bit::vector class -->
+[`bit::vector`]:                        /content/vector/index.qmd
+[`vector::all`]:                        /content/vector/all.qmd
+[`vector::allocator`]:                  /content/vector/blocks.qmd
+[`vector::any`]:                        /content/vector/all.qmd
+[`vector::append`]:                     /content/vector/append.qmd
+[`vector::back`]:                       /content/vector/access.qmd
+[`vector::blocks`]:                     /content/vector/blocks.qmd
+[`vector::capacity`]:                   /content/vector/capacity.qmd
+[`vector::checker_board`]:              /content/vector/specials.qmd
+[`vector::clear`]:                      /content/vector/clear.qmd
+[`vector::constructors`]:               /content/vector/constructors.qmd
+[`vector::convolution`]:                /content/vector/convolution.qmd
+[`vector::copy`]:                       /content/vector/copy.qmd
+[`vector::count`]:                      /content/vector/count.qmd
+[`vector::count0`]:                     /content/vector/count.qmd
+[`vector::count1`]:                     /content/vector/count.qmd
+[`vector::description`]:                /content/vector/description.qmd
+[`vector::diff`]:                       /content/vector/diff.qmd
+[`vector::dot`]:                        /content/vector/dot.qmd
+[`vector::element`]:                    /content/vector/access.qmd
+[`vector::empty`]:                      /content/vector/size.qmd
+[`vector::final_set`]:                  /content/vector/first_set.qmd
+[`vector::first_set`]:                  /content/vector/first_set.qmd
+[`vector::flip_if`]:                    /content/vector/set_if.qmd
+[`vector::flip`]:                       /content/vector/set.qmd
+[`vector::from`]:                       /content/vector/from.qmd
+[`vector::front`]:                      /content/vector/access.qmd
+[`vector::if_set_call`]:                /content/vector/if_set_call.qmd
+[`vector::join`]:                       /content/vector/join.qmd
+[`vector::next_set`]:                   /content/vector/first_set.qmd
+[`vector::none`]:                       /content/vector/all.qmd
+[`vector::ones`]:                       /content/vector/specials.qmd
+[`vector::operator|`]:                  /content/vector/logical-op.qmd
+[`vector::operator|=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator-`]:                  /content/vector/logical-op.qmd
+[`vector::operator-=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator()`]:                 /content/vector/access.qmd
+[`vector::operator[]`]:                 /content/vector/access.qmd
+[`vector::operator*`]:                  /content/vector/logical-op.qmd
+[`vector::operator*=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator&`]:                  /content/vector/logical-op.qmd
+[`vector::operator&=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator^`]:                  /content/vector/logical-op.qmd
+[`vector::operator^=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator+`]:                  /content/vector/logical-op.qmd
+[`vector::operator+=`]:                 /content/vector/logical-op-eq.qmd
+[`vector::operator<<`]:                 /content/vector/shift.qmd
+[`vector::operator<<=`]:                /content/vector/shift.qmd
+[`vector::operator>>`]:                 /content/vector/shift.qmd
+[`vector::operator>>=`]:                /content/vector/shift.qmd
+[`vector::operator~`]:                  /content/vector/logical-op-eq.qmd
+[`vector::overview`]:                   /content/vector/index.qmd
+[`vector::parity`]:                     /content/vector/count.qmd
+[`vector::polynomial_mod`]:             /content/vector/polynomial_mod.qmd
+[`vector::polynomial_sum`]:             /content/vector/polynomial_sum.qmd
+[`vector::pop`]:                        /content/vector/push-pop.qmd
+[`vector::prev_set`]:                   /content/vector/first_set.qmd
+[`vector::push`]:                       /content/vector/push-pop.qmd
+[`vector::random`]:                     /content/vector//random.qmd
+[`vector::reference`]:                  /content/vector/reference.qmd
+[`vector::replace`]:                    /content/vector/replace.qmd
+[`vector::reserve`]:                    /content/vector/reserve.qmd
+[`vector::reset`]:                      /content/vector/set.qmd
+[`vector::resize`]:                     /content/vector/resize.qmd
+[`vector::set_if`]:                     /content/vector/set_if.qmd
+[`vector::set_indices`]:                /content/vector/indices.qmd
+[`vector::set`]:                        /content/vector/set.qmd
+[`vector::shrink_to_fit`]:              /content/vector/reserve.qmd
+[`vector::size`]:                       /content/vector/size.qmd
+[`vector::stream<<`]:                   /content/vector/stream.qmd
+[`vector::stream>>`]:                   /content/vector/stream.qmd
+[`vector::sub`]:                        /content/vector/sub.qmd
+[`vector::swap_elements`]:              /content/vector/swap_elements.qmd
+[`vector::swap`]:                       /content/vector/swap.qmd
+[`vector::test`]:                       /content/vector/access.qmd
+[`vector::to_bit_order`]:               /content/vector/to_string.qmd
+[`vector::to_hex`]:                     /content/vector/to_string.qmd
+[`vector::to_polynomial`]:              /content/vector/to_string.qmd
+[`vector::to_pretty_string`]:           /content/vector/to_string.qmd
+[`vector::to_string`]:                  /content/vector/to_string.qmd
+[`vector::trimmed_left`]:               /content/vector/trimmed.qmd
+[`vector::trimmed_right`]:              /content/vector/trimmed.qmd
+[`vector::trimmed`]:                    /content/vector/trimmed.qmd
+[`vector::unit_ceil`]:                  /content/vector/unit_floor.qmd
+[`vector::unit_floor`]:                 /content/vector/unit_floor.qmd
+[`vector::unit`]:                       /content/vector/specials.qmd
+[`vector::unset_indices`]:              /content/vector/indices.qmd
+[`vector::unused`]:                     /content/vector/capacity.qmd
+[`vector::zeros`]:                      /content/vector/specials.qmd
+
+<!-- Formatted links to the pages for the bit::matrix class -->
+[`bit::matrix`]:                        /content/matrix/index.qmd
+[`matrix::add_col`]:                    /content/matrix/add-pop.qmd
+[`matrix::add_row`]:                    /content/matrix/add-pop.qmd
+[`matrix::all`]:                        /content/matrix/all.qmd
+[`matrix::any`]:                        /content/matrix/all.qmd
+[`matrix::append`]:                     /content/matrix/append.qmd
+[`matrix::characteristic_polynomial`]:  /content/matrix/characteristic_polynomial.qmd
+[`matrix::checker_board`]:              /content/matrix/specials.qmd
+[`matrix::clear`]:                      /content/matrix/clear.qmd
+[`matrix::col`]:                        /content/matrix/access.qmd
+[`matrix::col_capacity`]:               /content/matrix/capacity.qmd
+[`matrix::cols`]:                       /content/matrix/size.qmd
+[`matrix::compact_frobenius_form`]:     /content/matrix/companion.qmd
+[`matrix::companion`]:                  /content/matrix/companion.qmd
+[`matrix::constructors`]:               /content/matrix/constructors.qmd
+[`matrix::count`]:                      /content/matrix/count.qmd
+[`matrix::count_diagonal`]:             /content/matrix/count.qmd
+[`matrix::description`]:                /content/matrix/description.qmd
+[`matrix::dot`]:                        /content/matrix/dot.qmd
+[`matrix::echelon_form`]:               /content/matrix/echelon.qmd
+[`matrix::element`]:                    /content/matrix/element.qmd
+[`matrix::empty`]:                      /content/matrix/size.qmd
+[`matrix::flip`]:                       /content/matrix/set.qmd
+[`matrix::flip_diagonal`]:              /content/matrix/set.qmd
+[`matrix::flip_if`]:                    /content/matrix/set_if.qmd
+[`matrix::from`]:                       /content/matrix/from.qmd
+[`matrix::identity`]:                   /content/matrix/specials.qmd
+[`matrix::invert`]:                     /content/matrix/invert.qmd
+[`matrix::is_identity`]:                /content/matrix/is_special.qmd
+[`matrix::is_ones`]:                    /content/matrix/is_special.qmd
+[`matrix::is_square`]:                  /content/matrix/is_special.qmd
+[`matrix::is_symmetric`]:               /content/matrix/is_special.qmd
+[`matrix::is_zero`]:                    /content/matrix/is_special.qmd
+[`matrix::join`]:                       /content/matrix/append.qmd
+[`matrix::lower`]:                      /content/matrix/triangle.qmd
+[`matrix::none`]:                       /content/matrix/all.qmd
+[`matrix::ones`]:                       /content/matrix/specials.qmd
+[`matrix::operator()`]:                 /content/matrix/access.qmd
+[`matrix::operator[]`]:                 /content/matrix/access.qmd
+[`matrix::operator|`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator|=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator-`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator-=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator*`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator*=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator&`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator&=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator^`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator^=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator+`]:                  /content/matrix/logical-op.qmd
+[`matrix::operator+=`]:                 /content/matrix/logical-op-eq.qmd
+[`matrix::operator<<`]:                 /content/matrix/shift.qmd
+[`matrix::operator<<=`]:                /content/matrix/shift.qmd
+[`matrix::operator==`]:                 /content/matrix/op==.qmd
+[`matrix::operator>>`]:                 /content/matrix/shift.qmd
+[`matrix::operator>>=`]:                /content/matrix/shift.qmd
+[`matrix::operator~`]:                  /content/matrix/logical-op-eq.qmd
+[`matrix::polynomial_sum`]:             /content/matrix/polynomial_sum.qmd
+[`matrix::pop_col`]:                    /content/matrix/add-pop.qmd
+[`matrix::pop_row`]:                    /content/matrix/add-pop.qmd
+[`matrix::pow`]:                        /content/matrix/pow.qmd
+[`matrix::pow2`]:                       /content/matrix/pow.qmd
+[`matrix::print`]:                      /content/matrix/print.qmd
+[`matrix::probability_invertible`]:     /content/matrix/probability.qmd
+[`matrix::probability_singular`]:       /content/matrix/probability.qmd
+[`matrix::random`]:                     /content/matrix/random.qmd
+[`matrix::reduced_echelon_form`]:       /content/matrix/echelon.qmd
+[`matrix::replace`]:                    /content/matrix/replace.qmd
+[`matrix::replace`]:                    /content/matrix/replace.qmd
+[`matrix::reset`]:                      /content/matrix/set.qmd
+[`matrix::reset_diagonal`]:             /content/matrix/set.qmd
+[`matrix::resize`]:                     /content/matrix/resize.qmd
+[`matrix::resize`]:                     /content/matrix/resize.qmd
+[`matrix::rotate`]:                     /content/matrix/specials.qmd
+[`matrix::row`]:                        /content/matrix/access.qmd
+[`matrix::row_capacity`]:               /content/matrix/capacity.qmd
+[`matrix::rows`]:                       /content/matrix/size.qmd
+[`matrix::set`]:                        /content/matrix/set.qmd
+[`matrix::set`]:                        /content/matrix/set.qmd
+[`matrix::set_diagonal`]:               /content/matrix/set.qmd
+[`matrix::set_if`]:                     /content/matrix/set_if.qmd
+[`matrix::shift`]:                      /content/matrix/specials.qmd
+[`matrix::shrink_to_fit`]:              /content/matrix/shrink_to_fit.qmd
+[`matrix::size`]:                       /content/matrix/size.qmd
+[`matrix::stream<<`]:                   /content/matrix/stream.qmd
+[`matrix::stream>>`]:                   /content/matrix/stream.qmd
+[`matrix::strictly_lower`]:             /content/matrix/triangle.qmd
+[`matrix::strictly_upper`]:             /content/matrix/triangle.qmd
+[`matrix::sub`]:                        /content/matrix/sub.qmd
+[`matrix::swap_cols`]:                  /content/matrix/swap.qmd
+[`matrix::swap_rows`]:                  /content/matrix/swap.qmd
+[`matrix::test`]:                       /content/matrix/access.qmd
+[`matrix::to_echelon_form`]:            /content/matrix/echelon.qmd
+[`matrix::to_hex`]:                     /content/matrix/to_string.qmd
+[`matrix::to_pretty_string`]:           /content/matrix/to_string.qmd
+[`matrix::to_reduced_echelon_form`]:    /content/matrix/echelon.qmd
+[`matrix::to_string`]:                  /content/matrix/to_string.qmd
+[`matrix::to_transpose`]:               /content/matrix/transpose.qmd
+[`matrix::to_vector`]:                  /content/matrix/to_vector.qmd
+[`matrix::trace`]:                      /content/matrix/count.qmd
+[`matrix::transpose`]:                  /content/matrix/transpose.qmd
+[`matrix::unit_lower`]:                 /content/matrix/unit_triangle.qmd
+[`matrix::unit_upper`]:                 /content/matrix/unit_upper.qmd
+[`matrix::upper`]:                      /content/matrix/triangle.qmd
+[`matrix::zeros`]:                      /content/matrix/specials.qmd
+
+<!-- Formatted links to the pages for the bit::gauss class -->
+[`bit::gauss`]:                         /content/gauss/index/qmd
+[`gauss::constructors`]:                /content/gauss/constructors.qmd
+[`gauss::equation_count`]:              /content/gauss/queries.qmd
+[`gauss::free_count`]:                  /content/gauss/queries.qmd
+[`gauss::free_indices`]:                /content/gauss/free_indices.qmd
+[`gauss::is_consistent`]:               /content/gauss/queries.qmd
+[`gauss::lhs`]:                         /content/gauss/access.qmd
+[`gauss::operator()`]:                  /content/gauss/functor.qmd
+[`gauss::operator(i)`]:                 /content/gauss/functor.qmd
+[`gauss::rank`]:                        /content/gauss/queries.qmd
+[`gauss::rhs`]:                         /content/gauss/access.qmd
+[`gauss::solution_count`]:              /content/gauss/queries.qmd
+[`bit::solve`]:                         /content/gauss/solve.qmd
+
+<!-- Formatted links to the pages for the bit::lu class -->
+[`bit::lu`]:                            /content/lu/index.qmd
+[`lu::constructors`]:                   /content/lu/constructors.qmd
+[`lu::permute`]:                        /content/lu/permute.qmd
+[`lu::permutation_vector`]:             /content/lu/permute.qmd
+[`lu::row_swaps`]:                      /content/lu/permute.qmd
+[`lu::singular`]:                       /content/lu/queries.qmd
+[`lu::non_singular`]:                   /content/lu/queries.qmd
+[`lu::determinant`]:                    /content/lu/queries.qmd
+[`lu::rank`]:                           /content/lu/queries.qmd
+[`lu::L`]:                              /content/lu/access.qmd
+[`lu::U`]:                              /content/lu/access.qmd
+[`lu::LU`]:                             /content/lu/access.qmd
+[`lu::operator()`]:                     /content/lu/functor.qmd
+[`lu::invert`]:                         /content/lu/invert.qmd
+
+<!-- Formatted links to the pages for items in the standard library -->
+[`std::allocator`]:                     https://en.cppreference.com/w/cpp/memory/allocator
+[`assert`]:                             https://www.cplusplus.com/reference/cassert/assert/
+[`std::bit_ceil`]:                      https://en.cppreference.com/w/cpp/numeric/bit_ceil
+[`std::bit_floor`]:                     https://en.cppreference.com/w/cpp/numeric/bit_floor
+[`std::bitset`]:                        https://en.cppreference.com/w/cpp/utility/bitset
+[`std::invocable`]:                     https://en.cppreference.com/w/cpp/concepts/invocable
+[`std::logic_error`]:                   https://en.cppreference.com/w/cpp/error/
+[`std::nullopt`]:                       https://en.cppreference.com/w/cpp/utility/optional/nullopt
+[`std::optional`]:                      https://en.cppreference.com/w/cpp/utility/optiona
+[`std::unsigned_integral`]:             https://en.cppreference.com/w/cpp/concepts/unsigned_integral
+[`std::vector`]:                        https://en.cppreference.com/w/cpp/container/vector
+[`what`]:                               https://en.cppreference.com/w/cpp/error/exception/what
+
+<!--Links to other software tools we reference -->
+[`boost::dynamic_bitset`]:              https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html
+[MIT License]:                          https://opensource.org/license/mit/[MIT License]
+[Pandoc]:                               https://pandoc.org
+[Quarto]:                               https://quarto.org
+[Eigen]:                                https://eigen.tuxfamily.org/overview.php?title=Main_Page
+[`LAPACK`]:                             https://en.wikipedia.org/wiki/LAPACK
+[repo]:                                 https://github.com/nessan/bit
+[docs]:                                 https://nessan.github.io/bit
+[email]:                                mailto:nzznfitz+gh@icloud.com
+
+<!-- Pages and Wikipedia articles referenced in the documentation -->
+[annihilating polynomial]:              https://en.wikipedia.org/wiki/Minimal_polynomial_(linear_algebra)
+[Bernoulli distribution]:               https://en.wikipedia.org/wiki/Bernoulli_distribution
+[Cayley Hamilton]:                      https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem
+[characteristic polynomial]:            https://en.wikipedia.org/wiki/Characteristic_polynomial
+[co-factors]:                           https://en.wikipedia.org/wiki/Minor_(linear_algebra)
+[companion matrix]:                     https://en.wikipedia.org/wiki/Companion_matrix
+[Danilevsky's algorithm]:               http://web.tecnico.ulisboa.pt/~mcasquilho/compute/com/,eigen/FaddeevaDanil.pdf
+[elementary row operations]:            https://en.wikipedia.org/wiki/Elementary_matrix#Operations
+[Frobenius form]:                       https://encyclopediaofmath.org/wiki/Frobenius_matrix
+[Galois Field]:                         https://en.wikipedia.org/wiki/Finite_field
+[Gaussian elimination]:                 https://en.wikipedia.org/wiki/Gaussian_elimination
+[GF(2)]:                                https://en.wikipedia.org/wiki/GF(2)
+[Gram-Schmidt]:                         https://en.wikipedia.org/wiki/Gram–Schmidt_process
+[Hessenberg]:                           https://en.wikipedia.org/wiki/Hessenberg_matrix
+[LU decomposition]:                     https://en.wikipedia.org/wiki/lu
+[rank]:                                 https://en.wikipedia.org/wiki/Rank_(linear_algebra)
+[row-echelon form]:                     https://en.wikipedia.org/wiki/Row_echelon_form
+[reduced row-echelon form]:             https://en.wikipedia.org/wiki/Row_echelon_form
+[similar matrices]:                     https://en.wikipedia.org/wiki/Matrix_similarity

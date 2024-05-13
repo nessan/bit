@@ -1,0 +1,46 @@
+---
+title: "`bit::lu` --- Row Permutations"
+---
+
+{{< include /content/_common.qmd >}}
+
+If `lu` was constructed from the bit-matrix $A$ so that
+$$
+P \cdot A = L \cdot U.
+$$
+We provide access to the permutation matrix $P$ in two different compact forms and the action of $P$ on bit-matrices and bit-vectors.
+
+```cpp
+std::vector<std::size_t> row_swaps() const;             // <1>
+std::vector<std::size_t> permutation_vector() const;    // <2>
+
+constexpr void permute(bit::vector &b) const;           // <3>
+constexpr void permute(bit::matrix &B) const;           // <4>
+```
+1. Returns $P$ in row-swaps instruction form (see below).
+2. Returns $P$ as a vector of permuted indices.
+3. Applies the permutation $P$ to the elements of an input bit-vector _in-place_.
+4. Applies the permutation $P$ to the rows of an input bit-matrix _in-place_.
+
+A permutation matrix $P$ is just some row permutation of the identity matrix, so it has a single non-zero, 1, entry in each row or column.
+You don't need to store the entire $N \times N$ matrix but instead store the locations of those 1's.
+
+In the literature, the permutation matrix is often given as a permutation of the index vector $[0,1,2,3,\ldots \$].
+For example, the permutation vector $[0, 2, 1, 4, 3\$] tells you that elements/rows 1 and 2 are swapped, as are elements/rows 3 and 4.
+This form is easy to interpret at a glance.
+However, it is pretty tedious to use as a guide to executing the permutations _in-place_!
+
+The venerable[`LAPACK`] software instead uses an equally compact scheme to store $P$ that looks a little odd at first but is much easier to use if you want to permute rows/elements of matrices/vectors in-place.
+
+This _row-swaps_ scheme gives swapping instructions to be applied one after the other.
+Our example in this format becomes $[0, 2, 2, 4, 4\$].
+This vector can be interpreted as no swap on row 0, followed by a swap of rows 1 and 2, then no further swap on row 2, followed by a swap of rows 3 and 4, and finally, no further swap on row 4.
+
+::: {.callout-note}
+# This is for information only
+Internally, we store and use $P$ in the row-swaps instruction form.
+The index permutation form is provided only for informational purposes.
+:::
+
+### See Also
+[`lu::operator()`]

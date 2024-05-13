@@ -1,0 +1,83 @@
+---
+title: "`bit::gauss` --- Echelon Form Access"
+---
+
+{{< include /content/_common.qmd >}}
+
+If the `gauss` object was constructed from the system $A \cdot x = b$ these methods provide read-only access to the reduced row echelon form of the bit-matrix $A$ and also to the equivalently transformed bit-vector $b$.
+
+```cpp
+const bit::matrix& lhs() const;     // <1>
+const bit::vector& rhs() const;     // <2>
+```
+1. Returns a read-only reference to the reduced row echelon form of the bit-matrix $A$.
+2. Returns a read-only reference to the equivalently transformed bit-vector $b$.
+
+On construction, a `gauss` object computes the [reduced row-echelon form] of the input bit-matrix $A$ using [elementary row operations].
+It performs the same operations to a copy of the input bit-vector $b$.
+The two methods here let you look at the transformed left-hand side bit-matrix and right-hand side bit-vector.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto b = bit::vector<>::random(m);
+    std::cout << "Solving the system A.x = b for the following A & b:\n";
+    print(A, b);
+
+    // Create a solver object for the system
+    bit::gauss<> solver(A, b);
+
+    // Print some general information
+    std::cout << "Number of equations in system:   " << solver.equation_count() << '\n';
+    std::cout << "Rank of the matrix A:            " << solver.rank()           << '\n';
+    std::cout << "Number of free variables:        " << solver.free_count()     << '\n';
+    std::cout << "Number of solutions to A.x = b:  " << solver.solution_count() << '\n';
+
+    // Also have a look at the echelon form of A and the equivalently transformed b
+    std::cout << "The echelon forms of A & b are:\n";
+    print(solver.lhs(), solver.rhs());
+}
+```
+
+[Output (depends on the values of the random inputs)]{.bt}
+```bash
+Solving the system A.x = b for the following A & b:
+011100100101    0
+000111011100    1
+111101000011    1
+010000111110    1
+110011110000    1
+101100100100    1
+011010110010    0
+010010000111    1
+101110110001    0
+001100101110    1
+100000011010    1
+111111010100    1
+Number of equations in system:   12
+Rank of the matrix A:            11
+Number of free variables:        1
+Number of solutions to A.x = b:  2
+The echelon forms of A & b are:
+100000000000    1
+010000000000    0
+001000000000    1
+000100000000    0
+000010000100    0
+000001000000    0
+000000100100    1
+000000010000    1
+000000001000    0
+000000000010    1
+000000000001    0
+000000000000    0
+```
+
+### See Also
+[`gauss::constructors`]

@@ -1,0 +1,93 @@
+---
+title: "`bit::vector` --- Appending Elements"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods that add bits/elements taken from various sources to the end of a bit-vector.
+
+```cpp
+constexpr bit::vector &append(bool src);                            // <1>
+constexpr bit::vector &append(const bit::vector &src);              // <2>
+```
+1. Appends a single value to the end of the bit-vector. It is a synonym for the [`vector::push`] method.
+2. Appends all the elements from `src` to the end of the bit-vector.
+
+
+```cpp
+template<std::unsigned_integral Src>
+constexpr bit::vector &append(Src src);                              // <1>
+
+template<std::unsigned_integral Src>
+constexpr bit::vector &append(std::initializer_list<Src> src);       // <2>
+
+template<std::unsigned_integral Src>
+constexpr bit::vector &append(const std::vector<Src>& src);          // <3>
+
+template<typename Iter>
+constexpr bit::vector &append(Iter b, Iter e);                       // <4>
+
+template<std::size_t N>
+explicit constexpr bit::vector &append(const std::bitset<N> &bs);    // <5>
+```
+1. Appends the bits from a single word `src`, which is some unsigned integer type.
+2. Takes an initializer-style list of unsigned integers and appends their bits to the vector.
+3. Takes a `std::vector` of unsigned integers and appends their bits to the vector.
+4. Takes any iteration of unsigned integers and appends their bits to the vector.
+5. Appends all `N` bits from a `std:::bitset<N>` to the vector.
+
+These methods return a reference to `*this` so they can be chained with other calls.
+
+
+### Template Parameters
+
+Parameter   | Description
+---------   | -----------
+`Src`       | The type of the unsigned integers whose bits are getting appended to the vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can add the bits from a list of 32-bit unsigned integers while the storage scheme for the vector remains the default 64-bit type.
+`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` should be some unsigned integer type.
+
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector v;                                  // <1>
+    std::cout << "v: " << v.to_string() << '\n';
+    v.append(uint8_t(0));                           // <2>
+    std::cout << "v: " << v.to_string() << '\n';
+    v.append({uint8_t(255), uint8_t(0)});           // <3>
+    std::cout << "v: " << v.to_string() << '\n';
+    std::vector<uint8_t> vec{255, 0};               // <4>
+    v.append(vec);
+    std::cout << "v: " << v.to_string() << '\n';
+    v.append(vec.cbegin(), vec.cend());             // <5>
+    std::cout << "v: " << v.to_string() << '\n';
+    std::bitset<8> bs(255);                         // <6>
+    v.append(bs);
+    std::cout << "v: " << v.to_string() << '\n';
+}
+```
+1. Default constructor makes an empty vector.
+2. Appends eight zeros.
+3. Appends a list of eight 1-bits and eight 0-bits.
+4. Appends a `std::vector` with eight 1-bits and eight 0-bits.
+5. Appends a `std::vector` with eight 1-bits and eight 0-bits using the usual iterators.
+6. Appends a `std::bitset` with eight 1-bits.
+
+[Output]{.bt}
+```bash
+v:
+v: 00000000
+v: 000000001111111100000000
+v: 0000000011111111000000001111111100000000
+v: 00000000111111110000000011111111000000001111111100000000
+v: 0000000011111111000000001111111100000000111111110000000011111111
+```
+
+### See Also
+[`vector::push`]  \
+[`vector::clear`] \
+[`vector::join`]  \
+[`vector::copy`]

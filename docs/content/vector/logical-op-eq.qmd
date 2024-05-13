@@ -1,0 +1,74 @@
+---
+title: "`bit::vector` --- Logical Op= Operators"
+---
+
+{{< include /content/_common.qmd >}}
+
+These methods perform element-by-element binary `AND`, `XOR`, `OR` with another equal sized bit-vector.
+
+```cpp
+constexpr bit::vector &operator&=(const bit::vector &other);    // <1>
+constexpr bit::vector &operator^=(const bit::vector &other);    // <2>
+constexpr bit::vector &operator|=(const bit::vector &other);    // <3>
+constexpr bit::vector &operator+=(const bit::vector &other);    // <4>
+constexpr bit::vector &operator-=(const bit::vector &other);    // <5>
+constexpr bit::vector &operator*=(const bit::vector &other);    // <6>
+```
+1. Sets this bit-vector's bits to the result of binary `AND` between the corresponding pairs of bits of `*this` and `other`.
+2. Sets this bit-vector's bits to the result of binary `XOR` between the corresponding pairs of bits of `*this` and `other`.
+3. Sets this bit-vector's bits to the result of binary `OR` between the corresponding pairs of bits of `*this` and `other`.
+4. Sets this bit-vector's bits to the result of binary `XOR` between the corresponding pairs of bits of `*this` and `other`. \
+In GF(2), addition corresponds to the logical `XOR` operation.
+5. Sets this bit-vector's bits to the result of binary `XOR` between the corresponding pairs of bits of `*this` and `other`. \
+In GF(2), subtraction corresponds to the logical `XOR` operation.
+1. Sets this bit-vector's bits to the result of binary `AND` between the corresponding pairs of bits of `*this` and `other`. \
+In GF(2), multiplication corresponds to the logical `AND` operation.
+
+These methods all return a reference to `*this` so they can be chained with other calls.
+
+::: {.callout-warning}
+# Size checking
+The two vectors in question must be of the same size. \
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+```cpp
+constexpr bit::vector operator~() const;    // <1>
+```
+1. Returns a copy of the bit-vector with all the bits flipped
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> u(11, [&](size_t k) { return k % 2; });       // <1>
+    bit::vector<> v(11, [&](size_t k) { return (k + 1) % 2; }); // <2>
+    std::cout << "u:        " << u << '\n';
+    std::cout << "v:        " << v << '\n';
+    std::cout << "(u &= v): " << (u &= v) << '\n';
+    std::cout << "(u |= v): " << (u |= v) << '\n';
+    std::cout << "(u ^= v): " << (u ^= v) << '\n';
+    std::cout << "~u:       " << ~u << '\n';
+}
+```
+1. Creates a vector of size 11 by calling a lambda that sets all the even indices.
+2. Creates a vector of size 11 by calling a lambda that sets all the odd indices.
+
+[Output]{.bt}
+```bash
+u:        [0 1 0 1 0 1 0 1 0 1 0]
+v:        [1 0 1 0 1 0 1 0 1 0 1]
+(u &= v): [0 0 0 0 0 0 0 0 0 0 0]
+(u |= v): [1 0 1 0 1 0 1 0 1 0 1]
+(u ^= v): [0 0 0 0 0 0 0 0 0 0 0]
+~u:       [1 1 1 1 1 1 1 1 1 1 1]
+```
+
+### See Also
+[`vector::operator&`]   \
+[`vector::operator|`]   \
+[`vector::operator^`]   \
+[`vector::operator+`]   \
+[`vector::operator-`]   \
+[`vector::operator*`]

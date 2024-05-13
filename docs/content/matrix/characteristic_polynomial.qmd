@@ -1,0 +1,89 @@
+---
+title: "`bit::matrix` --- Characteristic Polynomial"
+---
+
+{{< include /content/_common.qmd >}}
+
+Finds the [characteristic polynomial] of a _square_ bit-matrix.
+
+```cpp
+bit::vector<Block, Allocator>
+characteristic_polynomial(const matrix<Block, Allocator>& A);
+```
+Returns a bit-vector `p` where the [characteristic polynomial] for the bit-matrix $A$ is given by
+$$
+p(\lambda) = p_0  + p_1 \lambda + p_2 \lambda^2 + \cdots
+$$
+The bit-matrix must be non-empty and square; otherwise, the method throws a `std::invalid_argument` exception.
+
+[Danilevsky's algorithm] is used to compute the characteristic polynomial.
+We [coded the algorithm](/content/notes/danilevsky.qmd) considering the nature of arithmetic over $\FF$, which means that the characteristic polynomial of _large_ bit-matrices can be efficiently computed --- even for those with millions of entries that would choke more naive implementations.
+
+[Example --- identity matrices]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    for(std::size_t i = 1; i < 8; ++i) {            // <1>
+        auto M = bit::matrix<>::identity(i);
+        auto p = bit::characteristic_polynomial(M);
+        std::cout << "Char-poly for the "
+                  << i << " x " << i << " identity: " << p.to_polynomial() << '\n';
+    }
+}
+```
+1. We generate identity matrices from 1 x 1 to 7 x 7 and get the characteristic polynomial in each case.
+
+[Output]{.bt}
+```bash
+Char-poly for the 1 x 1 identity: 1 + x^1
+Char-poly for the 2 x 2 identity: 1 + x^2
+Char-poly for the 3 x 3 identity: 1 + x^1 + x^2 + x^3
+Char-poly for the 4 x 4 identity: 1 + x^4
+Char-poly for the 5 x 5 identity: 1 + x^1 + x^4 + x^5
+Char-poly for the 6 x 6 identity: 1 + x^2 + x^4 + x^6
+Char-poly for the 7 x 7 identity: 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7
+```
+
+We can easily verify these.
+
+For example, if we consider the 7 x 7 identity matrix, it is clear that the characteristic polynomial is given by
+$$
+p(\lambda) = (\lambda - 1)^7 = \lambda ^7-7 \lambda ^6+21 \lambda ^5-35 \lambda ^4+35 \lambda ^3-21 \lambda ^2+7 \lambda -1
+$$
+In $\FF$, even coefficients are zero, and odd ones, whether positive or negative, are one, so $p(\lambda)$ becomes
+$$
+p(\lambda) = \lambda ^7 + \lambda ^6 + \lambda ^5 + \lambda ^4 + \lambda ^3 + \lambda ^2 + \lambda + 1
+$$
+Therefore, we expect to get the $\FF$ coefficients as `11111111`, which agrees with the output above.
+
+[Example]{.bt} Bit-matrices should satisfy their characteristic polynomial
+```cpp
+#include <bit/bit.h>
+
+int main()
+{
+    // For this example - turn off BIT_DEBUG and enable optimization here!
+    auto M = bit::matrix<>::random(512);        // <1>
+    auto p = bit::characteristic_polynomial(M);
+    std::cout << "Characteristic polynomial coefficients:\n" << p << "\n\n";
+
+    auto C = polynomial_sum(p, M);              // <2>
+    std::cout << "Does the bit-matrix satisfy its characteristic polynomial? "
+              << (C.none() ? "YES" : "NO") << '\n';
+}
+```
+1. Pay attention to the comment!
+We can handle much larger matrices, but you must enable compiler optimizations.
+2. All matrices should satisfy their characteristic polynomial so $p(M)$ should return the zero bit-matrix.
+
+[Output]{.bt}
+```bash
+Characteristic polynomial coefficients:
+110101101110101110100111001011010101101011001011110000100010011001111101011111111010101110010101101000101000010001000010011010111001000000011110000111000110110111100010100001000010110010010000110100111110000111010010110011111111001100001000100111111110101101101110001001111101000110101111000101100111100001011111011011000101010000110010101111110001100000011111100101110101010011100110101111001001111011101100001101000101101011110110000010101011111010100110011001110110110111110100010100010100101110001000010011101
+
+Does the bit-matrix satisfy its characteristic polynomial? YES
+```
+
+### See Also
+[`matrix::polynomial_sum`]

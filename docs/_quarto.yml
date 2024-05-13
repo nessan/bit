@@ -1,0 +1,166 @@
+# Metadata for this documentation project.
+# See https://quarto.orgcontent/reference/projects/websites.html
+project:
+    type: website
+    output-dir: _site
+format:
+    html:
+        toc: true
+        toc-expand: true
+        code-copy: true
+        code-overflow: scroll
+        grid:
+            sidebar-width: 250px
+            body-width: 800px
+            margin-width: 250px
+            gutter-width: 1.5em
+        theme:
+            - cosmo
+            - assets/css/theme.scss
+website:
+    title: "Linear Algebra over GF(2)"
+    image: "assets/images/logo.jpg"
+    favicon: "assets/images/logo.jpg"
+    open-graph: true
+    twitter-card: true
+    google-analytics: G-V57HYKPDW8
+    site-url: "https://nessan.github.io/bit"
+    repo-url: "https://github.com/nessan/bit"
+    repo-subdir: docs
+    issue-url: "https://github.com/nessan/bit/issues/new/choose"
+    repo-actions: [edit, issue]
+    page-navigation: true
+    bread-crumbs: false
+    back-to-top-navigation: true
+    page-footer:
+        left: |
+            Copyright (c) Nessan Fitzmaurice
+        center: |
+            Project is under the MIT License
+        right:
+            - icon: github
+              href: "https://github.com/nessan/bit"
+              aria-label: GitHub Repo
+            - icon: twitter
+              href: https://twitter.com/nezzan
+              aria-label: Twitter
+
+    navbar:
+        background: dark
+        logo: "assets/images/logo.jpg"
+        logo-alt: "The bit library logo"
+        title: bit
+        search: true
+        pinned: true
+        collapse-below: lg
+        left:
+            - text: "Home"
+              file: index.qmd
+            - text: "Vectors"
+              file: content/vector/index.qmd
+            - text: "Matrices"
+              file: content/matrix/index.qmd
+            - text: "Tech Notes"
+              file: content/notes/index.qmd
+            - text: "More"
+              menu:
+                  - text: "Project Repo"
+                    icon: "github"
+                    href: "https://github.com/nessan/bit"
+                  - text: "Report a Bug"
+                    icon: "bug"
+                    href: "https://github.com/nessan/bit/issues"
+                  - text: "Ask a Question"
+                    icon: "chat-right-text"
+                    href: "https://github.com/nessan/bit/discussions"
+        tools:
+            - icon: github
+              href: "https://github.com/nessan/bit"
+              text: GitHub repo
+            - icon: twitter
+              href: https://twitter.com/nezzan
+              aria-label: Twitter
+    sidebar:
+        style: floating
+        type: light
+        background: light
+        align: left
+        collapse-level: 2
+        contents:
+            - text: Overview
+              href: index.qmd
+            - text: "---"
+            - section: "Bit-Vectors"
+              contents:
+                  - text: "Introduction"
+                    href: content/vector/index.qmd
+                  - text: "Declaration"
+                    href: content/vector/index.qmd#declaration
+                  - text: "Class Constants & Types"
+                    href: content/vector/index.qmd#class-constants-and-types
+                  - text: "Instance Methods"
+                    href: content/vector/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: content/vector/index.qmd#non-member-functions
+            - text: "---"
+            - section: "Bit-Matrices"
+              contents:
+                  - text: "Introduction"
+                    href: content/matrix/index.qmd
+                  - text: "Declaration"
+                    href: content/matrix/index.qmd#declaration
+                  - text: "Class Types"
+                    href: content/matrix/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: content/matrix/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: content/matrix/index.qmd#non-member-functions
+            - text: "---"
+            - section: "Gaussian Elimination"
+              contents:
+                  - text: "Introduction"
+                    href: content/gauss/index.qmd
+                  - text: "Declaration"
+                    href: content/gauss/index.qmd#declaration
+                  - text: "Class Types"
+                    href: content/gauss/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: content/gauss/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: content/gauss/index.qmd#non-member-functions
+            - text: "---"
+            - section: "LU Decomposition"
+              contents:
+                  - text: "Introduction"
+                    href: content/lu/index.qmd
+                  - text: "Declaration"
+                    href: content/lu/index.qmd#declaration
+                  - text: "Class Types"
+                    href: content/lu/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: content/lu/index.qmd#instance-methods
+            - text: "---"
+            - section: "Debugging"
+              contents:
+                  - text: "Assertions"
+                    href: content/bit_assert/index.qmd
+                  - text: "Compiler Flags"
+                    href: content/bit_assert/index.qmd#compiler-flags
+                  - text: "Design Rationale"
+                    href: content/bit_assert/index.qmd#design-rationale
+            - text: "---"
+            - section: "Technical Notes"
+              contents:
+                  - text: "Introduction"
+                    href: content/notes/index.qmd
+                  - text: "Working in GF(2)"
+                    href: content/notes/gf2.qmd
+                  - text: "Library Design"
+                    href: content/notes/design.qmd
+                  - text: "Danilevsky's Method"
+                    href: content/notes/danilevsky.qmd
+                  - text: "Modulo Techniques"
+                    href: content/notes/mod.qmd
+editor:
+    markdown:
+        canonical: true

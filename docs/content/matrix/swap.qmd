@@ -1,0 +1,71 @@
+---
+title: "`bit::matrix` --- Swap Two Rows/Columns"
+---
+
+{{< include /content/_common.qmd >}}
+
+Swap any two rows or columns in a bit-matrix --- a standard operation in some matrix transformation algorithms.
+
+```cpp
+constexpr bit::matrix &swap_rows(std::size_t i0, std::size_t i1);    // <1>
+constexpr bit::matrix &swap_cols(std::size_t j0, std::size_t j1);    // <2>
+```
+1. Swap rows `i0` and `i1`.
+2. Swap columns `j0` and `j1`.
+
+These methods return a reference to `*this`, so can be chained with other calls.
+
+::: {.callout-caution}
+# Bounds checking
+Generally, these methods do *not* check whether the indices are in bounds.
+If they aren't, the behavior is undefined (but bound to be wrong!)
+All of them will perform range checking if you set the `BIT_DEBUG` at compile time.
+See [`bit_assert`].
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4, 8, [](std::size_t i, std::size_t j) { return (i + j)%2; });     // <1>
+    std::cout << "Original:\n"              << m << '\n';
+    std::cout << "Swapped first 2 rows:\n"  << m.swap_rows(0,1) << '\n';
+    std::cout << "And back:\n"              << m.swap_rows(0,1) << '\n';
+    std::cout << "Swapped first 2 cols:\n"  << m.swap_cols(0,1) << '\n';
+    std::cout << "And back:\n"              << m.swap_cols(0,1) << '\n';
+}
+```
+1. Set up a bit-matrix with a checkerboard pattern of zeros and ones.
+
+[Output]{.bt}
+```bash
+Original:
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+Swapped first 2 rows:
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+And back:
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+Swapped first 2 cols:
+│1 0 0 1 0 1 0 1│
+│0 1 1 0 1 0 1 0│
+│1 0 0 1 0 1 0 1│
+│0 1 1 0 1 0 1 0│
+And back:
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+```
+
+### See Also
+[`matrix::replace`]

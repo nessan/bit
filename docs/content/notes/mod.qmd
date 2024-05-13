@@ -1,0 +1,201 @@
+---
+title: "Computing $x^N$ mod $P(x)$"
+filters:
+    - pseudocode
+---
+
+{{< include /content/_common.qmd >}}
+
+## Introduction
+
+We wish to compute $x^N\bmod{P(x)}$ where $P(x)$ is a polynomial over $\FF$ and $N$ is a potentially huge integer.
+
+It can be challenging to read a lot of references to "mod" in text, so we will use "$\mid$" to represent the modulo operation:
+$$
+    x^N \mid P(x) \equiv x^N\bmod{P(x)}.
+$$
+
+## An Iterative Technique
+
+Without any loss of generality, we can assume that $P(x)$ is _monic_, of, say, degree $n$.
+Then there is a polynomial $p(x)$ of degree less than $n$ such that
+$$
+P(x) = x^n + p(x) = x^n + p_{n-1} x^{n-1} + \cdots + p_1 x + p_0.
+$$
+The bit-vector of its coefficients can represent the polynomial $p(x)$:
+$$
+p(x) \sim \mathbf{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
+$$
+
+There are three cases to consider as we compute $x^N$ mod $P(x)$.
+
+[Case $N < n$:]{.bt}
+If $N < n$ then $P(x)$ does not divide $x^N$ so
+$$
+x^N \mid P(x) = x^N.
+$$
+Therefore, we can write:
+$$
+x^N \mid P(x) \sim \mathbf{u}_N.
+$$
+Here $\mathbf{u}_N$ is the unit bit-vector of size $n$, which is all zeros except for a one in the $N^{\mathrm{th}}$ slot.
+
+[Case $N = n$:]{.bt}
+In this case $P(x) = x^N + p(x)$ so $x^N = P(x) - p(x)$.
+
+Therefore
+$$x^N \mid P(x) = -p(x).
+$$
+In $\FF$ we can ignore that minus sign.
+
+Combining the two cases considered so far, we have:
+$$
+x^N \mid P(x) \sim
+\begin{cases}
+    \mathbf{u}_N & N < n \\
+    \mathbf{p}   & N = n
+\end{cases}
+$$
+
+[Case $N > n$:]{.bt}
+It remains to determine $x^N \mid P(x)$ for $N > n$.
+
+Now _any_ polynomial $h(x)$ over $\FF$ can be written as some multiple of $P(x)$ plus a remainder term:
+$$
+h(x) = q(x) P(x) + r(x)
+$$
+where the _quotient_ $q(x)$ and _remainder_ $r(x)$ are polynomials over $\FF$ and the degree of $r(x)$ is strictly less than $n$.
+$$
+r(x) \equiv h(x) \mid P(x)
+$$
+
+Suppose we already know the explicit form for $r(x) = h(x) \mid P(x)$
+$$
+r(x) = r_{n-1} x^{n-1} + r_{n-2} x^{n-2} +\cdots + r_1 x + r_0.
+$$
+That is, we know the elements in the bit-vector of coefficients for $r(x)$
+$$
+r(x) \sim \mathbf{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
+$$
+
+Now
+$$
+x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mid P(x) = x\,r(x) \mid P(x).
+$$
+Thus
+$$
+x\,h(x) \mid P(x) = r_{n-1} x^n \mid P(x) + \left(r_{n-2} x^{n-1} + \cdots + r_1 x^2 + r_0 x \right) \mid P(x).
+$$
+Using our two known cases for $N < n$ and $N = n$ we get
+$$
+x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} + \lbrack r_{n-2} \ldots r_0 0 \rbrack.
+$$
+Thus
+$$
+h(x) \mid P(x) \sim \mathbf{r} \implies x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} \; \wedge \; (\mathbf{r} \ll 1 ).
+$$
+Here $\mathbf{r} \ll 1$ means we shift $\mathbf{r}$ one place to the left and introduce a zero on the far right.
+
+In our case $h(x) = x^N$ and we will use the notation
+$$
+x^N \mid P(x) = r^N(x) \sim \mathbf{r}^N,
+$$
+where
+$$
+\mathbf{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack.
+$$
+
+In conclusion, we can compute $x^N \mid P(x)$ directly for small values of $N$ and iteratively for larger values of $N$ using the relations:
+$$
+x^N \mid P(x) \sim
+\begin{cases}
+\mathbf{u}_N         & N < n \\
+\mathbf{p}           & N = n \\
+r_{n-1}^{N-1} \, \mathbf{p} \; \wedge \; \left(\mathbf{r}^{N-1} \ll 1 \right)
+                 & N > n \text{ where } x^{N-1} \mid P(x) \sim \mathbf{r}^{N-1}
+\end{cases}
+$$
+
+## Multiply and Square
+
+This iterative scheme is too slow for large $N$.
+
+We can speed it up considerably by using a "`multiply and square`" approach, which uses the decomposition:
+$$
+x^N =
+\begin{cases}
+x \, \left( x^{\frac{N-1}{2}} \right)^2 & N \text{ odd,} \\
+\left( x^{\frac{N}{2}} \right)^2        & N \text{ even.}
+\end{cases}
+$$
+
+[Multiply and square algorithm:]{.bt}
+We're computing $x^N \mid P(x)$ where the degree of $P(x)$ is $n$ and $N > n$.
+
+Now we know that $x^N \mid P(x) \sim \mathbf{p}$ so start by initializing a counter $M = N-n$ and a return value $\mathbf{r} = \mathbf{p}$.
+
+The second case above shows that we will also need to do some squaring steps where $s(x)$ starts as just $s(x) = x$ and then gets squared as often as needed and, of course, reduced modulo $P(x)$:
+$$
+    s(x) \mid P(x) = x \mid P(x) \rightarrow x^2 \mid P(x)  \rightarrow x^4 \mid P(x)  \rightarrow \cdots
+$$
+Now  $x \mid P(x) = x$ so we can initialize $\mathbf{s} = \mathbf{u}_1$ the unit vector with a single set bit at index number 1.
+
+```pseudocode
+#| label: alg-ms
+#| html-indent-size: "1.2em"
+#| html-comment-delimiter: "//"
+#| html-line-number: true
+#| html-line-number-punc: ":"
+#| html-no-end: false
+#| pdf-placement: "htb!"
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Computing $x^N$ mod $P(x)$}
+\begin{algorithmic}
+\Procedure{Mod}{$N, \mathbf{p}$}
+    \State $n = \text{len}(\mathbf{p}) + 1
+    \State $M = N - n$
+    \State $\mathbf{r} = \mathbf{p}$
+    \State set $s$ to the appropriate unit bit-vector
+    \While {$M \ne 0$}
+        \If $M$ is odd
+            \State $\mathbf{r} \equiv r(x)*s(x) \mid P(x)
+        \EndIf
+        \State $M \ll 1$
+        \If $M = 0$
+            \Break
+        \EndIf
+        \State set $\mathbf{s} \equiv s(x)^2 \mid P(x)$
+    \EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+[From there, we can build some code along the following lines]{.bt}
+```cpp
+// Initialize the counter M to N = n,
+// r to p, and s to the correct unit vector.
+...
+// Loop through the counter values, halving M each time
+while(M != 0) {
+    if(M is odd) r = mod(r(x)*s(x), P(x));
+    M >>= 1;
+    if(M == 0) break;
+    s = mod(s(x)*s(x), P(x));
+}
+```
+This hinges on computing the terms $\left( r(x) s(x) \right) \mid P(x)$ and $s(x)^2 \mid P(x)$.
+
+Now $r(x) \mid P(x) \sim \mathbf{r}$ and $s(x) \mid P(x) \sim \mathbf{s}$ for known vectors $\mathbf{r}$ and $\mathbf{s}$.
+
+This means that the product $r(x)s(x) \mid P(x)$ is given by
+$$
+r(x)s(x) \mid P(x) = r_0 s(x) \vert P(x)  + r_1 x s(x) \vert P(x) + \cdots + r_{n-1} x^{n-1} s(x) \vert P(x).
+$$
+From an earlier observation above we know that if $s(x) \mid P(x) \sim \mathbf{s}$ then
+$$
+x s(x) \mid P(x) \sim  s_{n-1} \mathbf{p} \wedge ( \mathbf(s) \ll 1).
+$$
+We can use this iteratively and create a loop that computes $r(x)s(x) \mid P(x)$ and a similar one to compute $s(x)^2 \mid P(x)$.

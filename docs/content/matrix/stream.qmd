@@ -1,0 +1,74 @@
+---
+title: "`bit::matrix` --- Stream Operators"
+---
+
+{{< include /content/_common.qmd >}}
+
+Methods to insert or extract a bit-matrix from a stream.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+std::ostream &
+operator<<(std::ostream &s, const matrix<Block, Allocator> &M);   // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+std::istream &
+operator>>(std::istream &s, matrix<Block, Allocator> &M);         // <2>
+```
+1. Writes a binary string representation of a bit-matrix to an output stream.
+2. Fill a bit-matrix by reading bits encoded as a binary or hex string from a stream.
+
+The input stream operator will throw a `std::invalid_argument` exception on parse failures.
+
+The bit-matrix is printed row-by-row, separated by newlines.
+Each row is printed as a [`bit::vector`] in _vector-order_ so row $i$ is in the order $M_{i0}M_{i1}M_{i2}\cdots$.
+The input stream operator can handle other row separators and hex-formatted strings.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // Read from a stream until we have a parse error ...
+    while (true) {
+        bit::matrix<> m;
+        std::cout << "bit::matrix? ";
+        try {
+            std::cin >> m;
+            std::cout << "Parsed as:\n" << m << std::endl;
+        }
+        catch (...) {
+            std::cout << "Couldn't parse that input as a bit::matrix! Quitting ..." << std::endl;
+            break;
+        }
+    }
+}
+```
+
+##### Input and Output:
+```bash
+bit::matrix? 11111 10101 01010; 00100
+Parsed as:
+│1 1 1 1 1│
+│1 0 1 0 1│
+│0 1 0 1 0│
+│0 0 1 0 0│
+bit::matrix? 0xff 0xf2 0x3e 0x45
+Parsed as:
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 0 1 0 0│
+│1 1 0 0 0 1 1 1│
+│0 0 1 0 1 0 1 0│
+bit::matrix? q
+Couldn't parse that input as a bit::matrix! Quitting ...
+```
+
+### See Also
+[`matrix::to_string`]           \
+[`matrix::to_pretty_string`]    \
+[`matrix::to_hex`]              \
+[`matrix::print`]               \
+[`matrix::description`]         \
+[`matrix::from`]                \
+[`vector::stream<<`]            \
+[`vector::stream>>`]

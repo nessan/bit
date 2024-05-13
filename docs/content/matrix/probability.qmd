@@ -1,0 +1,74 @@
+---
+title: "`bit::matrix` --- Probability of Inversion"
+---
+
+{{< include /content/_common.qmd >}}
+
+We provide class methods that calculate the probability that a square bit-matrix with a _fair_ fill is invertible or singular.
+
+```cpp
+double bit::matrix<>::probability_invertible(std::size_t n);   // <1>
+double bit::matrix<>::probability_singular(std::size_t n);     // <2>
+```
+1. Returns the probability that an $n \times n$ bit-matrix filled by flipping _fair_ coins is invertible.
+2. Returns the probability that an $n \times n$ bit-matrix filled by flipping _fair_ coins is singular (i.e. non-invertible).
+
+::: {.callout-warning}
+# Empty matrices are not allowed
+We throw an exception if the parameter `n` is zero.
+:::
+
+The simplest case is a $1 \times 1$ matrix $A = [a_{11}]$.
+As $a_{11}$ is either 0 or 1, $A$ is invertible 50% of the time if the fill is fair.
+
+One can show that any  $n \times n$ bit-matrix with a fair random fill of zeros and ones has the following probability of being invertible:
+$$
+    p(n) = \prod_{k = 1}^{n} (1 - 2^{-k}).
+$$
+Now  $\lim\limits_{n \to \infty} p(n) \approx 0.289$ and that limit is reached quickly.
+Bit-matrices $10 \times 10$ or larger have a roughly 71% chance of being singular if the matrix elements were set by flipping fair coins.
+
+Contrast that to real-valued matrices where, mathematically at least, matrices are almost certainly invertible (of course, the numerics of the situation over $\R$ may not be so sure).
+
+[Example --- Create lots of $N \times N$ matrices and see how many are singular]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    std::size_t N = 100;                                        // <1>
+    std::size_t trials = 1000;                                  // <2>
+    std::size_t fails = 0;
+    for (std::size_t trial = 0; trial < trials; ++trial) {
+        auto A = bit::matrix<>::random(N, N);                   // <3>
+        auto B = bit::invert(A);                                // <4>
+        if (!B) ++fails;                                        // <5>
+    }
+    auto p = bit::matrix<>::probability_singular(N);
+    std::cout << "Matrix size: " << N << " x " << N << "\n"     // <6>
+              << "P[singular]: " << 100 * p << "%\n"
+              << "Trials:      " << trials << "\n"
+              << "No inverse:  " << fails << " times\n"
+              << "Expected:    " << int(p * double(trials)) << " times\n";
+
+    return 0;
+}
+```
+1. We will create an $N \times N$ matrix in each trial.
+2. Run this number of trials.
+3. Each matrix is filled at random by flipping fair coins.
+4. Then, we attempt to invert the matrix.
+5. We count the number of times the inversion fails--i.e., how often the matrix is singular.
+6. Print the outcome of the trials and compare those to the expectation.
+
+[Output (actual numbers vary from run to run)]{.bt}
+```bash
+Matrix size: 100 x 100
+P[singular]: 71.1212%
+Trials:      1000
+No inverse:  703 times
+Expected:    711 times
+```
+
+### See Also
+[`matrix::invert`]

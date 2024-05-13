@@ -1,0 +1,166 @@
+---
+title: "`bit::vector` --- Construction"
+---
+
+{{< include /content/_common.qmd >}}
+
+Constructors for a bit-vector.
+
+```cpp
+constexpr bit::vector(std::size_t n = 0);                           // <1>
+
+template<std::unsigned_integral Src>
+constexpr bit::vector(std::initializer_list<Src> src);              // <2>
+
+template<std::unsigned_integral Src>
+constexpr bit::vector(const std::vector<Src>& src);                 // <3>
+
+template<typename Iter>
+constexpr bit::vector(Iter b, Iter e);                              // <4>
+
+template<std::size_t N>
+explicit constexpr bit::vector(const std::bitset<N> &bs);           // <5>
+
+explicit constexpr
+bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <6>
+
+explicit
+bit::vector(std::string_view str, bool bit_order = false);          // <7>
+
+```
+1. Constructs a bit-vector with `n` elements all set to 0.                  \
+   The _default_ constructor creates the empty vector.
+2. Construct a bit-vector from an initializer list of unsigned integers.    \
+   The bits from each get appended to the vector.
+3. Construct a bit-vector from a `std::vector` of unsigned integers.        \
+   The bits from each element get appended to the vector.
+4. Construct a bit-vector from any iteration of unsigned integers.          \
+   The bits from each get appended to the vector.
+5. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
+6. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
+   Element `i` in the vector is set to 1 if `f(i) != 0`; otherwise it is 0.
+7. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
+   See below.
+
+### Template Parameters
+
+Parameter   | Description
+---------   | -----------
+`Src`       | The type of the unsigned integers used to fill the vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can create a bit-vector from a list of 32-bit unsigned integers while the storage scheme for the vector remains the default 64-bit type.
+`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` should be some unsigned integer type.
+`std::invocable` | [`std::invocable`] is the signature for a function over an index.
+
+: {.bordered .hover .responsive tbl-colwidths="[25,75]"}
+
+### Method Arguments
+
+Argument    | Description
+--------    | -----------
+`n`         | The size of the vector to construct.
+`f`         | This function will be called as `f(i)` for $i \in 0,\ldots,n-1$. A non-zero return is the signal to set the corresponding element in the vector to 1.
+`str`       | A string that encodes the elements of the bit-vector. These are typically all 0's and 1's or they can be hex characters.
+`bit_order` | This defaults to false, but if present and set to true, any binary string is interpreted as encoding the bit-vector in bit-order where the least significant bit v~0 is on the right. This parameter is ignored for hex strings.
+
+: {.bordered .hover .responsive tbl-colwidths="[25,75]"}
+
+## Construction from non-strings
+
+Here is an example of constructing a `bit::vector` from non-string data.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    bit::vector           v0;                                           // <1>
+    bit::vector           v1(32);                                       // <2>
+    bit::vector           v2({uint16_t(65535), uint16_t(0)});           // <3>
+    std::vector<uint16_t> vec{65535, 0};
+    bit::vector           v3(vec);                                      // <4>
+    bit::vector           v4(vec.cbegin(), vec.cend());                 // <5>
+    bit::vector           v5(32, [](size_t k) { return (k + 1) % 2; }); // <6>
+    std::bitset<32>       b6(65535);
+    bit::vector           v6(b6);                                       // <7>
+    std::cout << "v1 = " << v1.to_string()    << '\n';
+    std::cout << "v2 = " << v2.to_string()    << '\n';
+    std::cout << "v3 = " << v3.to_string()    << '\n';
+    std::cout << "v4 = " << v4.to_string()    << '\n';
+    std::cout << "v5 = " << v5.to_string()    << '\n';
+    std::cout << "v6 = " << v6.to_string()    << '\n';
+    std::cout << "b6 = " << b6                << '\n';
+    std::cout << "v6 = " << v6.to_string()    << '\n';
+    std::cout << "v6 = " << v6.to_bit_order() << " in bit-order!\n";
+}
+```
+1. Default constructor makes an empty bit-vector.
+2. `bit::vector` of size 32--elements default to 0.
+3. `bit::vector` constructed from an initializer list of two 16-bit integers.
+4. `bit::vector` constructed from a `std::vector` with the same two 16-bit integers.
+5. `bit::vector` constructed from an iterator pair over the same two 16-bit integers.
+6. `bit::vector` constructed using a lambda that returns true if the element index is even.
+7. `bit::vector` constructed from a `std::bitset`.
+
+[Output]{.bt}
+```bash
+v1 = 00000000000000000000000000000000
+v2 = 11111111111111110000000000000000
+v3 = 11111111111111110000000000000000
+v4 = 11111111111111110000000000000000
+v5 = 10101010101010101010101010101010
+b6 = 00000000000000001111111111111111                <1>
+v6 = 11111111111111110000000000000000                <2>
+v6 = 00000000000000001111111111111111 in bit-order!  <3>
+```
+1. Note that the `std::bitset` prints with in _bit-order_.
+2. This `bit::vector` has the same elements but prints in _vector-order_.
+3. We can also print a `bit::vector` in bit-order if required.
+
+## Construction from strings
+
+{{< include _encoding.qmd >}}
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector v1("111");          // <1>
+    bit::vector v2("0b111");        // <2>
+    bit::vector v3("0x111");        // <3>
+    bit::vector v4("0xF1");         // <4>
+    bit::vector v5("0xF1_8");       // <5>
+    bit::vector v6("0xF1_4");       // <6>
+    bit::vector v7("0xF1_2");       // <7>
+
+    std::cout << "v1 = " << v1 << '\n';
+    std::cout << "v2 = " << v2 << '\n';
+    std::cout << "v3 = " << v3 << '\n';
+    std::cout << "v4 = " << v4 << '\n';
+    std::cout << "v5 = " << v5 << '\n';
+    std::cout << "v6 = " << v6 << '\n';
+    std::cout << "v7 = " << v7 << '\n';
+}
+```
+1. Construction from a string without a prefix.
+All characters are 0's and 1's so the string is interpreted as being binary,
+2. Construction from the identical binary string with the prefix `"0b"`.
+3. Construction from the same digits, but each one is now interpreted as a hex character thanks to the `"0x"` prefix
+4. Construction where the final character has no suffix, so by default, it is parsed as a hex/base-16 number.
+5. Construction where the final character has a suffix `"_8"` so, parsed as a base-8 number.
+6. Construction where the final character has a suffix `"_4"` so, parsed as a base-4 number.
+7. Construction where the final character has a suffix `"_2"` so, parsed as a base-2 number.
+
+[Output]{.bt}
+```bash
+v1 = [1 1 1]
+v2 = [1 1 1]
+v3 = [1 0 0 0 1 0 0 0 1 0 0 0]
+v4 = [1 1 1 1 1 0 0 0]
+v5 = [1 1 1 1 1 0 0]
+v6 = [1 1 1 1 1 0]
+v7 = [1 1 1 1 1]
+```
+
+### See Also
+[`vector::from`]

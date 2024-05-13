@@ -1,0 +1,250 @@
+---
+title: "The `bit::matrix` Class"
+---
+{{< include /content/_common.qmd >}}
+
+## Introduction
+
+A `bit::matrix` represents a matrix over [GF(2)] (also known as $\FF$) the simplest _Galois_ field that has just two elements usually denoted 0 & 1, or as booleans--true & false, or as bits--set & unset.
+
+Arithmetic in $\FF$ is mod 2, which means that addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
+
+We often refer to an object of the type `bit::matrix` as a _bit-matrix_.
+It is a matrix where all the elements are 0 or 1, and arithmetic is mod 2.
+
+A `bit::matrix` is stored in _row-major mode_ where each row is a single [`bit::vector`].
+Thus, arranging computations to work row by row instead of column by column is typically much more efficient.
+Primarily, you will be using higher-level methods and functions that consider this.
+
+The aim is to facilitate efficient linear algebra over $\FF$ where the bit-vector class is [`bit::vector`].
+
+This bit-matrix class is a [`std::vector`] of rows where each row is a single bit-vector.
+If, instead, the primary aim was to minimize storage, one would store the bit-matrix as a single long bit-vector with appropriate index operations.
+However, in that case, matrix operations would often need to be done element-by-element, which is much slower than doing things block-by-block, as we do here.
+
+Like bit-vectors, bit-matrices are sized dynamically at runtime, with the row elements packed into blocks of some unsigned integral type.
+That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type in some scenarios).
+
+::: {.callout-note}
+# Square matrices
+Arbitrary $m \times n$ bit-matrices are supported, but some functions only make sense for square matrices where $n = m$.
+:::
+
+The `bit::matrix` class has many of the same methods defined for [`bit::vector`].
+We also define functions like `dot(lhs, rhs)` to handle matrix-vector, vector-matrix, and matrix-matrix multiplication.
+
+There are methods to solve linear systems of equations $A \cdot x = b$.
+
+Danilevsky's method to compute characteristic polynomials (and the determinant) for a `bit::matrix` is available and works for quite large matrices (ones with millions of entries) that would choke a naive implementation that didn't take into account the nature of arithmetic over [GF(2)].
+
+## Declaration
+
+Like everything in the library, this class is in the `bit` namespace.
+We define it in the header `<bit/matrix.h>` as follows:
+
+```cpp
+namespace bit {
+    template<
+        std::unsigned_integral Block = uint64_t,
+        Allocator = std::allocator<Block>
+    > class bit::matrix;
+}
+```
+
+The two template parameters add some visual clutter, but they both have reasonable defaults and disappear in most uses.
+
+For example, your code might have a line like:
+```cpp
+    ...
+    bit::matrix M(3,5);
+    ...
+```
+This code creates a 3 x 5 matrix with 15 elements, all zeros by default.
+
+### Template Parameters
+
+Parameter | Description
+--------- | -----------
+`Block` = `std::uint64_t`              | We store individual matrix elements/bits by row and pack the rows into blocks. The default `Block` is an unsigned 64-bit word.
+`Allocator` = `std::allocator<Block>`  | The default `Allocator` should be just fine for most purposes, but you can use a custom type to handle all memory allocation/destruction for blocks.
+
+: {.bordered .hover .responsive}
+
+The default [`std::unsigned`] for a `Block` is  64-bits, the _native_ size for many modern CPUs.
+Of course, if you need to use many smaller bit-matrices and have concerns about conserving space, you might use a different `Block`.
+Perhaps if the bit-matrices all fit in 32-bits, you might have code along the lines
+```cpp
+    using bit::matrix = bit::matrix<uint32_t>;
+    bit::matrix mat = ...
+```
+
+::: callout-warning
+# Use a single `Block` type throughout your code!
+You should use just one `Block` type throughout your code.
+In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::matrix<uint32_t>` and a `bit::vector<uint64_t>`.
+However, doing that efficiently makes the code much more complex.
+The library doesn't support this!
+:::
+
+## Class Types
+
+Item | Description
+---- | -----------
+ `vector_type`  | Alias for [`bit::vector`] --- the type used for matrix rows (and columns).
+: {.bordered .hover .responsive tbl-colwidths="[20,80]"}
+
+## Instance Methods
+
+### Construction
+Method | Description
+------ | -----------
+[`matrix::constructors`]            | Construct a bit-matrix in various ways.
+[`matrix::random`]                  | Construct a bit-matrix with a random fill.
+[`matrix::from`]                    | Construct a bit-matrix from a string.
+[`matrix::ones`]                    | Create a bit-matrix with all the elements set to 1.
+[`matrix::zeros`]                   | Create a bit-matrix with all the elements set to 0.
+[`matrix::checker_board`]           | Create a bit-matrix with the elements set to a checker-board pattern.
+[`matrix::identity`]                | Create an identity bit-matrix.
+[`matrix::shift`]                   | Create a bit-matrix that shifts a bit-vector right or left.
+[`matrix::rotate`]                  | Create a bit-matrix that rotates the elements of a bit-vector.
+[`matrix::companion`]               | Construct a [companion matrix] from its top-row only.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Queries
+Method | Description
+------ | -----------
+[`matrix::is_zero`]                 | Is this a zero bit-matrix?
+[`matrix::is_ones`]                 | Is this bit-matrix all ones?
+[`matrix::is_identity`]             | Is this an identity bit-matrix?
+[`matrix::is_square`]               | Is this bit-matrix square?
+[`matrix::is_symmetric`]            | Is this bit-matrix symmetric?
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Element Access
+Method | Description
+------ | -----------
+[`matrix::operator()`]              | Access a bit-matrix element, a whole row, or an entire column.
+[`matrix::operator[]`]              | Access a bit-matrix element, a whole row, or an entire column.
+[`matrix::row`]                     | Read-write access a bit-matrix row.
+[`matrix::col`]                     | Read only access a bit-matrix column.
+[`matrix::test`]                    | Check the value of a bit-matrix element.
+[`matrix::all`]                     | Check that all the bit-matrix elements are set.
+[`matrix::any`]                     | Check if any bit-matrix elements are set.
+[`matrix::all`]                     | Check that none of the bit-matrix elements are set.
+[`matrix::count`]                   | Counts the set elements in the bit-matrix.
+[`matrix::count_diagonal`]          | Counts the set elements on the diagonal of the bit-matrix.
+[`matrix::trace`]                   | Sum of the elements on the diagonal.
+[`matrix::sub`]                     | Extracts a bit-matrix as a _distinct_ copy of some of the elements of this one. Note that _views_ into a bit-matrix are *not* supported.
+[`matrix::lower`]                   | Returns a bit-matrix that is a copy of the lower triangular part of this bit-matrix.
+[`matrix::upper`]                   | Returns a bit-matrix that is a copy of the upper triangular part of this bit-matrix.
+[`matrix::strictly_lower`]          | Returns a bit-matrix that is a copy of the strictly lower triangular part of this bit-matrix.
+[`matrix::strictly_upper`]          | Returns a bit-matrix that is a copy of the strictly upper triangular part of this bit-matrix.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Capacity
+Method | Description
+------ | -----------
+[`matrix::rows`]                    | The number of rows in this bit-matrix.
+[`matrix::cols`]                    | The number of columns in this bit-matrix.
+[`matrix::size`]                    | The number of elements in this bit-matrix.
+[`matrix::empty`]                   | Check whether this matrix has no elements.
+[`matrix::row_capacity`]            | How many rows can be added to this bit-matrix without a fresh memory allocation?
+[`matrix::col_capacity`]            | How many columns can be added to this bit-matrix without a fresh memory allocation?
+[`matrix::shrink_to_fit`]           | Tries to reduce memory usage by freeing unused memory.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Modifiers
+Method | Description
+------ | -----------
+[`matrix::clear`]                   | Clears all the elements so `rows()`, `cols()`, and `size()` all become 0.
+[`matrix::resize`]                  | Resizes the bit-matrix, padding out any added values with zeros.
+[`matrix::add_row`]                 | Adds a row to the end of the bit-matrix.
+[`matrix::add_col`]                 | Adds a column to the end of the bit-matrix.
+[`matrix::pop_row`]                 | Removes the final row of the bit-matrix.
+[`matrix::pop_col`]                 | Removes the final column of the bit-matrix.
+[`matrix::append`]                  | Augments the bit-matrix in-place by appending columns from a vector or another bit-matrix on the right.
+[`matrix::swap_rows`]               | Swap two rows.
+[`matrix::swap_cols`]               | Swap two columns.
+[`matrix::transpose`]               | Transpose a _square_ bit-matrix in-place.
+[`matrix::replace`]                 | Replace some of the contents of the bit-matrix with other values.
+[`matrix::set`]                     | Sets all the elements to 1.
+[`matrix::reset`]                   | Sets all the elements to 0.
+[`matrix::flip`]                    | Flips the 1 values to 0 and vice versa.
+[`matrix::set_diagonal`]            | Sets all the diagonal elements to 1.
+[`matrix::reset_diagonal`]          | Sets all the diagonal elements to 0.
+[`matrix::set_if`]                  | Sets the values in a bit-matrix based on the return value from a function of each element index-pair.
+[`matrix::flip_if`]                 | Flips the values in a bit-matrix based on the return value from a function of each element index-pair.
+[`matrix::operator&=`]              | In-place element-by-element logical `AND`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator^=`]              | In-place element-by-element logical `XOR`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator|=`]              | In-place element-by-element logical `OR`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator-=`]              | In-place element-by-element logical `DIFF`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator~`]               | Flip all the elements in this bit-matrix.
+[`matrix::operator+=`]              | In-place element-by-element logical `XOR`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator-=`]              | In-place element-by-element logical `XOR`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator*=`]              | In-place element-by-element logical `AND`  between this bit-matrix and another of equal dimensions.
+[`matrix::operator<<=`]             | In-place left shift of the _rows_ in this bit-matrix.
+[`matrix::operator>>=`]             | In-place right shift of the _rows_ in this bit-matrix.
+[`matrix::operator<<`]              | Returns a copy of this bit-matrix where the _rows_ are all left shifted.
+[`matrix::operator>>`]              | Returns a copy of this bit-matrix where the _rows_ are all right shifted.
+[`matrix::to_echelon_form`]         | Changes this bit-matrix in place to [row-echelon form].
+[`matrix::to_reduced_echelon_form`] | Changes this bit-matrix in place to [reduced row-echelon form].
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### String Conversions
+Method | Description
+------ | -----------
+[`matrix::to_string`]               | Returns a binary string representation of this bit-matrix.
+[`matrix::to_pretty_string`]        | Returns a formatted binary string representation of this bit-matrix.
+[`matrix::to_hex`]                  | Returns a hex string representation of this bit-matrix.
+[`matrix::to_vector`]               | Packs this bit-matrix into a bit-vector.
+[`matrix::description`]             | Writes some descriptive data about the bit-matrix to a stream.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Other methods
+Method | Description
+------ | -----------
+[`matrix::probability_invertible`]  | Returns the probability that a "`fair`" square bit-matrix is invertible.
+[`matrix::probability_singular`]    | Returns the probability that a "`fair`" square bit-matrix is singular.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Debugging
+Macro | Description
+----- | -----------
+[`BIT_DEBUG`]                       | This compile-time flag enables extra safety checks.
+[`BIT_NDEBUG`]                      | This compile-time flag turns off most safety checks.
+[`bit_debug_assert`]                | These assertions are only checked if the `BIT_DEBUG` flag is set at compile time.
+[`bit_assert`]                      | These assertions are checked unless the `BIT_NDEBUG` flag is set at compile time.
+[`bit_always_assert`]               | Use this form for checks that must always be performed.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+## Non-member Functions
+
+Function | Description
+-------- | -----------
+[`matrix::operator&`]                   | Element-by-element logical `AND`  between two bit-matrices of equal dimensions.
+[`matrix::operator^`]                   | Element-by-element logical `XOR`  between two bit-matrices of equal dimensions.
+[`matrix::operator|`]                   | Element-by-element logical `OR`  between two bit-matrices of equal dimensions.
+[`matrix::operator-`]                   | Element-by-element logical `DIFF`  between two bit-matrices of equal dimensions.
+[`matrix::operator+`]                   | Element-by-element logical `XOR`  between two bit-matrices of equal dimensions.
+[`matrix::operator-`]                   | Element-by-element logical `XOR`  between two bit-matrices of equal dimensions.
+[`matrix::operator*`]                   | Element-by-element logical `AND`  between two bit-matrices of equal dimensions.
+[`matrix::dot`]                         | Returns the _dot product_ of a bit-matrix with a bit-vector or another bit-matrix.
+[`matrix::append`]                      | Returns an augmented bit-matrix by copying one input and then appending columns from a bit-vector or another bit-matrix on the right of that.
+[`matrix::transpose`]                   | Returns the transpose of an arbitrary rectangular bit-matrix as a new bit-matrix.
+[`matrix::pow`]                         | Raises a square bit-matrix to a power $n$.
+[`matrix::pow2`]                        | Raises a square bit-matrix to a power $2^n$.
+[`matrix::polynomial_sum`]              | Evaluates a polynomial over GF(2) using a square bit-matrix as the argument.
+[`matrix::invert`]                      | Attempts to return the inverse of a square bit-matrix.
+[`matrix::echelon_form`]                | Returns the {row-echelon} form of an arbitrary bit-matrix.
+[`matrix::reduced_echelon_form`]        | Returns the _reduced_ {row-echelon} form of an arbitrary bit-matrix.
+[`matrix::characteristic_polynomial`]   | Returns the coefficients of the characteristic polynomial of a square bit-matrix.
+[`matrix::compact_frobenius_form`]      | Returns the companion matrices that are the diagonal blocks in the [Frobenius form] of a square bit-matrix.
+[`matrix::print`]                       | Prints multiple bit-matrices or a bit-matrix with potentially multiple bit-vectors side by side to a stream.
+[`matrix::stream<<`]                    | Stream input for bit-matrices
+[`matrix::stream>>`]                    | Stream output for bit-matrices
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### See Also
+[`bit::solve`]          \
+[`gauss::constructors`] \
+[`lu::constructors`]

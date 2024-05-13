@@ -1,0 +1,103 @@
+---
+title: "`bit::matrix` --- Bit-Matrix Multiplication"
+---
+
+{{< include /content/_common.qmd >}}
+
+Computes the _dot product_ of a bit-vector with a bit-matrix, a bit-matrix with a bit-vector, and a bit-matrix with another bit-matrix.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+constexpr const vector<Block, Allocator>
+dot(const matrix<Block, Allocator> &M, const vector<Block, Allocator> &v);  // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr const vector<Block, Allocator>
+dot(const vector<Block, Allocator> &v, const matrix<Block, Allocator> &M);  // <2>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr const matrix<Block, Allocator>
+dot(const matrix<Block, Allocator> &M, const matrix<Block, Allocator> &N);  // <3>
+```
+1. Computes $M \cdot v$ \
+If `M` is `r x c`, then `v.size()` must be `c`.
+The returned bit-vector will have size `r`.
+2. Computes $v \cdot M$ \
+If `M` is `r x c`, then `v.size()` must be `r`.
+The returned bit-vector will have size `c`.
+3. Computes $M \cdot N$ \
+If `M` is `a x b`, then `N` must be `b x c` for some `c`.
+The returned bit-matrix will be `a x c`.
+
+These dot products are defined by:
+$$
+\begin{aligned}
+    \left(M \cdot v\right)_i       &=  \sum_j M_{ij} \times v_j    \\
+    \left(v \cdot M\right)_j       &=  \sum_i v_i \times M_{ij}    \\
+    \left(M \cdot N\right)_{ij}    &=  \sum_k M_{ik} \times N_{kj}
+\end{aligned}
+$$
+In the case of $\FF$, the product is replaced by logical `AND`, and the sum by the logical `XOR` operation.
+
+The dot product is a critical operation in linear algebra, so it is fortunate that `AND`'ing and `XOR`'ing for bit-matrices and bit-vectors can be done very efficiently over blocks of elements simultaneously.
+
+::: {.callout-warning}
+# Range checking
+The function arguments must have compatible sizes. \
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> u(6, [](size_t k) { return k % 2; });
+    bit::vector<> v(8, [](size_t k) { return (k + 1)% 2; });
+
+    bit::matrix<> M(6, 8, [](size_t i, size_t j) { return i == j; });
+    bit::matrix<> N(8, 4, [](size_t i, size_t j) { return (i + j)%2; });
+
+    std::cout << "bit::matrix M:\n" << M << "\n\n";
+    std::cout << "bit::matrix N:\n" << N << "\n\n";
+
+    std::cout << "dot(" << u << ", M)     = " << dot(u, M) << "\n\n";
+    std::cout << "dot(M, " << v << ") = " << dot(M, v) << "\n\n";
+    std::cout << "dot(M, N):\n" << dot(M, N) << "\n";
+}
+```
+
+[Output]{.bt}
+```bash
+bit::matrix M:
+│1 0 0 0 0 0 0 0│
+│0 1 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0│
+│0 0 0 1 0 0 0 0│
+│0 0 0 0 1 0 0 0│
+│0 0 0 0 0 1 0 0│
+
+bit::matrix N:
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+
+dot([0 1 0 1 0 1], M)     = [0 1 0 1 0 1 0 0]
+dot(M, [1 0 1 0 1 0 1 0]) = [1 0 1 0 1 0]
+
+dot(M, N):
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+```
+
+### See Also
+[`matrix::polynomial_sum`]

@@ -1,0 +1,103 @@
+---
+title: "`bit::lu` --- Invert a Bit-Matrix"
+---
+
+{{< include /content/_common.qmd >}}
+
+We can use the [LU Decomposition] of $A$ to find $A^{-1}$
+```cpp
+std::optional<bit::matrix> invert() const;
+```
+This returns [`std::nullopt`] if $A$ is singular otherwise returns $A^{-1}$.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    // Number of trials
+    std::size_t trials = 100;
+
+    // Each trial will run on a bit-matrix of this size
+    std::size_t N = 30;
+
+    // Number of non-singular matrices
+    std::size_t singular = 0;
+
+    // Start the trials
+    for (std::size_t n = 0; n < trials; ++n) {
+
+        // Create a random matrix & decompose it
+        auto A = bit::matrix<>::random(N);
+        auto LU = bit::lu(A);
+
+        // See if we can invert the matrix, and if so, check A.A_inv == I
+        if (auto A_inv = LU.invert(); A_inv) {
+            auto I = bit::dot(A, *A_inv);
+            std::cout << "A.Inverse[A] == I? " << (I.is_identity() ? "YES" : "NO") << "\n";
+        }
+
+        // Count the number of singular matrices we come across
+        if (LU.singular()) singular++;
+    }
+
+    // Stats
+    auto p = bit::matrix<>::probability_singular(N);    // <1>
+    std::cout << "\n"
+              << "Singularity stats ...\n";
+    std::cout << "bit::matrix size: " << N << " x " << N << "\n"
+              << "P[singular]: " << 100 * p << "%\n"
+              << "Trials:      " << trials << "\n"
+              << "Singular:    " << singular << " times\n"
+              << "Expected:    " << int(p * double(trials)) << " times\n";
+    return 0;
+}
+```
+1. See [`matrix::probability_singular`]
+
+[Output for a consistent system (details depend on the random inputs)]{.bt}
+```bash
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+A.Inverse[A] == I? YES
+
+Singularity stats
+bit::matrix size: 30 x 30
+P[singular]: 71.1212%
+Trials:      100
+Singular:    68 times
+Expected:    71 times
+```
+
+### See Also
+[`lu::singular`]

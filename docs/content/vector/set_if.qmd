@@ -1,0 +1,47 @@
+---
+title: "`bit::vector` --- Conditional Change"
+---
+
+{{< include /content/_common.qmd >}}
+
+Define methods to set or flip the element values in a bit-vector based on the return value from a function call.
+
+```cpp
+constexpr bit::vector &set_if(std::invocable<std::size_t, std::size_t> auto f);    // <1>
+constexpr bit::vector &flip_if(std::invocable<std::size_t, std::size_t> auto f);   // <2>
+```
+1. Sets element `i` to 1 if `f(i) != 0`, otherwise sets it to 0.
+2. Flips the value of element `i` if `f(i) != 0`, otherwise leaves it unchanged.
+
+`f` is a function, and we expect to call `f(i)` for each set index.
+
+These return a reference to `*this`, so can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> v(16);                                    // <1>
+    std::cout << "v: " << v << '\n';
+    v.set_if([](std::size_t i) { return (i + 1) % 2; });    // <2>
+    std::cout << "v: " << v << '\n';
+    v.flip_if([](std::size_t i) { return (i + 1) % 2; });   // <3>
+    std::cout << "v: " << v << '\n';
+}
+```
+1. Start with a bit-vector whose elements are all 0 by default.
+2. Using the `set_if` method with a lambda to set the even indices 0,2,4,...
+3. Using the `flip_if` method with a lambda to flip the even indices 0,2,4,...
+
+[Output]{.bt}
+```bash
+v: [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+v: [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0]
+v: [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+```
+
+### See Also
+[`vector::set`]   \
+[`vector::reset`] \
+[`vector::flip`]

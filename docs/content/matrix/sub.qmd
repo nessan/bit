@@ -1,0 +1,72 @@
+---
+title: "`bit::matrix` --- Extract a Sub-Bit-Matrix"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to extract a sub-matrix as a stand-alone, distinct copy of elements from this bit-matrix.
+
+```cpp
+constexpr bit::matrix
+sub(std::size_t i0, std::size_t j0, std::size_t r, std::size_t c) const;    // <1>
+
+constexpr bit::matrix
+sub(std::size_t r, std::size_t c) const;                                    // <2>
+
+constexpr bit::matrix
+sub(std::size_t n) const const;                                             // <3>
+```
+1. Returns an `r x c` bit-matrix, a copy from this bit-matrix starting at `(i0, j0)`
+2. Returns an `r x c` bit-matrix, a copy from this bit-matrix starting at `(0, 0)`.
+3. Returns an `n x n` square bit-matrix, a copy from this bit-matrix starting at `(0, 0)`
+
+::: {.callout-warning}
+# Bounds checking
+`(i0, j0)` has to be a valid index pair, and the requested dimensions must fit as a valid sub-matrix.
+Set the `BIT_DEBUG` flag at compile time to check these conditions --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::random(8);                                  // <1>
+    std::cout << "m:                \n" << m                << "\n";
+    std::cout << "m.sub(4):         \n" << m.sub(4)         << "\n";    // <2>
+    std::cout << "m.sub(2,4):       \n" << m.sub(2,4)       << "\n";    // <3>
+    std::cout << "m.sub(5,5,3,3):   \n" << m.sub(5,5,3,3)   << "\n";    // <4>
+}
+```
+1. This constructs an 8 x 8 bit-matrix a random fill.
+2. Extract the 4 x 4 elements starting at index (0, 0).
+3. Extract the 2 x 4 elements starting at index (0, 0).
+4. Extract the 3 x 3 elements starting at index (5, 5).
+
+[Output]{.bt}
+```bash
+m:
+│0 1 0 0 1 1 0 1│
+│1 0 1 1 0 0 1 1│
+│1 0 0 0 0 0 0 1│
+│0 0 0 0 1 0 1 1│
+│0 0 1 1 0 1 0 0│
+│0 0 0 1 0 0 0 0│
+│1 1 1 0 1 1 0 1│
+│1 1 1 1 1 0 0 1│
+m.sub(4):
+│0 1 0 0│
+│1 0 1 1│
+│1 0 0 0│
+│0 0 0 0│
+m.sub(2,4):
+│0 1 0 0│
+│1 0 1 1│
+m.sub(5,5,3,3):
+│0 0 0│
+│1 0 1│
+│0 0 1│
+```
+
+### See Also
+[`matrix::replace`]

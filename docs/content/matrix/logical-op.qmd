@@ -1,0 +1,93 @@
+---
+title: "`bit::matrix` --- Logical Operators"
+---
+
+{{< include /content/_common.qmd >}}
+
+Methods to perform element-by-element binary `AND`, `XOR`, `OR`, +, -, * between two equal sized bit-matrix.
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc>
+constexpr bit::matrix<Block, Alloc>
+operator&(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <1>
+operator^(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <2>
+operator|(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <3>
+operator+(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <4>
+operator-(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <5>
+operator*(const bit::matrix<Block, Alloc> &lhs,
+          const bit::matrix<Block, Alloc> &rhs);    // <6>
+```
+1. Returns a bit-matrix, the binary `AND` of `rhs` & `lhs`.
+2. Returns a bit-matrix, the binary `XOR` of `rhs` & `lhs`.
+3. Returns a bit-matrix, the binary `OR`  of `rhs` & `lhs`.
+4. Returns a bit-matrix, the binary `XOR` of `rhs` & `lhs`. \
+   In $\FF$, addition corresponds to `XOR`.
+5. Returns a bit-matrix, the binary `XOR` of `rhs` & `lhs`. \
+   In $\FF$, subtraction corresponds to `XOR`.
+6. Returns a bit-matrix, the binary `AND` of `rhs` & `lhs`. \
+   In $\FF$, multiplication corresponds to `AND`.
+
+::: {.callout-warning}
+# Dimensions must match
+The two bit-matrices in question must have the same dimensions.
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m1(4,[](std::size_t i, std::size_t j) { return (i + j) % 2; });
+    auto m2 = bit::matrix<>::ones(4);
+
+    std::cout << "m1:\n" << m1  << '\n';
+    std::cout << "m2:\n" << m2  << '\n';
+    std::cout << "m1 & m2:\n" << (m1 & m2) << '\n';
+    std::cout << "m1 | m2:\n" << (m1 | m2) << '\n';
+    std::cout << "m1 ^ m2:\n" << (m1 ^ m2) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+m1:
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+m2:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m1 & m2:
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+m1 | m2:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m1 ^ m2:
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+```
+
+### See Also
+[`matrix::operator&=`] \
+[`matrix::operator|=`]  \
+[`matrix::operator^=`]  \
+[`matrix::operator+=`]  \
+[`matrix::operator-=`]  \
+[`matrix::operator*=`]  \
+[`matrix::operator~`]

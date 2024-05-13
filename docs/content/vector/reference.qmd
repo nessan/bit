@@ -1,0 +1,34 @@
+---
+title: "`bit::vector::reference`"
+---
+
+{{< include /content/_common.qmd >}}
+
+`bit::vector::reference` is a publicly accessible nested _proxy class_ that lets users interact with individual elements/bits in a bit-vector.
+
+It is needed because standard {{< var cpp >}}  types cannot target down to the bit level of precision.
+
+The primary use of this class is to provide an _l-value_ that can be returned from `operator[]` and `operator()` in the `bit::vector` class.
+
+## Member Functions
+Method | Description
+------ | -----------
+`constructor`   | The bit-vector methods `operator[]` and `operator()` automatically construct a `bit::vector::reference` as needed.
+`operator=`     | Assigns a `bool` to the referenced element.
+`operator bool` | Return the value of the referenced element.
+`set`           | Sets the referenced element in the bit-vector to 1.
+`reset`         | Sets the referenced element in the bit-vector to 0.
+`set`           | Flips the referenced element in the bit-vector from 1 to 0 and vice versa.
+`operator&=`    | Logical `AND` of the referenced element with a `bool` on the right-hand side.
+`operator^=`    | Logical `XOR` of the referenced element with a `bool` on the right-hand side.
+`operator|=`    | Logical `OR` of the referenced element with a `bool` on the right-hand side.
+`operator-=`    | Logical `DIFF` of the referenced element with a `bool` on the right-hand side.
+`operator~`     | Flips the value of the referenced element from 0 to 1 and vice versa.
+: {.bordered .striped .hover .responsive tbl-colwidths="[20,80]"}
+
+### See Also
+[`vector::element`]     \
+[`vector::operator[]`]  \
+[`vector::operator()`]  \
+[`vector::front`]       \
+[`vector::back`]

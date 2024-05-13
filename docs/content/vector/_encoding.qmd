@@ -1,0 +1,48 @@
+<!--  This is a snippet that describes how we encode/decode bits from a bit-vector in/out of binary or hex strings -->
+
+There are two principal ways we can encode a bit-vector as a string:
+
+### Binary String Encodings
+
+The straightforward character encoding for a bit-vector is a _binary_ string containing just 0's and 1's, e.g., "10101".
+Each character in a binary string represents a single element in the bit-vector.
+
+By default, we encode bit-vectors to binary strings in _vector_ order $v_0 v_1  \cdots v_{n-1}$.
+However, methods that read or write binary strings typically have an extra boolean argument, `bit_order`.
+This argument always defaults to `false`, but if present and set to `true`, then the binary string will encode the bit-vector in _bit-order_ where the least significant bit v~0~ is on the right so $v_{n-1} \cdots v_1 v_0$.
+Hex-strings ignore the `bit_order` parameter.
+
+### Hex String Encodings
+
+The other supported encoding for bit-vectors is a compact _hex_ type string containing just the 16 hex characters `0123456789ABCDEF`.
+For example, the string "3ED02".
+We allow for hex strings with an optional prefix "0x" or "0X," e.g. "0x3ED02".
+
+Hex strings are *not* affected by a `bit_order` argument --- we ignore that argument.
+
+Each hex character naturally translates to **four** elements in a `bit::vector`.
+The hex string `"0x0"` is equivalent to the binary string `"0000"`, and so on, up to string `"0xF"` which is the same as the binary `"1111"`.
+
+The hex pair `"0x0F"` will be interpreted in the vector as `00001111`.
+Of course, this is the advantage of hex.
+It is a more compact format that occupies a quarter of the space needed to write out the equivalent binary string.
+
+However, what happens if you want to encode a vector whose size is *not* a multiple of 4?
+We handle that by allowing the final character in the string to have a base that is _not_ 16.
+To accomplish that, we allow for an optional _suffix_, which must be one of `"\_2"`, `"_4"`, or `"_8"`.
+If present, the prefix gives the base for just the _preceding_ character in the otherwise hex-based string.
+If there is no suffix, the final character is assumed to be hex like all the others.
+
+So the string `"0x1"` (no suffix, so the last character is the default hex base 16) is equivalent to `"0001"`.
+On the other hand, the string `"0x1_8"` (the last character is base 8) is equivalent to `"001"`.
+Similarly, the string `"0x1_4"` (the last character is base 4) is equivalent to `"01"` and finally, the string `"0x1_2"` (the previous character is base 2) is comparable to `"1"`
+
+In the string `"0x3ED01_8"`, the first four characters `'3'`, `'E'`, `'D'`, and `'0'` are interpreted as hex values, and each will consume four slots in the vector.
+However, that final `"1_8"` is parsed as an octal 1, which takes up three slots `001`.
+Therefore, this vector has size 19 (i.e., 4*4 + 3).
+
+::: {.callout-warning}
+# Careful with that final suffix character
+If the suffix is present, the final character must fit inside the base given by that suffix.
+The string `"0x3_8"` is OK, but trying to parse `"0x3_2"` will result in a `std::nullopt` return value because the final character is not either 0 or 1, which are the only valid options for something that is supposed to be base 2.
+:::

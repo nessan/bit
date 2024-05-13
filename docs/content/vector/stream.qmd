@@ -1,0 +1,74 @@
+---
+title: "`bit::vector` --- Stream Operators"
+---
+
+{{< include /content/_common.qmd >}}
+
+Methods to insert or extract a bit-vector from a stream.
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc>
+std::ostream &
+operator<<(std::ostream &s, const bit::vector<Block, Alloc> &rhs);   // <1>
+
+template<std::unsigned_integral Block, typename Alloc>
+std::istream &
+operator>>(std::istream &s, bit::vector<Block, Alloc> &rhs);         // <2>
+```
+1. Writes a binary string representation of a bit-vector to an output stream.
+2. Fill a bit-vector by reading bits encoded as a binary or hex string from a stream.
+
+The input stream operator will throw a `std::invalid_argument` exception on parse failures.
+
+::: {.callout-note}
+# Vector-ordering
+Strings are written or read in _vector-order_ where the least significant element is on the _left_, so as v~0~v~1~v~2~...
+:::
+
+## Valid Strings
+
+{{< include _encoding.qmd >}}
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // Read from a stream until we have a parse error ...
+    while (true) {
+        bit::vector<> v;
+        std::cout << "bit::vector? ";
+        try {
+            std::cin >> v;
+            std::cout << "Parsed as " << v << std::endl;
+        }
+        catch (...) {
+            std::cout << "Couldn't parse that input as a bit::vector! Quitting ..." << std::endl;
+            break;
+        }
+    }
+}
+```
+
+##### Input and Output:
+```bash
+bit::vector? 111
+Parsed as [1 1 1]
+bit::vector? 0b111
+Parsed as [1 1 1]
+bit::vector? 0x111
+Parsed as [1 0 0 0 1 0 0 0 1 0 0 0]
+bit::vector? 0x111_8
+Parsed as [1 0 0 0 1 0 0 0 1 0 0]
+bit::vector? 0x111_4
+Parsed as [1 0 0 0 1 0 0 0 1 0]
+bit::vector? 0x111_2
+Parsed as [1 0 0 0 1 0 0 0 1]
+bit::vector? q
+Couldn't parse that input as a bit::vector! Quitting ...
+```
+
+### See Also
+[`vector::to_string`]     \
+[`vector::to_bit_order`]  \
+[`vector::to_hex`]

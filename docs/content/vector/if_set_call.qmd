@@ -1,0 +1,43 @@
+---
+title: "`bit::vector` --- Iterate over the Set Bits"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods that iterate over the elements in a bit-vector calling a function `f(i)` for every index `i` where the corresponding element is 1.
+
+```cpp
+constexpr void if_set_call(std::invocable<std::size_t> auto f) const;           // <1>
+constexpr void reverse_if_set_call(std::invocable<std::size_t> auto f) const;   // <2>
+```
+1. The iteration here is in the order `vector.first_set()` forward to `vector.final_set()`.
+2. The iteration here is in the order `vector.final_set()` backward to `vector.first_set()`.
+
+In these methods, the `f` parameter is any function taking an index as its argument.
+See [`std::invocable`].
+For each set element index `pos`, these methods will be called `f(pos)`.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> v(11, [&](size_t k) { return (k + 1) % 2; });     // <1>
+    std::cout << "The set indices in " << v << " are ";
+    v.if_set_call([](std::size_t k) { std::cout << k << ' '; });    // <2>
+    std::cout << std::endl;
+}
+```
+1. Creates a vector of size 11 by calling a lambda that sets all the even indices.
+2. The trivial print to `std::cout` lambda is called if the corresponding element in `v` is set.
+
+[Output]{.bt}
+```bash
+The set indices in [1 0 1 0 1 0 1 0 1 0 1] are 0 2 4 6 8 10
+```
+
+### See Also
+[`vector::first_set`] \
+[`vector::final_set`] \
+[`vector::next_set`]  \
+[`vector::prev_set`]

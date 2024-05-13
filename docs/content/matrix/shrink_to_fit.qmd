@@ -1,0 +1,29 @@
+---
+title: "`bit::matrix` --- Minimize the Space Used"
+---
+
+{{< include /content/_common.qmd >}}
+
+Potentially change the _capacity_  of a bit-matrix.
+
+```cpp
+constexpr bit::matrix &shrink_to_fit();          // <1>
+```
+1. This is a request to minimize the unused/excess [`matrix::row_capacity`] and [`matrix::col_capacity`] .
+May do nothing.
+
+The method returns `*this`, so you can chain it with other calls.
+
+The method will _not_ change the dimensions of a bit-matrix (so `rows()`, `cols()`, and `size()` remain unchanged).
+No elements are added or deleted.
+
+::: {.callout-warning}
+# References may get lost
+If the capacity does change, all the old _values_ are unaltered, but be aware that any pre-existing element references are invalidated.
+:::
+
+
+### See Also
+[`matrix::clear`] \
+[`matrix::description`] \
+[`vector::shrink_to_fit`]

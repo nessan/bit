@@ -1,0 +1,27 @@
+---
+title: "`bit::vector` --- Underlying Storage"
+---
+
+{{< include /content/_common.qmd >}}
+
+Access to the underlying block store and memory allocator.
+
+```cpp
+constexpr const std::vector<Block, Allocator>& blocks() const;  // <1>
+constexpr std::vector<Block, Allocator>& blocks();              // <2>
+constexpr Allocator allocator() const                           // <3>
+```
+1. Read-only access to the underlying block store.
+2. Read-write access to the underlying block store.
+3. Read-only access to the memory allocator the underlying block store uses.
+
+Bit-vectors pack their elements into `Blocks` (some [`std::unsigned`] type), which are stored in a [`std::vector`].
+These methods allow access to that store and its memory allocator.
+
+::: {.callout-caution}
+# Use at your own risk
+Writing directly into the store can leave the `bit::vector` in an illegitimate state.
+:::
+
+### See Also
+[`vector::capacity`]

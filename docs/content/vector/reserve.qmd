@@ -1,0 +1,56 @@
+---
+title: "`bit::vector` --- Change the Capacity"
+---
+
+{{< include /content/_common.qmd >}}
+
+Potentially change the [`vector::capacity`] of a bit-vector.
+
+```cpp
+constexpr bit::vector &reserve(std::size_t n);   // <1>
+constexpr bit::vector &shrink_to_fit();          // <2>
+```
+1. Increases the bit-vector's [`vector::capacity`] to hold  `n` elements. \
+Does _nothing_ if `n` elements fit inside the current capacity.
+2. This is a request to minimize the unused/excess [`vector::capacity`]. May do nothing.
+
+The idea is to make it as efficient as possible to append a (known) large number of elements to a bit-vector by allocating the needed storage up-front rather than in pieces.
+
+These methods return `*this`, so you can chain them with other calls.
+
+These methods do _not_ change a bit-vector's `size()`.
+No elements are added or deleted.
+
+::: {.callout-warning}
+# References can disappear
+If the capacity does change, all the old _values_ are unaltered. However, any references are then invalidated.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::checker_board(8);
+    std::cout << v << ": size " << v.size() << ", capacity " << v.capacity() << '\n';   // <1>
+    v.reserve(99);                                                                      // <2>
+    std::cout << v << ": size " << v.size() << ", capacity " << v.capacity() << '\n';   // <3>
+    v.shrink_to_fit();                                                                  // <4>
+    std::cout <<  v << ": size " << v.size() << ", capacity " << v.capacity() << '\n';
+}
+```
+1. We're using the default 64-bit blocks, so `v` can hold 64 elements (though it only has eight at present).
+2. Get `v` "ready" to hold 99 elements.
+3. As the blocks are all 64-bits, we need two for those 99 elements; therefore, the capacity increases to 128.
+4. Changed our mind and want to shrink `v` to a minimum size. Note that the elements in `v` never changed!
+
+[Output]{.bt}
+```bash
+[1 0 1 0 1 0 1 0]: size 8, capacity 64
+[1 0 1 0 1 0 1 0]: size 8, capacity 128
+[1 0 1 0 1 0 1 0]: size 8, capacity 64
+```
+
+### See Also
+[`vector::reserve`] \
+[`vector::description`]

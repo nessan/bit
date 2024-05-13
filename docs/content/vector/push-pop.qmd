@@ -1,0 +1,55 @@
+---
+title: "`bit::vector` --- Add/Remove Elements"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to add or remove single elements from the end of the bit-vector.
+
+```cpp
+constexpr bit::vector &push(bool one = false);    // <1>
+constexpr bit::vector &append(bool);              // <2>
+constexpr bit::vector &pop();                     // <3>
+```
+1. Adds a single element to the end of the bit-vector. The element will default to 0 unless `one == true`.
+2. This is a synonym for `push()` and adds a single `bool` to the end of the bit-vector.
+Several other [`vector::append`] methods exist, so the synonym seems natural.
+3. Remove the last element from the bit-vector & shrink it if possible; do nothing if the bit-vector is empty.
+
+These methods both return a reference to `*this` and can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+   bit::vector<> v;
+   v.push(true);                        // <1>
+   std::cout << "v: " << v << '\n';
+   v.push();                            // <2>
+   std::cout << "v: " << v << '\n';
+   v.pop();
+   std::cout << "v: " << v << '\n';
+   v.pop();
+   std::cout << "v: " << v << '\n';
+   v.pop();                             // <3>
+   std::cout << "v: " << v << '\n';
+}
+```
+1. Adding a 1 element to the end of the bit-vector.
+2. Adding the default element of 0 to the end of the bit-vector.
+3. Calling `pop()` on an empty bit-vector does nothing.
+
+[Output]{.bt}
+```bash
+v: [1]
+v: [1 0]
+v: [1]
+v: []
+v: []   # <1>
+```
+1. Calling `pop()` on an empty vector does nothing.
+
+### See Also
+[`vector::append`] \
+[`vector::clear`]

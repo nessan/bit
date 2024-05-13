@@ -1,0 +1,48 @@
+---
+title: "`bit::vector` --- State Queries"
+---
+
+{{< include /content/_common.qmd >}}
+
+```cpp
+constexpr bool all() const;     // <1>
+constexpr bool any() const;     // <2>
+constexpr bool none() const;    // <3>
+```
+1. Returns `true` if all the elements in the bit-vector are 1; otherwise, returns `false`.
+2. Returns `true` if any elements in the bit-vector are 1; otherwise, returns `false`.
+3. Returns `true` if none of the elements in the bit-vector are 1; otherwise, returns `false`.
+
+::: {.callout-caution}
+# Empty bit-vectors
+Calling these methods for an empty bit-vector is likely an error --- if you set the `BIT_DEBUG` flag at compile time, we throw an exception with a helpful message.
+If the `BIT_DEBUG` flag is not set, `all()` and `none()` _both_ return `true` while `any()` will return `false`.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v1 = bit::vector<>::zeros(4);
+    auto v2 = bit::vector<>::checker_board(4);
+    auto v3 = bit::vector<>::ones(4);
+
+    std::cout
+        << "vector\t\t" << "all\t" << "any\t" << "none\n"
+        << v1 << '\t' << v1.all() << '\t' << v1.any() << '\t' << v1.none() << '\n'
+        << v2 << '\t' << v2.all() << '\t' << v2.any() << '\t' << v2.none() << '\n'
+        << v3 << '\t' << v3.all() << '\t' << v3.any() << '\t' << v3.none() << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+vector          all     any     none
+[0 0 0 0]       0       0       1
+[0 1 0 1]       0       1       0
+[1 1 1 1]       1       1       0
+```
+
+### See Also
+[`vector::count`]

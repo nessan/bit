@@ -1,0 +1,65 @@
+---
+title: "`bit::matrix` --- Bit-Matrix Inversion"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a non-member function that attempts to invert a square bit-matrix.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+std::optional<matrix<Block, Allocator>>
+bit::invert(const matrix<Block, Allocator> &M);
+```
+
+If this method succeeds, it will return $M^{-1}$ wrapped in a `std::optional`.
+If the input matrix $M$ is singular, it will return `std::nullopt` instead.
+
+::: {.callout-note}
+# Bit-matrices are often singular
+Randomly filled matrices over $\FF$ are likely to be singular.
+In fact, for matrices that are $10 \times 10$ or larger, there is a 71% chance the matrix is singular if the elements were set by flipping fair coins.
+Contrast that to matrices over the reals where, mathematically at least, matrices are almost surely invertible (though the numerics of the situation may not be so sure).
+:::
+
+::: {.callout-warning}
+# The bit-matrix argument must be square
+The input matrix must be square, and the [`bit_assert`] macro checks that pre-condition.
+Setting the `BIT_NDEBUG` flag at compile time turns off that check.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto A = bit::matrix<>::rotate(8);  // <1>
+    auto B = bit::invert(A);
+    if(B) {
+        std::cout << "bit::matrix, its inverse, their product:\n";
+        bit::print(A,*B, bit::dot(A,*B));
+    }
+    else {
+        std::cout << "bit::matrix:\n" << A << "\n" << "Is singular!\n";
+    }
+}
+```
+1. The product of `A` and any 8-element bit-vector will rotate the elements in the vector one place to the left --- see [`matrix::rotate`].
+Obviously, `A` is invertible, so `B` exists and acts on bit-vectors by rotating their elements one place to the right.
+
+[Output]{.bt}
+```bash
+bit::matrix, its inverse, their product:
+00000001        01000000        10000000
+10000000        00100000        01000000
+01000000        00010000        00100000
+00100000        00001000        00010000
+00010000        00000100        00001000
+00001000        00000010        00000100
+00000100        00000001        00000010
+00000010        10000000        00000001
+```
+
+### See Also
+[`matrix::probability_invertible`] \
+[`matrix::probability_singular`]

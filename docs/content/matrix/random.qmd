@@ -1,0 +1,53 @@
+---
+title: "`bit::matrix` --- Random Fill"
+---
+
+{{< include /content/_common.qmd >}}
+
+Factory method to construct a bit-matrix whose elements come from independent random draws from a [Bernoulli distribution]
+
+```cpp
+static bit::matrix random(std::size_t r, std::size_t c, double prob_one);    //  <1>
+static bit::matrix random(std::size_t r, std::size_t c);                     //  <2>
+static bit::matrix random(std::size_t n);                                    //  <3>
+```
+1. Returns an `r x c` bit-matrix where the probability that any element in the bit-matrix is 1 is `prob_one`.
+2. Returns an `r x c` bit-matrix where the probability that any element in the bit-matrix is 1 is 0.5.
+3. Returns an `n x n` square bit-matrix where the probability that an element in the bit-matrix is 1 is 0.5.
+
+The probability that an element in the bit-matrix is 1 is `prob_one`.
+The default probability value is `0.5`, so element values are determined by tossing a fair coin a total of `r x c` times.
+
+::: {.callout-warning}
+# Probability must be valid
+These throw a `std::invalid_argument` exception if `prob_one` is not in the valid range $[0, 1$].
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m1 = bit::matrix<>::random(8);
+    std::cout << m1 << std::endl;
+}
+```
+[Output (varies from run to run)]{.bt}
+```bash
+│1 0 1 1 1 1 1 0│
+│1 1 0 0 1 1 1 0│
+│1 1 0 0 0 0 1 0│
+│1 0 1 0 0 1 1 0│
+│1 1 0 1 1 0 1 1│
+│0 0 0 1 0 0 1 0│
+│1 0 0 0 1 1 0 0│
+│1 1 0 0 1 1 1 0│
+```
+
+### See Also
+[`matrix::ones`]          \
+[`matrix::zeros`]         \
+[`matrix::identity`]      \
+[`matrix::checker_board`] \
+[`matrix::shift`]         \
+[`matrix::rotate`]

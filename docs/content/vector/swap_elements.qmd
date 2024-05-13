@@ -1,0 +1,40 @@
+---
+title: "`bit::vector` --- Swap Elements"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method to swap the values of two individual elements/bits in a bit-vector.
+
+```cpp
+constexpr bit::vector &swap(std::size_t i, std::size_t j) const;       // <1>
+```
+1. Swaps the values at element `i` and element `j`.
+
+::: {.callout-warning}
+# Range checking
+By default, the method does *not* check whether the indices are in bounds, and if they aren't, the behavior is undefined (but bound to be bad)! \
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> v(2);
+    v(0) = 0; v(1) = 1;
+    std::cout << "Before swap v = " << v << "\n";
+    v.swap_elements(0,1);
+    std::cout << "After  swap v = " << v << "\n";
+}
+```
+
+[Output]{.bt}
+```bash
+Before swap v = [0 1]
+After  swap v = [1 0]
+```
+
+### See Also
+[`vector::swap`]

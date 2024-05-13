@@ -1,0 +1,59 @@
+---
+title: "`bit::matrix` --- Append to a Bit-Matrix"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to append one or more columns to the right of a bit-matrix.
+
+```cpp
+constexpr bit::matrix &append(const bit::vector &v);            // <1>
+constexpr bit::matrix &append(const bit::matrix &V);            // <2>
+
+bit::matrix join(const bit::matrix& M, const bit::vector& v);   // <3>
+bit::matrix join(const bit::matrix& M, const bit::vector& V);   // <4>
+```
+1. bit::matrix $M$ is augmented in place to become $M|v$.
+2. bit::matrix $M$ is augmented in place to become $M|V$.
+3. Returns a new matrix, the augmented $M|v$.
+4. Returns a new matrix, the augmented $M|V$.
+
+::: {.callout-warning}
+# Consistency
+The number of rows in `v` and `V` must match the number in `M`.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n_rows = 12;
+    auto M = bit::matrix<>::ones(n_rows);
+    auto v = bit::vector<>::zeros(n_rows);
+    auto V = bit::matrix<>::zeros(n_rows, 5);
+    auto A = bit::join(M,v);
+    auto B = bit::join(M,V);
+    bit::print(M, A, B);
+    return 0;
+}
+```
+
+[Output]{.bt}
+```bash
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+111111111111    1111111111110   11111111111100000
+```
+
+### See Also
+[`matrix::replace`]

@@ -1,0 +1,110 @@
+---
+title: "`bit::matrix` --- Side-by-Side Printing"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have functions that print a bit-matrix and some bit-vectors or two or three bit-matrices side by side to a stream.
+
+### Versions that print to an arbitrary stream
+```cpp
+print(std::ostream &s,
+      const bit::matrix &A,
+      const bit::vector &b,
+      std::string_view delim = "\t");     // <1>
+
+print(std::ostream &s,
+      const bit::matrix &A,
+      const bit::vector &b, const bit::vector &c,
+      std::string_view delim = "\t");     // <2>
+
+print(std::ostream &s,
+      const bit::matrix &A,
+      const bit::vector &b, const bit::vector &c, const bit::vector &d,
+      std::string_view delim = "\t");     // <3>
+
+print(std::ostream &s,
+      const bit::matrix &A,
+      const bit::matrix &B,
+      std::string_view delim = "\t");     // <4>
+
+print(std::ostream &s,
+      const bit::matrix &A,
+      const bit::matrix &B, const bit::matrix &C,
+      std::string_view delim = "\t");     // <5>
+```
+1. Prints a bit-matrix and a bit-vector side by side to an arbitrary stream.
+2. Prints a bit-matrix and two bit-vectors side by side to an arbitrary stream.
+3. Prints a bit-matrix and three bit-vectors side by side to an arbitrary stream.
+4. Prints two bit-matrices side by side to an arbitrary stream.
+5. Prints three bit-matrices side by side to an arbitrary stream.
+
+### Versions that print to `std::cout`
+```cpp
+print(const bit::matrix &A,
+      const bit::vector &b,
+      std::string_view delim = "\t");     // <1>
+
+print(const bit::matrix &A,
+      const bit::vector &b, const bit::vector &c,
+      std::string_view delim = "\t");     // <2>
+
+print(const bit::matrix &A,
+      const bit::vector &b, const bit::vector &c, const bit::vector &d,
+      std::string_view delim = "\t");     // <3>
+
+print(const bit::matrix &A,
+      const bit::matrix &B,
+      std::string_view delim = "\t");     // <4>
+
+print(const bit::matrix &A,
+      const bit::matrix &B, const bit::matrix &C,
+      std::string_view delim = "\t");     // <5>
+```
+1. Prints a bit-matrix and a bit-vector side by side to `std::cout`.
+2. Prints a bit-matrix and two bit-vectors side by side to `std::cout`.
+3. Prints a bit-matrix and three bit-vectors side by side to `std::cout`.
+4. Prints two bit-matrices side by side to `std::cout`.
+5. Prints three bit-matrices side by side to `std::cout`.
+
+Each non-member function is void (i.e., returns nothing).
+In practice, each has all the appropriate template parameters (not shown here for brevity).
+
+The delimiter string `delim` separates the various bit-matrices and bit-vectors in the output stream.
+
+::: {.callout-tip}
+# Utility function
+The need for this sort of printing turns up often enough to make it sensible to include the code in the library directly.
+In particular, these functions gracefully handle cases where the number of rows in the arguments does not match.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto M1 = bit::matrix<>::random(8, 6);
+    auto M2 = bit::matrix<>::random(10);
+    auto M3 = bit::matrix<>::random(6, 8);
+    std::cout << "M1           M2          M3\n";
+    print(M1, M2, M3, " | ");
+}
+```
+
+[Output where the specific numbers vary from run to run]{.bt}
+```bash
+M1           M2          M3
+001011 | 0111010001 | 00111010
+111101 | 0100100010 | 11100100
+011101 | 0010110111 | 00100011
+100111 | 0100111110 | 00100011
+011001 | 1010110010 | 11001001
+011001 | 1101010100 | 01000001
+010010 | 1011000001 |
+011011 | 1101001010 |
+       | 0100111101 |
+       | 1101111001 |
+```
+
+### See Also
+[`matrix::stream<<`]

@@ -1,0 +1,66 @@
+---
+title: "`bit::matrix` --- Resize a Bit-Matrix"
+---
+
+{{< include /content/_common.qmd >}}
+
+Resizes the bit-matrix, initializing any added elements to 0.
+
+```cpp
+constexpr bit::matrix &resize(std::size_t r, std::size_t c); // <1>
+constexpr bit::matrix &resize(std::size_t n);                // <2>
+```
+1. Resize the bit-matrix to be `r x c`.
+2. Resize the bit-matrix to be `n x n`.
+
+If `r < rows()`, the bit-matrix is reduced in size to the first `r` rows.   \
+If `r > rows()`, we append extra rows of zeros to the end of the bit-matrix. \
+If `c < cols()`, the bit-matrix is reduced in size to the first `c` columns.    \
+If `c > cols()`, we append extra columns of zeros to the end of the bit-matrix.
+
+This method returns a reference to `*this` so it can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::random(4);   // <1>
+    std::cout << "m:\n" << m << '\n';
+    m.resize(6,8);                       // <2>
+    std::cout << "m:\n" << m << '\n';
+    m.resize(4);                         // <3>
+    std::cout << "m:\n" << m << '\n';
+}
+```
+1. Construct a 4 x 4  bit-matrix with a random fill.
+2. Resize the bit-matrix to have 6 x 8. The extra two rows and columns get initialized with zeros.
+3. Resize the bit-matrix to the original 4 x 4 size.
+
+[Output]{.bt}
+```bash
+m:
+│1 1 0 0│
+│1 1 0 1│
+│1 1 1 0│
+│1 1 1 0│
+m:
+│1 1 0 0 0 0 0 0│
+│1 1 0 1 0 0 0 0│
+│1 1 1 0 0 0 0 0│
+│1 1 1 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+m:
+│1 1 0 0│
+│1 1 0 1│
+│1 1 1 0│
+│1 1 1 0│
+```
+
+### See Also
+[`matrix::clear`]     \
+[`matrix::add_row`]   \
+[`matrix::add_col`]   \
+[`matrix::pop_row`]   \
+[`matrix::pop_col`]

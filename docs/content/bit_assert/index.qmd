@@ -1,0 +1,168 @@
+---
+title: Assertions
+---
+
+{{< include /content/_common.qmd >}}
+
+## Introduction
+
+The `bit_assert.h` header has three replacements for the standard [`assert`] macro --- they all allow for an additional string output that you can use to print the values of the variables that triggered any failure.
+
+```cpp
+bit_assert(condition, message)                      // <1>
+bit_debug_assert(condition, message)                // <2>
+bit_always_assert(condition, message)               // <3>
+```
+1. assertions of this type are verified **unless** you set the `BIT_NDEBUG` flag at compile time.
+This version is closest in spirit to the standard [`assert`] macro.
+1. assertions of this type are **only** verified if you set the `BIT_DEBUG` flag at compile time.
+2. assertions of this type are **always** verified and cannot be turned off with a compiler flag.
+
+Assuming the asserts are "on," in all cases, if `condition` evaluates to `false`, we print an error message to `std::cerr`, and the program will **exit**.
+
+The error message always includes the location of the failure and an extra dynamic payload typically used to print the values of the variables that triggered the failure.
+The payload can be anything that can be formatted using the facilities in [`std::format`].
+
+These look like functions but are macros, and the level of assertion checking performed is controlled by setting compiler flags at build time:
+
+## Compiler Flags
+
+Macro        | Description
+-----------  | -----------
+`BIT_DEBUG`  | If set, we will perform demanding but potentially useful safety assertions on indices, size equality checks, etc.
+`BIT_NDEBUG` | If set, we turn off even relatively innocuous safety assertions for maximum performance.
+: {.bordered .hover .responsive tbl-colwidths="[30,70]"}
+
+::: {.callout-note}
+# Consistency is enforced
+If you set the `BIT_NDEBUG` flag, the library will ensure that `BIT_DEBUG` is not set.
+:::
+
+::: {.callout-tip}
+# Microsoft compiler
+Microsoft's old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine.
+Add the `/Zc:preprocessor` flag to use that upgrade at compile time.
+Our `CMake` module `compiler_init` does that automatically for you.
+:::
+
+## Examples
+
+[Example --- Snippet from the `bit::vector<>::set` method]{.bt}
+```cpp
+/// @brief Set the element at index `i` to 1.
+constexpr bit::vector &set(std::size_t i)
+{
+    bit_debug_assert(i < m_size, "index `i` = " << i << " must be < `m_size` which is " << m_size);
+    ...
+}
+```
+Here `m_size` is holds the size of the vector---so we must have `i < m_size`
+
+To check every element access, set the `BIT_DEBUG` flag during compiles.
+If the assertion fails, the program exits with an error message that gives the offending values.
+
+The `bit_debug_assert` line expands to _nothing_ if the `BIT_DEBUG` flag is not set during compiles.
+
+[Example---Message from an assertion failure]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 12;         // <1>
+    bit::vector<> v(n);
+    v.set(n);                   // <2>
+    std::cout << v << "\n";
+}
+```
+1. Construct a vector of size 12 and then attempt to set the "`last`" element.
+2. A deliberate but typical _off-by-one_ index error as the valid indices are from 0 to `n-1`, which is 11.
+
+Compile the sample program with the `BIT_DEBUG` flag set and get:
+
+[Output]{.bt}
+```sh
+BIT ASSERTION FAILURE:
+Function 'set' (vector.h, line 893):
+Statement 'i < m_size' is NOT true: Index i = 12 must be < `m_size` = 12
+```
+The program will then exit.
+
+## Design Rationale
+
+### `bit_debug_assert`
+
+In the development cycle, it can be helpful to range-check indices and so on.
+However, those checks are expensive and can slow down numerical code by orders of magnitude.
+Therefore, we don't want there to be any chance that those verifications are accidentally left "on" in the production code.
+The `bit_debug_assert(...)` form covers this type of verification.
+Turning on these checks requires the programmer to take a specific action --- namely, she must set the `BIT_DEBUG` flag during compile time.
+
+For example, here is a pre-condition from a hypothetical `dot(Vector u, Vector v)` function:
+```cpp
+bit_debug_assert(u.size() == v.size(), "Vector sizes {} and {} DO NOT match!", u.size(), v.size());
+```
+This code checks that the two vector arguments have equal length --- a necessary constraint for the dot product operation to make sense.
+If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.
+
+The check here is **off** by default, and you need to do something special (i.e., define the `BIT_DEBUG` flag at compile time) to enable it.
+The idea is that production code may do many of these dot products, and we do not generally want to pay for the check.
+However, enabling these sorts of checks may be very useful during development.
+
+The `bit_debug_assert(...)` macro expands to nothing **unless** you set the `BIT_DEBUG` flag at compile time.
+
+### `bit_assert`
+
+On the other hand, some checks are pretty cheap, especially when you compare the cost to the actual work done by the function.
+The `bit_assert(...)` form is helpful for those cheaper verifications.
+
+For example, a pre-condition for a matrix inversion method is that the input matrix must be square.
+Here is how you might do that check in an `invert(const Matrix& M)` function:
+```cpp
+bit_assert(M.is_square(), "Cannot invert a {} x {} NON-square matrix!", M.rows(), M.cols());
+```
+We can only invert square matrices.
+The `M.is_square()` call checks that condition and, on failure, throws an exception with a helpful message.
+
+This particular check is always on by default, and the programmer needs to do something special (i.e., define the `BIT_NDEBUG` flag at compile time) to deactivate it.
+
+The `bit_assert(...)` macro expands to nothing **only if** you set the `BIT_NDEBUG` flag at compile time --- the behavior is the same as the standard [`assert`] macro but allows for adding a formatted error message.
+
+### `bit_always_assert`
+
+There may be checks you never want to be turned off.
+The final form `bit_always_assert(...)` accomplishes those tasks --- it is unaffected by compiler flags.
+
+For instance, in that last example, the check cost is very slight compared to the work done by the `invert(...)` method, so leaving it on even in production code is probably not a problem.
+You might well want to use the `bit_always_assert(...)` version so the check never gets disabled:
+```cpp
+bit_always_assert(M.is_square(), "Cannot invert a {} x {} NON-square matrix!", M.rows(), M.cols());
+```
+
+The decision to use one of these forms vs. another depends on the cost of doing the check versus the work done by the method in question.
+A primary use case for `bit_debug_assert` is to do things like bounds checking on indices --- from experience, this is vital during development.
+However, bounds-checking every index operation incurs a considerable performance penalty and can slow down numerical code by orders of magnitude.
+So it makes sense to have the checks in place for development but to ensure they are never there in release builds.
+
+In the development cycle, asserting range indices and so on is helpful.
+However, those assertions are expensive and can slow down numerical code by orders of magnitude.
+Therefore, we don't want there to be any chance that those verifications are accidentally left "on" in our production code.
+The first form, `bit_debug_assert(...)`, covers these asserts.
+Turning on `bit_debug_assert` asserts requires the programmer to take a specific action, namely, setting the `BIT_DEBUG` flag during compile time.
+
+On the other hand, some assertions are relatively cheap, especially compared to the work done by the containing function.
+For example, a pre-condition for the [`matrix::invert`] method is that the input bit-matrix is square.
+There is probably no harm if we always do that assert, which is very cheap compared to the typical cost of inverting a bit-matrix.
+The second form, `bit_assert(...)`, is suitable for those cheaper verifications.
+Turning off even those assertions is possible, but the programmer must take a specific action. She must set the `BIT_NDEBUG` flag during compile time.
+
+Finally, you may wish that some assertions are always checked.
+The final form above accomplishes those tasks.
+
+::: {.callout-note}
+# Macro-land
+We are in macro land here, so there are no namespaces.
+Typically, macros have names in caps, but the standard `assert` does not follow that custom, so neither do these `bit_assert` macros.
+:::
+
+### See Also
+[`assert`]

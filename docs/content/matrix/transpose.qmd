@@ -1,0 +1,56 @@
+---
+title: "`bit::matrix` --- Transpose a Bit-Matrix"
+---
+
+{{< include /content/_common.qmd >}}
+
+We supply a member function to transpose a _square_ bit-matrix _in place_ and a free function that transposes an arbitrary bit-matrix.
+
+```cpp
+constexpr bit::matrix &to_transpose();                  // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr matrix<Block, Allocator>
+transpose(const matrix<Block, Allocator> &M);           // <2>
+```
+1. Member function to transpose a _square_ bit-matrix in place.
+2. Free function that returns the transpose of an arbitrary bit-matrix.
+
+The transpose of a matrix $M$ with elements $M_{ij}$ is the matrix $M^T$ whose elements are
+$$
+M^T_{ij} = M_{ji}
+$$
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4, [](std::size_t i, std::size_t) { return (i + 1)%2; });
+    auto m1 = m;
+    std::cout << "Original and transposed matrices:\n";
+    bit::print(m, m1.to_transpose());
+
+    bit::matrix<> m2(4, 8, [](std::size_t i, std::size_t) { return (i + 1)%2; });
+    std::cout << "Original and transposed matrices:\n";
+    bit::print(m2, bit::transpose(m2));
+}
+```
+
+[Output]{.bt}
+```bash
+Original and transposed matrices:
+1111    1010
+0000    1010
+1111    1010
+0000    1010
+Original and transposed matrices:
+11111111        1010
+00000000        1010
+11111111        1010
+00000000        1010
+                1010
+                1010
+                1010
+                1010
+```

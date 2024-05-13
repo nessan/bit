@@ -1,0 +1,64 @@
+---
+title: "`bit::vector` --- Computing $x^N \\textrm{ mod } p(x)$"
+---
+
+{{< include /content/_common.qmd >}}
+
+If $p(x)$ is an arbitrary polynomial over $\FF$
+$$
+p(x) = p_{m-1} x^{m-1} + \cdots + p_1 x + p_0.
+$$
+Then for any power $N$ we can write
+$$
+x^N= q(x) p(x) + r(x)
+$$
+where $q(x)$ is some _quotient_ polynomial and the degree of the _remainder_ polynomial $r(x)$ is strictly less than the degree of $p(x)$.
+
+In standard notation, we write
+$$
+r(x) = x^N \textrm{ mod } p(x).
+$$
+
+We have a function that computes the coefficients of the polynomial $r(x)$.
+```cpp
+bit::vector
+polynomial_mod(std::size_t n, const bit::vector &p, bool is_exp = false);
+```
+For the sake of clarity, the usual template parameters are taken as read.
+
+The elements of the input bit-vector `p` are the coefficients of a polynomial $p(x)$. \
+By default, $N = n$, but if the last argument `is_exp` is `true`, then $N = 2^n$. \
+That allows us to handle large values of $N$ that would overflow standard integer types, e.g., $N=2^{100}$.
+
+::: {.callout-note}
+# Efficiency
+The method works by repeated multiplication and squaring and is efficient for large values of $N$.
+:::
+
+::: {.callout-note}
+# Why would we ever need this?
+Computing $x^N \textrm{ mod } p(x)$ for very large $N$ can be used to jump far ahead in the random number streams produced by many
+pseudorandom generators --- see [this paper](https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf).
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t N = 447'124'345;
+    auto        p = bit::vector<>::from(1234019u);
+    auto        r = bit::polynomial_mod(N, p);
+    std::cout << "r(x) = x^" << N << " mod p(x)\n";
+    std::cout << "p(x) = " << p.to_polynomial() << '\n';
+    std::cout << "r(x) = " << r.to_polynomial() << '\n';
+    return 0;
+}
+```
+
+[Output]{.bt}
+```bash
+r(x) = x^447124345 mod p(x)
+p(x) = 1 + x^1 + x^5 + x^6 + x^10 + x^12 + x^14 + x^15 + x^17 + x^20
+r(x) = 1 + x^4 + x^7 + x^9 + x^10 + x^12 + x^16 + x^18 + x^19
+```
