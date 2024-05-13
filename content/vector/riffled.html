@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)</title>
+<title>Linear Algebra over GF(2) - bit::vector — Riffling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,7 +63,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/notes/danilevsky.html" rel="prev">
 <link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -74,8 +73,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
-<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -143,13 +140,13 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta property="og:title" content="Linear Algebra over GF(2) - bit::vector — Riffling">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
+<meta property="og:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - bit::vector — Riffling">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
+<meta name="twitter:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -225,7 +222,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Riffling</h1>
         </a>     
     </div>
   </nav>
@@ -470,7 +467,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Modulo Techniques</span></a>
   </div>
 </li>
@@ -486,18 +483,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#an-iterative-technique" id="toc-an-iterative-technique" class="nav-link" data-scroll-target="#an-iterative-technique">An Iterative Technique</a></li>
-  <li><a href="#multiply-and-square" id="toc-multiply-and-square" class="nav-link" data-scroll-target="#multiply-and-square">Multiply and Square</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link active" data-scroll-target="#see-also">See Also</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/vector/riffled.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Riffling</h1>
 </div>
 
 
@@ -528,109 +523,49 @@ window.Quarto = {
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>We wish to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
-<p>It can be challenging to read a lot of references to “mod” in text, so we will use “<span class="math inline">\(\mid\)</span>” to represent the modulo operation: <span class="math display">\[
-    x^N \mid P(x) \equiv x^N\bmod{P(x)}.
-\]</span></p>
-</section>
-<section id="an-iterative-technique" class="level2">
-<h2 class="anchored" data-anchor-id="an-iterative-technique">An Iterative Technique</h2>
-<p>Without any loss of generality, we can assume that <span class="math inline">\(P(x)\)</span> is <em>monic</em>, of, say, degree <span class="math inline">\(n\)</span>. Then there is a polynomial <span class="math inline">\(p(x)\)</span> of degree less than <span class="math inline">\(n\)</span> such that <span class="math display">\[
-P(x) = x^n + p(x) = x^n + p_{n-1} x^{n-1} + \cdots + p_1 x + p_0.
-\]</span> The bit-vector of its coefficients can represent the polynomial <span class="math inline">\(p(x)\)</span>: <span class="math display">\[
-p(x) \sim \mathbf{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
-\]</span></p>
-<p>There are three cases to consider as we compute <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span>.</p>
-<p><span class="bt">Case <span class="math inline">\(N &lt; n\)</span>:</span> If <span class="math inline">\(N &lt; n\)</span> then <span class="math inline">\(P(x)\)</span> does not divide <span class="math inline">\(x^N\)</span> so <span class="math display">\[
-x^N \mid P(x) = x^N.
-\]</span> Therefore, we can write: <span class="math display">\[
-x^N \mid P(x) \sim \mathbf{u}_N.
-\]</span> Here <span class="math inline">\(\mathbf{u}_N\)</span> is the unit bit-vector of size <span class="math inline">\(n\)</span>, which is all zeros except for a one in the <span class="math inline">\(N^{\mathrm{th}}\)</span> slot.</p>
-<p><span class="bt">Case <span class="math inline">\(N = n\)</span>:</span> In this case <span class="math inline">\(P(x) = x^N + p(x)\)</span> so <span class="math inline">\(x^N = P(x) - p(x)\)</span>.</p>
-<p>Therefore <span class="math display">\[x^N \mid P(x) = -p(x).
-\]</span> In <span class="math inline">\(\FF\)</span> we can ignore that minus sign.</p>
-<p>Combining the two cases considered so far, we have: <span class="math display">\[
-x^N \mid P(x) \sim
-\begin{cases}
-    \mathbf{u}_N &amp; N &lt; n \\
-    \mathbf{p}   &amp; N = n
-\end{cases}
-\]</span></p>
-<p><span class="bt">Case <span class="math inline">\(N &gt; n\)</span>:</span> It remains to determine <span class="math inline">\(x^N \mid P(x)\)</span> for <span class="math inline">\(N &gt; n\)</span>.</p>
-<p>Now <em>any</em> polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be written as some multiple of <span class="math inline">\(P(x)\)</span> plus a remainder term: <span class="math display">\[
-h(x) = q(x) P(x) + r(x)
-\]</span> where the <em>quotient</em> <span class="math inline">\(q(x)\)</span> and <em>remainder</em> <span class="math inline">\(r(x)\)</span> are polynomials over <span class="math inline">\(\FF\)</span> and the degree of <span class="math inline">\(r(x)\)</span> is strictly less than <span class="math inline">\(n\)</span>. <span class="math display">\[
-r(x) \equiv h(x) \mid P(x)
-\]</span></p>
-<p>Suppose we already know the explicit form for <span class="math inline">\(r(x) = h(x) \mid P(x)\)</span> <span class="math display">\[
-r(x) = r_{n-1} x^{n-1} + r_{n-2} x^{n-2} +\cdots + r_1 x + r_0.
-\]</span> That is, we know the elements in the bit-vector of coefficients for <span class="math inline">\(r(x)\)</span> <span class="math display">\[
-r(x) \sim \mathbf{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
-\]</span></p>
-<p>Now <span class="math display">\[
-x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mid P(x) = x\,r(x) \mid P(x).
-\]</span> Thus <span class="math display">\[
-x\,h(x) \mid P(x) = r_{n-1} x^n \mid P(x) + \left(r_{n-2} x^{n-1} + \cdots + r_1 x^2 + r_0 x \right) \mid P(x).
-\]</span> Using our two known cases for <span class="math inline">\(N &lt; n\)</span> and <span class="math inline">\(N = n\)</span> we get <span class="math display">\[
-x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} + \lbrack r_{n-2} \ldots r_0 0 \rbrack.
-\]</span> Thus <span class="math display">\[
-h(x) \mid P(x) \sim \mathbf{r} \implies x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} \; \wedge \; (\mathbf{r} \ll 1 ).
-\]</span> Here <span class="math inline">\(\mathbf{r} \ll 1\)</span> means we shift <span class="math inline">\(\mathbf{r}\)</span> one place to the left and introduce a zero on the far right.</p>
-<p>In our case <span class="math inline">\(h(x) = x^N\)</span> and we will use the notation <span class="math display">\[
-x^N \mid P(x) = r^N(x) \sim \mathbf{r}^N,
-\]</span> where <span class="math display">\[
-\mathbf{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack.
-\]</span></p>
-<p>In conclusion, we can compute <span class="math inline">\(x^N \mid P(x)\)</span> directly for small values of <span class="math inline">\(N\)</span> and iteratively for larger values of <span class="math inline">\(N\)</span> using the relations: <span class="math display">\[
-x^N \mid P(x) \sim
-\begin{cases}
-\mathbf{u}_N         &amp; N &lt; n \\
-\mathbf{p}           &amp; N = n \\
-r_{n-1}^{N-1} \, \mathbf{p} \; \wedge \; \left(\mathbf{r}^{N-1} \ll 1 \right)
-                 &amp; N &gt; n \text{ where } x^{N-1} \mid P(x) \sim \mathbf{r}^{N-1}
-\end{cases}
-\]</span></p>
-</section>
-<section id="multiply-and-square" class="level2">
-<h2 class="anchored" data-anchor-id="multiply-and-square">Multiply and Square</h2>
-<p>This iterative scheme is too slow for large <span class="math inline">\(N\)</span>.</p>
-<p>We can speed it up considerably by using a “<code>multiply and square</code>” approach, which uses the decomposition: <span class="math display">\[
-x^N =
-\begin{cases}
-x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
-\left( x^{\frac{N}{2}} \right)^2        &amp; N \text{ even.}
-\end{cases}
-\]</span></p>
-<p><span class="bt">Multiply and square algorithm:</span> We’re computing <span class="math inline">\(x^N \mid P(x)\)</span> where the degree of <span class="math inline">\(P(x)\)</span> is <span class="math inline">\(n\)</span> and <span class="math inline">\(N &gt; n\)</span>.</p>
-<p>Now we know that <span class="math inline">\(x^N \mid P(x) \sim \mathbf{p}\)</span> so start by initializing a counter <span class="math inline">\(M = N-n\)</span> and a return value <span class="math inline">\(\mathbf{r} = \mathbf{p}\)</span>.</p>
-<p>The second case above shows that we will also need to do some squaring steps where <span class="math inline">\(s(x)\)</span> starts as just <span class="math inline">\(s(x) = x\)</span> and then gets squared as often as needed and, of course, reduced modulo <span class="math inline">\(P(x)\)</span>: <span class="math display">\[
-    s(x) \mid P(x) = x \mid P(x) \rightarrow x^2 \mid P(x)  \rightarrow x^4 \mid P(x)  \rightarrow \cdots
-\]</span> Now <span class="math inline">\(x \mid P(x) = x\)</span> so we can initialize <span class="math inline">\(\mathbf{s} = \mathbf{u}_1\)</span> the unit vector with a single set bit at index number 1.</p>
-<div id="alg-ms" class="pseudocode-container" data-line-number="true" data-no-end="false" data-comment-delimiter="//" data-line-number-punc=":" data-indent-size="1.2em" data-alg-title="Algorithm" data-pseudocode-index="1">
-<div class="pseudocode">
-\begin{algorithm} \caption{Computing $x^N$ mod $P(x)$} \begin{algorithmic} \Procedure{Mod}{$N, \mathbf{p}$} \State $n = \text{len}(\mathbf{p}) + 1 \State $M = N - n$ \State $\mathbf{r} = \mathbf{p}$ \State set $s$ to the appropriate unit bit-vector \While {$M \ne 0$} \If $M$ is odd \State $\mathbf{r} \equiv r(x)*s(x) \mid P(x) \EndIf \State $M \ll 1$ \If $M = 0$ \Break \EndIf \State set $\mathbf{s} \equiv s(x)^2 \mid P(x)$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
+<p>We have an instance method that copies a bit-vector while interleaving the elements with zeros.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector riffled<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This method creates a new bit-vector, a copy of the current bit-vector with interleaved zeros.</p>
+<p>For example, if the current bit-vector has elements <code>[a b c d ...]</code>, the returned bit-vector will have elements <code>[a 0 b 0 c 0 d 0 ...]</code>. The riffled version of a bit-vector of size <span class="math inline">\(n \ge 2\)</span> will have size <span class="math inline">\(2n-1\)</span>. The riffled version of a bit-vector of size <span class="math inline">\(n &lt; 2\)</span> will be <span class="math inline">\(n\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why is this useful?
 </div>
 </div>
-<p><span class="bt">From there, we can build some code along the following lines</span></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Initialize the counter M to N = n,</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// r to p, and s to the correct unit vector.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Loop through the counter values, halving M each time</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span>M <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M is odd<span class="op">)</span> r <span class="op">=</span> mod<span class="op">(</span>r<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    M <span class="op">&gt;&gt;=</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> mod<span class="op">(</span>s<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This hinges on computing the terms <span class="math inline">\(\left( r(x) s(x) \right) \mid P(x)\)</span> and <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
-<p>Now <span class="math inline">\(r(x) \mid P(x) \sim \mathbf{r}\)</span> and <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> for known vectors <span class="math inline">\(\mathbf{r}\)</span> and <span class="math inline">\(\mathbf{s}\)</span>.</p>
-<p>This means that the product <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> is given by <span class="math display">\[
-r(x)s(x) \mid P(x) = r_0 s(x) \vert P(x)  + r_1 x s(x) \vert P(x) + \cdots + r_{n-1} x^{n-1} s(x) \vert P(x).
-\]</span> From an earlier observation above we know that if <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> then <span class="math display">\[
-x s(x) \mid P(x) \sim  s_{n-1} \mathbf{p} \wedge ( \mathbf(s) \ll 1).
-\]</span> We can use this iteratively and create a loop that computes <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> and a similar one to compute <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
+<div class="callout-body-container callout-body">
+<p>If you think of a bit-vector <span class="math inline">\(\mathbf{p}\)</span> as being the coefficients in a polynomial over <span class="math inline">\(\FF\)</span>: <span class="math display">\[
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots
+\]</span> It is easy to verify that the polynomial <span class="math inline">\(p(x)^2\)</span> has coefficients that are the riffled version of <span class="math inline">\(\mathbf{p}\)</span>.</p>
+<p>For example, if <span class="math inline">\(p(x) = a + bx\)</span> then <span class="math display">\[
+p(x)^2 = a^2 + 2 a b x + b^2 x^2 = a + b x^2
+\]</span> Because in <span class="math inline">\(\FF\)</span>, you drop all multiples of 2.<br>
+The general case follows by induction.</p>
+</div>
+</div>
+<p><span class="bt">Example</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>uint8_t<span class="op">&gt;;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t N <span class="op">=</span> <span class="dv">17</span><span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> u <span class="op">=</span> <span class="dt">vector_type</span><span class="op">::</span>ones<span class="op">(</span>N<span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> v <span class="op">=</span> u<span class="op">.</span>riffled<span class="op">();</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u           = "</span> <span class="op">&lt;&lt;</span> u <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> u<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u.riffled() = "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="bt">Output</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">u</span>           = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] has size 17</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">u.riffled()</span> <span class="ex">=</span> [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1] has size 33</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="see-also" class="level3">
+<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
+<p><a href="../../content/vector/to_string.html"><code>vector::to_polynomial</code></a></p>
 
 
 </section>
@@ -1045,15 +980,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../../content/notes/danilevsky.html" class="pagination-link" aria-label="Danilevsky's Method">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Danilevsky’s Method</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1062,7 +988,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/vector/riffled.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
@@ -1081,30 +1007,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-    <script type="text/javascript">
-    (function(d) {
-      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
-        let pseudocodeOptions = {
-          indentSize: el.dataset.indentSize || "1.2em",
-          commentDelimiter: el.dataset.commentDelimiter || "//",
-          lineNumber: el.dataset.lineNumber === "true" ? true : false,
-          lineNumberPunc: el.dataset.lineNumberPunc || ":",
-          noEnd: el.dataset.noEnd === "true" ? true : false,
-          titlePrefix: el.dataset.algTitle || "Algorithm"
-        };
-        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
-      });
-    })(document);
-    (function(d) {
-      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
-        titleSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
-        titlePrefix = el.dataset.algTitle;
-        titleIndex = el.dataset.chapterLevel ? el.dataset.chapterLevel + "." + el.dataset.pseudocodeIndex : el.dataset.pseudocodeIndex;
-        titleSpan.innerHTML = titlePrefix + " " + titleIndex + " ";
-      });
-    })(document);
-    </script>
-  
 
 
 

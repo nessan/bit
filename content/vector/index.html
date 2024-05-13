@@ -493,7 +493,7 @@ window.Quarto = {
   <li><a href="#instance-methods" id="toc-instance-methods" class="nav-link" data-scroll-target="#instance-methods">Instance Methods</a>
   <ul class="collapse">
   <li><a href="#construction" id="toc-construction" class="nav-link" data-scroll-target="#construction">Construction</a></li>
-  <li><a href="#element-access" id="toc-element-access" class="nav-link" data-scroll-target="#element-access">Element Access</a></li>
+  <li><a href="#access" id="toc-access" class="nav-link" data-scroll-target="#access">Access</a></li>
   <li><a href="#iteration" id="toc-iteration" class="nav-link" data-scroll-target="#iteration">Iteration</a></li>
   <li><a href="#capacity" id="toc-capacity" class="nav-link" data-scroll-target="#capacity">Capacity</a></li>
   <li><a href="#modifiers" id="toc-modifiers" class="nav-link" data-scroll-target="#modifiers">Modifiers</a></li>
@@ -567,10 +567,6 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="template-parameters">Template Parameters</h3>
 <div class="table-responsive">
 <table class="table-bordered table-hover table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 55%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Parameter</th>
@@ -580,7 +576,7 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td><code>Block</code> = <code>std::uint64_t</code></td>
-<td>The elements of a bit-vector are packed into blocks of some [<code>std::unsigned</code>] type. The default size is 64 bits.</td>
+<td>The elements of a bit-vector are packed into blocks of some <a href="https://en.cppreference.com/w/cpp/concepts/unsigned_integral"><code>std::unsigned_integral</code></a> type. The default size is 64 bits.</td>
 </tr>
 <tr class="even">
 <td><code>Allocator</code> = <code>std::allocator&lt;Block&gt;</code></td>
@@ -624,10 +620,30 @@ Use a single <code>Block</code> type throughout your code!
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>npos</code></td>
-<td>A class <em>constant</em> of type <code>std::size_t</code> used to indicate search failures etc.</td>
+<td><code>block_type</code></td>
+<td>We use a specific <a href="https://en.cppreference.com/w/cpp/concepts/unsigned_integral"><code>std::unsigned_integral</code></a> type to store the bit-vector elements in blocks. The default is <code>std::uint64_t</code>, where we store 64 elements per block.</td>
 </tr>
 <tr class="even">
+<td><code>block_store_type</code></td>
+<td>The type of container used to store the blocks. The default is a <code>std::vector&lt;block_type&gt;</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>allocator_type</code></td>
+<td>The block store vector uses this type of memory manager. The default is a <code>std::allocator&lt;block_type&gt;</code>.</td>
+</tr>
+<tr class="even">
+<td><code>bits_per_block</code></td>
+<td>The number of bit-vector elements each block can hold. The default is 64.</td>
+</tr>
+<tr class="odd">
+<td><code>blocks_needed(n)</code></td>
+<td>Class method returning the number of blocks needed to store a bit-vector of size <code>n</code>.</td>
+</tr>
+<tr class="even">
+<td><code>npos</code></td>
+<td>A class constant of type <code>std::size_t</code> used to indicate search failures, etc.</td>
+</tr>
+<tr class="odd">
 <td><code>reference</code></td>
 <td>A proxy <em>sub-class</em> representing an individual vector element (a single bit).</td>
 </tr>
@@ -684,8 +700,8 @@ Use a single <code>Block</code> type throughout your code!
 </table>
 </div>
 </section>
-<section id="element-access" class="level3">
-<h3 class="anchored" data-anchor-id="element-access">Element Access</h3>
+<section id="access" class="level3">
+<h3 class="anchored" data-anchor-id="access">Access</h3>
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover table">
 <colgroup>
@@ -756,22 +772,10 @@ Use a single <code>Block</code> type throughout your code!
 <td>Extracts a sub-vector as a <em>distinct</em> copy of some of elements in a bit-vector.</td>
 </tr>
 <tr class="odd">
-<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed_right</code></a></td>
-<td>Returns a copy of a bit-vector with any trailing zeros removed.</td>
-</tr>
-<tr class="even">
-<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed_left</code></a></td>
-<td>Returns a copy of a bit-vector with any leading zeros removed.</td>
-</tr>
-<tr class="odd">
-<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed</code></a></td>
-<td>Returns a copy of a bit-vector with any leading or trailing zeros removed.</td>
-</tr>
-<tr class="even">
 <td><a href="../../content/vector/blocks.html"><code>vector::blocks</code></a></td>
 <td>Access the underlying block store as a <code>std::vector&lt;Block&gt;</code>.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../content/vector/blocks.html"><code>vector::allocator</code></a></td>
 <td>Read-only access to the underlying <code>Allocator</code> for the block store.</td>
 </tr>
@@ -1043,6 +1047,22 @@ Use a single <code>Block</code> type throughout your code!
 </thead>
 <tbody>
 <tr class="odd">
+<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed_right</code></a></td>
+<td>Returns a copy of a bit-vector with any trailing zeros removed.</td>
+</tr>
+<tr class="even">
+<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed_left</code></a></td>
+<td>Returns a copy of a bit-vector with any leading zeros removed.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../content/vector/trimmed.html"><code>vector::trimmed</code></a></td>
+<td>Returns a copy of a bit-vector with any leading or trailing zeros removed.</td>
+</tr>
+<tr class="even">
+<td><a href="../../content/vector/riffled.html"><code>vector::riffled</code></a></td>
+<td>Returns a copy of a bit-vector with any added interleaved zeros.</td>
+</tr>
+<tr class="odd">
 <td><a href="../../content/vector/dot.html"><code>vector::dot</code></a></td>
 <td>Returns the <em>dot product</em> of this bit-vector with another of equal size.</td>
 </tr>
@@ -1088,11 +1108,11 @@ Use a single <code>Block</code> type throughout your code!
 </tr>
 <tr class="odd">
 <td><a href="../../content/bit_assert/index.html"><code>bit_debug_assert</code></a></td>
-<td>These assertions are only checked if you set the <code>BIT_DEBUG</code> flag at compile time.</td>
+<td>These assertions are <strong>only</strong> checked if you set the <code>BIT_DEBUG</code> flag at compile time.</td>
 </tr>
 <tr class="even">
 <td><a href="../../content/bit_assert/index.html"><code>bit_assert</code></a></td>
-<td>These assertions are checked unless you set the <code>BIT_NDEBUG</code> flag at compile time.</td>
+<td>These assertions are checked <strong>unless</strong> you set the <code>BIT_NDEBUG</code> flag at compile time.</td>
 </tr>
 <tr class="odd">
 <td><a href="../../content/bit_assert/index.html"><code>bit_always_assert</code></a></td>

@@ -82,7 +82,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/constructors.html</loc>
-    <lastmod>2024-05-13T13:49:44.725Z</lastmod>
+    <lastmod>2024-05-13T15:00:47.986Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/description.html</loc>
@@ -122,7 +122,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.728Z</lastmod>
+    <lastmod>2024-05-13T15:21:05.587Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/convolution.html</loc>
@@ -137,107 +137,35 @@
     <lastmod>2024-05-13T13:49:44.725Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/to_string.html</loc>
-    <lastmod>2024-05-13T13:49:44.732Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/riffled.html</loc>
+    <lastmod>2024-05-13T15:34:43.510Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/reference.html</loc>
+    <loc>https://nessan.github.io/bit/content/vector/polynomial_sum.html</loc>
     <lastmod>2024-05-13T13:49:44.729Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/shift.html</loc>
-    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/vector/from.html</loc>
+    <loc>https://nessan.github.io/bit/content/vector/first_set.html</loc>
     <lastmod>2024-05-13T13:49:44.727Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/all.html</loc>
-    <lastmod>2024-05-13T13:49:44.724Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/specials.html</loc>
+    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/clear.html</loc>
-    <lastmod>2024-05-13T13:49:44.725Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/stream.html</loc>
+    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/unit_floor.html</loc>
+    <loc>https://nessan.github.io/bit/content/vector/swap_elements.html</loc>
     <lastmod>2024-05-13T13:49:44.732Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/lu/permute.html</loc>
-    <lastmod>2024-05-13T13:49:44.711Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/polynomial_mod.html</loc>
+    <lastmod>2024-05-13T13:49:44.729Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/lu/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.711Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/lu/access.html</loc>
-    <lastmod>2024-05-13T13:49:44.710Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/notes/mod.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/notes/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/notes/danilevsky.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/access.html</loc>
-    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/solve.html</loc>
-    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/faq/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/bit_assert/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.707Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/index.html</loc>
-    <lastmod>2024-05-13T13:49:44.710Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/queries.html</loc>
-    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/functor.html</loc>
-    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/gauss/constructors.html</loc>
-    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/notes/design.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/notes/gf2.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/lu/queries.html</loc>
-    <lastmod>2024-05-13T13:49:44.712Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nessan.github.io/bit/content/lu/functor.html</loc>
+    <loc>https://nessan.github.io/bit/content/lu/constructors.html</loc>
     <lastmod>2024-05-13T13:49:44.710Z</lastmod>
   </url>
   <url>
@@ -245,32 +173,108 @@
     <lastmod>2024-05-13T13:49:44.711Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/lu/constructors.html</loc>
+    <loc>https://nessan.github.io/bit/content/lu/functor.html</loc>
     <lastmod>2024-05-13T13:49:44.710Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/polynomial_mod.html</loc>
-    <lastmod>2024-05-13T13:49:44.729Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/lu/queries.html</loc>
+    <lastmod>2024-05-13T13:49:44.712Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/swap_elements.html</loc>
+    <loc>https://nessan.github.io/bit/content/notes/gf2.html</loc>
+    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/notes/design.html</loc>
+    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/constructors.html</loc>
+    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/functor.html</loc>
+    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/queries.html</loc>
+    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.710Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/bit_assert/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.707Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/faq/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/solve.html</loc>
+    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/access.html</loc>
+    <lastmod>2024-05-13T13:49:44.708Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/gauss/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/notes/danilevsky.html</loc>
+    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/notes/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/notes/mod.html</loc>
+    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/lu/access.html</loc>
+    <lastmod>2024-05-13T13:49:44.710Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/lu/index.html</loc>
+    <lastmod>2024-05-13T13:49:44.711Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/lu/permute.html</loc>
+    <lastmod>2024-05-13T13:49:44.711Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/vector/unit_floor.html</loc>
     <lastmod>2024-05-13T13:49:44.732Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/stream.html</loc>
-    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/clear.html</loc>
+    <lastmod>2024-05-13T13:49:44.725Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/specials.html</loc>
-    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/vector/all.html</loc>
+    <lastmod>2024-05-13T13:49:44.724Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/first_set.html</loc>
+    <loc>https://nessan.github.io/bit/content/vector/from.html</loc>
     <lastmod>2024-05-13T13:49:44.727Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/vector/polynomial_sum.html</loc>
+    <loc>https://nessan.github.io/bit/content/vector/shift.html</loc>
+    <lastmod>2024-05-13T13:49:44.731Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/vector/reference.html</loc>
     <lastmod>2024-05-13T13:49:44.729Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nessan.github.io/bit/content/vector/to_string.html</loc>
+    <lastmod>2024-05-13T13:49:44.732Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/join.html</loc>
