@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../content/notes/danilevsky.html" rel="prev">
+<link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V57HYKPDW8"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
+<meta property="og:site_name" content="Linear Algebra over GF(2)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">bit</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../content/vector/index.html"> 
+<span class="menu-text">Vectors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../content/matrix/index.html"> 
+<span class="menu-text">Matrices</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../content/notes/index.html"> 
+<span class="menu-text">Tech Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit"><i class="bi bi-github" role="img">
+</i> 
+ <span class="dropdown-text">Project Repo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit/issues"><i class="bi bi-bug" role="img">
+</i> 
+ <span class="dropdown-text">Report a Bug</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+</i> 
+ <span class="dropdown-text">Ask a Question</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+    <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
+    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+        </a>     
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Bit-Vectors</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/vector/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Bit-Matrices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/matrix/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Gaussian Elimination</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/gauss/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">LU Decomposition</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/lu/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assertions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/bit_assert/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compiler Flags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/bit_assert/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design Rationale</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Technical Notes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/notes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/notes/gf2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Working in GF(2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/notes/design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Library Design</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Danilevsky’s Method</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Modulo Techniques</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#an-iterative-technique" id="toc-an-iterative-technique" class="nav-link" data-scroll-target="#an-iterative-technique">An Iterative Technique</a></li>
+  <li><a href="#multiply-and-square" id="toc-multiply-and-square" class="nav-link" data-scroll-target="#multiply-and-square">Multiply and Square</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Shortcuts and links used throughout the documentation -->
+<!-- Some math shortcuts we use frequently in the documentation -->
+<p><span class="math display">\[
+\newcommand{FF}{\mathbb{F}_2}
+\newcommand{R}{\mathbb{R}}
+\]</span></p>
+<!-- Our check/assert macros and compiler flags that control them -->
+<!-- Formatted links to the pages for the bit::vector class -->
+<!-- Formatted links to the pages for the bit::matrix class -->
+<!-- Formatted links to the pages for the bit::gauss class -->
+<!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for items in the standard library -->
+<!--Links to other software tools we reference -->
+<!-- Pages and Wikipedia articles referenced in the documentation -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We wish to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
+<p>It can be challenging to read a lot of references to “mod” in text, so we will use “<span class="math inline">\(\mid\)</span>” to represent the modulo operation: <span class="math display">\[
+    x^N \mid P(x) \equiv x^N\bmod{P(x)}.
+\]</span></p>
+</section>
+<section id="an-iterative-technique" class="level2">
+<h2 class="anchored" data-anchor-id="an-iterative-technique">An Iterative Technique</h2>
+<p>Without any loss of generality, we can assume that <span class="math inline">\(P(x)\)</span> is <em>monic</em>, of, say, degree <span class="math inline">\(n\)</span>. Then there is a polynomial <span class="math inline">\(p(x)\)</span> of degree less than <span class="math inline">\(n\)</span> such that <span class="math display">\[
+P(x) = x^n + p(x) = x^n + p_{n-1} x^{n-1} + \cdots + p_1 x + p_0.
+\]</span> The bit-vector of its coefficients can represent the polynomial <span class="math inline">\(p(x)\)</span>: <span class="math display">\[
+p(x) \sim \mathbf{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
+\]</span></p>
+<p>There are three cases to consider as we compute <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span>.</p>
+<p><span class="bt">Case <span class="math inline">\(N &lt; n\)</span>:</span> If <span class="math inline">\(N &lt; n\)</span> then <span class="math inline">\(P(x)\)</span> does not divide <span class="math inline">\(x^N\)</span> so <span class="math display">\[
+x^N \mid P(x) = x^N.
+\]</span> Therefore, we can write: <span class="math display">\[
+x^N \mid P(x) \sim \mathbf{u}_N.
+\]</span> Here <span class="math inline">\(\mathbf{u}_N\)</span> is the unit bit-vector of size <span class="math inline">\(n\)</span>, which is all zeros except for a one in the <span class="math inline">\(N^{\mathrm{th}}\)</span> slot.</p>
+<p><span class="bt">Case <span class="math inline">\(N = n\)</span>:</span> In this case <span class="math inline">\(P(x) = x^N + p(x)\)</span> so <span class="math inline">\(x^N = P(x) - p(x)\)</span>.</p>
+<p>Therefore <span class="math display">\[x^N \mid P(x) = -p(x).
+\]</span> In <span class="math inline">\(\FF\)</span> we can ignore that minus sign.</p>
+<p>Combining the two cases considered so far, we have: <span class="math display">\[
+x^N \mid P(x) \sim
+\begin{cases}
+    \mathbf{u}_N &amp; N &lt; n \\
+    \mathbf{p}   &amp; N = n
+\end{cases}
+\]</span></p>
+<p><span class="bt">Case <span class="math inline">\(N &gt; n\)</span>:</span> It remains to determine <span class="math inline">\(x^N \mid P(x)\)</span> for <span class="math inline">\(N &gt; n\)</span>.</p>
+<p>Now <em>any</em> polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be written as some multiple of <span class="math inline">\(P(x)\)</span> plus a remainder term: <span class="math display">\[
+h(x) = q(x) P(x) + r(x)
+\]</span> where the <em>quotient</em> <span class="math inline">\(q(x)\)</span> and <em>remainder</em> <span class="math inline">\(r(x)\)</span> are polynomials over <span class="math inline">\(\FF\)</span> and the degree of <span class="math inline">\(r(x)\)</span> is strictly less than <span class="math inline">\(n\)</span>. <span class="math display">\[
+r(x) \equiv h(x) \mid P(x)
+\]</span></p>
+<p>Suppose we already know the explicit form for <span class="math inline">\(r(x) = h(x) \mid P(x)\)</span> <span class="math display">\[
+r(x) = r_{n-1} x^{n-1} + r_{n-2} x^{n-2} +\cdots + r_1 x + r_0.
+\]</span> That is, we know the elements in the bit-vector of coefficients for <span class="math inline">\(r(x)\)</span> <span class="math display">\[
+r(x) \sim \mathbf{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
+\]</span></p>
+<p>Now <span class="math display">\[
+x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mid P(x) = x\,r(x) \mid P(x).
+\]</span> Thus <span class="math display">\[
+x\,h(x) \mid P(x) = r_{n-1} x^n \mid P(x) + \left(r_{n-2} x^{n-1} + \cdots + r_1 x^2 + r_0 x \right) \mid P(x).
+\]</span> Using our two known cases for <span class="math inline">\(N &lt; n\)</span> and <span class="math inline">\(N = n\)</span> we get <span class="math display">\[
+x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} + \lbrack r_{n-2} \ldots r_0 0 \rbrack.
+\]</span> Thus <span class="math display">\[
+h(x) \mid P(x) \sim \mathbf{r} \implies x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} \; \wedge \; (\mathbf{r} \ll 1 ).
+\]</span> Here <span class="math inline">\(\mathbf{r} \ll 1\)</span> means we shift <span class="math inline">\(\mathbf{r}\)</span> one place to the left and introduce a zero on the far right.</p>
+<p>In our case <span class="math inline">\(h(x) = x^N\)</span> and we will use the notation <span class="math display">\[
+x^N \mid P(x) = r^N(x) \sim \mathbf{r}^N,
+\]</span> where <span class="math display">\[
+\mathbf{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack.
+\]</span></p>
+<p>In conclusion, we can compute <span class="math inline">\(x^N \mid P(x)\)</span> directly for small values of <span class="math inline">\(N\)</span> and iteratively for larger values of <span class="math inline">\(N\)</span> using the relations: <span class="math display">\[
+x^N \mid P(x) \sim
+\begin{cases}
+\mathbf{u}_N         &amp; N &lt; n \\
+\mathbf{p}           &amp; N = n \\
+r_{n-1}^{N-1} \, \mathbf{p} \; \wedge \; \left(\mathbf{r}^{N-1} \ll 1 \right)
+                 &amp; N &gt; n \text{ where } x^{N-1} \mid P(x) \sim \mathbf{r}^{N-1}
+\end{cases}
+\]</span></p>
+</section>
+<section id="multiply-and-square" class="level2">
+<h2 class="anchored" data-anchor-id="multiply-and-square">Multiply and Square</h2>
+<p>This iterative scheme is too slow for large <span class="math inline">\(N\)</span>.</p>
+<p>We can speed it up considerably by using a “<code>multiply and square</code>” approach, which uses the decomposition: <span class="math display">\[
+x^N =
+\begin{cases}
+x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
+\left( x^{\frac{N}{2}} \right)^2        &amp; N \text{ even.}
+\end{cases}
+\]</span></p>
+<p><span class="bt">Multiply and square algorithm:</span> We’re computing <span class="math inline">\(x^N \mid P(x)\)</span> where the degree of <span class="math inline">\(P(x)\)</span> is <span class="math inline">\(n\)</span> and <span class="math inline">\(N &gt; n\)</span>.</p>
+<p>Now we know that <span class="math inline">\(x^N \mid P(x) \sim \mathbf{p}\)</span> so start by initializing a counter <span class="math inline">\(M = N-n\)</span> and a return value <span class="math inline">\(\mathbf{r} = \mathbf{p}\)</span>.</p>
+<p>The second case above shows that we will also need to do some squaring steps where <span class="math inline">\(s(x)\)</span> starts as just <span class="math inline">\(s(x) = x\)</span> and then gets squared as often as needed and, of course, reduced modulo <span class="math inline">\(P(x)\)</span>: <span class="math display">\[
+    s(x) \mid P(x) = x \mid P(x) \rightarrow x^2 \mid P(x)  \rightarrow x^4 \mid P(x)  \rightarrow \cdots
+\]</span> Now <span class="math inline">\(x \mid P(x) = x\)</span> so we can initialize <span class="math inline">\(\mathbf{s} = \mathbf{u}_1\)</span> the unit vector with a single set bit at index number 1.</p>
+<div id="alg-ms" class="pseudocode-container" data-comment-delimiter="//" data-no-end="false" data-pseudocode-index="1" data-indent-size="1.2em" data-line-number="true" data-alg-title="Algorithm" data-line-number-punc=":">
+<div class="pseudocode">
+\begin{algorithm} \caption{Computing $x^N$ mod $P(x)$} \begin{algorithmic} \Procedure{Mod}{$N, \mathbf{p}$} \State $n = \text{len}(\mathbf{p}) + 1 \State $M = N - n$ \State $\mathbf{r} = \mathbf{p}$ \State set $s$ to the appropriate unit bit-vector \While {$M \ne 0$} \If $M$ is odd \State $\mathbf{r} \equiv r(x)*s(x) \mid P(x) \EndIf \State $M \ll 1$ \If $M = 0$ \Break \EndIf \State set $\mathbf{s} \equiv s(x)^2 \mid P(x)$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p><span class="bt">From there, we can build some code along the following lines</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Initialize the counter M to N = n,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// r to p, and s to the correct unit vector.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Loop through the counter values, halving M each time</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span>M <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M is odd<span class="op">)</span> r <span class="op">=</span> mod<span class="op">(</span>r<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    M <span class="op">&gt;&gt;=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> mod<span class="op">(</span>s<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This hinges on computing the terms <span class="math inline">\(\left( r(x) s(x) \right) \mid P(x)\)</span> and <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
+<p>Now <span class="math inline">\(r(x) \mid P(x) \sim \mathbf{r}\)</span> and <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> for known vectors <span class="math inline">\(\mathbf{r}\)</span> and <span class="math inline">\(\mathbf{s}\)</span>.</p>
+<p>This means that the product <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> is given by <span class="math display">\[
+r(x)s(x) \mid P(x) = r_0 s(x) \vert P(x)  + r_1 x s(x) \vert P(x) + \cdots + r_{n-1} x^{n-1} s(x) \vert P(x).
+\]</span> From an earlier observation above we know that if <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> then <span class="math display">\[
+x s(x) \mid P(x) \sim  s_{n-1} \mathbf{p} \wedge ( \mathbf(s) \ll 1).
+\]</span> We can use this iteratively and create a loop that computes <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> and a similar one to compute <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/nessan\.github\.io\/bit");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../content/notes/danilevsky.html" class="pagination-link" aria-label="Danilevsky's Method">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Danilevsky’s Method</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Copyright (c) Nessan Fitzmaurice</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Project is under the MIT License</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/nessan/bit">
+      <i class="bi bi-github" role="img" aria-label="GitHub Repo">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/nezzan">
+      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize || "1.2em",
+          commentDelimiter: el.dataset.commentDelimiter || "//",
+          lineNumber: el.dataset.lineNumber === "true" ? true : false,
+          lineNumberPunc: el.dataset.lineNumberPunc || ":",
+          noEnd: el.dataset.noEnd === "true" ? true : false,
+          titlePrefix: el.dataset.algTitle || "Algorithm"
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        titleSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        titlePrefix = el.dataset.algTitle;
+        titleIndex = el.dataset.chapterLevel ? el.dataset.chapterLevel + "." + el.dataset.pseudocodeIndex : el.dataset.pseudocodeIndex;
+        titleSpan.innerHTML = titlePrefix + " " + titleIndex + " ";
+      });
+    })(document);
+    </script>
+  
+
+
+
+
+</body></html>
