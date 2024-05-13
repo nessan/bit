@@ -1,0 +1,56 @@
+---
+title: "`bit::vector` --- Riffling"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have an instance method that copies a bit-vector while interleaving the elements with zeros.
+```cpp
+constexpr bit::vector riffled() const;
+```
+This method creates a new bit-vector, a copy of the current bit-vector with interleaved zeros.
+
+For example, if the current bit-vector has elements `[a b c d ...]`, the returned bit-vector will have elements `[a 0 b 0 c 0 d 0 ...]`.
+The riffled version of a bit-vector of size $n \ge 2$ will have size $2n-1$.
+The riffled version of a bit-vector of size $n < 2$ will be $n$.
+
+::: {.callout-note}
+# Why is this useful?
+If you think of a bit-vector $\mathbf{p}$ as being the coefficients in a polynomial over $\FF$:
+$$
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots
+$$
+It is easy to verify that the polynomial $p(x)^2$ has coefficients that are the riffled version of $\mathbf{p}$.
+
+For example, if $p(x) = a + bx$ then
+$$
+p(x)^2 = a^2 + 2 a b x + b^2 x^2 = a + b x^2
+$$
+Because in $\FF$, you drop all multiples of 2. \
+The general case follows by induction.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    using vector_type = bit::vector<std::uint8_t>;
+
+    std::size_t N = 17;
+    auto u = vector_type::ones(N);
+    auto v = u.riffled();
+    std::cout << "u           = " << u << " has size " << u.size() << '\n';
+    std::cout << "u.riffled() = " << v << " has size " << v.size() << '\n';
+
+    return 0;
+}
+```
+[Output]{.bt}
+```bash
+u           = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] has size 17
+u.riffled() = [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1] has size 33
+```
+
+### See Also
+[`vector::to_polynomial`]

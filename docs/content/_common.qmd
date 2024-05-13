@@ -78,6 +78,7 @@ $$
 [`vector::reserve`]:                    /content/vector/reserve.qmd
 [`vector::reset`]:                      /content/vector/set.qmd
 [`vector::resize`]:                     /content/vector/resize.qmd
+[`vector::riffled`]:                    /content/vector/riffled.qmd
 [`vector::set_if`]:                     /content/vector/set_if.qmd
 [`vector::set_indices`]:                /content/vector/indices.qmd
 [`vector::set`]:                        /content/vector/set.qmd

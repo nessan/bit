@@ -58,7 +58,7 @@ The bit-vector's 32 elements are packed into a single 64-bit word, so this examp
 
 Parameter | Description
 --------- | -----------
-`Block` = `std::uint64_t`              | The elements of a bit-vector are packed into blocks of some [`std::unsigned`] type. The default size is 64 bits.
+`Block` = `std::uint64_t`              | The elements of a bit-vector are packed into blocks of some [`std::unsigned_integral`] type. The default size is 64 bits.
 `Allocator` = `std::allocator<Block>`  | The default `Allocator` should be just fine for most purposes, but you can use your custom type to handle all memory allocation/destruction for blocks.
 : {.bordered .hover .responsive}
 
@@ -82,8 +82,13 @@ In theory, there is no reason that one couldn't intermingle operations between, 
 
 Item | Description
 ---- | -----------
- `npos`      | A class *constant* of type `std::size_t` used to indicate search failures etc.
- `reference` | A proxy *sub-class* representing an individual vector element (a single bit).
+`block_type`       | We use a specific [`std::unsigned_integral`] type to store the bit-vector elements in blocks. The default is `std::uint64_t`, where we store 64 elements per block.
+`block_store_type` | The type of container used to store the blocks. The default is a `std::vector<block_type>`.
+`allocator_type`   | The block store vector uses this type of memory manager. The default is a `std::allocator<block_type>`.
+`bits_per_block`   | The number of bit-vector elements each block can hold. The default is 64.
+`blocks_needed(n)` | Class method returning the number of blocks needed to store a bit-vector of size `n`.
+ `npos`            | A class constant of type `std::size_t` used to indicate search failures, etc.
+ `reference`       | A proxy *sub-class* representing an individual vector element (a single bit).
 : {.bordered .hover .responsive tbl-colwidths="[10,90]"}
 
 ## Instance Methods
@@ -100,7 +105,7 @@ Method | Description
 [`vector::from`]          | Factory methods that construct bit-vectors from the bits in an integer or from strings.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 
-### Element Access
+### Access
 Method | Description
 ------ | -----------
 [`vector::element`]       | Access an element in a bit-vector.
@@ -117,9 +122,6 @@ Method | Description
 [`vector::count1`]        | Count the set bits in a bit-vector.
 [`vector::parity`]        | Parity is the number of set bits mod 2.
 [`vector::sub`]           | Extracts a sub-vector as a _distinct_ copy of some of elements in a bit-vector.
-[`vector::trimmed_right`] | Returns a copy of a bit-vector with any trailing zeros removed.
-[`vector::trimmed_left`]  | Returns a copy of a bit-vector with any leading zeros removed.
-[`vector::trimmed`]       | Returns a copy of a bit-vector with any leading or trailing zeros removed.
 [`vector::blocks`]        | Access the underlying block store as a `std::vector<Block>`.
 [`vector::allocator`]     | Read-only access to the underlying `Allocator` for the block store.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
@@ -190,6 +192,10 @@ Method | Description
 ### Other Instance Methods
 Method | Description
 ------ | -----------
+[`vector::trimmed_right`]   | Returns a copy of a bit-vector with any trailing zeros removed.
+[`vector::trimmed_left`]    | Returns a copy of a bit-vector with any leading zeros removed.
+[`vector::trimmed`]         | Returns a copy of a bit-vector with any leading or trailing zeros removed.
+[`vector::riffled`]         | Returns a copy of a bit-vector with any added interleaved zeros.
 [`vector::dot`]             | Returns the _dot product_ of this bit-vector with another of equal size.
 [`vector::convolution`]     | Returns the _convolution_ of this bit-vector with another bit-vector.
 [`vector::unit_floor`]      | Returns a unit bit-vector with its 1 at the location of our final set bit.
@@ -203,8 +209,8 @@ Macro | Description
 ----- | -----------
 [`BIT_DEBUG`]               | This compile-time flag enables extra safety checks.
 [`BIT_NDEBUG`]              | This compile-time flag turns off most safety checks.
-[`bit_debug_assert`]        | These assertions are only checked if you set the `BIT_DEBUG` flag at compile time.
-[`bit_assert`]              | These assertions are checked unless you set the `BIT_NDEBUG` flag at compile time.
+[`bit_debug_assert`]        | These assertions are **only** checked if you set the `BIT_DEBUG` flag at compile time.
+[`bit_assert`]              | These assertions are checked **unless** you set the `BIT_NDEBUG` flag at compile time.
 [`bit_always_assert`]       | These assertions are always checked.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 

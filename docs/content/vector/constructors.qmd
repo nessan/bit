@@ -16,6 +16,7 @@ template<std::unsigned_integral Src>
 constexpr bit::vector(const std::vector<Src>& src);                 // <3>
 
 template<typename Iter>
+    requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
 constexpr bit::vector(Iter b, Iter e);                              // <4>
 
 template<std::size_t N>
@@ -24,8 +25,14 @@ explicit constexpr bit::vector(const std::bitset<N> &bs);           // <5>
 explicit constexpr
 bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <6>
 
+template<typename T>
+    requires std::same_as<std::remove_cvref_t<T>, block_store_type>
+explicit constexpr bit::vector(std::size_t n, T&& blocks, bool is_clean = false);   // <7>
+
+explicit bit::vector(std::size_t n, Block value);                   // <8>
+
 explicit
-bit::vector(std::string_view str, bool bit_order = false);          // <7>
+bit::vector(std::string_view str, bool bit_order = false);          // <9>
 
 ```
 1. Constructs a bit-vector with `n` elements all set to 0.                  \
@@ -39,7 +46,9 @@ bit::vector(std::string_view str, bool bit_order = false);          // <7>
 5. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
 6. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
    Element `i` in the vector is set to 1 if `f(i) != 0`; otherwise it is 0.
-7. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
+7. Create a bit-vector by *copying* or *moving* a pre-filled container of blocks.
+8. Create a bit-vector of size `n` by repeatedly copying the bits of a constant block value.
+9. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
    See below.
 
 ### Template Parameters
@@ -47,7 +56,7 @@ bit::vector(std::string_view str, bool bit_order = false);          // <7>
 Parameter   | Description
 ---------   | -----------
 `Src`       | The type of the unsigned integers used to fill the vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can create a bit-vector from a list of 32-bit unsigned integers while the storage scheme for the vector remains the default 64-bit type.
-`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` should be some unsigned integer type.
+`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` must be some unsigned integer type.
 `std::invocable` | [`std::invocable`] is the signature for a function over an index.
 
 : {.bordered .hover .responsive tbl-colwidths="[25,75]"}
@@ -65,7 +74,7 @@ Argument    | Description
 
 ## Construction from non-strings
 
-Here is an example of constructing a `bit::vector` from non-string data.
+Here are some examples of constructing a `bit::vector` from non-string data.
 
 [Example]{.bt}
 ```cpp
@@ -115,6 +124,71 @@ v6 = 00000000000000001111111111111111 in bit-order!  <3>
 1. Note that the `std::bitset` prints with in _bit-order_.
 2. This `bit::vector` has the same elements but prints in _vector-order_.
 3. We can also print a `bit::vector` in bit-order if required.
+
+## Construction from a prefilled store
+
+Sometimes, none of the standard construction methods we provide work for your application.
+For those cases, we provide a method to take a block store of bits you have prefilled in some manner and then use them to construct a `bit::vector`.
+
+::: {.callout-important}
+Your block store must match the `block_store_type` of the `bit::vector` you wish to construct.
+It must also have precisely the correct size --- if you are constructing a bit-vector of size `n`, the store size must equal the value returned from `blocks_needed(n)`.
+:::
+
+Suppose `my_store` is a prefilled store of bits you wish to use to construct a bit-vector of size `n`.
+If you invoke the constructor as:
+```cpp
+bit::vector v(n, std::move(my_store));
+```
+Then `my_store` is *moved* directly into place as the bit-vector's elements.
+This construction makes no copies of the blocks and will be very efficient.
+However, if you use this route, `my_store` will no longer be valid after the call.
+
+On the other hand, if you invoke the constructor as:
+```cpp
+bit::vector v(n, my_store);
+```
+Then `my_store` is *copied* into the bit-vector and remains valid after the call, though unconnected from the bit-vector.
+
+::: {.callout-tip}
+The constructor takes an optional third `is_clean` argument.
+If `false` (the default), the constructor cleans out any _junk_ bits in the final block of the store arguments.
+If you are sure those bits are all zero you can preempt that cleaning call.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    using vector_type = bit::vector<std::uint8_t>;
+    using block_store_type = vector_type::block_store_type;
+
+    std::size_t n = 22;                         // <1>
+    block_store_type  blocks(vector_type::blocks_needed(n));
+    std::fill(blocks.begin(), blocks.end(), std::numeric_limits<vector_type::block_type>::max());
+
+    vector_type u{n, blocks};                   // <2>
+    std::cout << "bit::vector(" << n << ", blocks)            = " << u    << '\n';
+    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
+
+    vector_type v{22, std::move(blocks)};       // <3>
+    std::cout << "bit::vector(" << n << ", std::move(blocks)) = " << u    << '\n';
+    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
+}
+```
+1. Fill three 8-bit blocks with ones.
+2. Copy 22 of those bits to a bit-vector and automatically clean out the two junk ones at the end.
+3. Move all the blocks into a bit-vector and automatically clean out the two junk ones at the end. \
+   Now, after the move, the original `blocks` store is empty!
+
+[Output]{.bt}
+```bash
+bit::vector(22, blocks)            = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+post-construction blocks size      = 3
+bit::vector(22, std::move(blocks)) = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+post-construction blocks size      = 0
+```
 
 ## Construction from strings
 
