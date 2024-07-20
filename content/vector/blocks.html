@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2) - bit::vector — Underlying Storage</title>
+<title>Linear Algebra over GF(2) - bit::vector — Access the Block Store</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -140,11 +140,11 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2) - bit::vector — Underlying Storage">
+<meta property="og:title" content="Linear Algebra over GF(2) - bit::vector — Access the Block Store">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2) - bit::vector — Underlying Storage">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - bit::vector — Access the Block Store">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Underlying Storage</h1>
+          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Access the Block Store</h1>
         </a>     
     </div>
   </nav>
@@ -405,12 +405,54 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
- <span class="menu-text">Debugging</span></a>
+ <span class="menu-text">Bit-Polynomials</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
@@ -434,13 +476,13 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/notes/index.html" class="sidebar-item-text sidebar-link">
@@ -483,7 +525,10 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link active" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#construction-from-a-prefilled-store" id="toc-construction-from-a-prefilled-store" class="nav-link active" data-scroll-target="#construction-from-a-prefilled-store">Construction from a prefilled store</a>
+  <ul class="collapse">
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/vector/blocks.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -492,7 +537,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Underlying Storage</h1>
+<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Access the Block Store</h1>
 </div>
 
 
@@ -520,46 +565,186 @@ window.Quarto = {
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
 <!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for the bit::polynomial class -->
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<p>Access to the underlying block store and memory allocator.</p>
-<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Block<span class="op">,</span> Allocator<span class="op">&gt;&amp;</span> blocks<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Block<span class="op">,</span> Allocator<span class="op">&gt;&amp;</span> blocks<span class="op">();</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-3" class="code-annotation-target"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> Allocator allocator<span class="op">()</span> <span class="at">const</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">Read-only access to the underlying block store.</span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="2">Read-write access to the underlying block store.</span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="3" data-code-annotation="3">Read-only access to the memory allocator the underlying block store uses.</span>
-</dd>
-</dl>
-<p>Bit-vectors pack their elements into <code>Blocks</code> (some [<code>std::unsigned</code>] type), which are stored in a <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>. These methods allow access to that store and its memory allocator.</p>
+<p>The methods referenced on this page allow you to access what might be termed the implementation details in the <code>bit::vector</code> class. As such, they probably should be considered <em>advanced</em> and something of a last resource!</p>
+<p>The primary use case is to implement functionality that should eventually make it into the core <code>bit::vector</code> interface.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Use at your own risk
+Use these methods at your own risk
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Writing directly into the store can leave the <code>bit::vector</code> in an illegitimate state.</p>
+<p>Writing directly into the block store can leave the <code>bit::vector</code> in an illegitimate state.</p>
 </div>
 </div>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">block_store_type</span> <span class="op">=</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Block<span class="op">,</span> Allocator<span class="op">&gt;;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">As mentioned, the bit-vector elements are packed into unsigned integer blocks. In turn, we collect those blocks in a <em>store</em> of this <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a> type.</span>
+</dd>
+</dl>
+<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="bu">std::</span>size_t bits_per_block<span class="op">;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="bu">std::</span>size_t blocks_needed<span class="op">(</span><span class="bu">std::</span>size_t n<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="1" data-code-annotation="1">The number of bit-vector elements we can store in a single block.</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="2">Returns the number of blocks needed to a bit-vector of size <code>n</code>.</span>
+</dd>
+</dl>
+<div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-1" class="code-annotation-target"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="bu">std::</span>size_t block_index_for<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-2" class="code-annotation-target"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="bu">std::</span>size_t bit_index_for<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="1" data-code-annotation="1">Returns the block index containing element <code>i</code> of the bit-vector.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="2" data-code-annotation="2">Returns the specific bit position in that block where element <code>i</code> resides.</span>
+</dd>
+</dl>
+<div class="sourceCode" id="annotated-cell-4"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-1" class="code-annotation-target"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="at">const</span> <span class="dt">block_store_type</span><span class="op">&amp;</span> blocks<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-2" class="code-annotation-target"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">block_store_type</span><span class="op">&amp;</span> blocks<span class="op">();</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-4-3" class="code-annotation-target"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> Allocator allocator<span class="op">()</span> <span class="at">const</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="1" data-code-annotation="1">Read-only access to the underlying block store.</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="2" data-code-annotation="2">Read-write access to the underlying block store.</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="3" data-code-annotation="3">Read-only access to the memory allocator the underlying block store uses.</span>
+</dd>
+</dl>
+<div class="sourceCode" id="annotated-cell-5"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-1" class="code-annotation-target"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="bu">std::</span>size_t block_count<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-2" class="code-annotation-target"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> Block  block<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">)</span> <span class="at">const</span><span class="op">;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-3" class="code-annotation-target"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> Block<span class="op">&amp;</span> block<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">)</span> <span class="op">;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="1" data-code-annotation="1">Returns the number of blocks that exist in the block store.</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="2" data-code-annotation="2">Read-only access to block <code>i</code> in the store (the index is never range-checked).</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="3" data-code-annotation="3">Read-write access to block <code>i</code> in the store (the index is never range-checked).</span>
+</dd>
+</dl>
+<div class="sourceCode" id="annotated-cell-6"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-6-1" class="code-annotation-target"><a href="#annotated-cell-6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> clean<span class="op">();</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-6" data-code-lines="1" data-code-annotation="1">This sets any extra/junk bits in the <em>last</em> occupied block to 0. It might be helpful if you have written directly into the block store.</span>
+</dd>
+</dl>
+<section id="construction-from-a-prefilled-store" class="level2">
+<h2 class="anchored" data-anchor-id="construction-from-a-prefilled-store">Construction from a prefilled store</h2>
+<p>Sometimes, none of the standard construction methods we provide in <a href="../../content/vector/constructors.html"><code>vector::constructors</code></a> work for your application. For those cases, we provide a method to take a block store of bits you have prefilled in some manner and then use those bits directly to construct a <code>bit::vector</code>.</p>
+<div class="sourceCode" id="annotated-cell-7"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
+<span id="annotated-cell-7-2"><a href="#annotated-cell-7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">requires</span> <span class="bu">std::</span>same_as<span class="op">&lt;</span><span class="bu">std::</span>remove_cvref_t<span class="op">&lt;</span>T<span class="op">&gt;,</span> <span class="dt">block_store_type</span><span class="op">&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-7-3" class="code-annotation-target"><a href="#annotated-cell-7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> bit<span class="op">::</span>vector<span class="op">(</span><span class="bu">std::</span>size_t n<span class="op">,</span> T<span class="op">&amp;&amp;</span> blocks<span class="op">,</span> <span class="dt">bool</span> is_clean <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="3" data-code-annotation="1">Create a bit-vector by <em>copying</em> or <em>moving</em> a pre-filled container of blocks.</span>
+</dd>
+</dl>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Your block store must match the <code>block_store_type</code> of the <code>bit::vector</code> you wish to construct. It must also have precisely the correct size — if you are constructing a bit-vector of size <code>n</code>, the store size must equal the value returned from <code>blocks_needed(n)</code>.</p>
+</div>
+</div>
+<p>Suppose <code>my_store</code> is a prefilled store of bits you wish to use to construct a bit-vector of size <code>n</code>. If you invoke the constructor as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">(</span>n<span class="op">,</span> <span class="bu">std::</span>move<span class="op">(</span>my_store<span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then <code>my_store</code> is <em>moved</em> directly into place as the bit-vector’s elements. This construction makes no copies of the blocks and will be very efficient. However, if you use this route, <code>my_store</code> will no longer be valid after the call.</p>
+<p>On the other hand, if you invoke the constructor as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">(</span>n<span class="op">,</span> my_store<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then <code>my_store</code> is <em>copied</em> into the bit-vector and remains valid after the call, though unconnected from the bit-vector.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The constructor takes an optional third <code>is_clean</code> argument. If <code>false</code> (the default), the constructor cleans out any <em>junk</em> bits in the final block of the store arguments. You can preempt that cleaning call if you are sure those bits are all zero.</p>
+</div>
+</div>
+<p><span class="bt">Example</span></p>
+<div class="sourceCode" id="annotated-cell-10"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="annotated-cell-10-4"><a href="#annotated-cell-10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>uint8_t<span class="op">&gt;;</span></span>
+<span id="annotated-cell-10-5"><a href="#annotated-cell-10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">block_store_type</span> <span class="op">=</span> <span class="dt">vector_type</span><span class="op">::</span><span class="dt">block_store_type</span><span class="op">;</span></span>
+<span id="annotated-cell-10-6"><a href="#annotated-cell-10-6" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-10-7" class="code-annotation-target"><a href="#annotated-cell-10-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t n <span class="op">=</span> <span class="dv">22</span><span class="op">;</span></span>
+<span id="annotated-cell-10-8"><a href="#annotated-cell-10-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">block_store_type</span> blocks<span class="op">(</span><span class="dt">vector_type</span><span class="op">::</span>blocks_needed<span class="op">(</span>n<span class="op">));</span></span>
+<span id="annotated-cell-10-9"><a href="#annotated-cell-10-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>fill<span class="op">(</span>blocks<span class="op">.</span>begin<span class="op">(),</span> blocks<span class="op">.</span>end<span class="op">(),</span> <span class="bu">std::</span>numeric_limits<span class="op">&lt;</span><span class="dt">vector_type</span><span class="op">::</span><span class="dt">block_type</span><span class="op">&gt;::</span>max<span class="op">());</span></span>
+<span id="annotated-cell-10-10"><a href="#annotated-cell-10-10" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-10-11" class="code-annotation-target"><a href="#annotated-cell-10-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector_type</span> u<span class="op">{</span>n<span class="op">,</span> blocks<span class="op">};</span></span>
+<span id="annotated-cell-10-12"><a href="#annotated-cell-10-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"bit::vector("</span> <span class="op">&lt;&lt;</span> n <span class="op">&lt;&lt;</span> <span class="st">", blocks)            = "</span> <span class="op">&lt;&lt;</span> u    <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-10-13"><a href="#annotated-cell-10-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"post-construction blocks size      = "</span> <span class="op">&lt;&lt;</span> blocks<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-10-14"><a href="#annotated-cell-10-14" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-10-15" class="code-annotation-target"><a href="#annotated-cell-10-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector_type</span> v<span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="bu">std::</span>move<span class="op">(</span>blocks<span class="op">)};</span></span>
+<span id="annotated-cell-10-16"><a href="#annotated-cell-10-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"bit::vector("</span> <span class="op">&lt;&lt;</span> n <span class="op">&lt;&lt;</span> <span class="st">", std::move(blocks)) = "</span> <span class="op">&lt;&lt;</span> u    <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-10-17"><a href="#annotated-cell-10-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"post-construction blocks size      = "</span> <span class="op">&lt;&lt;</span> blocks<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-10-18"><a href="#annotated-cell-10-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="7" data-code-annotation="1">Fill three 8-bit blocks with ones.</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="11" data-code-annotation="2">Copy 22 of those bits to a bit-vector and automatically clean out the two junk ones at the end.</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="15" data-code-annotation="3">Move all the blocks into a bit-vector and automatically clean out the two junk ones at the end.<br>
+Now, after the move, the original <code>blocks</code> store is empty!</span>
+</dd>
+</dl>
+<p><span class="bt">Output</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bit::vector</span><span class="er">(</span><span class="ex">22,</span> blocks<span class="kw">)</span>            <span class="ex">=</span> [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">post-construction</span> blocks size      = 3</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bit::vector</span><span class="er">(</span><span class="ex">22,</span> std::move<span class="er">(</span><span class="ex">blocks</span><span class="kw">))</span> <span class="ex">=</span> [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">post-construction</span> blocks size      = 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><a href="../../content/vector/capacity.html"><code>vector::capacity</code></a></p>
+<p><a href="../../content/vector/constructors.html"><code>vector::constructors</code></a></p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

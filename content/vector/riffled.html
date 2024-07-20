@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -405,12 +405,54 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
- <span class="menu-text">Debugging</span></a>
+ <span class="menu-text">Bit-Polynomials</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
@@ -434,13 +476,13 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/notes/index.html" class="sidebar-item-text sidebar-link">
@@ -520,52 +562,52 @@ window.Quarto = {
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
 <!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for the bit::polynomial class -->
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<p>We have an instance method that copies a bit-vector while interleaving the elements with zeros.</p>
+<p>We have instance methods that make a copy of the bit-vector with its elements interleaved with zeros.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector riffled<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This method creates a new bit-vector, a copy of the current bit-vector with interleaved zeros.</p>
-<p>For example, if the current bit-vector has elements <code>[a b c d ...]</code>, the returned bit-vector will have elements <code>[a 0 b 0 c 0 d 0 ...]</code>. The riffled version of a bit-vector of size <span class="math inline">\(n \ge 2\)</span> will have size <span class="math inline">\(2n-1\)</span>. The riffled version of a bit-vector of size <span class="math inline">\(n &lt; 2\)</span> will be <span class="math inline">\(n\)</span>.</p>
+<p>This method creates a new bit-vector, a copy of the current bit-vector with interleaved zeros. For example, if the current bit-vector has elements <code>[a b c d]</code>, the returned bit-vector will have elements <code>[a 0 b 0 c 0 d]</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">void</span> riffled<span class="op">(</span>bit<span class="op">::</span>vector<span class="op">&amp;</span> dst<span class="op">)</span> <span class="at">const</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This method turns <code>dst</code> into a copy of the current bit-vector with interleaved zeros. For example, if the current bit-vector has elements <code>[a b c d]</code>, then, on return, the <code>dst</code> bit-vector will have elements <code>[a 0 b 0 c 0 d]</code>. It is helpful for algorithms that require repeated riffling and where we want to reuse the <code>dst</code> storage.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Why is this useful?
+One reason this might be useful
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>If you think of a bit-vector <span class="math inline">\(\mathbf{p}\)</span> as being the coefficients in a polynomial over <span class="math inline">\(\FF\)</span>: <span class="math display">\[
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots
-\]</span> It is easy to verify that the polynomial <span class="math inline">\(p(x)^2\)</span> has coefficients that are the riffled version of <span class="math inline">\(\mathbf{p}\)</span>.</p>
-<p>For example, if <span class="math inline">\(p(x) = a + bx\)</span> then <span class="math display">\[
-p(x)^2 = a^2 + 2 a b x + b^2 x^2 = a + b x^2
-\]</span> Because in <span class="math inline">\(\FF\)</span>, you drop all multiples of 2.<br>
-The general case follows by induction.</p>
+\]</span> It is easy to verify that the polynomial <span class="math inline">\(p(x)^2\)</span> has coefficients that are the riffled version of <span class="math inline">\(\mathbf{p}\)</span>. For example, if <span class="math inline">\(p(x) = a + bx\)</span> then <span class="math display">\[
+p(x)^2 = a^2 + 2 a b x + b^2 x^2
+\]</span> In <span class="math inline">\(\FF\)</span>, you drop all multiples of 2, and it follows that <span class="math display">\[
+p(x)^2 = a + b x^2
+\]</span> The general case follows by induction.</p>
 </div>
 </div>
+<p>The riffled version of a bit-vector of size <span class="math inline">\(n \ge 2\)</span> will have size <span class="math inline">\(2n-1\)</span>. The riffled version of a bit-vector of size <span class="math inline">\(n &lt; 2\)</span> will be <span class="math inline">\(n\)</span>.</p>
 <p><span class="bt">Example</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>uint8_t<span class="op">&gt;;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t N <span class="op">=</span> <span class="dv">17</span><span class="op">;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> u <span class="op">=</span> <span class="dt">vector_type</span><span class="op">::</span>ones<span class="op">(</span>N<span class="op">);</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> v <span class="op">=</span> u<span class="op">.</span>riffled<span class="op">();</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u           = "</span> <span class="op">&lt;&lt;</span> u <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> u<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u.riffled() = "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>uint8_t<span class="op">&gt;;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t N <span class="op">=</span> <span class="dv">17</span><span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> u <span class="op">=</span> <span class="dt">vector_type</span><span class="op">::</span>ones<span class="op">(</span>N<span class="op">);</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> v <span class="op">=</span> u<span class="op">.</span>riffled<span class="op">();</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u           = "</span> <span class="op">&lt;&lt;</span> u <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> u<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"u.riffled() = "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="st">" has size "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>size<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="bt">Output</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">u</span>           = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] has size 17</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">u.riffled()</span> <span class="ex">=</span> [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1] has size 33</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">u</span>           = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] has size 17</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">u.riffled()</span> <span class="ex">=</span> [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1] has size 33</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><a href="../../content/vector/to_string.html"><code>vector::to_polynomial</code></a></p>
+<p><a href="../../content/polynomial/squared.html"><code>polynomial::squared</code></a></p>
 
 
 </section>

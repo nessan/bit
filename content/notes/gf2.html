@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -375,12 +375,54 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
- <span class="menu-text">Debugging</span></a>
+ <span class="menu-text">Bit-Polynomials</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
@@ -404,13 +446,13 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/notes/index.html" class="sidebar-item-text sidebar-link">
@@ -493,6 +535,7 @@ window.Quarto = {
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
 <!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for the bit::polynomial class -->
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
@@ -580,7 +623,7 @@ Add one row to another row.
 <section id="gaussian-elimination-in-ff" class="level2">
 <h2 class="anchored" data-anchor-id="gaussian-elimination-in-ff">Gaussian Elimination in <span class="math inline">\(\FF\)</span></h2>
 <p>Suppose that <span class="math inline">\(A\)</span> is an <span class="math inline">\(n \times n\)</span> matrix over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(b\)</span> is a compatibly sized bit-vector where we are interested in finding an <span class="math inline">\(x\)</span> satisfying <span class="math inline">\(A \cdot x = b\)</span>. Then the pseudocode for Gaussian elimination looks like:</p>
-<div id="alg-ge" class="pseudocode-container" data-line-number-punc=":" data-alg-title="Algorithm" data-indent-size="1.2em" data-pseudocode-index="1" data-comment-delimiter="//" data-no-end="false" data-line-number="true">
+<div id="alg-ge" class="pseudocode-container" data-alg-title="Algorithm" data-no-end="false" data-pseudocode-index="1" data-comment-delimiter="//" data-line-number-punc=":" data-line-number="true" data-indent-size="1.2em">
 <div class="pseudocode">
 \begin{algorithm} \caption{Gaussian Elimination in $F_2$} \begin{algorithmic} \Procedure{Solve}{$A, b, n$} \For {$j = 0$ \To $n - 1$} \State $s = j$ \While {$A(s,j) = 0$} \State $s = s + 1$ \EndWhile \If {$s &gt; n$} \Continue \EndIf \If {$ s \ne j$} \State swap rows $s$ and $j$ in the matrix $A$ \State swap elements $s$ and $j$ in the vector $b$ \EndIf \For {$i = j+1$ \To $n$} \If {$A(i,j) == 1$} \State replace row $i$ in $A$ with the sum of rows $i$ and $j$ \State replace element $i$ in $b$ with the sum of elements $i$ and $j$ \EndIf \EndFor \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>

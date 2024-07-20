@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -405,12 +405,54 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
- <span class="menu-text">Debugging</span></a>
+ <span class="menu-text">Bit-Polynomials</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
@@ -434,13 +476,13 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/notes/index.html" class="sidebar-item-text sidebar-link">
@@ -520,6 +562,7 @@ window.Quarto = {
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
 <!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for the bit::polynomial class -->
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
@@ -538,7 +581,7 @@ p(\lambda) = p_0  + p_1 \lambda + p_2 \lambda^2 + \cdots
 <span id="annotated-cell-2-5"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>identity<span class="op">(</span>i<span class="op">);</span></span>
 <span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">auto</span> p <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
 <span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Char-poly for the "</span></span>
-<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>                  <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" x "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" identity: "</span> <span class="op">&lt;&lt;</span> p<span class="op">.</span>to_polynomial<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>                  <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" x "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" identity: "</span> <span class="op">&lt;&lt;</span> bit<span class="op">::</span>polynomial<span class="op">(</span>p<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="annotated-cell-2-10"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
@@ -563,36 +606,34 @@ p(\lambda) = \lambda ^7 + \lambda ^6 + \lambda ^5 + \lambda ^4 + \lambda ^3 + \l
 \]</span> Therefore, we expect to get the <span class="math inline">\(\FF\)</span> coefficients as <code>11111111</code>, which agrees with the output above.</p>
 <p><span class="bt">Example</span> Bit-matrices should satisfy their characteristic polynomial</p>
 <div class="sourceCode" id="annotated-cell-4"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-4-1"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="annotated-cell-4-2"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-4-3"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="annotated-cell-4-5"><a href="#annotated-cell-4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// For this example - turn off BIT_DEBUG and enable optimization here!</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-6" class="code-annotation-target"><a href="#annotated-cell-4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">512</span><span class="op">);</span></span>
-<span id="annotated-cell-4-7"><a href="#annotated-cell-4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
-<span id="annotated-cell-4-8"><a href="#annotated-cell-4-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Characteristic polynomial coefficients:</span><span class="sc">\n</span><span class="st">"</span> <span class="op">&lt;&lt;</span> p <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="annotated-cell-4-9"><a href="#annotated-cell-4-9" aria-hidden="true" tabindex="-1"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-10" class="code-annotation-target"><a href="#annotated-cell-4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> C <span class="op">=</span> polynomial_sum<span class="op">(</span>p<span class="op">,</span> M<span class="op">);</span></span>
-<span id="annotated-cell-4-11"><a href="#annotated-cell-4-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Does the bit-matrix satisfy its characteristic polynomial? "</span></span>
-<span id="annotated-cell-4-12"><a href="#annotated-cell-4-12" aria-hidden="true" tabindex="-1"></a>              <span class="op">&lt;&lt;</span> <span class="op">(</span>C<span class="op">.</span>none<span class="op">()</span> <span class="op">?</span> <span class="st">"YES"</span> <span class="op">:</span> <span class="st">"NO"</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<span id="annotated-cell-4-13"><a href="#annotated-cell-4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="annotated-cell-4-2"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="annotated-cell-4-3"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// For this example - turn off BIT_DEBUG and enable optimization here!</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-5" class="code-annotation-target"><a href="#annotated-cell-4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">512</span><span class="op">);</span></span>
+<span id="annotated-cell-4-6"><a href="#annotated-cell-4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
+<span id="annotated-cell-4-7"><a href="#annotated-cell-4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Characteristic polynomial:</span><span class="sc">\n</span><span class="st">"</span> <span class="op">&lt;&lt;</span> p <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span><span class="op">;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-8" class="code-annotation-target"><a href="#annotated-cell-4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> C <span class="op">=</span> p<span class="op">(</span>M<span class="op">);</span></span>
+<span id="annotated-cell-4-9"><a href="#annotated-cell-4-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Does the bit-matrix satisfy its characteristic polynomial? "</span></span>
+<span id="annotated-cell-4-10"><a href="#annotated-cell-4-10" aria-hidden="true" tabindex="-1"></a>              <span class="op">&lt;&lt;</span> <span class="op">(</span>C<span class="op">.</span>none<span class="op">()</span> <span class="op">?</span> <span class="st">"YES"</span> <span class="op">:</span> <span class="st">"NO"</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="annotated-cell-4-11"><a href="#annotated-cell-4-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-4" data-code-lines="6" data-code-annotation="1">Pay attention to the comment! We can handle much larger matrices, but you must enable compiler optimizations.</span>
+<span data-code-cell="annotated-cell-4" data-code-lines="5" data-code-annotation="1">Pay attention to the comment! We can handle much larger matrices, but you must enable compiler optimizations.</span>
 </dd>
 <dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-4" data-code-lines="10" data-code-annotation="2">All matrices should satisfy their characteristic polynomial so <span class="math inline">\(p(M)\)</span> should return the zero bit-matrix.</span>
+<span data-code-cell="annotated-cell-4" data-code-lines="8" data-code-annotation="2">All matrices should satisfy their characteristic polynomial so <span class="math inline">\(p(M)\)</span> should return the zero bit-matrix.</span>
 </dd>
 </dl>
 <p><span class="bt">Output</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> polynomial coefficients:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">110101101110101110100111001011010101101011001011110000100010011001111101011111111010101110010101101000101000010001000010011010111001000000011110000111000110110111100010100001000010110010010000110100111110000111010010110011111111001100001000100111111110101101101110001001111101000110101111000101100111100001011111011011000101010000110010101111110001100000011111100101110101010011100110101111001001111011101100001101000101101011110110000010101011111010100110011001110110110111110100010100010100101110001000010011101</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> polynomial:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">x^1</span> + x^3 + x^4 + x^5 + x^6 + x^8 + x^11 + x^12 + x^15 + x^18 + x^20 + x^22 + x^24 + x^27 + x^29 + x^30 + x^31 + x^33 + x^34 + x^35 + x^37 + x^38 + x^39 + x^40 + x^41 + x^42 + x^43 + x^45 + x^46 + x^49 + x^50 + x^51 + x^52 + x^53 + x^54 + x^56 + x^57 + x^63 + x^64 + x^65 + x^66 + x^67 + x^70 + x^74 + x^75 + x^76 + x^77 + x^79 + x^81 + x^87 + x^90 + x^91 + x^93 + x^96 + x^97 + x^98 + x^101 + x^104 + x^105 + x^106 + x^111 + x^112 + x^115 + x^119 + x^120 + x^121 + x^122 + x^127 + x^128 + x^129 + x^130 + x^133 + x^135 + x^140 + x^142 + x^144 + x^145 + x^147 + x^148 + x^151 + x^153 + x^154 + x^157 + x^158 + x^159 + x^162 + x^163 + x^164 + x^165 + x^166 + x^171 + x^172 + x^176 + x^177 + x^178 + x^179 + x^180 + x^181 + x^182 + x^186 + x^188 + x^189 + x^191 + x^193 + x^194 + x^196 + x^197 + x^198 + x^201 + x^203 + x^206 + x^210 + x^211 + x^220 + x^221 + x^222 + x^226 + x^227 + x^228 + x^229 + x^230 + x^233 + x^235 + x^236 + x^238 + x^239 + x^240 + x^242 + x^247 + x^250 + x^251 + x^256 + x^257 + x^258 + x^260 + x^261 + x^262 + x^264 + x^265 + x^268 + x^269 + x^270 + x^273 + x^274 + x^278 + x^279 + x^280 + x^282 + x^283 + x^284 + x^285 + x^286 + x^289 + x^292 + x^293 + x^295 + x^296 + x^297 + x^298 + x^306 + x^307 + x^309 + x^314 + x^316 + x^320 + x^324 + x^326 + x^328 + x^330 + x^331 + x^334 + x^335 + x^336 + x^337 + x^341 + x^342 + x^343 + x^345 + x^347 + x^350 + x^351 + x^352 + x^357 + x^360 + x^365 + x^366 + x^369 + x^372 + x^373 + x^376 + x^377 + x^378 + x^379 + x^380 + x^381 + x^382 + x^383 + x^385 + x^386 + x^387 + x^388 + x^389 + x^393 + x^397 + x^400 + x^401 + x^402 + x^405 + x^406 + x^408 + x^409 + x^410 + x^412 + x^413 + x^414 + x^415 + x^417 + x^418 + x^429 + x^431 + x^434 + x^435 + x^436 + x^438 + x^439 + x^441 + x^443 + x^444 + x^445 + x^447 + x^450 + x^451 + x^452 + x^453 + x^455 + x^457 + x^458 + x^459 + x^460 + x^461 + x^463 + x^464 + x^465 + x^468 + x^470 + x^471 + x^472 + x^473 + x^475 + x^480 + x^481 + x^482 + x^483 + x^487 + x^488 + x^490 + x^492 + x^493 + x^498 + x^499 + x^501 + x^502 + x^503 + x^506 + x^509 + x^512</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Does</span> the bit-matrix satisfy its characteristic polynomial<span class="pp">?</span> YES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><a href="../../content/matrix/polynomial_sum.html"><code>matrix::polynomial_sum</code></a></p>
+<p><a href="../../content/polynomial/evaluation.html"><code>polynomial::operator()</code></a></p>
 
 
 </section>
