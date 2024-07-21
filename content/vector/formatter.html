@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -625,11 +629,11 @@ Specifier Errors
 <h3 class="anchored" data-anchor-id="hex-string-encodings">Hex String Encodings</h3>
 <p>The other supported encoding for bit-vectors is a compact <em>hex</em> type string containing just the 16 hex characters <code>0123456789ABCDEF</code>. For example, the string “3ED02”. We allow for hex strings with an optional prefix “0x” or “0X,” e.g.&nbsp;“0x3ED02”.</p>
 <p>Hex strings are <em>not</em> affected by a <code>bit_order</code> argument — we ignore that argument.</p>
-<p>Each hex character naturally translates to <strong>four</strong> elements in a <code>bit::vector</code>. The hex string <code>"0x0"</code> is equivalent to the binary string <code>"0000"</code>, and so on, up to string <code>"0xF"</code> which is the same as the binary <code>"1111"</code>.</p>
-<p>The hex pair <code>"0x0F"</code> will be interpreted in the vector as <code>00001111</code>. Of course, this is the advantage of hex. It is a more compact format that occupies a quarter of the space needed to write out the equivalent binary string.</p>
-<p>However, what happens if you want to encode a vector whose size is <em>not</em> a multiple of 4? We handle that by allowing the final character in the string to have a base that is <em>not</em> 16. To accomplish that, we allow for an optional <em>suffix</em>, which must be one of <code>"\_2"</code>, <code>"_4"</code>, or <code>"_8"</code>. If present, the prefix gives the base for just the <em>preceding</em> character in the otherwise hex-based string. If there is no suffix, the final character is assumed to be hex like all the others.</p>
-<p>So the string <code>"0x1"</code> (no suffix, so the last character is the default hex base 16) is equivalent to <code>"0001"</code>. On the other hand, the string <code>"0x1_8"</code> (the last character is base 8) is equivalent to <code>"001"</code>. Similarly, the string <code>"0x1_4"</code> (the last character is base 4) is equivalent to <code>"01"</code> and finally, the string <code>"0x1_2"</code> (the previous character is base 2) is comparable to <code>"1"</code></p>
-<p>In the string <code>"0x3ED01_8"</code>, the first four characters <code>'3'</code>, <code>'E'</code>, <code>'D'</code>, and <code>'0'</code> are interpreted as hex values, and each will consume four slots in the vector. However, that final <code>"1_8"</code> is parsed as an octal 1, which takes up three slots <code>001</code>. Therefore, this vector has size 19 (i.e., 4*4 + 3).</p>
+<p>Each hex character naturally translates to <strong>four</strong> elements in a <code>bit::vector</code>. The hex string <code>0x0</code> is equivalent to the binary string <code>0000</code>, and so on, up to string <code>0xF</code> which is the same as the binary <code>1111</code>.</p>
+<p>The hex pair <code>0x0F</code> will be interpreted in the vector as <code>00001111</code>. Of course, this is the advantage of hex. It is a more compact format that occupies a quarter of the space needed to write out the equivalent binary string.</p>
+<p>However, what happens if you want to encode a vector whose size is <em>not</em> a multiple of 4? We handle that by allowing the final character in the string to have a base that is <em>not</em> 16. To accomplish that, we allow for an optional <em>suffix</em>, which must be one of <code>_2</code>, <code>_4</code>, or <code>_8</code>. If present, the prefix gives the base for just the <em>preceding</em> character in the otherwise hex-based string. If there is no suffix, the final character is assumed to be hex like all the others.</p>
+<p>So the string <code>0x1</code> (no suffix, so the last character is the default hex base 16) is equivalent to <code>0001</code>. On the other hand, the string <code>0x1_8</code> (the last character is base 8) is equivalent to <code>001</code>. Similarly, the string <code>0x1_4</code> (the last character is base 4) is equivalent to <code>01</code> and finally, the string <code>0x1_2</code> (the previous character is base 2) is comparable to <code>1</code></p>
+<p>In the string <code>0x3ED01_8</code>, the first four characters <code>3</code>, <code>E</code>, <code>D</code>, and <code>0</code> are interpreted as hex values, and each will consume four slots in the vector. However, that final <code>1_8</code> is parsed as an octal 1, which takes up three slots <code>001</code>. Therefore, this vector has size 19 (i.e., 4*4 + 3).</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -640,7 +644,7 @@ Careful with that final suffix character
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If the suffix is present, the final character must fit inside the base given by that suffix. The string <code>"0x3_8"</code> is OK, but trying to parse <code>"0x3_2"</code> will result in a <code>std::nullopt</code> return value because the final character is not either 0 or 1, which are the only valid options for something that is supposed to be base 2.</p>
+<p>If the suffix is present, the final character must fit inside the base given by that suffix. The string <code>0x3_8</code> is OK, but trying to parse <code>0x3_2</code> will result in a <code>std::nullopt</code> return value because the final character is not either 0 or 1, which are the only valid options for something that is supposed to be base 2.</p>
 </div>
 </div>
 <p><span class="bt">Example</span></p>

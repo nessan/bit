@@ -184,6 +184,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -605,7 +609,7 @@ window.Quarto = {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span> vector<span class="op">;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses. For example, your code might have a simple line like:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">(</span><span class="dv">32</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">{</span><span class="dv">32</span><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This code creates a vector with 32 elements set to 0 by default. The bit-vector’s 32 elements are packed into a single 64-bit word, so this example has some spare capacity.</p>
 <section id="template-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="template-parameters">Template Parameters</h3>

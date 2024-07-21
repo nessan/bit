@@ -186,6 +186,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -530,7 +534,7 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#an-iterative-technique" id="toc-an-iterative-technique" class="nav-link" data-scroll-target="#an-iterative-technique">An Iterative Technique</a></li>
-  <li><a href="#multiply-and-square" id="toc-multiply-and-square" class="nav-link" data-scroll-target="#multiply-and-square">Multiply and Square</a></li>
+  <li><a href="#square-and-multiply" id="toc-square-and-multiply" class="nav-link" data-scroll-target="#square-and-multiply">Square and Multiply</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -636,10 +640,10 @@ r_{n-1}^{N-1} \, \mathbf{p} \; \wedge \; \left(\mathbf{r}^{N-1} \ll 1 \right)
 \end{cases}
 \]</span></p>
 </section>
-<section id="multiply-and-square" class="level2">
-<h2 class="anchored" data-anchor-id="multiply-and-square">Multiply and Square</h2>
+<section id="square-and-multiply" class="level2">
+<h2 class="anchored" data-anchor-id="square-and-multiply">Square and Multiply</h2>
 <p>This iterative scheme is too slow for large <span class="math inline">\(N\)</span>.</p>
-<p>We can speed it up considerably by using a “<code>multiply and square</code>” approach, which uses the decomposition: <span class="math display">\[
+<p>We can speed it up considerably by using a “square and multiply” approach, which uses the decomposition: <span class="math display">\[
 x^N =
 \begin{cases}
 x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
@@ -651,7 +655,7 @@ x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
 <p>The second case above shows that we will also need to do some squaring steps where <span class="math inline">\(s(x)\)</span> starts as just <span class="math inline">\(s(x) = x\)</span> and then gets squared as often as needed and, of course, reduced modulo <span class="math inline">\(P(x)\)</span>: <span class="math display">\[
     s(x) \mid P(x) = x \mid P(x) \rightarrow x^2 \mid P(x)  \rightarrow x^4 \mid P(x)  \rightarrow \cdots
 \]</span> Now <span class="math inline">\(x \mid P(x) = x\)</span> so we can initialize <span class="math inline">\(\mathbf{s} = \mathbf{u}_1\)</span> the unit vector with a single set bit at index number 1.</p>
-<div id="alg-ms" class="pseudocode-container" data-no-end="false" data-indent-size="1.2em" data-comment-delimiter="//" data-alg-title="Algorithm" data-line-number="true" data-pseudocode-index="1" data-line-number-punc=":">
+<div id="alg-ms" class="pseudocode-container" data-line-number-punc=":" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-alg-title="Algorithm" data-line-number="true" data-pseudocode-index="1">
 <div class="pseudocode">
 \begin{algorithm} \caption{Computing $x^N$ mod $P(x)$} \begin{algorithmic} \Procedure{Mod}{$N, \mathbf{p}$} \State $n = \text{len}(\mathbf{p}) + 1 \State $M = N - n$ \State $\mathbf{r} = \mathbf{p}$ \State set $s$ to the appropriate unit bit-vector \While {$M \ne 0$} \If $M$ is odd \State $\mathbf{r} \equiv r(x)*s(x) \mid P(x) \EndIf \State $M \ll 1$ \If $M = 0$ \Break \EndIf \State set $\mathbf{s} \equiv s(x)^2 \mid P(x)$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
 </div>

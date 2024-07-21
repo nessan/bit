@@ -184,6 +184,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -591,22 +595,21 @@ window.Quarto = {
 <p>If <span class="math inline">\(p(x)\)</span> is the bit-polynomial: <span class="math display">\[
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
 \]</span> then the argument <span class="math inline">\(x\)</span> and the polynomial coefficients <span class="math inline">\(p_0, p_1, \ldots\)</span> are all elements of <span class="math inline">\(\FF\)</span>.</p>
-<p>The <code>bit::polynomial</code> class is a wrapper around a <a href="../../content/vector/index.html"><code>bit::vector</code></a> used to hold the polynomial coefficients. Instance methods forward much of their work to that data member.</p>
-<p>Some fundamental bit-polynomial methods do need a separate implementation. For example, bit-vector addition only makes sense for two equal-sized bit-vectors, but of course, we have to be able to add two polynomials of different degrees.</p>
+<p>The <code>bit::polynomial</code> class holds the polynomial coefficients in a <a href="../../content/vector/index.html"><code>bit::vector</code></a>. Instance methods forward much of their work to that data member. However, some bit-polynomial methods need a separate implementation. For example, bit-vector addition only makes sense for two equal-sized bit-vectors, but of course, we have to be able to add two polynomials of different degrees.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Efficiency
+Polynomial size and degree
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A bit-polynomial has a <em>size</em> <span class="math inline">\(n\)</span> which is just its number of coefficients. It also has a <em>degree</em> <span class="math inline">\(d\)</span> which is the index of the highest non-trivial power in the polynomial. <em>Monic</em> polynomials are nonzero and have <span class="math inline">\(d = n+1\)</span> which means there are no trailing zero coefficients.</p>
+<p>The <em>size</em> of a bit-polynomial is the number of its coefficients. The <em>degree</em> of a bit-polynomial is the index of the highest non-trivial power in the polynomial. <em>Monic</em> polynomials are nonzero and have no trailing zero coefficients.</p>
 <p>Operations on and between polynomials generally can ignore trailing zero coefficients. This can be an important efficiency consideration in some cases.</p>
 <p>Algorithms and methods in the <code>bit::polynomial</code> class allow for this and internally work efficiently even if the polynomials are not monic. They do that by reimplementing some of the core <code>bit::vector</code> functionality to only consider underlying storage blocks up to and including the one containing the highest non-trivial power.</p>
-<p>Polynomial methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.</p>
+<p>We also note that polynomial methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.</p>
 </div>
 </div>
 </section>
@@ -618,7 +621,10 @@ Efficiency
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           Allocator <span class="op">=</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>Block<span class="op">&gt;&gt;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span> polynomial<span class="op">;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The <code>bit::polynomial</code> class has an underlying bit-vector data member holding the polynomial coefficients that use the two template parameters (see the documentation for <a href="../../content/vector/index.html"><code>bit::vector</code></a>).</p>
+<p>The <code>bit::polynomial</code> class holds the polynomial coefficients in a <a href="../../content/vector/index.html"><code>bit::vector</code></a> data member that uses the two template parameters.</p>
+<p>The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses. For example, your code might have a simple line like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>polynomial p<span class="op">{</span><span class="dv">32</span><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This code creates a polynomial with 32 coefficients set to 0 by default.</p>
 <section id="template-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="template-parameters">Template Parameters</h3>
 <div class="table-responsive">
@@ -643,8 +649,8 @@ Efficiency
 </div>
 <p>The default <code>Block</code> is 64-bits, the <em>native</em> size for many modern CPUs.</p>
 <p>Of course, if you need to use many smaller degree bit-polynomials and have concerns about conserving space, you might use a different <code>Block</code>. Perhaps if the bit-polynomials all have degrees that fit in 8 bits, you might have code along the lines:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">poly_type</span><span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;</span><span class="dt">uint8_t</span><span class="op">&gt;;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">poly_type</span> p <span class="op">=</span> <span class="op">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">poly_type</span><span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;</span><span class="dt">uint8_t</span><span class="op">&gt;;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">poly_type</span> p <span class="op">=</span> <span class="op">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -677,11 +683,11 @@ Use a single <code>Block</code> type throughout your code!
 <tbody>
 <tr class="odd">
 <td><code>vector_type</code></td>
-<td>Alias for <a href="../../content/vector/index.html"><code>bit::vector</code></a>—the type used to store the polynomial coefficients.</td>
+<td>Alias for <a href="../../content/vector/index.html"><code>bit::vector</code></a> — the type used to store the polynomial coefficients.</td>
 </tr>
 <tr class="even">
 <td><code>matrix_type</code></td>
-<td>Alias for <a href="../../content/matrix/index.html"><code>bit::matrix</code></a>—polynomials can be evaluated for scalar and <em>square</em> bit-matrix arguments of this type.</td>
+<td>Alias for <a href="../../content/matrix/index.html"><code>bit::matrix</code></a> — polynomials can be evaluated for scalar and <em>square</em> bit-matrix arguments of this type.</td>
 </tr>
 <tr class="odd">
 <td><code>ndeg</code></td>
@@ -702,8 +708,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 67%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -733,8 +739,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -769,7 +775,7 @@ Use a single <code>Block</code> type throughout your code!
 </tr>
 <tr class="odd">
 <td><a href="../../content/polynomial/special.html"><code>polynomial::constant</code></a></td>
-<td>Is this a constant polynomial <span class="math inline">\(p(x) = 1 \mathrm{ or } 1\)</span>?</td>
+<td>Is this a constant polynomial <span class="math inline">\(p(x) = 0 \text{ or } 1\)</span>?</td>
 </tr>
 <tr class="even">
 <td><a href="../../content/polynomial/degree.html"><code>polynomial::degree</code></a></td>
@@ -808,7 +814,7 @@ Use a single <code>Block</code> type throughout your code!
 <tbody>
 <tr class="odd">
 <td><a href="../../content/polynomial/size.html"><code>polynomial::resize</code></a></td>
-<td>Resizes the number of coefficients in the polynomial up or down. Added coefficients are all zeros.</td>
+<td>Resizes the number of coefficients in the polynomial up or down. Any added coefficients are set to zero.</td>
 </tr>
 <tr class="even">
 <td><a href="../../content/polynomial/size.html"><code>polynomial::clear</code></a></td>
@@ -859,11 +865,11 @@ Use a single <code>Block</code> type throughout your code!
 </tr>
 <tr class="odd">
 <td><a href="../../content/polynomial/access.html"><code>polynomial::coefficients</code></a></td>
-<td>Read-only access all the polynomial coefficients as a bit-vector.</td>
+<td>Read-only access to the polynomial coefficients as a bit-vector.</td>
 </tr>
 <tr class="even">
 <td><a href="../../content/polynomial/access.html"><code>polynomial::set_coefficients</code></a></td>
-<td>WRite access all the polynomial coefficients as a bit-vector.</td>
+<td>Write access to the polynomial coefficients as a bit-vector.</td>
 </tr>
 </tbody>
 </table>
@@ -874,8 +880,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -897,8 +903,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -936,8 +942,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -959,8 +965,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -971,15 +977,15 @@ Use a single <code>Block</code> type throughout your code!
 <tbody>
 <tr class="odd">
 <td><a href="../../content/polynomial/sub.html"><code>polynomial::sub</code></a></td>
-<td>Create a new polynomial as a distinct sub-polynomial of this one.</td>
+<td>Create a distinct sub-polynomial of this one.</td>
 </tr>
 <tr class="even">
 <td><a href="../../content/polynomial/split.html"><code>polynomial::split</code></a></td>
-<td>Split a polynomial <span class="math inline">\(p(x)\)</span> into two pieces so that <span class="math inline">\(p(x) = l(x) + x^n h(x)\)</span>.</td>
+<td>Split polynomial <span class="math inline">\(p(x)\)</span> into <span class="math inline">\(p(x) = l(x) + x^n h(x)\)</span>.</td>
 </tr>
 <tr class="odd">
 <td><a href="../../content/polynomial/reduce.html"><code>polynomial::reduce</code></a></td>
-<td>Reduces <span class="math inline">\(x^e\)</span> by this polynomial where the exponent <span class="math inline">\(e\)</span> can be very large.</td>
+<td>Reduces <span class="math inline">\(x^e\)</span> by this polynomial (<span class="math inline">\(e\)</span> can be very large).</td>
 </tr>
 </tbody>
 </table>
@@ -991,8 +997,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 70%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1031,8 +1037,8 @@ Use a single <code>Block</code> type throughout your code!
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
-<col style="width: 32%">
-<col style="width: 68%">
+<col style="width: 35%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1063,7 +1069,7 @@ Use a single <code>Block</code> type throughout your code!
 </tr>
 <tr class="even">
 <td><a href="../../content/polynomial/formatter.html"><code>polynomial::formatter</code></a></td>
-<td>Connect the <code>bit::polynomial</code> class to <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a> and friends.</td>
+<td>Connect the <code>bit::polynomial</code> class to <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a>.</td>
 </tr>
 </tbody>
 </table>

@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -566,7 +570,7 @@ window.Quarto = {
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<p>We have a method that efficiently computes the square of polynomials.</p>
+<p>We have methods that efficiently compute the square of polynomials.</p>
 <div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> polynomial squared<span class="op">()</span>                <span class="at">const</span><span class="op">;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">void</span>       squared<span class="op">(</span>polynomial<span class="op">&amp;</span> dst<span class="op">)</span> <span class="at">const</span><span class="op">;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
@@ -581,9 +585,10 @@ window.Quarto = {
 </dl>
 <p>The second version can be used for algorithms involving repeated squaring where you want to reuse the <code>dst</code> storage.</p>
 <p>The <code>squared</code> methods are faster than using the multiplication operator.</p>
-<p>If <span class="math inline">\(p(x)\)</span> is represented by its coefficient vector <span class="math inline">\(\mathbf{p}\)</span>: <span class="math display">\[
+<p>If <span class="math inline">\(p(x)\)</span> is represented by its coefficient vector <span class="math inline">\(\mathbf{p} = [ p_0, p_1, p_2, \ldots ]\)</span>: <span class="math display">\[
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots,
-\]</span> it is easy to verify that the polynomial <span class="math inline">\(p(x)^2\)</span> has coefficients that are the <a href="../../content/vector/riffled.html"><code>vector::riffled</code></a> version of <span class="math inline">\(\mathbf{p}\)</span>. For example, if <span class="math inline">\(p(x) = a + bx\)</span> then <span class="math display">\[
+\]</span> it is easy to verify that the polynomial <span class="math inline">\(p(x)^2\)</span> has coefficients that are the <a href="../../content/vector/riffled.html"><code>vector::riffled</code></a> version of <span class="math inline">\(\mathbf{p}\)</span>.</p>
+<p>For example, if <span class="math inline">\(p(x) = a + bx\)</span> then <span class="math display">\[
 p(x)^2 = a^2 + 2 a b x + b^2 x^2
 \]</span> In <span class="math inline">\(\FF\)</span>, you drop all multiples of 2, and it follows that <span class="math display">\[
 p(x)^2 = a + b x^2

@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -581,11 +585,11 @@ window.Quarto = {
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="2">Returns true if the polynomial is <em>monic</em>—i.e.&nbsp;has no trailing zero coefficients.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="2">Returns true if the polynomial is <em>monic</em> — i.e.&nbsp;has no trailing zero coefficients.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="3" data-code-annotation="3">Eliminates any trailing zero coefficients and returns a reference to this, now monic, polynomial.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="3" data-code-annotation="3">Eliminates any trailing zero coefficients and returns a reference to this polynomial.</span>
 </dd>
 </dl>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -599,7 +603,7 @@ The zero polynomial
 </div>
 <div class="callout-body-container callout-body">
 <p>The zero polynomial has <em>no</em> degree though by convention it is often set to <span class="math inline">\(-\infty\)</span>. Our polynomial class has a special “not a degree” constant for this purpose <code>polynomial::ndeg</code>.</p>
-<p>Polynomial methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case. The <code>make_monic()</code> method does nothing to a zero polynomial.</p>
+<p>The <code>make_monic()</code> method does nothing to a zero polynomial.</p>
 </div>
 </div>
 <section id="degree-versus-size" class="level2">
@@ -619,7 +623,7 @@ The <code>make_monic()</code> method does not alter the memory footprint
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Calling <code>make_monic</code> on a non-zero polynomial simply ensures that <code>size() == degree() + 1</code>. No memory is released by this operation—see the <a href="../../content/polynomial/shrink_to_fit.html"><code>polynomial::shrink_to_fit</code></a> method.</p>
+<p>Calling <code>make_monic</code> on a non-zero polynomial simply ensures that <code>size() == degree() + 1</code>. No memory is released by this operation — see the <a href="../../content/polynomial/shrink_to_fit.html"><code>polynomial::shrink_to_fit</code></a> method.</p>
 </div>
 </div>
 </section>

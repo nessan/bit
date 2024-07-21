@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -576,7 +580,7 @@ window.Quarto = {
 <!-- Pages and Wikipedia articles referenced in the documentation -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space!</p>
+<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.</p>
 <p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="../content/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="../content/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="../content/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\FF\)</span>.</p>
 <p>These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.</p>
 <p>Because arithmetic operations in <span class="math inline">\(\FF\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
@@ -613,11 +617,10 @@ Library versions
 <span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> c <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The bit-matrix M:</span><span class="sc">\n</span><span class="st">"</span> <span class="op">&lt;&lt;</span> M <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"has characteristic polynomial c(x) = "</span> <span class="op">&lt;&lt;</span> c <span class="op">&lt;&lt;</span> <span class="st">".</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The polynomial sum c(M) gives:</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-9" class="code-annotation-target"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> c<span class="op">(</span>M<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Bit-matrix M:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> M<span class="op">);</span></span>
+<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Characteristic poly c(x) = </span><span class="sc">{}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"c(M) yields:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">(</span>M<span class="op">));</span></span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
@@ -625,23 +628,23 @@ Library versions
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Computes the characteristic polynomial of <span class="math inline">\(M\)</span>, <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Computes its characteristic polynomial <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="9" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="8" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
 </dd>
 </dl>
 <p><span class="bt">Sample Output (varies from run to run):</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> bit-matrix M:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 0 0 0│</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 1 0 1 0│</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 0 0 1│</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 0 0 1 1│</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 0 1│</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">has</span> characteristic polynomial c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^4 + x^6.</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> polynomial sum c<span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">gives:</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bit-matrix</span> M:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 1 0│</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 1 0 0│</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 1 0 1│</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 1 0 1 0│</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 0 0 1 1 1│</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> poly c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^2 + x^3 + x^5 + x^6</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">c</span><span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">yields:</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>

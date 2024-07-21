@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -525,7 +529,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#resizing" id="toc-resizing" class="nav-link active" data-scroll-target="#resizing">Resizing</a></li>
+  <li><a href="#size-versus-degree" id="toc-size-versus-degree" class="nav-link active" data-scroll-target="#size-versus-degree">Size versus Degree</a></li>
+  <li><a href="#resizing" id="toc-resizing" class="nav-link" data-scroll-target="#resizing">Resizing</a></li>
   <li><a href="#memory-usage" id="toc-memory-usage" class="nav-link" data-scroll-target="#memory-usage">Memory Usage</a>
   <ul class="collapse">
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
@@ -595,9 +600,11 @@ window.Quarto = {
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="5">Resizes the number of coefficients in the polynomial up or down. Added coefficients are all zeros.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="5">Resizes the number of coefficients in the polynomial up or down. Any added coefficients are initialized to zero.</span>
 </dd>
 </dl>
+<section id="size-versus-degree" class="level2">
+<h2 class="anchored" data-anchor-id="size-versus-degree">Size versus Degree</h2>
 <p>It is important to distinguish between the <em>size</em> of a polynomial and its <em>degree</em>. The size is the number of coefficients, while the degree as returned by the <a href="../../content/polynomial/degree.html"><code>polynomial::degree</code></a> method is the index of its highest non-trivial power term.</p>
 <p>For example, <span class="math display">\[
 p(x) = x + x^3,
@@ -615,19 +622,20 @@ The zero polynomial
 </div>
 <div class="callout-body-container callout-body">
 <p>The zero polynomial might have no coefficients so <code>size() == 0</code>, or it might have lots of zero coefficients and a <code>size() &gt; 0</code>. In either case, the degree will be the special “not a degree” constant <code>polynomial::ndeg</code>.</p>
-<p>Polynomial methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.</p>
+<p>Methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.</p>
 </div>
 </div>
+</section>
 <section id="resizing" class="level2">
 <h2 class="anchored" data-anchor-id="resizing">Resizing</h2>
 <p>The <code>resize(n)</code> method alters the polynomial to have <code>n</code> coefficients.</p>
-<p>If <code>n &gt; size()</code> then, because the added coefficients are zeros, the degree of the polynomial is not changed. The memory footprint consumed by the polynomial may increase.</p>
+<p>If <code>n &gt; size()</code> the added coefficients are zeros so the degree of the polynomial is not changed. The memory footprint consumed by the polynomial may increase.</p>
 <p>On the other hand, if <code>n &lt; size()</code> we drop terms in the polynomial which may lower its degree. However, even if we decrease the polynomial size, no memory is released.</p>
 </section>
 <section id="memory-usage" class="level2">
 <h2 class="anchored" data-anchor-id="memory-usage">Memory Usage</h2>
-<p>The <code>capacity()</code> method returns the number of coefficients that a polynomial can have without causing any new memory allocation to happen. The method is a pass-through to the <a href="../../content/vector/capacity.html"><code>vector::capacity</code></a> method for the underlying coefficient bit-vector.</p>
-<p>A nonzero polynomial has at least <code>degree() + 1</code> coefficients but may have many more that are trailing zeros. Beyond that, the coefficient bit-vector can have spare capacity that is only ever reachable by using the <code>resize()</code> method. Resizing up to the capacity causes no memory allocation so is very efficient but of course, having lots of spare capacity can be resource wasteful.</p>
+<p>The <code>capacity()</code> method returns the number of coefficients that a polynomial <em>can</em> have without causing any new memory allocation to happen. The method is a pass-through to the <a href="../../content/vector/capacity.html"><code>vector::capacity</code></a> method for the underlying coefficient bit-vector.</p>
+<p>A nonzero polynomial has at least <code>degree() + 1</code> coefficients but may have many more that as trailing zeros. Beyond that, the coefficient bit-vector can have spare capacity that is only ever reachable by using the <code>resize()</code> method. Resizing up to the capacity causes no memory allocation so is very efficient but of course, having lots of spare capacity can be resource wasteful.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

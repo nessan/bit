@@ -183,6 +183,10 @@ window.Quarto = {
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../content/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../content/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
@@ -568,9 +572,9 @@ window.Quarto = {
 <!-- Pages and Wikipedia articles referenced in the documentation -->
 <p>We have a method that attempts to minimize the memory footprint of a bit-polynomial.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> polynomial<span class="op">&amp;</span> shrink_to_fit<span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is a request to minimize the unused/excess <a href="../../content/vector/capacity.html"><code>vector::capacity</code></a> in the bit-vector holding the polynomial coefficients. May do nothing though after the call the polynomial will be <em>monic</em>.</p>
+<p>This is a request to minimize the unused/excess <a href="../../content/vector/capacity.html"><code>vector::capacity</code></a> in the bit-vector holding the polynomial coefficients. The method may do nothing though after the call any nonzero polynomial is guaranteed to be <em>monic</em>.</p>
 <p>The bulk of the memory used by most polynomials is the bit-vector of its coefficients.</p>
-<p>The <code>shrink_to_fit()</code> call first uses the <a href="../../content/polynomial/size.html"><code>polynomial::resize</code></a> method to ensure that <code>size() == degree() + 1</code> which is the least possible size. It then calls the coefficient’s own <a href="../../content/vector/reserve.html"><code>vector::shrink_to_fit</code></a> method to see if that data member can release any of its memory back to the general pool.</p>
+<p><code>shrink_to_fit()</code> first uses the <a href="../../content/polynomial/monic.html"><code>polynomial::make_monic</code></a> method to ensure that <code>size() = degree() + 1</code> which is the least possible size. It then calls the coefficient bit-vector’s own <a href="../../content/vector/reserve.html"><code>vector::shrink_to_fit</code></a> method to see if that data member can release any of its memory back to the general pool.</p>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
