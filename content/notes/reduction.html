@@ -683,7 +683,7 @@ window.Quarto = {
 </table>
 </div>
 <p>With those in place we can proceed as follows (this is just a sketch):</p>
-<div id="multiply_and_square" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-caption-prefix="Algorithm">
+<div id="multiply_and_square" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-pseudocode-number="1">
 <div class="pseudocode">
 \begin{algorithm} \caption{Modular Reduction of $x^N$} \begin{algorithmic} \Require $\mathbf{p}$, a bit-vector of size $n$, where $P(x) = x^n + p(x)$ and $\mathbf{p} \sim p(x)$. Unchanged on output. \Require $\mathbf{r}$, a destination bit-vector of size $n$. On output $\mathbf{r} \sim r(x) = x^N \mid P(x)$. \Procedure{reduce}{$N$, $\mathbf{p}$} \State $\mathbf{r} \gets \mathbf{0}$ \State $r_1 = 1$ \While{$N &gt; 0$} \If{$N \text{ mod } 2 = 1$} \State \Call{MultiplyStep}{$\mathbf{r}$} \EndIf \State \Call{SquareStep}{$\mathbf{r}$} \State $N \gets N \gg 1$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
@@ -696,7 +696,7 @@ window.Quarto = {
 \]</span> then the following procedure performs the step <span class="math display">\[
     q(x) \gets x q(x) \mod P(x),
 \]</span> where <span class="math inline">\(q(x)\)</span> is represented by the bit-vector of its <span class="math inline">\(n\)</span> coefficients <span class="math inline">\(\bold{q} = [q_0, q_1, \ldots, q_{n-1}]\)</span>.</p>
-<div id="MultiplyStep" class="pseudocode-container quarto-float" data-pseudocode-number="2" data-caption-prefix="Algorithm">
+<div id="MultiplyStep" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-pseudocode-number="2">
 <div class="pseudocode">
 \begin{algorithm} \caption{The step: $q(x) \gets x q(x) \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{MultiplyStep}{$\mathbf{q}$} \State $tmp \gets q_{n-1}$ \State $\mathbf{q} \gets \mathbf{q} \gg 1$ \If {$tmp$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{p}$ \EndIf \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
@@ -734,7 +734,7 @@ h(x) = \sum_{i=0}^{n-1} h_i x^i
     \bold{x}^0 = \bold{p}.
 \]</span> With that starting point, we can easily fill in bit vectors <span class="math inline">\(\bold{x}^i\)</span> for <span class="math inline">\(i = 1, \ldots, n-1\)</span> by using <a href="#MultiplyStep" class="quarto-xref">Algorithm 2</a>.</p>
 <p>The squaring step looks like the following:</p>
-<div id="SquareStep" class="pseudocode-container quarto-float" data-pseudocode-number="3" data-caption-prefix="Algorithm">
+<div id="SquareStep" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-pseudocode-number="3">
 <div class="pseudocode">
 \begin{algorithm} \caption{The step: $q(x) \gets q(x)^2 \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{x}^i$ are known bit-vectors, where $\mathbf{x}^i \sim x^{n+i} \mid P(x)$. \Require $\mathbf{s}, \mathbf{l}$ and $\mathbf{h}$ are available workspace bit-vectors. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{SquareStep}{$\mathbf{q}$} \State // \textit{Riffle $\mathbf{q}$ into $\mathbf{s}$.} \State \Call{riffle}{$\mathbf{q}$, $\mathbf{s}$} \State // \textit{Fill $\mathbf{l}$ with a copy of the first $n$ elements from $\mathbf{s}$ and $\mathbf{h}$ with the rest.} \State \Call{split}{$\mathbf{s}$, $n$, $\mathbf{l}$, $\mathbf{h}$} \State $\mathbf{q} \gets \mathbf{l}$ \For {$i \gets 0, n-1$} \If{$h_i$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{x}^i$ \EndIf \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>

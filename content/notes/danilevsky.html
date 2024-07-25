@@ -802,7 +802,7 @@ a_{kj}   &amp;=
   1 &amp; \text { for } j = k-1
 \end{cases}
 \end{aligned}
-\]</span> That last step puts row <span class="math inline">\(k\)</span> of <span class="math inline">\(A\)</span> into companion matrix form–the later rows of <span class="math inline">\(A\)</span> are already there.</p>
+\]</span> That last step puts row <span class="math inline">\(k\)</span> of <span class="math inline">\(A\)</span> into companion matrix form — the later rows of <span class="math inline">\(A\)</span> are already there.</p>
 <p>.. If <span class="math inline">\(k &gt; 1\)</span>, then <span class="math inline">\(k \leftarrow k-1\)</span>, and we go back to step 1. Otherwise, we are finished.</p>
 <p>. If <span class="math inline">\(a_{kk-1} = 0\)</span> even after trying the search in step 2 then we cannot perform step 3. + The current <span class="math inline">\(A\)</span> matrix must then have the following form: + <span class="math display">\[
 A =
@@ -845,7 +845,7 @@ There are no badly conditioned matrices in <span class="math inline">\(\FF\)</sp
 <h2 class="anchored" data-anchor-id="danilevsky-for-bit-matrices">Danilevsky for Bit-Matrices</h2>
 <p>In the case of bit-matrices, or in more formal math-speak, matrices with elements in <span class="math inline">\(\FF\)</span>, the input matrix <span class="math inline">\(A\)</span> is all zeros or ones. Moreover, the usual addition and multiplication operators are performed modulo 2 so everything remains in the limited set <span class="math inline">\(\{0,1\}\)</span>. In <span class="math inline">\(\mathbb{F_2}\)</span> we can replace addition with the logical XOR operator and multiplication with the logical AND operator.</p>
 <p>Note that in <span class="math inline">\(\mathbb{F_2}\)</span> we have <span class="math inline">\(1+1 = 2 \rightarrow 0\)</span> so the additive inverse of 1 is 1. And of course as usual, the additive inverse of 0 is 0. This means that in <span class="math inline">\(\mathbb{F_2}\)</span> negation is a no-op and any term like <span class="math inline">\(-b\)</span> can just be replaced with <span class="math inline">\(b\)</span>.</p>
-<p>We always have <span class="math inline">\(1 * 1 = 1\)</span> so the multiplicative inverse of <span class="math inline">\(1\)</span> is just <span class="math inline">\(1\)</span>. Also just like <span class="math inline">\(\mathbb{R}\)</span>, the element <span class="math inline">\(0\)</span> has no multiplicative inverse in <span class="math inline">\(\mathbb{F_2}\)</span> either–you still cannot divide by zero. This means that if <span class="math inline">\(a, b \in \mathbb{F_2}\)</span> then a term like <span class="math inline">\(a/b\)</span> makes no sense if <span class="math inline">\(b=0\)</span> but otherwise <span class="math inline">\(a/b = a\)</span>.</p>
+<p>We always have <span class="math inline">\(1 * 1 = 1\)</span> so the multiplicative inverse of <span class="math inline">\(1\)</span> is just <span class="math inline">\(1\)</span>. Also just like <span class="math inline">\(\mathbb{R}\)</span>, the element <span class="math inline">\(0\)</span> has no multiplicative inverse in <span class="math inline">\(\mathbb{F_2}\)</span> either — you still cannot divide by zero. This means that if <span class="math inline">\(a, b \in \mathbb{F_2}\)</span> then a term like <span class="math inline">\(a/b\)</span> makes no sense if <span class="math inline">\(b=0\)</span> but otherwise <span class="math inline">\(a/b = a\)</span>.</p>
 <p>Let’s reconsider that very first step we took above to move our matrix <span class="math inline">\(A\)</span> closer to Frobenius form. That involved finding a matrix <span class="math inline">\(M\)</span> such that <span class="math inline">\(B = A \cdot M\)</span> had its final row in the required format.</p>
 <p>Taking into account that now all the matrices are boolean and assuming that <span class="math inline">\(a_{nn-1} = 1\)</span> then the appropriate <span class="math inline">\(M\)</span> is:</p>
 <p><span class="math display">\[
@@ -865,18 +865,22 @@ a_{n1} &amp; a_{n2} &amp; a_{n3} &amp; \ldots &amp; a_{nn-2} &amp; a_{nn-1} &amp
 <p>The full algorithm for matrices over <span class="math inline">\(\mathbb{R}\)</span> also works for matrices over <span class="math inline">\(\mathbb{F_2}\)</span>. As before, it proceeds in a sequence of steps that move <span class="math inline">\(A\)</span> closer to companion/Frobenius matrix form at the end of each one.</p>
 <section id="the-algorithm-1" class="level3">
 <h3 class="anchored" data-anchor-id="the-algorithm-1">The Algorithm</h3>
-<p>. Initialize a counter <span class="math inline">\(k\)</span> to <span class="math inline">\(n\)</span> and <span class="math inline">\(A\)</span> to the input matrix.</p>
-<p>. If <span class="math inline">\(a_{kk-1} = 0\)</span> look for an earlier element in the same row that is 1. That is, look for <span class="math inline">\(j &lt; k-1\)</span> where <span class="math inline">\(a_{kj} = 1\)</span>. + If we are successful then swap both the <em>rows and columns</em> <span class="math inline">\(j\)</span> and <span class="math inline">\(k-1\)</span> of <span class="math inline">\(A\)</span>. + Row and column swaps like that are permutation transformations and those preserve the eigen-structure.</p>
-<p>. If by now <span class="math inline">\(a_{kk-1} = 1\)</span>:</p>
-<p>.. Capture the elements from row <span class="math inline">\(k\)</span> of the matrix <span class="math inline">\(A\)</span> by setting <span class="math inline">\(m_ = \text{row}_k(A)\)</span>. + Note that by assumption <span class="math inline">\(m_{k-1} = a_{kk-1} = 1\)</span>.</p>
-<p>.. Compute the elements of <span class="math inline">\(B\)</span> for rows <span class="math inline">\(i = 1, ..., k-1\)</span> as follows: + <span class="math display">\[
+<ol type="1">
+<li><p>Initialize a counter <span class="math inline">\(k\)</span> to <span class="math inline">\(n\)</span> and <span class="math inline">\(A\)</span> to the input matrix.</p></li>
+<li><p>If <span class="math inline">\(a_{kk-1} = 0\)</span> look for an earlier element in the same row that is 1. That is, look for an index <span class="math inline">\(j &lt; k-1\)</span> such that <span class="math inline">\(a_{kj} = 1\)</span>. If found then swap <em>both</em> the rows and the columns <span class="math inline">\(j\)</span> and <span class="math inline">\(k-1\)</span> of <span class="math inline">\(A\)</span>. These swaps are permutation transformations that preserve the eigen-structure.</p></li>
+<li><p>If after step 2 we have <span class="math inline">\(a_{kk-1} = 1\)</span>:</p>
+<ul>
+<li><p>Capture the elements from row <span class="math inline">\(k\)</span> of the matrix <span class="math inline">\(A\)</span> by setting <span class="math display">\[
+m = \text{row}_k(A).
+\]</span> Note that by assumption <span class="math inline">\(m_{k-1} = a_{kk-1} = 1\)</span>.</p></li>
+<li><p>Compute the elements of <span class="math inline">\(B\)</span> for rows <span class="math inline">\(i = 1, ..., k-1\)</span> as follows <span class="math display">\[
 b_{ij} =
 \begin{cases}
   a_{ij} -  a_{ik-1}\frac{m_j}{m_{k-1}} = a_{ij} + a_{ik-1} m_j &amp; \text{ if } j \ne k-1 \\
   \frac{a_{ik-1}}{m_{k-1}} = a_{ik-1}                           &amp; \text{ if } j = k-1
 \end{cases}
-\]</span></p>
-<p>.. Update <span class="math inline">\(A\)</span> for all columns <span class="math inline">\(j = 1, \ldots, n\)</span> as follows: + <span class="math display">\[
+\]</span></p></li>
+<li><p>Update <span class="math inline">\(A\)</span> for all columns <span class="math inline">\(j = 1, \ldots, n\)</span> as follows <span class="math display">\[
 \begin{aligned}
 a_{ij}   &amp;=  b_{ij} \text{ for } i = 1, \ldots, k-2, \\
 a_{k-1j} &amp;= \sum_{l=1}^{n} m_l b_{lj} = m \cdot \text{col}_j(B) \\
@@ -886,19 +890,24 @@ a_{kj}   &amp;=
   1 &amp; \text { for } j = k-1
 \end{cases}
 \end{aligned}
-\]</span> + That last step puts row <span class="math inline">\(k\)</span> of <span class="math inline">\(A\)</span> into Frobenius form–the later rows of <span class="math inline">\(A\)</span> are already there.</p>
-<p>.. If <span class="math inline">\(k &gt; 1\)</span> then <span class="math inline">\(k \leftarrow k-1\)</span> and we go back to step 1, otherwise we are done.</p>
-<p>. If <span class="math inline">\(a_{kk-1} = 0\)</span> even after trying the search in step 2 then we cannot perform step 3. + Just like before, in this case the current <span class="math inline">\(A\)</span> matrix must have the following form: + <span class="math display">\[
+\]</span> That last step puts row <span class="math inline">\(k\)</span> of <span class="math inline">\(A\)</span> into Frobenius form — later rows are already there.</p></li>
+<li><p>If <span class="math inline">\(k &gt; 1\)</span> then <span class="math inline">\(k \gets k-1\)</span> and we go back to step 1, otherwise, we are done.</p></li>
+</ul></li>
+<li><p>If after step 2 we have <span class="math inline">\(a_{kk-1} = 0\)</span> then we cannot perform step 3.<br>
+In this case, the current <span class="math inline">\(A\)</span> matrix must have the following form: <span class="math display">\[
 A =
 \begin{bmatrix}
 A_1 &amp; A_2 \\
 0   &amp; A_3
 \end{bmatrix}
-\]</span> hence the characteristic polynomial <span class="math inline">\(c_A(x)\)</span> we are after is the product of two other characteristic polynomials: + <span class="math display">\[
-c_A(x) = c_{A_1}(x) c_{A_3}(x)
-\]</span> + and as <span class="math inline">\(A_3\)</span> is already in Frobenius form we can easily read off the coefficients for <span class="math inline">\(c_{A_3}(x)\)</span>: + <span class="math display">\[
+\]</span> hence the characteristic polynomial <span class="math inline">\(c_A(x)\)</span> is the product of two others:<br>
+<span class="math display">\[
+c_A(x) = c_{A_1}(x) c_{A_3}(x).
+\]</span> As <span class="math inline">\(A_3\)</span> is already in Frobenius form we can easily read off the coefficients for <span class="math inline">\(c_{A_3}(x)\)</span>:<br>
+<span class="math display">\[
 c_{A_3}(x) = 1+ a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
-\]</span> + The algorithm will store those coefficients and recurse using <span class="math inline">\(A_1\)</span> as the smaller <span class="math inline">\((k-1) \times (k-1)\)</span> input matrix. + It can then convolve the coefficients of <span class="math inline">\(c_{A_1}(x)\)</span> and <span class="math inline">\(c_{A_3}(x)\)</span> to return the coefficients for <span class="math inline">\(c_{A}(x)\)</span>.</p>
+\]</span> Store those coefficients and recurse using <span class="math inline">\(A_1\)</span> as the <span class="math inline">\((k-1) \times (k-1)\)</span> input matrix. Convolve the coefficients of <span class="math inline">\(c_{A_1}(x)\)</span> and <span class="math inline">\(c_{A_3}(x)\)</span> to get the coefficients for <span class="math inline">\(c_{A}(x)\)</span>.</p></li>
+</ol>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
