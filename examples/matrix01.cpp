@@ -1,8 +1,8 @@
-/// @brief Exercise some of the basic functionality for the `bit::matrix` class.
+/// @brief Exercise some of the basic functionality for the @c bit::matrix class.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 
-// No need for speed -- do need bounds checking!
+// No need for speed here -- always do need bounds checking!
 #ifndef BIT_DEBUG
     #define BIT_DEBUG
 #endif

@@ -5,17 +5,22 @@ title: The `bit`Library
 
 ## Introduction
 
-`bit` is a header-only {{< var cpp >}} library for performing linear algebra in bit-space where _bit-vectors_ are represented by the [`bit::vector`] class and bit-matrices by the [`bit::matrix`] class.
-In the jargon of professional mathematics, the classes make it possible to perform linear algebra over [GF(2)], the simplest [Galois field] with just two elements 0 & 1.
+`bit` is a header-only {{< var cpp >}} library for numerical work in *bit-space* which mathematicians call [GF(2)] or $\FF$, the simplest [Galois field] with just two elements 0 & 1.
+All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.
 
-GF(2) is also known as $\FF$, and it keeps things closed in the set $\{0, 1\}$ by performing arithmetic operations mod 2 --- this has the effect that addition/subtraction becomes the `XOR` operation and multiplication/division becomes the `AND` operation.
+The library provides vector and matrix classes for performing linear algebra in bit-space.
+The [`bit::vector`] class represents *bit_vectors*, and the [`bit::matrix`] class represents *bit-matrices*.
+The library also has a [`bit::polynomial`] class to represent *bit-polynomials* over $\FF$.
+
+These classes are efficient and pack the individual bit elements into natural word blocks.
+You can size/resize the classes at run-time.
+
+Because arithmetic operations in $\FF$ are mod 2, addition/subtraction becomes the `XOR` operation, and multiplication/division becomes the `AND` operation.
 The `bit` library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.
 
 The `bit` library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways.
 Amongst other things, the interface includes methods to solve systems of linear equations over $\FF$ and to look at the eigen-structure of bit-matrices.
-
-The bit-vector and bit-matrix classes are efficient and pack the individual bit elements into natural word blocks.
-You can size/resize these dynamic objects as needed at run-time.
+The `bit::polynomial` class has methods to compute $x^N\bmod{P(x)}$ where $P(x)$ is a polynomial over $\FF$ and $N$ is a potentially huge integer.
 
 ## Installation
 
@@ -34,7 +39,7 @@ Used like this, `FetchContent` will only download a minimal library version with
 ::: {.callout-note}
 # Library versions
 The shown `URL` gets the `current` version of the library---whatever is in the main branch.
-To get a fixed, stable version of the library (say release `2.0.0`), use a `URL` parameter like: `https://github.com/nessan/bit/releases/download/2.0.0/bit.zip`.
+For a fixed, stable library version (say release `2.0.0`), use a `URL` parameter like: `https://github.com/nessan/bit/releases/download/2.0.0/bit.zip`.
 :::
 
 ## Example
@@ -44,31 +49,28 @@ Here is a simple example of a program that uses `bit`:
 #include <bit/bit.h>
 int main()
 {
-    auto M = bit::matrix<>::random(6,6);                // <1>
-    auto c = bit::characteristic_polynomial(M);         // <2>
-    std::cout << "The bit-matrix M:\n" << M << "\n";
-    std::cout << "has characteristic polynomial c(x) = "
-              << c.to_polynomial() << ".\n";
-    std::cout << "The matrix polynomial sum c(M):\n";
-    std::cout << bit::polynomial_sum(c, M) << "\n";     // <3>
-    return 0;
+    auto M = bit::matrix<>::random(6, 6);                           // <1>
+    auto c = bit::characteristic_polynomial(M);                     // <2>
+    std::cout << std::format("Bit-matrix M:\n{:p}\n", M);
+    std::cout << std::format("Characteristic poly c(x) = {}\n", c);
+    std::cout << std::format("c(M) yields:\n{:p}\n", c(M));         // <3>
 }
 ```
 1. Creates a random $6\times6$ bit-matrix $M$ where 0 & 1 are equally likely to occur.
-2. Computes the characteristic polynomial of $M$, $c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6$.
+2. Computes its characteristic polynomial $c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6$.
 3. Verifies that $M$ satisfies its own characteristic equation $c(M) = 0$, as expected from the [Cayley Hamilton] theorem.
 
 [Sample Output (varies from run to run):]{.bt}
 ```bash
-The bit-matrix M:
-│0 1 1 0 1 0│
-│0 1 1 0 1 1│
-│1 0 0 1 0 1│
-│0 1 1 0 0 1│
+Bit-matrix M:
+│1 1 0 1 1 0│
+│0 0 0 0 0 1│
+│0 1 1 1 0 0│
+│0 0 0 1 0 1│
+│1 1 1 0 1 0│
 │1 0 0 1 1 1│
-│0 0 0 1 1 0│
-has characteristic polynomial c(x) = x^2 + x^3 + x^6.
-The polynomial sum of the bit-matrix c(M) should be all zeros:
+Characteristic poly c(x) = x^1 + x^2 + x^3 + x^5 + x^6
+c(M) yields:
 │0 0 0 0 0 0│
 │0 0 0 0 0 0│
 │0 0 0 0 0 0│
@@ -83,14 +85,13 @@ The polynomial sum of the bit-matrix c(M) should be all zeros:
 
 ## Why Use `bit`?
 
-The standard library already has [`std::bitset`], an efficient _bitset_ class.
-Recognizing that `std::bitset` is familiar and well thought through, `bit::vector` replicates and extends much of that interface.
+The standard library already has [`std::bitset`], an efficient *bitset* class that is familiar and well thought through, so our `bit::vector` class replicates and extends much of that interface.
 
 All `std::bitset` objects have a fixed size determined at compile time.
 The well-known *Boost* library does add a dynamic version [`boost::dynamic_bitset`], where the bitset size can be set and changed at runtime.
 
-However, as the two names suggest, those types are aimed at _bitsets_ instead of _bit-vectors_.
-So, for example, they print in _bit-order_ with the least significant element/bit on the right.
+However, as the two names suggest, those types are aimed at *bitsets* instead of *bit-vectors*.
+So, for example, they print in *bit-order* with the least significant element/bit on the right.
 More importantly, those classes don't have any particular methods aimed at linear algebra.
 Neither does the standard library's vector class [`std::vector`].
 
@@ -109,8 +110,7 @@ For linear algebra problems over $\FF$, this specialized `bit` library is a bett
 
 The project's source code repository is [here][repo]. \
 You can read the project's documentation [here][docs]. \
-We used the static website generator [Quarto] to construct the documentation site.
-
+The documentation site was generated using [Quarto](https://quarto.org).
 
 ### Contact
 

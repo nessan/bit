@@ -1,4 +1,4 @@
-/// @brief Trimming bit-vectors.
+/// @brief Exercise the various bit-vector @c trim methods.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #include "common.h"

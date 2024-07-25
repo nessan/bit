@@ -1,0 +1,52 @@
+---
+title: "`bit::polynomial` --- Random Polynomials"
+---
+
+{{< include /content/_common.qmd >}}
+
+Factory method to construct a fixed *degree* bit-polynomial whose coefficients come from independent random draws from a [Bernoulli distribution]
+```cpp
+static bit::polynomial random(std::size_t n, double prob_one = 0.5);
+```
+This method returns a polynomial of *degree* $n$ with $n+1$ coefficients.
+
+If $n > 0$ then $p_n = 1$ and all the other coefficients in the polynomial are 1 with probability `prob_one`.
+If $n = 0$ then the single coefficient $p_0$ is 1 with probability `prob_one`.
+
+The default probability value is `0.5`, so `n` coefficient values are determined by tossing a fair coin.
+
+At the extremes, if this parameter is `1.0`, the coefficients will all be 1; if it is `0.0`, the elements will all be 0.
+
+::: {.callout-warning}
+# The probability value needs to be valid
+This method throws a [`std::invalid_argument`] exception if the `prob_one` argument is not in the valid range $[0, 1]$.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // lambda: Turns the degree of a polynomial into a string.
+    auto deg = [](auto& p) { return p.degree() == bit::polynomial<>::ndeg ? "NONE" : std::format("{}", p.degree()); };
+
+    auto p0 = bit::polynomial<>::random(0);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p0, deg(p0));
+
+    auto p1 = bit::polynomial<>::random(7);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p1, deg(p1));
+
+    auto p2 = bit::polynomial<>::random(7, 0.9);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p2, deg(p2));
+}
+```
+[Output (will vary from run to run)]{.bt}
+```bash
+p0(x) = 0 has degree: NONE.
+p0(x) = x^1 + x^3 + x^5 + x^7 has degree: 7.
+p0(x) = 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7 has degree: 7.
+```
+
+### See Also
+[`polynomial::constructors`] \
+[`polynomial::power`]

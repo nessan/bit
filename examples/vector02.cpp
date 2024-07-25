@@ -1,4 +1,4 @@
-/// @brief Look at setting/resetting/flipping blocks of bits for the `bit::vector` class.
+/// @brief Look at setting/resetting/flipping blocks of bits for the @c bit::vector class.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #include "common.h"

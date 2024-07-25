@@ -196,14 +196,14 @@ int main()
 ```
 1. Construction from strings separated by white space.
 All characters are 0's and 1's, so we interpret each element as a binary number.
-1. Construction from the same binary strings, each with a binary prefix `"0b"`.
-2. Construction from the same digits, but each is now interpreted as a hex character thanks to the `"0x"` prefix.
+1. Construction from the same binary strings, each with a binary prefix `0b`.
+2. Construction from the same digits, but each is now interpreted as a hex character thanks to the `0x` prefix.
 Here, semi-colons separate rows.
 1. Construction where the final characters have no suffix, so by default, are parsed as a hex/base-16 number.
 Here, commas separate rows.
-1. Construction where the final characters have a suffix `"_8"` so are parsed as base-8 numbers.
-2. Construction where the final characters have a suffix `"_4"` so are parsed as base-4 numbers.
-3. Construction where the final characters have a suffix `"_2"` so are parsed as base-2 numbers.
+1. Construction where the final characters have a suffix `_8` so are parsed as base-8 numbers.
+2. Construction where the final characters have a suffix `_4` so are parsed as base-4 numbers.
+3. Construction where the final characters have a suffix `_2` so are parsed as base-2 numbers.
 
 [Output]{.bt}
 ```bash

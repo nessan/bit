@@ -1,10 +1,12 @@
 <!-- Shortcuts and links used throughout the documentation -->
 
 <!-- Some math shortcuts we use frequently in the documentation -->
+::: {.hidden}
 $$
-\newcommand{FF}{\mathbb{F}_2}
-\newcommand{R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
 $$
+:::
 
 <!-- Our check/assert macros and compiler flags that control them -->
 [`BIT_DEBUG`]:                          /content/bit_assert/index.qmd#compiler-flags
@@ -20,9 +22,18 @@ $$
 [`vector::any`]:                        /content/vector/all.qmd
 [`vector::append`]:                     /content/vector/append.qmd
 [`vector::back`]:                       /content/vector/access.qmd
+[`vector::bit_index_for`]:              /content/vector/blocks.qmd
+[`vector::bits_per_block`]:             /content/vector/blocks.qmd
+[`vector::block`]:                      /content/vector/blocks.qmd
+[`vector::block_constructor`]:          /content/vector/blocks.qmd
+[`vector::block_count`]:                /content/vector/blocks.qmd
+[`vector::block_index_for`]:            /content/vector/blocks.qmd
+[`vector::block_store_type`]:           /content/vector/blocks.qmd
 [`vector::blocks`]:                     /content/vector/blocks.qmd
+[`vector::blocks_needed`]:              /content/vector/blocks.qmd
 [`vector::capacity`]:                   /content/vector/capacity.qmd
 [`vector::checker_board`]:              /content/vector/specials.qmd
+[`vector::clean`]:                      /content/vector/blocks.qmd
 [`vector::clear`]:                      /content/vector/clear.qmd
 [`vector::constructors`]:               /content/vector/constructors.qmd
 [`vector::convolution`]:                /content/vector/convolution.qmd
@@ -39,6 +50,7 @@ $$
 [`vector::first_set`]:                  /content/vector/first_set.qmd
 [`vector::flip_if`]:                    /content/vector/set_if.qmd
 [`vector::flip`]:                       /content/vector/set.qmd
+[`vector::formatter`]:                  /content/vector/formatter.qmd
 [`vector::from`]:                       /content/vector/from.qmd
 [`vector::front`]:                      /content/vector/access.qmd
 [`vector::if_set_call`]:                /content/vector/if_set_call.qmd
@@ -67,8 +79,6 @@ $$
 [`vector::operator~`]:                  /content/vector/logical-op-eq.qmd
 [`vector::overview`]:                   /content/vector/index.qmd
 [`vector::parity`]:                     /content/vector/count.qmd
-[`vector::polynomial_mod`]:             /content/vector/polynomial_mod.qmd
-[`vector::polynomial_sum`]:             /content/vector/polynomial_sum.qmd
 [`vector::pop`]:                        /content/vector/push-pop.qmd
 [`vector::prev_set`]:                   /content/vector/first_set.qmd
 [`vector::push`]:                       /content/vector/push-pop.qmd
@@ -92,7 +102,7 @@ $$
 [`vector::test`]:                       /content/vector/access.qmd
 [`vector::to_bit_order`]:               /content/vector/to_string.qmd
 [`vector::to_hex`]:                     /content/vector/to_string.qmd
-[`vector::to_polynomial`]:              /content/vector/to_string.qmd
+[`vector::polynomial`]:                 /content/vector/to_string.qmd
 [`vector::to_pretty_string`]:           /content/vector/to_string.qmd
 [`vector::to_string`]:                  /content/vector/to_string.qmd
 [`vector::trimmed_left`]:               /content/vector/trimmed.qmd
@@ -131,6 +141,7 @@ $$
 [`matrix::flip`]:                       /content/matrix/set.qmd
 [`matrix::flip_diagonal`]:              /content/matrix/set.qmd
 [`matrix::flip_if`]:                    /content/matrix/set_if.qmd
+[`matrix::formatter`]:                  /content/matrix/formatter.qmd
 [`matrix::from`]:                       /content/matrix/from.qmd
 [`matrix::identity`]:                   /content/matrix/specials.qmd
 [`matrix::invert`]:                     /content/matrix/invert.qmd
@@ -163,7 +174,6 @@ $$
 [`matrix::operator>>`]:                 /content/matrix/shift.qmd
 [`matrix::operator>>=`]:                /content/matrix/shift.qmd
 [`matrix::operator~`]:                  /content/matrix/logical-op-eq.qmd
-[`matrix::polynomial_sum`]:             /content/matrix/polynomial_sum.qmd
 [`matrix::pop_col`]:                    /content/matrix/add-pop.qmd
 [`matrix::pop_row`]:                    /content/matrix/add-pop.qmd
 [`matrix::pow`]:                        /content/matrix/pow.qmd
@@ -243,13 +253,59 @@ $$
 [`lu::operator()`]:                     /content/lu/functor.qmd
 [`lu::invert`]:                         /content/lu/invert.qmd
 
+<!-- Formatted links to the pages for the bit::polynomial class -->
+[`bit::polynomial`]:                    /content/polynomial/index.qmd
+[`polynomial::capacity`]:               /content/polynomial/size.qmd
+[`polynomial::clear`]:                  /content/polynomial/size.qmd
+[`polynomial::coefficients`]:           /content/polynomial/access.qmd
+[`polynomial::constant`]:               /content/polynomial/special.qmd
+[`polynomial::constructors`]:           /content/polynomial/constructors.qmd
+[`polynomial::count0`]:                 /content/polynomial/count.qmd
+[`polynomial::count1`]:                 /content/polynomial/count.qmd
+[`polynomial::degree`]:                 /content/polynomial/degree.qmd
+[`polynomial::empty`]:                  /content/polynomial/size.qmd
+[`polynomial::formatter`]:              /content/polynomial/formatter.qmd
+[`polynomial::get`]:                    /content/polynomial/access.qmd
+[`polynomial::make_monic`]:             /content/polynomial/monic.qmd
+[`polynomial::monic`]:                  /content/polynomial/monic.qmd
+[`polynomial::nonzero`]:                /content/polynomial/special.qmd
+[`polynomial::one`]:                    /content/polynomial/special.qmd
+[`polynomial::operator-`]:              /content/polynomial/arithmetic.qmd
+[`polynomial::operator-=`]:             /content/polynomial/arithmetic.qmd
+[`polynomial::operator()`]:             /content/polynomial/evaluation.qmd
+[`polynomial::operator[]`]:             /content/polynomial/access.qmd
+[`polynomial::operator*`]:              /content/polynomial/arithmetic.qmd
+[`polynomial::operator*=`]:             /content/polynomial/arithmetic.qmd
+[`polynomial::operator+`]:              /content/polynomial/arithmetic.qmd
+[`polynomial::operator+=`]:             /content/polynomial/arithmetic.qmd
+[`polynomial::power`]:                  /content/polynomial/power.qmd
+[`polynomial::random`]:                 /content/polynomial/random.qmd
+[`polynomial::reduce`]:                 /content/polynomial/reduce.qmd
+[`polynomial::reference`]:              /content/polynomial/reference.qmd
+[`polynomial::reset`]:                  /content/polynomial/access.qmd
+[`polynomial::resize`]:                 /content/polynomial/size.qmd
+[`polynomial::set`]:                    /content/polynomial/access.qmd
+[`polynomial::set_coefficients`]:       /content/polynomial/access.qmd
+[`polynomial::shrink_to_fit`]:          /content/polynomial/shrink_to_fit.qmd
+[`polynomial::size`]:                   /content/polynomial/size.qmd
+[`polynomial::split`]:                  /content/polynomial/split.qmd
+[`polynomial::squared`]:                /content/polynomial/squared.qmd
+[`polynomial::stream>>`]:               /content/polynomial/stream.qmd
+[`polynomial::sub`]:                    /content/polynomial/sub.qmd
+[`polynomial::times_x`]:                /content/polynomial/times_x.qmd
+[`polynomial::to_string`]:              /content/polynomial/to_string.qmd
+[`polynomial::zero`]:                   /content/polynomial/special.qmd
+
 <!-- Formatted links to the pages for items in the standard library -->
 [`std::allocator`]:                     https://en.cppreference.com/w/cpp/memory/allocator
 [`assert`]:                             https://www.cplusplus.com/reference/cassert/assert/
 [`std::bit_ceil`]:                      https://en.cppreference.com/w/cpp/numeric/bit_ceil
 [`std::bit_floor`]:                     https://en.cppreference.com/w/cpp/numeric/bit_floor
 [`std::bitset`]:                        https://en.cppreference.com/w/cpp/utility/bitset
+[`std::format`]:                        https://en.cppreference.com/w/cpp/utility/format/format
+[`std::formatter`]:                     https://en.cppreference.com/w/cpp/utility/format/formatter
 [`std::invocable`]:                     https://en.cppreference.com/w/cpp/concepts/invocable
+[`std::invalid_argument`]:              https://en.cppreference.com/w/cpp/error/invalid_argument
 [`std::logic_error`]:                   https://en.cppreference.com/w/cpp/error/
 [`std::nullopt`]:                       https://en.cppreference.com/w/cpp/utility/optional/nullopt
 [`std::optional`]:                      https://en.cppreference.com/w/cpp/utility/optiona

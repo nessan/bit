@@ -1,0 +1,37 @@
+---
+title: "`bit::polynomial` --- String Form"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method that encodes a bit-polynomial as a string.
+```cpp
+std::string to_string(std::string_view x = "x") const;
+```
+This method returns a string representation of the polynomial where the "variable" is `x`.
+
+The default polynomial "variable" is `x` but, as shown in the following examples, you can easily change that.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p = bit::polynomial<>::random(7);
+    std::cout << "Polynomial with default specifier:        " << p.to_string() << '\n';
+    std::cout << "Polynomial with variable 'y' specified:   " << p.to_string("y") << '\n';
+    std::cout << "Polynomial with variable 'M' specified:   " << p.to_string("M") << '\n';
+    std::cout << "Polynomial with variable 'mat' specified: " << p.to_string("mat") << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Polynomial with default specifier:        1 + x^3 + x^5 + x^7
+Polynomial with variable 'y' specified:   1 + y^3 + y^5 + y^7
+Polynomial with variable 'M' specified:   1 + M^3 + M^5 + M^7
+Polynomial with variable 'mat' specified: 1 + mat^3 + mat^5 + mat^7
+```
+
+### See Also
+[`polynomial::formatter`]

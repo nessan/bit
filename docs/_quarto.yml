@@ -60,6 +60,8 @@ website:
               file: content/vector/index.qmd
             - text: "Matrices"
               file: content/matrix/index.qmd
+            - text: "Polynomials"
+              file: content/polynomial/index.qmd
             - text: "Tech Notes"
               file: content/notes/index.qmd
             - text: "More"
@@ -140,6 +142,19 @@ website:
                   - text: "Instance Methods"
                     href: content/lu/index.qmd#instance-methods
             - text: "---"
+            - section: "Bit-Polynomials"
+              contents:
+                  - text: "Introduction"
+                    href: content/polynomial/index.qmd
+                  - text: "Declaration"
+                    href: content/polynomial/index.qmd#declaration
+                  - text: "Class Constants & Types"
+                    href: content/polynomial/index.qmd#class-constants-and-types
+                  - text: "Instance Methods"
+                    href: content/polynomial/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: content/polynomial/index.qmd#non-member-functions
+            - text: "---"
             - section: "Debugging"
               contents:
                   - text: "Assertions"
@@ -159,8 +174,8 @@ website:
                     href: content/notes/design.qmd
                   - text: "Danilevsky's Method"
                     href: content/notes/danilevsky.qmd
-                  - text: "Modulo Techniques"
-                    href: content/notes/mod.qmd
+                  - text: "Polynomial Reduction"
+                    href: content/notes/reduction.qmd
 editor:
     markdown:
         canonical: true

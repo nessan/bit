@@ -13,7 +13,7 @@ constexpr bool trace() const;                     // <3>
 ```
 1. Return the number of set elements in the bit-matrix.
 2. Return the number of set elements on the bit-matrix diagonal.
-3. Return `count_diagonal() % 2`--the "`sum`" of the diagonal elements.
+3. Return `count_diagonal() % 2`--the "sum" of the diagonal elements.
 
 [Example]{.bt}
 ```cpp

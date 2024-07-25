@@ -1,0 +1,30 @@
+---
+title: "`bit::polynomial` --- Is the Polynomial Special?"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to query if this polynomial is "special" in some way.
+```cpp
+constexpr bool zero()       const;      // <1>
+constexpr bool nonzero()    const;      // <2>
+constexpr bool one()        const;      // <3>
+constexpr bool constant()   const;      // <4>
+```
+1. Returns `true` if this is any form of the zero polynomial.
+2. Returns `true` as long as this is not the zero polynomial.
+3. Returns `true` if this is the polynomial $p(x) = 1$.
+4. Returns `true` if this is either the zero or the one polynomial.
+
+::: {.callout-note}
+# The zero polynomial
+The zero polynomial might have no coefficients so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
+In either case, the degree will be the special "not a degree" constant `polynomial::ndeg`.
+
+Methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
+:::
+
+### See Also
+[`polynomial::size`]        \
+[`polynomial::empty`]       \
+[`polynomial::degree`]

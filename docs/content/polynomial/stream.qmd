@@ -1,0 +1,38 @@
+---
+title: "`bit::polynomial` --- Stream Operator"
+---
+
+{{< include /content/_common.qmd >}}
+
+We supply the customary method to send a bit-polynomial to an output stream.
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+std::ostream &
+operator<<(std::ostream &s, const bit::polynomial<Block, Allocator> &rhs);
+```
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p = bit::polynomial<>::random(12);
+    std::cout << "p(x) = " << p << '\n';                    // <1>
+    std::cout << "p(y) = " << p.to_string("y") << '\n';     // <2>
+    std::cout << std::format("p(y) = {:y}\n", p);           // <3>
+}
+```
+1. This uses the output stream operator and the polynomial variable will always be the default `x`.
+2. You can use the [`polynomial::to_string`] method to customize the polynomial variable.
+3. You can also use the [`polynomial::formatter`] class to customize the polynomial variable.
+
+[Output]{.bt}
+```bash
+p(x) = 1 + x^1 + x^8 + x^10 + x^12
+p(y) = 1 + y^1 + y^8 + y^10 + y^12
+p(y) = 1 + y^1 + y^8 + y^10 + y^12
+```
+
+### See Also
+[`polynomial::to_string`]  \
+[`polynomial::formatter`]

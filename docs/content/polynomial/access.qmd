@@ -1,0 +1,89 @@
+---
+title: "`bit::polynomial` --- Coefficient Access"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to access the coefficients of the polynomial either individually or as a whole.
+```cpp
+constexpr bool          operator[](std::size_t i) const;    // <1>
+constexpr reference     operator[](std::size_t i);          // <2>
+
+constexpr bool          get(std::size_t i) const;           // <3>
+constexpr polynomial&   set(std::size_t i, bool val=true)   // <4>
+constexpr polynomial&   reset(std::size_t i)                // <5>
+
+constexpr polynomial&   set()                               // <6>
+constexpr polynomial&   reset()                             // <7>
+
+constexpr const vector_type& coefficients() const;          // <8>
+constexpr polynomial& set_coefficients(vector_type&  c);    // <9>
+constexpr polynomial& set_coefficients(vector_type&& c);    // <10>
+```
+1. Read-only access to coefficient `i`.
+2. Returns a [`polynomial::reference`] object --- allows modification of coefficient `i`.
+3. Another way to get read-only access to coefficient `i`..
+4. Set the value of coefficient `i` to `val`.
+5. Set the value of coefficient `i` to `false`.
+6. Sets all the polynomial coefficients to 1.
+7. Sets all the polynomial coefficients to 0.
+8. Read-only access to all the polynomial coefficients as a bit-vector.
+9. Sets the polynomial coefficients by copying the passed-in bit-vector.
+10. Sets the polynomial coefficients by *moving* the passed-in bit-vector into place.
+
+::: {.callout-warning}
+# Bounds checking
+Generally, the methods do *not* check whether the index `i` is in bounds.
+The behavior is undefined if it is out of bounds, but it will surely not be good!
+Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+The `vector_type` is simply a [`bit::vector`] with the appropriate `Block` and `Allocator` template parameters.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial<> p{6};
+    std::cout << std::format("p(x) = {} has coefficients {:p}\n", p, p.coefficients());
+
+    p[0] = p[3] = 1;
+    std::cout << std::format("p(x) = {} has coefficients {:p}\n", p, p.coefficients());
+
+    p.reset(3);
+    p.set(5);
+    std::cout << std::format("p(x) = {} has coefficients {:p}\n\n", p, p.coefficients());
+
+    auto v = bit::vector<>::checker_board(10);
+    std::cout << std::format("Before call v = {:p}\n", v);
+    p.set_coefficients(v);
+    std::cout << std::format("p.set_coefficients(v) gives p = {}.\n", p);
+    std::cout << std::format("After call v = {:p}\n\n", v);
+
+    std::cout << std::format("Before call v = {:p}\n", v);
+    p.set_coefficients(std::move(v));
+    std::cout << std::format("p.set_coefficients(std::move(v)) gives p = {}.\n", p);
+    std::cout << std::format("After call v = {:p}\n", v);
+}
+```
+
+[Output]{.bt}
+```bash
+p(x) = 0 has coefficients [0 0 0 0 0 0]
+p(x) = 1 + x^3 has coefficients [1 0 0 1 0 0]
+p(x) = 1 + x^5 has coefficients [1 0 0 0 0 1]
+
+Before call v = [1 0 1 0 1 0 1 0 1 0]
+p.set_coefficients(v) gives p = 1 + x^2 + x^4 + x^6 + x^8.
+After call v = [1 0 1 0 1 0 1 0 1 0]
+
+Before call v = [1 0 1 0 1 0 1 0 1 0]
+p.set_coefficients(std::move(v)) gives p = 1 + x^2 + x^4 + x^6 + x^8.
+After call v = []
+```
+
+### See Also
+[`polynomial::reference`] \
+[`polynomial::size`]      \
+[`bit_assert`]

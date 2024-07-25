@@ -1,5 +1,5 @@
 ---
-title: "`bit::vector::reference`"
+title: "`bit::vector::reference` --- Proxy Class"
 ---
 
 {{< include /content/_common.qmd >}}

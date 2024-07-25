@@ -1,0 +1,33 @@
+---
+title: "`bit::polynomial` --- Power Polynomial"
+---
+
+{{< include /content/_common.qmd >}}
+
+Factory method to construct the polynomial $p(x) = x^n$.
+```cpp
+static bit::polynomial power(std::size_t n);
+```
+This polynomial will have $n+1$ coefficients.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p0 = bit::polynomial<>::power(0);
+    std::cout << std::format("p0(x) = {} has coefficients {:p}.\n", p0, p0.coefficients());
+
+    auto p1 = bit::polynomial<>::power(7);
+    std::cout << std::format("p1(x) = {} has coefficients {:p}.\n", p1, p1.coefficients());
+}
+```
+[Output]{.bt}
+```bash
+p0(x) = 1 has coefficients [1].
+p1(x) = x^7 has coefficients [0 0 0 0 0 0 0 1].
+```
+
+### See Also
+[`polynomial::constructors`] \
+[`polynomial::random`]

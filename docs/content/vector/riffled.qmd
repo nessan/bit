@@ -4,13 +4,20 @@ title: "`bit::vector` --- Riffling"
 
 {{< include /content/_common.qmd >}}
 
-We have an instance method that makes a copy of the bit-vector with its elements interleaved with zeros.
+We have instance methods that make a copy of the bit-vector with its elements interleaved with zeros.
 ```cpp
 constexpr bit::vector riffled() const;
 ```
 This method creates a new bit-vector, a copy of the current bit-vector with interleaved zeros.
+For example, if the current bit-vector has elements `[a b c d]`, the returned bit-vector will have elements `[a 0 b 0 c 0 d]`.
 
-For example, if the current bit-vector has elements `[a b c d ...]`, the returned bit-vector will have elements `[a 0 b 0 c 0 d 0 ...]`.
+```cpp
+constexpr void riffled(bit::vector& dst) const;
+```
+This method turns `dst` into a copy of the current bit-vector with interleaved zeros.
+For example, if the current bit-vector has elements `[a b c d]`, then, on return, the `dst` bit-vector will have elements `[a 0 b 0 c 0 d]`.
+It is helpful for algorithms that require repeated riffling and where we want to reuse the `dst` storage.
+
 
 ::: {.callout-note}
 # One reason this might be useful
@@ -53,4 +60,4 @@ u.riffled() = [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
 ```
 
 ### See Also
-[`vector::to_polynomial`]
+[`polynomial::squared`]

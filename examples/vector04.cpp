@@ -1,4 +1,4 @@
-/// @brief Parsing bit::vectors from strings and streams.
+/// @brief Parsing a @c bit::vector from a string/stream.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #include "common.h"

@@ -5,10 +5,9 @@ title: "`bit::vector` --- Size Queries"
 {{< include /content/_common.qmd >}}
 
 How many elements are in the bit-vector?
-
 ```cpp
-constexpr std::size_t size() const; // <1>
-constexpr bool empty() const;       // <2>
+constexpr std::size_t size() const;     // <1>
+constexpr bool empty() const;           // <2>
 ```
 1. Returns the number of elements in the bit-vector.
 2. Returns `true` if the bit-vector has no elements (so `size() == 0`), returns `false` otherwise.

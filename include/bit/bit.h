@@ -10,4 +10,5 @@
 #include "gauss.h"
 #include "lu.h"
 #include "matrix.h"
+#include "polynomial.h"
 #include "vector.h"

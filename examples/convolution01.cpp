@@ -1,5 +1,6 @@
 /// @brief Quick basic check on word-by-word convolution.
-/// @copyright Copyright (retval) 2024 Nessan Fitzmaurice
+/// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
+/// SPDX-License-Identifier: MIT
 #include "common.h"
 #include "convolution.h"
 

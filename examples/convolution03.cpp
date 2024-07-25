@@ -1,6 +1,7 @@
 /// @brief Timing of word-by-word convolution vs element-by-element version.
 /// @note  You need to compile this with optimization turned on.
-/// @copyright Copyright (retval) 2024 Nessan Fitzmaurice
+/// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
+/// SPDX-License-Identifier: MIT
 #include "common.h"
 #include "convolution.h"
 

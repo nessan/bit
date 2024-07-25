@@ -1,0 +1,43 @@
+---
+title: "`bit::polynomial` --- Polynomial Splitting"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method to split a polynomial $p(x)$ of degree $n$ into two polynomials, $l(x)$ and $h(x)$, such that
+$$
+p(x) = l(x) + x^n h(x),
+$$
+where the degree of $l(x)$ is less than $n$.
+```cpp
+constexpr void split(std::size_t n, polynomial& l, polynomial& h);
+```
+This method is useful for implementing some polynomial algorithms.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p = bit::polynomial<>::random(17);
+
+    bit::polynomial lo, hi;
+    std::size_t n = 7;
+    p.split(n, lo, hi);
+    std::cout << std::format("p           = {}\n", p);
+    std::cout << std::format("lo          = {}\n", lo);
+    std::cout << std::format("hi          = {}\n", hi);
+    std::cout << std::format("lo + x^{} hi = {}\n", n, lo + hi.times_x(7));
+}
+```
+
+[Output]{.bt}
+```bash
+p           = 1 + x^1 + x^2 + x^4 + x^10 + x^11 + x^17
+lo          = 1 + x^1 + x^2 + x^4
+hi          = x^3 + x^4 + x^10
+lo + x^7 hi = 1 + x^1 + x^2 + x^4 + x^10 + x^11 + x^17
+```
+
+### See Also
+[`polynomial::sub`]

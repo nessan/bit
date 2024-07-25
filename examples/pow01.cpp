@@ -1,5 +1,6 @@
 /// @brief Check that left-to-right bit-matrix power algorithm matches older version.
-/// @copyright Copyright (c) 2024 Nessan Fitzmaurice
+/// SPDX-FileCopyrightText:  2024 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
+/// SPDX-License-Identifier: MIT
 #include "common.h"
 
 namespace bit {
@@ -41,7 +42,7 @@ main()
     using matrix_type = bit::matrix<std::uint64_t>;
 
     // A random NxN matrix.
-    std::size_t N = 300;
+    std::size_t N = 30;
     auto        M0 = matrix_type::random(N, N);
 
     // Power to raise the matrix to.

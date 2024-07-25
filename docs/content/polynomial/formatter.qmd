@@ -1,0 +1,40 @@
+---
+title: "`bit::polynomial` --- Custom Formatting"
+---
+
+{{< include /content/_common.qmd >}}
+
+We specialize the [`std::formatter`] class to connect any `bit::polynomial` to [`std::format`] and friends.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+struct std::formatter<bit::polynomial<Block, Allocator>> {
+    ...
+};
+```
+Under the covers, this custom class calls the bit-polynomial's `to_string()` method.
+The default polynomial "variable" is `x` but, as shown in the following examples, you can easily change that.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p = bit::polynomial<>::random(7);
+    std::cout << std::format("Polynomial with default specifier:        {}\n", p);
+    std::cout << std::format("Polynomial with variable 'y' specified:   {:y}\n", p);
+    std::cout << std::format("Polynomial with variable 'M' specified:   {:M}\n", p);
+    std::cout << std::format("Polynomial with variable 'mat' specified: {:mat}\n", p);
+}
+```
+
+[Output]{.bt}
+```bash
+Polynomial with default specifier:        1 + x^1 + x^2 + x^3 + x^7
+Polynomial with variable 'y' specified:   1 + y^1 + y^2 + y^3 + y^7
+Polynomial with variable 'M' specified:   1 + M^1 + M^2 + M^3 + M^7
+Polynomial with variable 'mat' specified: 1 + mat^1 + mat^2 + mat^3 + mat^7
+```
+
+### See Also
+[`polynomial::to_string`]

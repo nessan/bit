@@ -1,4 +1,4 @@
-/// @brief Checks on Gaussian Elimination for bit-matrices.
+/// @brief Quick check on the Gaussian Elimination methods for bit-matrices.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #include "common.h"

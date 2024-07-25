@@ -38,10 +38,20 @@ main()
 
     std::size_t N = 41;
 
+    // Very basic checks ...
     auto u = vector_type::ones(N);
     auto v = u.riffled();
     std::print("u = {} has size {}\n", u, u.size());
     std::print("v = {} has size {}\n", v, v.size());
+
+    // How about using/reusing a destination bit-vector
+    vector_type dst;
+    v.riffled(dst);
+    dst.description("v.riffled(dst) gives dst as");
+
+    u.riffled(dst);
+    dst.description("u.riffled(dst) gives dst as");
+    v.description("compare to v = u.riffled() where v is");
 
     return 0;
 }

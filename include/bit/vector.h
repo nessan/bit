@@ -11,6 +11,7 @@
 #include <bitset>
 #include <chrono>
 #include <concepts>
+#include <format>
 #include <functional>
 #include <iostream>
 #include <optional>
@@ -26,99 +27,54 @@ namespace bit {
 template<std::unsigned_integral Block = std::uint64_t, typename Allocator = std::allocator<Block>>
 class vector {
 public:
-    /// @brief The allocator type used for memory management.
-    using allocator_type = Allocator;
-
-    /// @brief The underlying block type for our store of bits.
+    /// @brief The individual bit-vector elements/bits are packed into blocks of this unsigned integer type.
     using block_type = Block;
 
-    /// @brief The blocks are stored in a container of the following type.
-    using block_store_type = std::vector<Block, Allocator>;
+    /// @brief The memory manager used by the bit-vector's store of blocks.
+    using allocator_type = Allocator;
 
-    /// @brief The number of @e bits of storage in each block.
-    static constexpr std::size_t bits_per_block = std::numeric_limits<Block>::digits;
-
-    /// @brief Returns the number of blocks needed to hold  a bit-vector with @c n elements.
-    /// @note  The block store for an n-element bit-vector will be exactly this (the block store capacity may differ).
-    static constexpr std::size_t blocks_needed(std::size_t n) { return (bits_per_block + n - 1) / bits_per_block; }
-
-    /// @brief A special @c std::size_t value to indicate not-found/no-such-position failure for some methods below.
+    /// @brief A special index value to indicate not-found/no-such-position failure for some methods below.
     static constexpr auto npos = static_cast<std::size_t>(-1);
 
-    /// @brief Create a bit-vector with @c n elements all set to 0.
-    /// @note  The default constructor creates a completely empty/size 0 bit-vector.
-    constexpr explicit vector(std::size_t n = 0) : m_size(n), m_store(blocks_needed(n)) {}
-
-    /// @brief  Create a bit-vector by copying all the bits from an initializer list of words.
-    /// @tparam Src The type of the words for the source bits (could e.g. be unsigned or unsigned char etc.)
-    /// @note   The @c src words need not be the same type as our storage type @c Block.
-    template<std::unsigned_integral Src = Block>
-    constexpr explicit vector(std::initializer_list<Src> src) : vector()
+    /// @brief Create a bit-vector with @c n elements.
+    /// @note  The default constructor creates a completely empty bit-vector with size 0.
+    explicit constexpr vector(std::size_t n = 0) : m_size{n}, m_blocks(blocks_needed(n))
     {
-        append(src);
+        // Empty body -- we now have an underlying store vector of blocks all initialized to 0.
+        // Note that it's a mistake to use uniform initialization on std::vectors.
     }
 
-    /// @brief  Create a bit-vector by copying all the bits from a @c std::vector<Src> of words.
-    /// @tparam Src The type of the words for the source bits (could e.g. be unsigned or unsigned char etc.).
-    /// @note   The @c src  words need not be the same type as our storage type @c Block.
-    template<std::unsigned_integral Src>
-    constexpr explicit vector(const std::vector<Src>& src) : vector()
+    /// @brief Create a bit-vector of size @c n by repeatedly copying the bits of a constant block value.
+    /// @param n The size of the bit-vector to create.
+    /// @param blk All the blocks in the bit-vector have this value (bar the final one which will be masked for size).
+    explicit constexpr vector(std::size_t n, Block blk) : m_size{n}, m_blocks(blocks_needed(n), blk)
     {
-        append(src);
+        // W e now have a vector of blocks all initialized to blk.
+        // The final block may now have excess junk we need to set to zero.
+        clean();
     }
 
     /// @brief Create a bit-vector by copying all the bits from an iteration of unsigned words.
-    /// @note  The @c value_type associated with the iterator will be unsigned but not necessarily the same as Block.
+    /// @note  The @c value_type associated with the iterator must be unsigned but not necessarily the same as Block.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
-    constexpr vector(Iter b, Iter e) : vector()
+    explicit constexpr vector(Iter b, Iter e) : vector{}
     {
         append(b, e);
     }
 
     /// @brief Create a bit-vector by copying the bits from a @c std::bitset.
     template<std::size_t N>
-    explicit constexpr vector(const std::bitset<N>& bs) : vector()
+    explicit constexpr vector(const std::bitset<N>& bs) : vector{}
     {
         append(bs);
     }
 
     /// @brief Create a bit-vector by calling @c f(i) for @c i=0,...,n-1 where a non-zero return indicates a set bit.
-    explicit constexpr vector(std::size_t n, std::invocable<std::size_t> auto f) : vector(n)
+    explicit constexpr vector(std::size_t n, std::invocable<std::size_t> auto f) : vector{n}
     {
         for (std::size_t i = 0; i < n; ++i)
             if (f(i) != 0) set(i);
-    }
-
-    /// @brief   Create a bit-vector by *copying* or *moving* a pre-filled container of blocks.
-    /// @tparam  Function works with either an r-value or const l-value reference to a @c block_store_type.
-    /// @param   n        Size of vector to create. Note that blocks_needed(n) *must* match blocks.size().
-    /// @param   blocks   The container of blocks we either copy or move over (use std::move(blocks) to do that).
-    /// @param   is_clean If false (the default) we zap any junk bits in the final block to zeros.
-    /// @warning If you set that last parameter to true, be sure that any extra bits are really zero!
-    template<typename T>
-        requires std::same_as<std::remove_cvref_t<T>, block_store_type>
-    explicit constexpr vector(std::size_t n, T&& blocks, bool is_clean = false) : vector()
-    {
-        // Check that the size of the bit-vector matches with the number of passed in blocks.
-        std::size_t needed = blocks_needed(n);
-        bit_always_assert(needed == blocks.size(), "needed = {}, blocks.size() = {}", needed, blocks.size());
-
-        // Size is OK & we then copy of move the passed in block store.
-        m_size = n;
-        m_store = std::forward<T>(blocks);
-
-        // Clean out any unused bits in the last block unless otherwise told.
-        if (!is_clean) clean();
-    }
-
-    /// @brief Create a bit-vector of size @c n by repeatedly copying the bits of a constant block value.
-    /// @param n The size of the bit-vector to create.
-    /// @param b All the blocks in the bit-vector have this value (bar the final one which will be masked for size).
-    constexpr explicit vector(std::size_t n, Block b) : m_size(n), m_store(blocks_needed(n), b)
-    {
-        // The final block may now have excess junk we need to set to zero.
-        clean();
     }
 
     /// @brief Create a bit-vector from bits encoded in a string (generally either all 0's & 1's or all hex chars).
@@ -130,7 +86,7 @@ public:
     /// @param bit_order If true (default is false) the string will have the lowest bit on its right.
     ///        This argument is completely ignored for hex strings.
     /// @throw This method throws a @c std::invalid_argument exception if the string is not recognized
-    explicit vector(std::string_view src, bool bit_order = false) : vector()
+    explicit vector(std::string_view src, bool bit_order = false) : vector{}
     {
         // Defer the work to our factory method that tries to parse the input string.
         auto v = from(src, bit_order);
@@ -153,7 +109,7 @@ public:
     static constexpr vector unit(std::size_t n, std::size_t i)
     {
         bit_assert(i < n, "Unit axis i = {} should be less than the bit-vector size n = {}", i, n);
-        vector retval(n);
+        vector retval{n};
         retval.set(i);
         return retval;
     }
@@ -162,7 +118,8 @@ public:
     static constexpr vector checker_board(std::size_t n, bool first_element_set = true)
     {
         // We construct by copying the appropriate `checkered_block` into all the needed blocks.
-        return vector{n, checkered_block(first_element_set)};
+        auto blk = checkered_block(first_element_set);
+        return vector{n, blk};
     }
 
     /// @brief Factory method to generate a bit-vector of size @c n where the elements are from independent coin flips.
@@ -185,14 +142,14 @@ public:
         using lcg = std::linear_congruential_engine<uint64_t, 0xd1342543de82ef95, 1, 0>;
         static lcg rng(static_cast<lcg::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
 
-        return vector(n, [&](std::size_t) { return rng() < scaled_p; });
+        return vector{n, [&](std::size_t) { return rng() < scaled_p; }};
     }
 
     /// @brief Factory method to create a bit-vector from any unsigned type word.
     /// @note  This isn't a constructor because we don't want @c src to be treated as the number of bit-vector elements!
     static constexpr vector from(std::unsigned_integral auto src)
     {
-        vector retval;
+        vector retval{};
         retval.append(src);
         return retval;
     }
@@ -201,14 +158,14 @@ public:
     /// @param  src he source string which can be prefixed by "0x"/"0X" for hex (and should be to avoid doubt).
     ///         For hex strings there can also be a suffix (one of "_2", "_4", or "_8").
     ///         That suffix give the base for the last character in the string.
-    ///         So "0x1" -> 0001, but "0x1_8" -> 001, "0x1_4" -> 01, and "0x1_2" -> 1.
+    ///         So "0x1" -> 0b0001, but "0x1_8" -> 0b001, "0x1_4" -> 0b01, and "0x1_2" -> 0b1.
     ///         Without any suffix, hex-strings always parse as bit-vectors with a size divisible by 4.
     /// @param  bit_order If true (default is false) the string will have the lowest bit on its right.
     ///         This argument is completely ignored for hex strings.
     /// @return Returns @c std::nullopt if we fail to parse the input string.
     static std::optional<vector> from(std::string_view src, bool bit_order = false)
     {
-        // If the string is all 0's and 1's we have a valid binary string.
+        // If the string is all 0's and 1's we assume that the this is a binary string.
         // To force such a string to be intrepreted as hex add the prefix "0x"!
         if (src.find_first_not_of("01") == std::string::npos) {
 
@@ -218,7 +175,7 @@ public:
 
             // Create an appropriately sized bit-vector which is all zeros to start with.
             std::size_t n_chars = s.length();
-            vector      retval(n_chars);
+            vector      retval{n_chars};
 
             // Each '1' in s sets the corresponding bit in retval.
             for (std::size_t i = 0; i < n_chars; ++i)
@@ -235,11 +192,11 @@ public:
     /// @brief Returns the number of elements in this bit-vector.
     constexpr std::size_t size() const { return m_size; }
 
-    /// @brief Returns true if the  size of this bit-vector is zero.
+    /// @brief Returns true if the size of this bit-vector is zero.
     constexpr bool empty() const { return size() == 0; }
 
     /// @brief What is the capacity of this bit-vector (how many bits can it hold without allocating memory)?
-    constexpr std::size_t capacity() const { return bits_per_block * m_store.capacity(); }
+    constexpr std::size_t capacity() const { return bits_per_block * m_blocks.capacity(); }
 
     /// @brief What is the size in bits of any unused capacity in this bit-vector?
     constexpr std::size_t unused() const { return capacity() - size(); }
@@ -249,29 +206,29 @@ public:
     /// @note  This method does nothing if the @c n elements fits inside the current capacity.
     constexpr vector& reserve(std::size_t n)
     {
-        m_store.reserve(blocks_needed(n));
+        m_blocks.reserve(blocks_needed(n));
         return *this;
     }
 
-    /// @brief Try to minimize the unused/excess capacity -- may do nothing.
+    /// @brief Try to minimize any unused/excess capacity -- may do nothing.
     constexpr vector& shrink_to_fit()
     {
-        m_store.resize(blocks_needed(size()));
-        m_store.shrink_to_fit();
+        m_blocks.resize(blocks_needed(size()));
+        m_blocks.shrink_to_fit();
         return *this;
     }
 
     /// @brief Resize the bit-vector padding out any extra values with 0's.
-    ///        If `n < size()` the bit-vector is reduced to the first `n` elements.
-    ///        If `n > size()` then the extra appended values are zeros.
+    ///        If @c n<size() the bit-vector is reduced to the first @c n elements.
+    ///        If @c n>size() then the extra appended values are zeros.
     constexpr vector& resize(std::size_t n)
     {
-        // Trivial case ...
+        // Edge case?
         if (size() == n) return *this;
 
         // Perhaps we need to increase/decrease the size of the underlying data (increases are zeros)
         auto need = blocks_needed(n);
-        if (auto have = m_store.size(); have != need) m_store.resize(need);
+        if (auto have = block_count(); have != need) m_blocks.resize(need);
 
         // Record the new size and clean up the last occupied word if necessary.
         m_size = n;
@@ -281,19 +238,10 @@ public:
     /// @brief Removes all elements from the bit-vector so @c size()==0. Capacity is not changed!
     constexpr vector& clear()
     {
-        m_store.clear();
+        m_blocks.clear();
         m_size = 0;
         return *this;
     }
-
-    /// @brief Read access to the allocator for this bit-vector
-    constexpr Allocator allocator() const { return m_store.allocator(); }
-
-    /// @brief Read-write access to the underlying store of blocks (use at you own risk!!)
-    constexpr block_store_type& blocks() { return m_store; }
-
-    /// @brief Read-only access to the underlying store of blocks (use at you own risk!!)
-    constexpr const block_store_type& blocks() const { return m_store; }
 
     /// @brief Swap the values of elements at locations i & j
     constexpr vector& swap_elements(std::size_t i, std::size_t j)
@@ -311,7 +259,7 @@ public:
     constexpr vector& swap(vector& other) noexcept
     {
         std::swap(m_size, other.m_size);
-        std::swap(m_store, other.m_store);
+        std::swap(m_blocks, other.m_blocks);
         return *this;
     }
 
@@ -326,16 +274,16 @@ public:
             --m_size;
 
             // Perhaps we can also shrink the storage data ?
-            if (m_store.size() > blocks_needed(m_size)) m_store.pop_back();
+            if (block_count() > blocks_needed(m_size)) m_blocks.pop_back();
         }
         return *this;
     }
 
-    /// @brief Adds a single element to the end of this bit-vector. Element will be 0 unless the argument is `true`
+    /// @brief Adds a single element to the end of this bit-vector. It will be 0 unless the argument is @c true
     constexpr vector& push(bool one = false)
     {
         // Perhaps we need more storage?
-        m_store.resize(blocks_needed(m_size + 1));
+        m_blocks.resize(blocks_needed(m_size + 1));
 
         // Increase the size of the bit-vector and set the new last bit if appropriate
         ++m_size;
@@ -349,40 +297,40 @@ public:
     /// @brief Append another bit-vector to the end of this one
     constexpr vector& append(const vector& v)
     {
-        // Trivial case?
+        // Edge case?
         if (v.size() == 0) return *this;
 
         // Resize the underlying block store so we have enough space to accommodate the extra bits
-        m_store.resize(blocks_needed(m_size + v.m_size));
+        m_blocks.resize(blocks_needed(m_size + v.m_size));
 
         // Where is starting location for where the new bits need to go?
-        auto blk = next_block();
-        auto bit = next_bit();
+        auto blk = next_block_index();
+        auto bit = next_bit_index();
 
-        // Easy case: If we're at the start of a new block we can just copy the blocks in v over to the new space
+        // Easy case: If we're at the start of a new block we can just copy the blocks in v over to the new space.
         if (bit == 0) {
-            for (std::size_t i = 0; i < v.m_store.size(); ++i) m_store[blk + i] = v.m_store[i];
+            for (std::size_t i = 0; i < v.block_count(); ++i) block(blk + i) = v.block(i);
             m_size += v.m_size;
             return *this;
         }
 
-        // Otherwise we may have to put each block from v in two contiguous blocks in our data store.
-        for (std::size_t i = 0; i < v.m_store.size(); ++i) {
+        // Otherwise we may have to put each block from v in two contiguous blocks in our own store.
+        for (std::size_t i = 0; i < v.block_count(); ++i) {
 
-            // Split the i'th block of v into a left and right group of bits
-            // Note that it may be the case that what's left of v may fit into the left block alone!
-            auto l = static_cast<Block>(v.m_store[i] << bit);
-            auto r = static_cast<Block>(v.m_store[i] >> (bits_per_block - bit));
+            // Split the i'th block of v into lo and hi groups of bits.
+            // Note that it may be the case that what's left of v may fit into the lo block alone!
+            auto lo = static_cast<Block>(v.block(i) << bit);
+            auto hi = static_cast<Block>(v.block(i) >> (bits_per_block - bit));
 
-            // Add the left group to our current block
-            m_store[blk + i] |= l;
+            // Add the low group to our current block.
+            block(blk + i) |= lo;
 
-            // If necessary add the right group to the next block along in our store
+            // If necessary add the hi group to the next block along in our store
             // Note that if it doesn't fit its not needed!
-            if (blk + i + 1 < m_store.size()) m_store[blk + i + 1] = r;
+            if (blk + i + 1 < block_count()) block(blk + i + 1) = hi;
         }
 
-        // Record the new size and go home
+        // Record the new size and go home.
         m_size += v.m_size;
         return *this;
     }
@@ -395,7 +343,7 @@ public:
     {
         // Resize the underlying data of blocks so we have enough space to accommodate the extra bits
         constexpr std::size_t bits_per_src = std::numeric_limits<Src>::digits;
-        m_store.resize(blocks_needed(m_size + bits_per_src));
+        m_blocks.resize(blocks_needed(m_size + bits_per_src));
 
         if constexpr (bits_per_src > bits_per_block) {
 
@@ -404,7 +352,7 @@ public:
             static_assert(bits_per_src % bits_per_block == 0, "Cannot pack the source evenly into an array of blocks!");
             constexpr std::size_t blocks_per_src = bits_per_src / bits_per_block;
 
-            // Mask out the appropriate number of bits in the source to create shorter words to push one at a time
+            // Mask out the appropriate number of bits in the source to create shorter words to push one at a time.
             auto mask = static_cast<Src>(ones_block());
             for (std::size_t i = 0; i < blocks_per_src; ++i, src >>= bits_per_block) {
                 auto tmp = static_cast<Block>(src & mask);
@@ -413,38 +361,38 @@ public:
             return *this;
         }
         else {
-            // Here we know that sizeof(src) << sizeof(Block) so we can safely cast src to a Block
+            // Short source words so we can safely cast the Src to a Block
             auto tmp = static_cast<Block>(src);
 
             // Where are we putting things?
-            auto blk = next_block();
-            auto bit = next_bit();
+            auto blk = next_block_index();
+            auto bit = next_bit_index();
 
             // If we're at the start of a new block we can just copy the src over.
             if (bit == 0) {
-                m_store[blk] = tmp;
+                block(blk) = tmp;
                 m_size += bits_per_src;
                 return *this;
             }
 
             // Otherwise push as many src bits as possible into the current block.
             std::size_t available = bits_per_block - bit;
-            m_store[blk] |= Block(tmp << bit);
+            block(blk) |= Block(tmp << bit);
 
             // If there are bits left in the source word they go at the start of the next block
-            if (bits_per_src > available) m_store[blk + 1] = tmp >> available;
+            if (bits_per_src > available) block(blk + 1) = tmp >> available;
             m_size += bits_per_src;
             return *this;
         }
     }
 
     /// @brief Add an iterated collection of unsigned words as bits to the end of the bit-vector.
-    /// @note  The @c value_type of the iterator should be some unsigned integer type but needn’t be Block.
+    /// @note  The @c value_type of the iterator should be some unsigned integer type but needn’t be @c Block.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
     constexpr vector& append(Iter b, Iter e)
     {
-        // Handle a trivial case
+        // Edge case?
         if (b == e) return *this;
 
         // Number of src words to copy
@@ -453,7 +401,7 @@ public:
         // Resize the underlying block store so we have enough space to accommodate the extra bits
         using src_type = typename std::iterator_traits<Iter>::value_type;
         std::size_t n_bits = n_words * std::numeric_limits<src_type>::digits;
-        m_store.resize(blocks_needed(m_size + n_bits));
+        m_blocks.resize(blocks_needed(m_size + n_bits));
 
         // Run through the source words and add each one
         while (b != e) append(*b++);
@@ -461,23 +409,23 @@ public:
     }
 
     /// @brief  Add a whole list of unsigned source words as bits to the end of the bit-vector.
-    /// @tparam Src The type of the words for the source bits which need not be Block.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
     template<std::unsigned_integral Src = Block>
     constexpr vector& append(std::initializer_list<Src> src)
     {
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief  Add a `std::vector<Src>` of unsigned source words as bits to the end of the bit-vector.
-    /// @tparam Src The type of the words for the source bits which need not be Block.
+    /// @brief  Add a @c std::vector<Src> of unsigned source words as bits to the end of the bit-vector.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
     template<std::unsigned_integral Src>
     constexpr vector& append(const std::vector<Src>& src)
     {
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief  Add a `std::array<Src,N>` of N unsigned source words as bits to the end of the bit-vector.
-    /// @tparam Src The type of the words for the source bits which need not be Block.
+    /// @brief  Add a @c std::array<Src,N> of @c N unsigned source words as bits to the end of the bit-vector.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
     /// @tparam N The fixed array size
     template<std::unsigned_integral Src, std::size_t N>
     constexpr vector& append(const std::array<Src, N>& src)
@@ -496,70 +444,81 @@ public:
     }
 
     /// @brief  Create a "riffled" version of this bit-vector (i.e. one with our bits interleaved with zeros).
-    /// @return If this vector has elements `abcd...` then return bit-vector will have elements `a0b0c0d0...`
+    /// @return If this vector has elements @c abcd then return bit-vector will have elements @c a0b0c0d
     constexpr vector riffled() const
     {
-        // Nothing to do unless there we have at least 2 elements (with two elements ab we return a0b).
-        if (m_size < 2) return vector{*this};
-
-        // Make a block store for the output vector (it may contain one block too many at this stage).
-        auto             N = m_store.size();
-        block_store_type dst_store(2 * N);
-
-        // Riffle each of our blocks into a pair of adjacent blocks in the destination store.
-        for (std::size_t i = 0; i < N; ++i) riffle(m_store[i], dst_store[2 * i], dst_store[2 * i + 1]);
-
-        // The return vector should just have `2 * m_size - 1` elements & the corresponding sized block store.
-        std::size_t dst_size = 2 * m_size - 1;
-        dst_store.resize(blocks_needed(dst_size));
-
-        // Move that store into place in the return value and also note that any junk bits are surely zero.
-        bool is_clean = true;
-        return vector{dst_size, std::move(dst_store), is_clean};
+        // We let the riffled(dst) method do the heavy lifting.
+        vector retval;
+        riffled(retval);
+        return retval;
     }
 
+    /// @brief  Create a "riffled" copy of this bit-vector (i.e. one with our bits interleaved with zeros) in @c dst
+    /// @return If this vector has elements @c abcd then on return the bit-vector @c dst will have elements @c a0b0c0d
+    /// @note   This version is useful in e.g. repeated squaring algorithms where we want to reuse the @c dst storage.
+    constexpr void riffled(vector& dst) const
+    {
+        // Nothing much to do unless there we have at least 2 elements (with two elements `ab` we return `a0b`).
+        if (m_size < 2) {
+            dst = *this;
+            return;
+        }
+
+        // Make sure the destination block store is big enough (at this point it may be one block too large).
+        auto N = block_count();
+        dst.m_blocks.resize(2 * N);
+
+        // Riffle each block into a pair of adjacent blocks in the destination store using a class helper method.
+        for (std::size_t i = 0; i < N; ++i) riffle(block(i), dst.block(2 * i), dst.block(2 * i + 1));
+
+        // Our `abcde` example now looks like `a0b0c0d0e0` instead of `a0b0c0d0e`.
+        // Chop that last 0 element off by setting the destination size appropriately (no clean() operation needed).
+        std::size_t dst_size = 2 * m_size - 1;
+        dst.m_blocks.resize(blocks_needed(dst_size));
+        dst.m_size = dst_size;
+    }
+
+    /// @brief  Create a new bit-vector as a distinct sub-vector of this one.
+    /// @param  begin The first element to copy from this bit-vector to index 0 of the returned bit-vector
+    /// @param  len The number of elements to copy.
+    /// @return A completely new bit-vector of size @c len
     constexpr vector sub(std::size_t begin, std::size_t len) const
     {
-        // Two trivial cases ...
+        // Edge cases?
         if (empty() || len == 0) return vector{};
 
         // Another easy one ...
         if (begin == 0 && len == m_size) return vector{*this};
 
-        // DEBUG builds will check the starting position of the sub-vector
+        // DEBUG builds will check the starting position of the sub-vector & the length.
         bit_debug_assert(begin < m_size, "begin = {}, m_size = {}", begin, m_size);
-
-        // DEBUG builds will check whether the sub-vector fits (the length of the sub-vector).
         bit_debug_assert(begin + len < m_size, "begin = {}, len = {}, m_size = {}", begin, len, m_size);
 
         // Create the right sized rub-vector all initialized to 0's
-        vector retval(len);
+        vector retval{len};
 
-        // Where does the begin bit of the sub-vector lie in our block data?
-        std::size_t fi = block_index(begin);
-        std::size_t fb = block_bit(begin);
-        std::size_t fb_complement = bits_per_block - fb;
+        // Where does the begin bit of the sub-vector lie in our block store?
+        std::size_t begin_blk = block_index_for(begin);
+        std::size_t begin_bit = bit_index_for(begin);
+        std::size_t complement = bits_per_block - begin_bit;
 
-        // Where does the last bit of the sub-vector lie in our block data?
-        std::size_t last = begin + len - 1;
-        std::size_t li = block_index(last);
+        // Where does the end bit of the sub-vector lie in our block store?
+        std::size_t end_blk = block_index_for(begin + len - 1);
 
-        if (fb == 0) {
+        if (begin_bit == 0) {
             // Can copy over whole blocks and deal with any extra bits copied with a clean()
-            for (std::size_t i = fi; i <= li; ++i) retval.m_store[i - fi] = m_store[i];
+            for (std::size_t i = begin_blk; i <= end_blk; ++i) retval.block(i - begin_blk) = block(i);
         }
         else {
             // Not working on word boundaries (each block in the sub-vector is a combo of two of ours).
-            for (std::size_t i = fi; i < li; ++i) {
-                auto l = static_cast<Block>(m_store[i] >> fb);
-
-                // NOTE: Next if guard shouldn't be needed but (as of v13.1) gcc -O3 creates an out of bounds error!
-                if (i + 1 < m_store.size()) l |= static_cast<Block>(m_store[i + 1] << fb_complement);
-                retval.m_store[i - fi] = l;
+            for (std::size_t i = begin_blk; i < end_blk; ++i) {
+                retval.block(i - begin_blk) = static_cast<Block>(block(i) >> begin_bit);
+                if (i + 1 < block_count())
+                    retval.block(i - begin_blk) |= static_cast<Block>(block(i + 1) << complement);
             }
 
             // Do we still need to grab the last few bits? Do those the dumb way for now ...
-            std::size_t copied = (li - fi) * bits_per_block;
+            std::size_t copied = (end_blk - begin_blk) * bits_per_block;
             if (copied < len) {
                 for (std::size_t i = copied; i < len; ++i)
                     if (test(begin + i)) retval.set(i);
@@ -575,12 +534,58 @@ public:
     /// @return A completely new bit-vector of size @c abs(len)
     constexpr vector sub(int len) const
     {
-        // Trivial case?
+        // EDge case?
         if (empty() || len == 0) return vector{};
 
         auto        alen = std::size_t(abs(len));
         std::size_t begin = len > 0 ? 0 : m_size - alen;
         return sub(begin, alen);
+    }
+
+    /// @brief Split this vector into two -- one of size @c n_lo and the other with all the rest of the elements.
+    /// @param n_lo  The size of @c lo on output -- this should be at most @c size()
+    /// @param lo We copy the first @c n_lo elements of this bit-vector into @c lo
+    /// @param hi We copy the other @c size()-n elements into @c hi
+    /// @note  If necessary, we silently change @c n_lo to be at most @c size()
+    /// @note  After we're done a call to @c join(lo,hi) should reproduce this bit-vector.
+    constexpr void split(std::size_t n_lo, vector& lo, vector& hi) const
+    {
+        // Silently correct the n_lo argument if it is too large.
+        if (n_lo > m_size) n_lo = m_size;
+
+        // Resize lo to its correct dimension.
+        lo.resize(n_lo);
+
+        // Copy over our low blocks to lo -- this can be done a block at time.
+        for (std::size_t i = 0; i < lo.block_count(); ++i) lo.block(i) = block(i);
+
+        // From lo's perspective that last block we copied may have some extra "junk" bits so clean those up.
+        lo.clean();
+
+        // Move on to hi which we first resize to its correct dimension.
+        std::size_t n_hi = m_size - n_lo;
+        hi.resize(n_hi);
+
+        // Edge case?
+        if (n_hi == 0) return;
+
+        // hi will have a copy of our elements from n_lo on. Need to determine where that element lies on our store.
+        std::size_t blk = block_index_for(n_lo);
+        std::size_t bit = bit_index_for(n_lo);
+
+        if (bit == 0) {
+            // Can just copy over whole blocks from our store to hi's store.
+            for (std::size_t i = blk; i < block_count(); ++i) hi.block(i - blk) = block(i);
+        }
+        else {
+            // Not working on word boundaries so most blocks in hi's store are a combination of two of ours.
+            std::size_t bit_complement = bits_per_block - bit;
+            for (std::size_t i = blk; i < block_count(); ++i) {
+                hi.block(i - blk) = static_cast<Block>(block(i) >> bit);
+                if (i + 1 < block_count()) hi.block(i - blk) |= static_cast<Block>(block(i + 1) << bit_complement);
+            }
+        }
+        // No hi.clean() call needed as our own store of blocks is clean!
     }
 
     /// @brief Create a new bit-vector that is a copy of this one without any trailing zeros.
@@ -607,10 +612,9 @@ public:
     }
 
     /// @brief Write access to an individual bit in a bit-vector is through this `vector::reference` proxy class.
-    ///        Supports all the usual bit type operations (reading as a `bool`, setting, un-setting, flipping, ...)
     class reference {
     public:
-        constexpr reference(vector& v, std::size_t bit) : m_store_ref(v.block(bit)), m_bit_mask(v.block_mask(bit))
+        constexpr reference(vector& v, std::size_t bit) : m_ref{v.block_ref_for(bit)}, m_mask{v.block_mask_for(bit)}
         {
             // Empty body
         }
@@ -620,10 +624,10 @@ public:
         constexpr reference(reference&&) noexcept = default;
         ~reference() = default;
 
-        // Cannot data a reference to a reference ...
+        // Cannot take a reference to a reference ...
         constexpr void operator&() = delete;
 
-        // Have custom operator='s
+        // Have some custom operator='s
         constexpr reference& operator=(const reference& rhs)
         {
             set_to(rhs.to_bool());
@@ -646,17 +650,17 @@ public:
         }
         constexpr reference& set()
         {
-            m_store_ref |= m_bit_mask;
+            m_ref |= m_mask;
             return *this;
         }
         constexpr reference& reset()
         {
-            m_store_ref &= Block(~m_bit_mask);
+            m_ref &= Block(~m_mask);
             return *this;
         }
         constexpr reference& flip()
         {
-            m_store_ref ^= m_bit_mask;
+            m_ref ^= m_mask;
             return *this;
         }
 
@@ -684,14 +688,14 @@ public:
         constexpr reference& operator~() const { return flip(); }
 
         // Explicitly convert to a bool
-        constexpr bool to_bool() const { return (m_store_ref & m_bit_mask); }
+        constexpr bool to_bool() const { return (m_ref & m_mask); }
 
         // Actually you can always use a vector::reference as a bool
         constexpr operator bool() const { return to_bool(); }
 
     private:
-        Block& m_store_ref;
-        Block  m_bit_mask;
+        Block& m_ref;  // This is the block in the bit-vector store that holds the bit-vector element of interest.
+        Block  m_mask; // This mask singles out the single bit of interest in that block.
     };
 
     /// @brief Read-write access to the element at index @c i
@@ -746,7 +750,7 @@ public:
     constexpr bool test(std::size_t i) const
     {
         bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
-        return block(i) & block_mask(i);
+        return block_ref_for(i) & block_mask_for(i);
     }
 
     /// @brief Check whether all the elements in the bit-vector are set.
@@ -755,19 +759,18 @@ public:
         // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
         bit_debug_assert(!empty(), "Calling this method for an empty vector is likely an error!");
 
-        // The "logical connective" for all() is AND with the identity TRUE.
-        // That is the return value for the empty set.
+        // The "logical connective" for all() is AND with the identity TRUE, hence the return value for the empty set.
         if (empty()) return true;
 
         auto final_element = size() - 1;
-        auto final_block = block_index(final_element);
+        auto final_block = block_index_for(final_element);
 
-        // Run through all the fully used blocks and check they are fully set.
+        // Run through all the fully used blocks and check they are completely set.
         for (std::size_t i = 0; i < final_block; ++i)
-            if (m_store[i] != ones_block()) return false;
+            if (block(i) != ones_block()) return false;
 
         // Check that the used portion of the final block is also fully set.
-        return m_store[final_block] == ones_block() >> block_bit(~final_element);
+        return block(final_block) == ones_block() >> bit_index_for(~final_element);
     }
 
     /// @brief Check whether any of the elements in the bit-vector are set.
@@ -776,9 +779,8 @@ public:
         // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
         bit_debug_assert(!empty(), "Calling this method for an empty vector is likely an error!");
 
-        // Note: The "logical connective" for any() is OR with the identity FALSE.
-        // That is the return value for the empty set.
-        for (auto b : m_store)
+        // The "logical connective" for any() is OR with the identity FALSE, hence the return value for the empty set.
+        for (auto b : m_blocks)
             if (b != 0) return true;
 
         return false;
@@ -798,7 +800,7 @@ public:
     {
         // NOTE: We have been careful to keep the excess bits in the last block all at 0.
         std::size_t sum = 0;
-        for (auto b : m_store) sum += static_cast<std::size_t>(std::popcount(b));
+        for (auto b : m_blocks) sum += static_cast<std::size_t>(std::popcount(b));
         return sum;
     }
 
@@ -813,15 +815,15 @@ public:
     {
         // NOTE: We have been careful to keep the excess bits in the last block all at 0.
         Block sum = 0;
-        for (auto b : m_store) sum ^= b;
+        for (auto b : m_blocks) sum ^= b;
         return std::popcount(sum) % 2;
     }
 
     /// @brief Returns the index of the first set element in the bit-vector or @c npos if there are none set.
     constexpr std::size_t first_set() const
     {
-        for (std::size_t i = 0; i < m_store.size(); ++i)
-            if (m_store[i] != 0) return i * bits_per_block + lsb(m_store[i]);
+        for (std::size_t i = 0; i < block_count(); ++i)
+            if (block(i) != 0) return i * bits_per_block + lsb(block(i));
 
         // No luck!
         return npos;
@@ -830,9 +832,9 @@ public:
     /// @brief Returns the index of the last set element in the bit-vector or @c npos if there are none set.
     constexpr std::size_t final_set() const
     {
-        std::size_t i = m_store.size();
+        std::size_t i = block_count();
         while (i--)
-            if (m_store[i] != 0) return i * bits_per_block + msb(m_store[i]);
+            if (block(i) != 0) return i * bits_per_block + msb(block(i));
 
         // No luck!
         return npos;
@@ -848,19 +850,19 @@ public:
         if (p >= m_size) return npos;
 
         // Iterate through the blocks starting at the one containing element p.
-        std::size_t i = block_index(p);
+        std::size_t i = block_index_for(p);
 
         // The first block is masked to exclude any bits below p.
-        auto b = static_cast<Block>(ones_block() << block_bit(p));
-        for (b &= m_store[i]; b == 0; b = m_store[i])
-            if (++i >= m_store.size()) return npos;
+        auto b = static_cast<Block>(ones_block() << bit_index_for(p));
+        for (b &= block(i); b == 0; b = block(i))
+            if (++i >= block_count()) return npos;
         return i * bits_per_block + lsb(b);
     }
 
     /// @brief Returns the index of the previous set bit before the argument or @c npos if there are none.
     constexpr std::size_t prev_set(std::size_t pos) const
     {
-        // Trivial case?
+        // Edge case?
         if (empty() || pos == 0) return npos;
 
         // Silently fix a very large argument
@@ -870,11 +872,11 @@ public:
         std::size_t p = pos - 1;
 
         // Iterate backwards through the blocks starting at the one containing element p.
-        std::size_t i = block_index(p);
+        std::size_t i = block_index_for(p);
 
         // The first block is masked to exclude bits above p.
-        auto b = static_cast<Block>(ones_block() >> (bits_per_block - 1 - block_bit(p)));
-        for (b &= m_store[i]; b == 0 && i != 0; b = m_store[--i]) {
+        auto b = static_cast<Block>(ones_block() >> (bits_per_block - 1 - bit_index_for(p)));
+        for (b &= block(i); b == 0 && i != 0; b = block(--i)) {
             // Empty loop
         }
         return i * bits_per_block + msb(b);
@@ -906,37 +908,38 @@ public:
     constexpr vector& set(std::size_t i)
     {
         bit_debug_assert(i < m_size, "Index i = {} must be < `m_size` = {}", i, m_size);
-        block(i) |= block_mask(i);
+        block_ref_for(i) |= block_mask_for(i);
         return *this;
     }
 
     /// @brief Set @c len elements in the bit-vector starting at @c first to 1.
     constexpr vector& set(std::size_t first, std::size_t len)
     {
-        // Check index ranges if appropriate and also handle the trivial case where len == 0
-        bit_debug_assert(first < m_size, "first = {}, m_size = {}", first, m_size);
+        // Check index ranges if appropriate and also handle the edge case where len == 0
+        bit_debug_assert(first < m_size, "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
-        std::size_t last = first + len - 1;
-        bit_debug_assert(last < m_size, "len = {} so last = {} but m_size = {}", len, last, m_size);
 
-        // Locations of the first and last elements in our block store.
-        std::size_t fi = block_index(first);
-        std::size_t li = block_index(last);
+        std::size_t final = first + len - 1;
+        bit_debug_assert(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
+
+        // Indices of the first and final elements in our block store.
+        std::size_t first_block = block_index_for(first);
+        std::size_t final_block = block_index_for(final);
 
         // Useful masks
-        auto  f_mask = static_cast<Block>(ones_block() << block_bit(first));
-        Block l_mask = ones_block() >> (bits_per_block - block_bit(last) - 1);
+        auto  first_mask = static_cast<Block>(ones_block() << bit_index_for(first));
+        Block final_mask = ones_block() >> (bits_per_block - bit_index_for(final) - 1);
 
         // Perhaps the range of interest lies in a single block?
-        if (fi == li) {
-            m_store[fi] |= (f_mask & l_mask);
+        if (first_block == final_block) {
+            block(first_block) |= (first_mask & final_mask);
             return *this;
         }
 
         // The range of interest lies over more than one block.
-        m_store[fi] |= f_mask;
-        for (std::size_t i = fi + 1; i < li; ++i) m_store[i] = ones_block();
-        m_store[li] |= l_mask;
+        block(first_block) |= first_mask;
+        for (std::size_t i = first_block + 1; i < final_block; ++i) block(i) = ones_block();
+        block(final_block) |= final_mask;
 
         return *this;
     }
@@ -944,45 +947,45 @@ public:
     /// @brief Set all the elements in the bit-vector to 1.
     constexpr vector& set()
     {
-        m_store.assign(m_store.size(), ones_block());
+        m_blocks.assign(block_count(), ones_block());
         return clean();
     }
 
     /// @brief Reset the element at index @c i in the bit-vector to 0.
     constexpr vector& reset(std::size_t i)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
-        block(i) &= Block(~block_mask(i));
+        bit_debug_assert(i < m_size, "Index i = {} must be < size() = {}", i, m_size);
+        block_ref_for(i) &= Block(~block_mask_for(i));
         return *this;
     }
 
     /// @brief Reset @c len elements starting at @c first in the bit-vector to 0.
     constexpr vector& reset(std::size_t first, std::size_t len)
     {
-        // Check index ranges if appropriate and also handle the trivial case where len == 0
-        bit_debug_assert(first < m_size, "first = {}, m_size = {}", first, m_size);
+        // Check index ranges if appropriate and also handle the edge case where len == 0
+        bit_debug_assert(first < m_size, "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
-        std::size_t last = first + len - 1;
-        bit_debug_assert(last < m_size, "len = {} so last = {} but m_size = {}", len, last, m_size);
+        std::size_t final = first + len - 1;
+        bit_debug_assert(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
 
-        // Locations of the first and last elements in our data
-        std::size_t fi = block_index(first);
-        std::size_t li = block_index(last);
+        // Indices of the first and final elements in our block store.
+        std::size_t first_block = block_index_for(first);
+        std::size_t final_block = block_index_for(final);
 
         // Useful masks
-        auto  f_mask = static_cast<Block>(ones_block() << block_bit(first));
-        Block l_mask = ones_block() >> (bits_per_block - block_bit(last) - 1);
+        auto  first_mask = static_cast<Block>(ones_block() << bit_index_for(first));
+        Block final_mask = ones_block() >> (bits_per_block - bit_index_for(final) - 1);
 
         // Perhaps the range of interest lies in a single block?
-        if (fi == li) {
-            m_store[fi] &= Block(~(f_mask & l_mask));
+        if (first_block == final_block) {
+            block(first_block) &= Block(~(first_mask & final_mask));
             return *this;
         }
 
         // The range of interest lies over more than one block.
-        m_store[fi] &= Block(~f_mask);
-        for (std::size_t i = fi + 1; i < li; ++i) m_store[i] = 0;
-        m_store[li] &= Block(~l_mask);
+        block(first_block) &= Block(~first_mask);
+        for (std::size_t i = first_block + 1; i < final_block; ++i) block(i) = 0;
+        block(final_block) &= Block(~final_mask);
 
         return *this;
     }
@@ -990,7 +993,7 @@ public:
     /// @brief Reset all the elements in the bit-vector to 0.
     constexpr vector& reset()
     {
-        for (auto& block : m_store) block = 0;
+        for (auto& block : m_blocks) block = 0;
         return *this;
     }
 
@@ -998,37 +1001,37 @@ public:
     constexpr vector& flip(std::size_t i)
     {
         bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
-        block(i) ^= block_mask(i);
+        block_ref_for(i) ^= block_mask_for(i);
         return *this;
     }
 
     /// @brief Flip @c len elements starting at @c first in the bit-vector.
     constexpr vector& flip(std::size_t first, std::size_t len)
     {
-        // Check index ranges if appropriate and also handle the trivial case where len == 0
-        bit_debug_assert(first < m_size, "first = {}, m_size = {}", first, m_size);
+        // Check index ranges if appropriate and also handle the edge case where len == 0
+        bit_debug_assert(first < size(), "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
-        std::size_t last = first + len - 1;
-        bit_debug_assert(last < m_size, "len = {} so last = {} but m_size = {}", len, last, m_size);
+        std::size_t final = first + len - 1;
+        bit_debug_assert(final < size(), "len = {} => final = {} but size() = {}", len, final, m_size);
 
-        // Locations of the first and last elements in our block store
-        std::size_t fi = block_index(first);
-        std::size_t li = block_index(last);
+        // Locations of the first and last elements in our block store.
+        std::size_t first_block = block_index_for(first);
+        std::size_t final_block = block_index_for(final);
 
         // Useful masks
-        auto  f_mask = static_cast<Block>(ones_block() << block_bit(first));
-        Block l_mask = ones_block() >> (bits_per_block - block_bit(last) - 1);
+        auto  first_mask = static_cast<Block>(ones_block() << bit_index_for(first));
+        Block final_mask = ones_block() >> (bits_per_block - bit_index_for(final) - 1);
 
         // Perhaps the range of interest lies in a single block?
-        if (fi == li) {
-            m_store[fi] ^= (f_mask & l_mask);
+        if (first_block == final_block) {
+            block(first_block) ^= (first_mask & final_mask);
             return *this;
         }
 
         // The range of interest lies over more than one block
-        m_store[fi] ^= f_mask;
-        for (std::size_t i = fi + 1; i < li; ++i) m_store[i] = ~m_store[i];
-        m_store[li] ^= l_mask;
+        block(first_block) ^= first_mask;
+        for (std::size_t i = first_block + 1; i < final_block; ++i) block(i) = ~block(i);
+        block(final_block) ^= final_mask;
 
         return *this;
     }
@@ -1036,7 +1039,7 @@ public:
     /// @brief Flip all the elements in the bit-vector.
     constexpr vector& flip()
     {
-        for (auto& block : m_store) block = ~block;
+        for (auto& block : m_blocks) block = ~block;
         return clean();
     }
 
@@ -1063,7 +1066,7 @@ public:
     constexpr vector& operator&=(const vector& rhs)
     {
         bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
-        for (std::size_t i = 0; i < m_store.size(); ++i) m_store[i] &= rhs.m_store[i];
+        for (std::size_t i = 0; i < block_count(); ++i) block(i) &= rhs.block(i);
         return *this;
     }
 
@@ -1071,7 +1074,7 @@ public:
     constexpr vector& operator|=(const vector& rhs)
     {
         bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
-        for (std::size_t i = 0; i < m_store.size(); ++i) m_store[i] |= rhs.m_store[i];
+        for (std::size_t i = 0; i < block_count(); ++i) block(i) |= rhs.block(i);
         return *this;
     }
 
@@ -1079,7 +1082,7 @@ public:
     constexpr vector& operator^=(const vector& rhs)
     {
         bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
-        for (std::size_t i = 0; i < m_store.size(); ++i) m_store[i] ^= rhs.m_store[i];
+        for (std::size_t i = 0; i < block_count(); ++i) block(i) ^= rhs.block(i);
         return *this;
     }
 
@@ -1106,45 +1109,8 @@ public:
         // DEBUG builds will check that the two bit-vectors are indeed equally sized otherwise we assume it is true.
         bit_debug_assert(size() == rhs.size(), "bit-vector sizes don't match {} != {}", size(), rhs.size());
         Block sum = 0;
-        for (std::size_t k = 0; k < m_store.size(); ++k) sum ^= static_cast<Block>(m_store[k] & rhs.m_store[k]);
+        for (std::size_t k = 0; k < block_count(); ++k) sum ^= static_cast<Block>(block(k) & rhs.block(k));
         return std::popcount(sum) % 2;
-    }
-
-    /// @brief Return the convolution of this bit-vector with another one.
-    /// @note  The calculation here is done word-by-word style (thanks to Jason).
-    ///        Faster algorithms exist for very very large bit-vectors.
-    constexpr vector convolution(const vector& rhs) const
-    {
-        // Singular case?
-        if (empty() || rhs.empty()) return vector();
-
-        // Generally the return value will have size() + rhs.size() - 1 elements (which could be all zeros).
-        vector retval(size() + rhs.size() - 1);
-
-        // Trivial case? If either vector is all zeros then so too is the convolution.
-        if (none() || rhs.none()) return retval;
-
-        // Only need to consider blocks in rhs up and including the one holding the final set bit.
-        // We can ignore any trailing blocks that happen to be all zeros.
-        std::size_t num_rhs_blocks = block_index(rhs.final_set()) + 1;
-
-        // Special first "iteration" where we copy the rhs rather than XOR'ing as we do later.
-        for (std::size_t k = 0; k < num_rhs_blocks; ++k) retval.m_store[k] = rhs.m_store[k];
-
-        // Work back from our final set element using the usual idiom for such reverse iteration
-        for (std::size_t n = final_set(); n-- > 0;) {
-            Block prev = 0;
-            for (std::size_t i = 0; i < retval.m_store.size(); ++i) {
-                Block left = prev >> (bits_per_block - 1);
-                prev = retval.m_store[i];
-                retval.m_store[i] = static_cast<Block>(prev << 1) | left;
-            }
-
-            if (test(n)) {
-                for (std::size_t k = 0; k < num_rhs_blocks; ++k) retval.m_store[k] ^= rhs.m_store[k];
-            }
-        }
-        return retval;
     }
 
     /// @brief  Shift this bit-vector @c p elements to the left.
@@ -1152,7 +1118,7 @@ public:
     /// @note   Left shift in vector-order is same as right shift for bit-order!
     constexpr vector& operator<<=(std::size_t p)
     {
-        // Handle some trivial cases
+        // Edge cases?
         if (p == 0 || empty()) return *this;
 
         // Perhaps we have just shifted in all zeros?
@@ -1163,16 +1129,16 @@ public:
 
         // For larger values of p we can efficiently start with whole block shifts:
         std::size_t block_shift = p / bits_per_block;
-        std::size_t block_end = m_store.size() - block_shift;
+        std::size_t block_end = block_count() - block_shift;
 
         // Do any whole block shifts first (pushing in whole blocks of zeros to fill the empty slots)
         if (block_shift > 0) {
 
             // Start by first doing whole block shifts.
-            for (std::size_t i = 0; i < block_end; ++i) m_store[i] = m_store[i + block_shift];
+            for (std::size_t i = 0; i < block_end; ++i) block(i) = block(i + block_shift);
 
             // Fill the high order blocks with zeros.
-            for (std::size_t i = block_end; i < m_store.size(); ++i) m_store[i] = 0;
+            for (std::size_t i = block_end; i < block_count(); ++i) block(i) = 0;
 
             // That handles a lot of `p` but there may be some shifts left to do.
             p %= bits_per_block;
@@ -1184,13 +1150,13 @@ public:
             // Work on the "shift by less than a blocks's worth of bits" piece.
             std::size_t q = bits_per_block - p;
             for (std::size_t i = 0; i < block_end - 1; ++i) {
-                auto hi = static_cast<Block>(m_store[i + 1] << q);
-                auto lo = static_cast<Block>(m_store[i] >> p);
-                m_store[i] = hi | lo;
+                auto hi = static_cast<Block>(block(i + 1) << q);
+                auto lo = static_cast<Block>(block(i) >> p);
+                block(i) = hi | lo;
             }
 
             // And shift the 'end' block.
-            m_store[block_end - 1] >>= p;
+            block(block_end - 1) >>= p;
         }
 
         // Can only have shifted in 0's so no junk to clean up here (contrast to operator>>== below)
@@ -1202,7 +1168,7 @@ public:
     /// @note   Right shift in vector-order is same as left shift for bit-order!
     constexpr vector& operator>>=(std::size_t p)
     {
-        // Handle some trivial cases.
+        // Edge cases?
         if (p == 0 || empty()) return *this;
 
         // Perhaps we have just shifted in all zeros?
@@ -1216,10 +1182,10 @@ public:
         if (block_shift > 0) {
 
             // Start by first doing whole block shifts starting from the end.
-            for (std::size_t i = m_store.size() - 1; i >= block_shift; --i) m_store[i] = m_store[i - block_shift];
+            for (std::size_t i = block_count() - 1; i >= block_shift; --i) block(i) = block(i - block_shift);
 
             // Push zeros into the low order blocks.
-            for (std::size_t i = 0; i < block_shift; ++i) m_store[i] = 0;
+            for (std::size_t i = 0; i < block_shift; ++i) block(i) = 0;
 
             // That handles a lot of `p` but there may be some shifts left to do.
             p %= bits_per_block;
@@ -1230,14 +1196,14 @@ public:
 
             // Work on the "shift by less than a blocks's worth of bits" piece.
             std::size_t q = bits_per_block - p;
-            for (std::size_t i = m_store.size() - 1; i > block_shift; --i) {
-                auto hi = static_cast<Block>(m_store[i] << p);
-                auto lo = static_cast<Block>(m_store[i - 1] >> q);
-                m_store[i] = hi | lo;
+            for (std::size_t i = block_count() - 1; i > block_shift; --i) {
+                auto hi = static_cast<Block>(block(i) << p);
+                auto lo = static_cast<Block>(block(i - 1) >> q);
+                block(i) = hi | lo;
             }
 
             // And shift that 'first' block.
-            m_store[block_shift] <<= p;
+            block(block_shift) <<= p;
         }
 
         // We may have added some junk/redundant set bits that need to be zapped.
@@ -1269,12 +1235,12 @@ public:
     /// @param with The sub-vector we are putting in place -- it must fit in the existing structure!
     constexpr vector& replace(std::size_t i0, const vector& with)
     {
-        // Trivial case?
+        // Edge case?
         std::size_t ws = with.size();
         if (ws == 0) return *this;
 
         // Do a couple of optional sanity checks
-        bit_debug_assert(i0 < size(), "i0 = {} size() = {}", i0, size());
+        bit_debug_assert(i0 < size(), "i0 = {} but size() = {}", i0, size());
         bit_debug_assert(i0 + ws - 1 < size(), "i0 = {}, with.size() = {}, but size = {}", i0, ws, size());
 
         // TODO: Replace this loop with something that works on blocks at a time!
@@ -1297,7 +1263,7 @@ public:
     std::string to_string(std::string_view pre = "", std::string_view post = "", std::string_view sep = "",
                           char off = '0', char on = '1') const
     {
-        // Trivial case?
+        // Edge case?
         auto n = size();
         if (n == 0) return std::string{pre} + std::string{post};
 
@@ -1348,7 +1314,7 @@ public:
         // Table of hex characters.
         static constexpr std::array hex_char = {'0', '1', '2', '3', '4', '5', '6', '7',
                                                 '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        // Trivial case?
+        // Edge case?
         auto n = size();
         if (n == 0) return std::string{};
 
@@ -1365,7 +1331,7 @@ public:
         // We always start with a "0x" prefix to eliminate potential mixups between hex and binary formatting.
         retval = "0x";
 
-        Block const* p = m_store.data();
+        Block const* p = m_blocks.data();
         Block        b = 1;
 
         // Emit digits, reloading buffer word b as necessary (requires that bits_per_block % 4 == 0).
@@ -1389,31 +1355,6 @@ public:
         }
 
         return retval;
-    }
-
-    /// @brief   Get a string representation of the polynomial whose coefficients are stored in this bit-vector.
-    /// @param   var By default we print the polynomial in terms of "x" -- you can override that by setting @c var
-    /// @returns If bit-vector is [1,0,1,0,0,1] we return "1 + x^2 + x^5".
-    std::string to_polynomial(std::string_view var = "x") const
-    {
-        // Trivial case?
-        if (empty() || none()) return "0";
-
-        // Otherwise we construct the string ...
-        std::ostringstream ss;
-
-        bool first_term = true;
-        for (std::size_t i = 0; i < m_size; ++i) {
-            if (test(i)) {
-                if (i == 0) { ss << "1"; }
-                else {
-                    if (!first_term) ss << " + ";
-                    ss << var << "^" << i;
-                }
-                first_term = false;
-            }
-        }
-        return ss.str();
     }
 
     /// @brief Call @c f(pos) over the set bits in the bit-vector in increasing order.
@@ -1452,8 +1393,8 @@ public:
     {
         if (&lhs != &rhs) {
             if (lhs.m_size != rhs.m_size) return false;
-            for (std::size_t i = 0; i < lhs.m_store.size(); ++i)
-                if (lhs.m_store[i] != rhs.m_store[i]) return false;
+            for (std::size_t i = 0; i < lhs.block_count(); ++i)
+                if (lhs.block(i) != rhs.block(i)) return false;
         }
         return true;
     }
@@ -1472,9 +1413,9 @@ public:
 
         if (!empty()) {
             s << "bits-per-block:       " << std::numeric_limits<Block>::digits << "\n";
-            s << "blocks used:          " << block_index(m_size - 1) + 1 << "\n";
-            s << "block store size:     " << m_store.size() << "\n";
-            s << "block store capacity: " << m_store.capacity() << "\n";
+            s << "blocks used:          " << block_index_for(m_size - 1) + 1 << "\n";
+            s << "block store size:     " << block_count() << "\n";
+            s << "block store capacity: " << m_blocks.capacity() << "\n";
         }
         s << footer;
     }
@@ -1485,9 +1426,83 @@ public:
         description(std::cout, header, footer);
     }
 
+    /// @brief Read-only access to the memory allocator for this bit-vector.
+    constexpr Allocator allocator() const { return m_blocks.allocator(); }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // BLOCK METHODS:
+    // These are methods that allow access to the raw blocks a bit-vector uses to store its elements.
+    // For "advanced" use only -- writing into the block store can leave the bit-vector in an undefined state!
+    // ----------------------------------------------------------------------------------------------------------------
+
+    /// @brief The unsigned integer blocks of bit-vector elements are stored in a container of the following type.
+    using block_store_type = std::vector<Block, Allocator>;
+
+    /// @brief  A constructor that creates a bit-vector by copying or moving a pre-filled container of blocks.
+    /// @tparam Function works with either an r-value or const l-value reference to a @c block_store_type.
+    /// @param  n        Size of vector to create. Note that @c blocks_needed(n) must match @c blocks.size().
+    /// @param  blocks   The container of blocks we either copy or move over (use @c std::move(blocks) to *move* it).
+    /// @param  is_clean If false (the default) we make sure to zap any junk bits in the final block to zeros.
+    /// @note   If you set that last parameter to true, be sure that any extra bits are really zero!
+    template<typename T>
+        requires std::same_as<std::remove_cvref_t<T>, block_store_type>
+    explicit constexpr vector(std::size_t n, T&& blocks, bool is_clean = false) : vector()
+    {
+        // Check that the size of the bit-vector matches with the number of passed in blocks.
+        std::size_t needed = blocks_needed(n);
+        bit_always_assert(needed == blocks.size(), "needed = {}, blocks.size() = {}", needed, blocks.size());
+
+        // Size is OK & we then copy or move the passed in block store.
+        m_size = n;
+        m_blocks = std::forward<T>(blocks);
+
+        // Clean out any unused bits in the last block unless otherwise told.
+        if (!is_clean) clean();
+    }
+
+    /// @brief The number of bit-vector elements/elements that can be stored in each block.
+    static constexpr std::size_t bits_per_block = std::numeric_limits<Block>::digits;
+
+    /// @brief Returns the number of blocks needed to hold  a bit-vector with @c n elements.
+    /// @note  The block store for an n-element bit-vector will be exactly this size (the store capacity may differ).
+    static constexpr std::size_t blocks_needed(std::size_t n) { return (bits_per_block + n - 1) / bits_per_block; }
+
+    /// @brief Returns the index of the block that holds element @c i of the bit-vector.
+    static constexpr std::size_t block_index_for(std::size_t i) { return i / bits_per_block; }
+
+    /// @brief Returns the bit position of element @c i of the bit-vector inside the block that holds it.
+    static constexpr std::size_t bit_index_for(std::size_t i) { return i % bits_per_block; }
+
+    /// @brief Returns the number of blocks in the block store.
+    constexpr std::size_t block_count() const { return m_blocks.size(); }
+
+    /// @brief Read-only access to block @c b in the store (index is not range checked).
+    constexpr Block block(std::size_t b) const { return m_blocks[b]; }
+
+    /// @brief   Read-write access to block @c b in the store (index is not range checked).
+    /// @warning Writing into the store can leave the vector in a bad state. Use at your own risk.
+    constexpr Block& block(std::size_t b) { return m_blocks[b]; }
+
+    /// @brief Read-only access to the full block store.
+    constexpr const block_store_type& blocks() const { return m_blocks; }
+
+    /// @brief   Read-write access to the full block store.
+    /// @warning Writing into the store can leave the vector in a bad state. Use at your own risk.
+    constexpr block_store_type& blocks() { return m_blocks; }
+
+    /// @brief Sets any excess/junk bits in the *last* occupied block to 0.
+    /// @note  This is useful if for some reason you write directly into the block store.
+    constexpr vector& clean()
+    {
+        // NOTE: This works fine even if size() == 0
+        std::size_t shift = m_size % bits_per_block;
+        if (shift != 0) block(block_count() - 1) &= Block(~(ones_block() << shift));
+        return *this;
+    }
+
 private:
     std::size_t      m_size = 0; // The number of elements in the bit-vector (default is none).
-    block_store_type m_store;    // The elements are packed into a container of blocks.
+    block_store_type m_blocks;   // The elements are packed into a container of blocks.
 
     /// @brief A Block with all bits set to 1.
     static constexpr Block ones_block() { return std::numeric_limits<Block>::max(); }
@@ -1501,42 +1516,21 @@ private:
         return first_element_set ? starts_with_1 : starts_with_0;
     }
 
-    /// @brief Returns the index of the block that holds element @c i of the bit-vector.
-    static constexpr std::size_t block_index(std::size_t i) { return i / bits_per_block; }
-
-    /// @brief Returns the bit position of element @c i of the bit-vector inside the block that holds it.
-    static constexpr std::size_t block_bit(std::size_t i) { return i % bits_per_block; }
-
-    /// @brief Returns a bit-mask that isolates a single target bit element in the block that contains it.
-    static constexpr Block block_mask(std::size_t i) { return Block(Block{1} << block_bit(i)); }
-
     /// @brief Returns a writable reference to the block that holds element @c i of the bit-vector.
-    constexpr Block& block(std::size_t i) { return m_store[block_index(i)]; }
+    constexpr Block& block_ref_for(std::size_t i) { return block(block_index_for(i)); }
 
     /// @brief Returns a read-only reference to the block that holds element @c i of the bit-vector.
-    constexpr Block block(std::size_t i) const { return m_store[block_index(i)]; }
+    constexpr Block block_ref_for(std::size_t i) const { return block(block_index_for(i)); }
+
+    /// @brief Returns a bit-mask that isolates a single target bit element in the block that contains it.
+    static constexpr Block block_mask_for(std::size_t i) { return Block(Block{1} << bit_index_for(i)); }
 
     /// @brief Returns the index of the word where the next pushed bit will reside.
-    constexpr std::size_t next_block() const { return block_index(m_size); }
+    constexpr std::size_t next_block_index() const { return block_index_for(m_size); }
 
     /// @brief Returns the location where the next pushed bit will be found inside its containing word.
-    constexpr std::size_t next_bit() const { return block_bit(m_size); }
+    constexpr std::size_t next_bit_index() const { return bit_index_for(m_size); }
 
-    /// @brief Returns true if the block at the passed index is full
-    constexpr bool block_is_full(std::size_t i) { return (i + 1) * bits_per_block <= size(); }
-
-public:
-    /// @brief Reset any excess bits in the last occupied word to 0.
-    /// @note  Words beyond the last occupied one are never contaminated by any of our methods above.
-    constexpr vector& clean()
-    {
-        // NOTE: This works fine even if size() == 0
-        std::size_t shift = m_size % bits_per_block;
-        if (shift != 0) m_store[m_store.size() - 1] &= Block(~(ones_block() << shift));
-        return *this;
-    }
-
-private:
     /// @brief  Returns the index for the least significant set bit in the argument or @c npos if none set.
     /// @tparam Src The (deduced) type of the argument which must be an unsigned integral of some sort.
     template<std::unsigned_integral Src>
@@ -1612,8 +1606,9 @@ private:
         return retval.resize(retval.size() - padding_bits);
     }
 
+public:
     /// @brief  Riffle a block into two output blocks containing the bits from the src interleaved with zeros.
-    /// @return With 8-bit block and src = `abcdefgh`, on return `lo = a0b0c0d0` and 'hi = e0f0g0h0`.
+    /// @return With 8-bit blocks and src = `abcdefgh`, on return `lo = a0b0c0d0` and 'hi = e0f0g0h0`.
     static constexpr void riffle(Block src, Block& lo, Block& hi)
     {
         constexpr auto half_block = bits_per_block / 2;
@@ -1625,8 +1620,9 @@ private:
         hi = src >> half_block;
 
         // Some magic to interleave the respective halves with zeros.
+        const Block one = 1;
         for (auto i = bits_per_block / 4; i > 0; i /= 2) {
-            Block div  = (1 << i | 1);
+            Block div = Block(one << i) | one;
             Block mask = all_set / div;
             lo = (lo ^ (lo << i)) & mask;
             hi = (hi ^ (hi << i)) & mask;
@@ -1773,7 +1769,7 @@ template<std::unsigned_integral Block, typename Allocator, typename Iter>
 constexpr void
 copy(const vector<Block, Allocator>& src, Iter dst_b, Iter dst_e)
 {
-    // Handle the trivial case of a container with no words
+    // Edge case?
     if (dst_b == dst_e) return;
 
     // Initialize the entire collection to all zeros
@@ -1989,112 +1985,45 @@ dot(const vector<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
     return lhs.dot(rhs);
 }
 
-/// @brief Returns the convolution of two bit-vectors.
+/// @brief Return the convolution of two bit-vectors.
+/// @note  The calculation here is done word-by-word style (thanks to Jason).
+///        Faster algorithms exist for very very large bit-vectors.
 template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 convolution(const vector<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
-    return lhs.convolution(rhs);
-}
+    using vector_type = vector<Block, Allocator>;
 
-/// @brief Returns @c p(x) a polynomial over GF(2) evaluated at @c x
-/// @param p The coefficients of the polynomial where p(x) = p_0 + p_1 x + p_2 x^2 + ... p_{n-1} x^{n-1}
-/// @param x A boolean which defaults to true (the false case is even more trivial)
-template<std::unsigned_integral Block, typename Allocator>
-constexpr bool
-polynomial_sum(const vector<Block, Allocator>& p, bool x)
-{
-    // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
-    bit_debug_assert(!p.empty(), "Calling this method for an empty vector is likely an error!");
+    // Edge case?
+    if (lhs.empty() || rhs.empty()) return vector_type{};
 
-    // Handling of empty vectors otherwise is a bit arbitrary but needs must ...
-    if (p.empty()) return false;
+    // Generally the return value will have lhs.size() + rhs.size() - 1 elements (which could be all zeros).
+    vector_type retval(lhs.size() + rhs.size() - 1);
 
-    return x ? p.parity() : p[0];
-}
+    // Edge case? If either bit-vector is all zeros then so too is the convolution.
+    if (lhs.none() || rhs.none()) return retval;
 
-/// @brief  Returns r(x) := x^e mod P(x) where P(x) is a polynomial over GF(2) and e = N or 2^N
-/// @param  N We are either interested in reducing x^N or possibly x^(2^N).
-/// @param  P The coefficients of P(x) a polynomial over GF(2)
-/// @param  N_is_exponent If true e = 2^N which allows for huge powers of x like x^(2^100).
-/// @return r The coefficients of the remainder polynomial where e^x = q(x)P(x) + r(x) and degree[r] < degree[P].
-/// @note   Implementation uses repeated squaring/multiplication which is much faster than other methods for larger N.
-template<std::unsigned_integral Block, typename Allocator>
-vector<Block, Allocator>
-polynomial_mod(std::size_t N, const vector<Block, Allocator>& P, bool N_is_exponent = false)
-{
-    // Only the *monic* part of P(x) matters--we can drop any trailing zero coefficients in P.
-    auto monic = P.trimmed_right();
+    // Only need to consider blocks in rhs up and including the one holding the final set bit.
+    // We can ignore any trailing blocks that happen to be all zeros.
+    std::size_t num_rhs_blocks = vector_type::block_index_for(rhs.final_set()) + 1;
 
-    // If all you are left with is the empty bit-vector then P(x) is the zero polynomial which is a problem.
-    if (monic.empty()) throw std::invalid_argument("x^N mod 0 is not defined!");
+    // Special first "iteration" where we copy the rhs rather than XOR'ing as we do later.
+    for (std::size_t k = 0; k < num_rhs_blocks; ++k) retval.block(k) = rhs.block(k);
 
-    // The monic version of P(x) is x^rho + p(x) -- we only need the lower order part p(x).
-    auto p = monic.sub(0, monic.size() - 1);
-    auto m = p.size();
-
-    // Some work space we use below
-    bit::vector<Block, Allocator> sum(m);
-    bit::vector<Block, Allocator> tmp(m);
-
-    // Lambda that performs an lhs(x) <- (lhs(x)*rhs(x)) mod c(x) step.
-    // It makes use of the common workspace sum and tmp.
-    // Note: a(x)*b(x) mod c(x) = a_0 b(x) | c(x) + a_1 x b(x) | c(x) + ... + a_{m-1} x^{m-1} b(x) | c(x).
-    auto multiply_and_mod = [&](auto& lhs, const auto& rhs) {
-        sum.reset();
-        tmp = rhs;
-        for (std::size_t i = 0; i < m; ++i) {
-            if (lhs[i]) sum ^= tmp;
-            if (i + 1 < m) {
-                bool add_p = tmp[m - 1];
-                tmp >>= 1;
-                if (add_p) tmp ^= p;
-            }
+    // Work back from the final set element in the lhs using the usual idiom for such reverse iteration.
+    for (std::size_t n = lhs.final_set(); n-- > 0;) {
+        Block prev = 0;
+        for (std::size_t i = 0; i < retval.block_count(); ++i) {
+            Block left = prev >> (vector_type::bits_per_block - 1);
+            prev = retval.block(i);
+            retval.block(i) = static_cast<Block>(prev << 1) | left;
         }
-        lhs = sum;
-    };
 
-    // Space for the square powers of x each taken mod P(x).
-    // Start with s(x) = x | P(x) then s(x) -> x^2 | P(x) then s(x) -> x^4 | P(x) etc.
-    bit::vector<Block, Allocator> s(m);
-    s.set(1);
-
-    // Case: e = 2^N:  We perform N squaring steps to return x^(2^N) mod P(x).
-    if (N_is_exponent) {
-        for (std::size_t j = 0; j < N; ++j) multiply_and_mod(s, s);
-        return s;
+        if (lhs.test(n)) {
+            for (std::size_t k = 0; k < num_rhs_blocks; ++k) retval.block(k) ^= rhs.block(k);
+        }
     }
-
-    // Case e = N < m: Then x^N mod P(x) = x^N
-    if (N < m) {
-        bit::vector<Block, Allocator> r(N + 1);
-        r.set(N);
-        return r;
-    }
-
-    // Case e = N = m: Then x^N mod P(x) = p(x) (this also handles the case where P(x) = 1 so m = 0).
-    if (N == m) return p;
-
-    // Case e = N > m: Need to do repeated squaring starting at last known spot.
-    auto        r = p;
-    std::size_t N_left = N - m;
-
-    // And we're off
-    while (N_left != 0) {
-
-        // Odd n? Do a multiplication step r(x) <- r(x)*s(x) mod P(x) step.
-        if ((N_left & 1) == 1) multiply_and_mod(r, s);
-
-        // Are we done?
-        N_left >>= 1;
-        if (N_left == 0) break;
-
-        // Do a squaring step s(x) <- s(x)^2 mod P(x) step.
-        multiply_and_mod(s, s);
-    }
-
-    // Eliminate any trailing zero coefficients in r.
-    return r.trimmed_right();
+    return retval;
 }
 
 /// @brief The usual output stream operator for a bit-vector.
@@ -2130,3 +2059,56 @@ operator>>(std::istream& s, vector<Block, Allocator>& rhs)
 }
 
 } // namespace bit
+
+// --------------------------------------------------------------------------------------------------------------------
+// Connect bit-vectors to std::format & friends (not in the `bit` namespace).
+// --------------------------------------------------------------------------------------------------------------------
+
+/// @brief Connect bit-vectors to @c std::format and friends by specializing the @c std:formatter struct.
+/// @note  We handle {} (default), {:b} (bit-order), {:p} (pretty-string), and {:x} (hex string).
+template<std::unsigned_integral Block, typename Allocator>
+struct std::formatter<bit::vector<Block, Allocator>> {
+
+    /// @brief Parse a bit-vector format specifier where where we recognize:
+    ///        '{}'   returns "v_0v_1v_2..." (elements in vector-order).
+    ///        '{:b}' returns "v_{n-1}v_{n-2}..." (elements in bit-order).
+    ///        '{:p}' returns "[v_0 v_1 v_2 ...]" (vector order pretty printed).
+    ///        '{:x}' returns "0x...." (as a hex value).
+    /// @note  Other specifiers will result in an "unrecognized format ..." message.
+    ///        C++20 seems a bit weak on rational ways to tell you the specifier is not good at compile time.
+    constexpr auto parse(const std::format_parse_context& ctx)
+    {
+        auto it = ctx.begin();
+        while (it != ctx.end() && *it != '}') {
+            switch (*it) {
+                case 'b': m_bit_order = true; break;
+                case 'p': m_pretty = true; break;
+                case 'x': m_hex = true; break;
+                default: m_error = true;
+            }
+            ++it;
+        }
+        return it;
+    }
+
+    /// @brief Push out a formatted bit-vector using the various @c to_string(...) methods in the class.
+    template<class FormatContext>
+    auto format(const bit::vector<Block, Allocator>& rhs, FormatContext& ctx) const
+    {
+        // Was there a format specification error?
+        if (m_error) return std::format_to(ctx.out(), "'UNRECOGNIZED FORMAT SPECIFIER FOR BIT-VECTOR'");
+
+        // Special handling requested?
+        if (m_bit_order) return std::format_to(ctx.out(), "{}", rhs.to_bit_order());
+        if (m_hex) return std::format_to(ctx.out(), "{}", rhs.to_hex());
+        if (m_pretty) return std::format_to(ctx.out(), "{}", rhs.to_pretty_string());
+
+        // Default
+        return std::format_to(ctx.out(), "{}", rhs.to_string());
+    }
+
+    bool m_bit_order = false;
+    bool m_hex = false;
+    bool m_pretty = false;
+    bool m_error = false;
+};

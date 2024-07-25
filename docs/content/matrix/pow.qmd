@@ -77,4 +77,4 @@ M^{2^{100}}:
 ```
 
 ### See Also
-[`matrix::polynomial_sum`]
+[`polynomial::operator()`]

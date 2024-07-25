@@ -6,13 +6,13 @@ title: Technical Notes
 
 ## Introduction
 
-There isn't a lot of material on the web devoted to linear algebra over [GF(2)]. \
+There isn't a lot of material on the web devoted to computational work in [GF(2)]. \
 We add some here:
 
 Paper  | Topic
 ------ | -----------
-[Working in GF(2)](/content/notes/gf2.qmd)             | Notes about the vagaries of doing linear algebra over $\FF$.
-[Library Design Notes](/content/notes/design.qmd)      | Notes about the overall design of the `bit` library.
-[Danilevsky's Method](/content/notes/danilevsky.qmd)   | An algorithm to compute the characteristic polynomial of a square matrix --- the algorithm isn't well known, so we review it here.
-[Computing $x^N$ mod $P(x)$](/content/notes/mod.qmd)   | An algorithm to compute $x^N$ mod $P(x)$ where $P(x)$ is a polynomial over $\FF$ and $N$ is potentially a huge integer.
+[Working in GF(2)](/content/notes/gf2.qmd)           | Some notes about the vagaries of working in $\FF$.
+[Library Design Notes](/content/notes/design.qmd)    | Notes about the overall design of the `bit` library.
+[Danilevsky's Method](/content/notes/danilevsky.qmd) | An algorithm to compute the characteristic polynomial of a square matrix --- the algorithm isn't well known, so we review it here.
+[Polynomial Reduction](/content/notes/reduction.qmd) | An algorithm to compute $x^N$ mod $P(x)$ where $P(x)$ is a polynomial over $\FF$ and $N$ is potentially a huge integer.
 : {.bordered .hover .responsive tbl-colwidths="[30,70]"}

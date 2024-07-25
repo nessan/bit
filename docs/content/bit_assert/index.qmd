@@ -74,7 +74,7 @@ int main()
     std::cout << v << "\n";
 }
 ```
-1. Construct a vector of size 12 and then attempt to set the "`last`" element.
+1. Construct a vector of size 12 and then attempt to set the "last" element.
 2. A deliberate but typical _off-by-one_ index error as the valid indices are from 0 to `n-1`, which is 11.
 
 Compile the sample program with the `BIT_DEBUG` flag set and get:

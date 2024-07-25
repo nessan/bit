@@ -9,7 +9,6 @@ We have methods to extract a sub-vector as a stand-alone, distinct copy of eleme
 ```cpp
 constexpr bit::vector sub(std::size_t begin, std::size_t len) const;    // <1>
 constexpr bit::vector sub(int len) const;                               // <2>
-
 ```
 1. Returns a bit-vector of size `len`, a copy of the elements starting at `begin`.
 2. Returns a copy of the first `len` elements if `len > 0` or the final `abs(len)` elements if `len < 0`.

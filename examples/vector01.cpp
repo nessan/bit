@@ -1,8 +1,8 @@
-/// @brief Exercise some of the basic functionality for the bit::vector class.
+/// @brief Exercise some of the basic functionality for the @c bit::vector class.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 
-// NOTE: We do want bounds checking here so force that.
+// NOTE: Speed is not important here and we always want bounds checking.
 #ifndef BIT_DEBUG
     #define BIT_DEBUG
 #endif
@@ -256,10 +256,10 @@ main()
     std::print("uint64_t: {}\n\n", v64);
 
     std::print("Construction/reconstruction from std::vector<T>:\n");
-    vector_type r08(v08);
-    vector_type r16(v16);
-    vector_type r32(v32);
-    vector_type r64(v64);
+    vector_type r08(v08.cbegin(), v08.cend());
+    vector_type r16(v16.cbegin(), v16.cend());
+    vector_type r32(v32.cbegin(), v32.cend());
+    vector_type r64(v64.cbegin(), v64.cend());
     std::print("Original vector:             {}\n", v50.to_string());
     std::print("Reconstructed from uint8_t:  {}\n", r08.to_string());
     std::print("Reconstructed from uint16_t: {}\n", r16.to_string());

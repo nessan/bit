@@ -1,12 +1,16 @@
 # README
 
-This repository holds the source code and documentation for `bit`, a header-only C++ library for performing linear algebra in bit space. The library represents bit vectors by `bit::vector` and bit matrices by `bit::matrix`. In professional mathematics jargon, the classes allow you to perform linear algebra over GF(2), the simplest Galois field with just two elements, 0 and 1.
+`bit` is a header-only C++ library for numerical work in _bit-space_ which mathematicians call [GF(2)](https://en.wikipedia.org/wiki/Finite_field), the simplest Galois field with just two elements 0 & 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.
 
-GF(2) keeps things closed in $\{0, 1\}$ by performing arithmetic operations mod 2. Addition/subtraction becomes the `XOR` operation, while multiplication/division becomes the `AND` operation. The `bit` library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.
+The library provides vector and matrix classes for performing linear algebra in bit-space. The [`bit::vector`] class represents _bit_vectors_, and the [`bit::matrix`] class represents _bit-matrices_. The library also has a [`bit::polynomial`] class to represent _bit-polynomials_ over GF(2).
 
-The `bit` library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over GF(2) and to look at the eigen-structure of bit-matrices.
+The library provides classes for performing linear algebra in bit space. The `bit::vector` class represents bit vectors, and the `bit::matrix` class represents bit-matrices. These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize these dynamic vectors and matrices at run-time.
 
-The bit-vector and bit-matrix classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize these dynamic objects as needed at run-time.
+These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.
+
+Because arithmetic operations in GF(2) are mod 2, addition/subtraction becomes the `XOR` operation, and multiplication/division becomes the `AND` operation. The `bit` library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.
+
+The `bit` library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over GF(2) and to look at the eigen-structure of bit-matrices. The `bit::polynomial` class has methods to compute $x^N\bmod{P(x)}$ where $P(x)$ is a polynomial over $\FF$ and $N$ is a potentially huge integer.
 
 ## Installation
 
@@ -20,7 +24,7 @@ FetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/cur
 FetchContent_MakeAvailable(bit)
 ```
 
-This command downloads and unpacks an archive of the current version of `bit` to your project's build folder. You can then add a dependency on `bit::bit`, a `CMake` alias for `bit`. `FetchContent` will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.
+This command downloads and unpacks an archive of the current version of the `bit` library to your project's build folder. You can then add a dependency on `bit::bit`, a `CMake` alias for `bit`. `FetchContent` will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.
 
 Used like this, `FetchContent` will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.
 
@@ -32,14 +36,12 @@ Here is a simple example of a program that uses `bit`:
 #include <bit/bit.h>
 int main()
 {
-    auto M = bit::matrix<>::random(6,6);
+    auto M = bit::matrix<>::random(6, 6);
     auto c = bit::characteristic_polynomial(M);
     std::cout << "The bit-matrix M:\n" << M << "\n";
-    std::cout << "has characteristic polynomial c(x) = "
-              << c.to_polynomial() << ".\n";
-    std::cout << "The matrix polynomial sum c(M):\n";
-    std::cout << bit::polynomial_sum(c, M) << "\n";
-    return 0;
+    std::cout << "has characteristic polynomial c(x) = " << c << ".\n";
+    std::cout << "The polynomial sum c(M) gives:\n";
+    std::cout << c(M) << "\n";
 }
 ```
 
@@ -49,14 +51,14 @@ Here is the output from one run of the program:
 
 ```sh
 The bit-matrix M:
-│0 1 1 0 1 0│
-│0 1 1 0 1 1│
-│1 0 0 1 0 1│
-│0 1 1 0 0 1│
-│1 0 0 1 1 1│
-│0 0 0 1 1 0│
-has characteristic polynomial c(x) = x^2 + x^3 + x^6.
-The polynomial sum of the bit-matrix c(M) should be all zeros:
+│0 1 1 0 0 0│
+│0 0 1 0 1 0│
+│1 1 0 0 0 1│
+│0 0 0 0 0 1│
+│0 1 0 0 1 1│
+│1 1 0 1 0 1│
+has characteristic polynomial c(x) = x^1 + x^4 + x^6.
+The polynomial sum c(M) gives:
 │0 0 0 0 0 0│
 │0 0 0 0 0 0│
 │0 0 0 0 0 0│
@@ -65,11 +67,11 @@ The polynomial sum of the bit-matrix c(M) should be all zeros:
 │0 0 0 0 0 0│
 ```
 
-**NOTE:** `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements -- ​a problem that chokes a naive implementation that does not consider the unique nature of arithmetic in GF(2).
+**NOTE:** `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements--​a problem that chokes a naive implementation that does not consider the unique nature of arithmetic in GF(2).
 
-## Why Use this Library?
+## Why Use `bit`?
 
-The standard library already has `std::bitset`, an efficient _bitset_ class. Recognizing that `std::bitset` is familiar and well thought through, `bit::vector` replicates and extends much of that interface.
+The standard library already has `std::bitset`, an efficient _bitset_ class that is familiar and well thought through, so our `bit::vector` class replicates and extends much of that interface.
 
 All `std::bitset` objects have a fixed size determined at compile time. The well-known _Boost_ library adds a dynamic version `boost::dynamic_bitset`, where the bitset size can be set and changed at runtime.
 
@@ -84,7 +86,7 @@ This specialized `bit` library is better for linear algebra problems over GF(2).
 ## Documentation
 
 You can read the project's documentation [here](https://nessan.github.io/bit/). \
-We used the static website generator [Quarto](https://quarto.org) to construct the documentation site.
+The documentation site was generated using [Quarto](https://quarto.org).
 
 ### Contact
 

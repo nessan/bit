@@ -11,7 +11,7 @@ It automatically adds & resolves the dependency on the `bit` header-only library
 
 ## Other Dependencies
 
-Some of these programs also depend on the header-only `utilities::utilities` library of useful functions and classes (such as a handy `stopwatch` class, etc.). The `CMakeLists.txt` build file at the top level of the repo will also automatically resolve and add that dependency for you.
+Many of these programs also depend on the header-only `utilities::utilities` library of useful functions and classes (such as a handy `stopwatch` class, etc.). The `CMakeLists.txt` build file at the top level of the repo will also automatically resolve and add that dependency for you.
 
 ## The `charpoly.py` File
 

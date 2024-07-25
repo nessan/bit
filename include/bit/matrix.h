@@ -5,10 +5,8 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assert.h"
 #include "vector.h"
 
-#include <optional>
 #include <regex>
 #include <utility>
 
@@ -32,7 +30,10 @@ public:
 
     /// @brief Construct an `n x n` square bit-matrix.
     /// @note  The default constructor for a @c bit::matrix creates an empty/singular 0x0 matrix.
-    explicit constexpr matrix(std::size_t n = 0) : matrix(n, n) {}
+    explicit constexpr matrix(std::size_t n = 0) : matrix{n, n}
+    {
+        // Empty body
+    }
 
     /// @brief  Reshape a bit-vector into a bit-matrix with @c r rows (defaults to one row).
     /// @param  v All the elements of @c v are used to create the bit-matrix.
@@ -41,9 +42,9 @@ public:
     ///         If @c r=0 we will return a matrix with a single column instead.
     /// @param  by_rows If true we assume that @c v has the bit-matrix stored by rows (if false, columns).
     /// @throw  @c std::invalid_argument if @c r does not divide @c v.size() evenly.
-    constexpr matrix(const vector_type& v, std::size_t r = 1, bool by_rows = true) : matrix()
+    constexpr matrix(const vector_type& v, std::size_t r = 1, bool by_rows = true) : matrix{}
     {
-        // Trivial case?
+        // Edge case?
         std::size_t s = v.size();
         if (s == 0) return;
 
@@ -73,7 +74,7 @@ public:
     /// @param u has n elements `u[i]` for `i = 0, ..., n-1`
     /// @param v has m elements `v[j]` for `j = 0, ..., m-1`
     /// @param product (defaults to true) means use the outer product. False means use the outer sum instead.
-    constexpr matrix(const vector_type& u, const vector_type& v, bool product = true) : matrix(0, v.size())
+    constexpr matrix(const vector_type& u, const vector_type& v, bool product = true) : matrix{0, v.size()}
     {
         std::size_t r = u.size();
         std::size_t c = v.size();
@@ -94,7 +95,7 @@ public:
     /// @brief Construct an `r x c` bit-matrix by calling @c f(i,j) for each index pair.
     /// @param f If @c f(i,j)!=0 the corresponding element will be set to 1, otherwise it will be set to 0.
     explicit constexpr matrix(std::size_t r, std::size_t c, std::invocable<std::size_t, std::size_t> auto f) :
-        matrix(r, c)
+        matrix{r, c}
     {
         for (std::size_t i = 0; i < r; ++i)
             for (std::size_t j = 0; j < c; ++j)
@@ -103,7 +104,7 @@ public:
 
     /// @brief Construct an `n x n` square bit-matrix by calling @c f(i,j) for each index pair.
     /// @param f If @c f(i,j)!=0 the corresponding element will be set to 1, otherwise it will be set to 0.
-    explicit constexpr matrix(std::size_t n, std::invocable<std::size_t, std::size_t> auto f) : matrix(n, n, f)
+    explicit constexpr matrix(std::size_t n, std::invocable<std::size_t, std::size_t> auto f) : matrix{n, n, f}
     {
         // Empty body
     }
@@ -115,7 +116,7 @@ public:
     /// @param bit_order If true (default is false) the rows will all have their lowest bit on the right.
     ///        This parameter is completely ignored for hex-strings.
     /// @throw This method throws a @c std::invalid_argument exception if the string is not recognized.
-    explicit matrix(std::string_view s, bool bit_order = false) : matrix()
+    explicit matrix(std::string_view s, bool bit_order = false) : matrix{}
     {
         auto m = from(s, bit_order);
         if (!m) throw std::invalid_argument("Failed to parse the input string as a valid bit-matrix!");
@@ -142,7 +143,7 @@ public:
         using lcg = std::linear_congruential_engine<uint64_t, 0xd1342543de82ef95, 1, 0>;
         static lcg rng(static_cast<lcg::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
 
-        return matrix(r, c, [&](std::size_t, std::size_t) { return rng() < scaled_p; });
+        return matrix{r, c, [&](std::size_t, std::size_t) { return rng() < scaled_p; }};
     }
 
     /// @brief Factory method to construct an `r x c` bit-matrix where the elements are found by fair coin flips.
@@ -199,7 +200,7 @@ public:
     /// @return An `n x n` bit-matrix with 1's on the diagonal and 0's everywhere else.
     static constexpr matrix identity(std::size_t n)
     {
-        matrix retval(n);
+        matrix retval{n, n};
         retval.set_diagonal();
         return retval;
     }
@@ -208,7 +209,7 @@ public:
     /// @param p Number of places to shift: `p > 0` for right-shift, `p < 0` for left-shift.
     static constexpr matrix shift(std::size_t n, int p = -1)
     {
-        matrix retval(n);
+        matrix retval{n, n};
         retval.set_diagonal(p);
         return retval;
     }
@@ -223,7 +224,7 @@ public:
         // Inelegant fix for `implicit conversion changes signedness` compiler warning that is meaningless here.
         auto n_plus_p = std::size_t(int(n) + p);
 
-        matrix retval(n);
+        matrix retval{n, n};
         for (std::size_t i = 0; i < n; ++i) {
             std::size_t j = (n_plus_p + i) % n;
             retval(i, j) = 1;
@@ -235,12 +236,11 @@ public:
     /// @param top_row These are the elements we copy into the top row of our matrix
     static constexpr matrix companion(const vector_type& top_row)
     {
-        // Trivial case?
+        // Edge case?
         auto n = top_row.size();
         if (n == 0) return matrix();
 
-        // General case
-        matrix retval(n);
+        matrix retval{n, n};
         retval.row(0) = top_row;
         retval.set_diagonal(-1);
         return retval;
@@ -255,8 +255,8 @@ public:
     /// @return Method returns a @c std::nullopt if the the string is not recognized.
     static std::optional<matrix> from(std::string_view s, bool bit_order = false)
     {
-        // Trivial case
-        if (s.empty()) return matrix();
+        // Edge case
+        if (s.empty()) return matrix{};
 
         // We split the string into tokens using the standard regex library.
         std::string                src(s);
@@ -267,7 +267,7 @@ public:
         // Zap any empty tokens & check there is something to do
         tokens.erase(std::remove_if(tokens.begin(), tokens.end(), [](std::string_view x) { return x.empty(); }),
                      tokens.end());
-        if (tokens.empty()) return matrix();
+        if (tokens.empty()) return matrix{};
 
         // We hope to fill a matrix.
         matrix retval;
@@ -325,7 +325,7 @@ public:
     /// @param c The new number of columns -- if `c  < cols()` we lose the excess columns.
     constexpr matrix& resize(std::size_t r, std::size_t c)
     {
-        // Trivial case ...
+        // Edge case ...
         if (rows() == r && cols() == c) return *this;
 
         // Resizes to zero in either dimension is taken as a zap the lot instruction
@@ -440,7 +440,7 @@ public:
         bit_debug_assert(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
         bit_debug_assert(j0 < cols(), "i0 = {},  rows() = {}", j0, cols());
 
-        // Trivial case?
+        // Edge case?
         if (r == 0 || c == 0) return matrix{};
 
         // End point OK?
@@ -471,8 +471,8 @@ public:
     /// @return A completely independent new bit-matrix.
     constexpr matrix lower(bool strict = false) const
     {
-        // Trivial case?
-        if (empty()) return matrix();
+        // Edge case?
+        if (empty()) return matrix{};
 
         // Make a copy of the full matrix
         matrix retval = *this;
@@ -509,8 +509,8 @@ public:
     /// @return A completely independent new bit-matrix.
     constexpr matrix upper(bool strict = false) const
     {
-        // Trivial case?
-        if (empty()) return matrix();
+        // Edge case?
+        if (empty()) return matrix{};
 
         // Make a copy of the full matrix
         matrix retval = *this;
@@ -767,6 +767,18 @@ public:
         return *this;
     }
 
+    /// @brief Adds the identity bit-matrix to this one (a common operation in linear algebra).
+    /// @note  Only makes sense for square matrices.
+    constexpr matrix& add_identity()
+    {
+        // Check the precondition for debug builds.
+        bit_debug_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+
+        // Run through the diagonal "adding" ones.
+        for (std::size_t i = 0; i < rows(); ++i) element(i, i) ^= 1;
+        return *this;
+    }
+
     /// @brief Set element `(i, j)` to 1 if `f(i,j) != 0` otherwise set it to 0.
     /// @param f is function that we expect to call as `f(i, j)` for each index pair in the bit-matrix.
     constexpr matrix& set_if(std::invocable<std::size_t, std::size_t> auto f)
@@ -921,7 +933,7 @@ public:
     /// @brief Get a bit-string representation for this bit-matrix using the given characters for set and unset.
     std::string to_string(std::string_view delim = "\n", char off = '0', char on = '1') const
     {
-        // Handle a trivial case ...
+        // Edge case?
         std::size_t r = rows();
         if (r == 0) return std::string{};
 
@@ -965,7 +977,7 @@ public:
     /// @brief Get a hex-string representation for this bit-matrix.
     std::string to_hex(std::string_view delim = "\n") const
     {
-        // Handle a trivial case ...
+        // Edge case?
         std::size_t r = rows();
         if (r == 0) return std::string{};
 
@@ -1118,7 +1130,7 @@ dot(const matrix<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
     bit_debug_assert(lhs.cols() == rhs.size(), "Matrix cols = {}, vector size = {}", lhs.cols(), rhs.size());
     std::size_t              r = lhs.rows();
-    vector<Block, Allocator> retval(r);
+    vector<Block, Allocator> retval{r};
     for (std::size_t i = 0; i < r; ++i) retval[i] = bit::dot(lhs.row(i), rhs);
     return retval;
 }
@@ -1131,7 +1143,7 @@ dot(const vector<Block, Allocator>& lhs, const matrix<Block, Allocator>& rhs)
 {
     bit_debug_assert(lhs.size() == rhs.rows(), "Matrix rows = {}, vector size = {}", rhs.rows(), lhs.size());
     std::size_t              c = rhs.cols();
-    vector<Block, Allocator> retval(c);
+    vector<Block, Allocator> retval{c};
     for (std::size_t j = 0; j < c; ++j) retval[j] = bit::dot(lhs, rhs.col(j));
     return retval;
 }
@@ -1144,7 +1156,7 @@ dot(const matrix<Block, Allocator>& lhs, const matrix<Block, Allocator>& rhs)
     bit_debug_assert(lhs.cols() == rhs.rows(), "lhs.cols() = {}, rhs.rows() = {}", lhs.cols(), rhs.rows());
     std::size_t              r = lhs.rows();
     std::size_t              c = rhs.cols();
-    matrix<Block, Allocator> retval(r, c);
+    matrix<Block, Allocator> retval{r, c};
     for (std::size_t j = 0; j < c; ++j) {
         auto rhsCol = rhs.col(j);
         for (std::size_t i = 0; i < r; ++i) retval(i, j) = bit::dot(lhs.row(i), rhsCol);
@@ -1177,7 +1189,7 @@ transpose(const matrix<Block, Allocator>& M)
 {
     std::size_t              r = M.rows();
     std::size_t              c = M.cols();
-    matrix<Block, Allocator> retval(c, r);
+    matrix<Block, Allocator> retval{c, r};
     for (std::size_t i = 0; i < r; ++i) {
         for (std::size_t j = 0; j < c; ++j) retval(j, i) = M(i, j);
     }
@@ -1185,35 +1197,31 @@ transpose(const matrix<Block, Allocator>& M)
 }
 
 /// @brief Raise a square bit-matrix to any power @c n.
-/// @note  This version is a straight left-to-right bits in n square & multiply.
+/// @note  Implementation is "square & multiply"  running from left-to-right through the bits in n.
 template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 pow(const matrix<Block, Allocator>& M, std::size_t n)
 {
     bit_assert(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
 
-    // Trivial case M^0 = I?
+    // Edge case: M^0 = I?
     if (n == 0) return matrix<Block, Allocator>::identity(M.rows());
 
     // n != 0: Note that if e.g. n = 0b00010111 then std::bit_floor(n) = 0b00010000.
-    std::size_t n2 = std::bit_floor(n);
+    std::size_t n_bit = std::bit_floor(n);
 
-    // Start with our product being M
+    // Start with our product being M which takes care of the most significant binary digit in n.
     matrix<Block, Allocator> retval{M};
-
-    // That takes care of the most significant binary digit in n.
-    n2 >>= 1;
+    n_bit >>= 1;
 
     // More to go?
-    while (n2) {
-        // Need a squaring step ...
+    while (n_bit) {
+        // Always square and then multiply if necessary (i.e. if current bit in n is set).
         retval = dot(retval, retval);
+        if (n & n_bit) retval = dot(retval, M);
 
-        // May also need a straight multiply step.
-        if (n & n2) retval = dot(retval, M);
-
-        // Finished with another binary digit in n.
-        n2 >>= 1;
+        // On to the next bit position in n.
+        n_bit >>= 1;
     }
     return retval;
 }
@@ -1225,11 +1233,11 @@ pow2(const matrix<Block, Allocator>& M, std::size_t n)
 {
     bit_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
 
-    // Note the 2^0 = 1 so we can start with a straight copy of M
+    // Note the 2^0 = 1 so M^(2^0) = M and hence we start with a straight copy of M.
     matrix<Block, Allocator> retval{M};
 
-    // Square as often as requested ...
-    for (uint64_t i = 0; i < n; ++i) retval = dot(retval, retval);
+    // Square that as often as requested ...
+    for (std::size_t i = 0; i < n; ++i) retval = dot(retval, retval);
 
     return retval;
 }
@@ -1291,49 +1299,6 @@ operator*(const matrix<Block, Allocator>& lhs, const matrix<Block, Allocator>& r
 {
     matrix<Block, Allocator> retval{lhs};
     retval &= rhs;
-    return retval;
-}
-
-/// @brief Computes the result of using a square bit-matrix as the argument in a polynomial.
-/// @param p The polynomial coefficients as a bit-vector where the polynomial is p0 + p1 x + p2 x^2 + ...
-template<std::unsigned_integral Block, typename Allocator>
-constexpr matrix<Block, Allocator>
-polynomial_sum(const vector<Block, Allocator>& p, const matrix<Block, Allocator>& M)
-{
-    // The bit-matrix must be square.
-    bit_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
-
-    // The returned bit-matrix will be N x N.
-    auto N = M.rows();
-
-    // Handle a singular/empty polynomial with an exception if we're in a `BIT_DEBUG` scenario
-    bit_debug_assert(!p.empty(), "Calling this method for an empty bit-vector is likely an error!");
-
-    // Otherwise handling a singular/empty polynomial is a bit arbitrary but needs must ...
-    if (p.empty()) return matrix<Block, Allocator>(N);
-
-    // Of course if the polynomial is all zeros then so too is the polynomial sum.
-    if (p.none()) return matrix<Block, Allocator>(N);
-
-    // Highest power in the polynomial--now know there is one.
-    auto n = p.final_set();
-
-    // Start with the polynomial sum being the identity matrix.
-    auto retval = matrix<Block, Allocator>::identity(N);
-
-    // Work backwards a la Horner
-    while (n > 0) {
-
-        retval = dot(M, retval);
-
-        // Add the identity to the sum if the corresponding polynomial coefficient is 1.
-        if (p[n - 1])
-            for (std::size_t i = 0; i < N; ++i) retval(i, i) ^= 1;
-
-        // And count down ...
-        n--;
-    }
-
     return retval;
 }
 
@@ -1617,3 +1582,49 @@ operator>>(std::istream& s, bit::matrix<Block, Allocator>& rhs)
 }
 
 } // namespace bit
+
+// --------------------------------------------------------------------------------------------------------------------
+// Connect bit-matrices to std::format & friends (not in the `bit` namespace).
+// --------------------------------------------------------------------------------------------------------------------
+
+/// @brief Connect bit-matrices to @c std::format and friends by specializing the @c std:formatter struct.
+/// @note  We handle {} (default), {:p} (pretty-strings by row), and {:x} (hex strings by row).
+template<std::unsigned_integral Block, typename Allocator>
+struct std::formatter<bit::matrix<Block, Allocator>> {
+
+    /// @brief Parse a bit-matrix format specifier where where we recognize @c p for 'pretty' and  @c x fpr 'hex'.
+    /// @note  Other specifiers will result in an "unrecognized format ..." message.
+    ///        C++20 seems a bit weak on rational ways to tell you the specifier is not good at compile time.
+    constexpr auto parse(const std::format_parse_context& ctx)
+    {
+        auto it = ctx.begin();
+        while (it != ctx.end() && *it != '}') {
+            switch (*it) {
+                case 'p': m_pretty = true; break;
+                case 'x': m_hex = true; break;
+                default: m_error = true;
+            }
+            ++it;
+        }
+        return it;
+    }
+
+    /// @brief Push out a formatted bit-matrix using the various @c to_string(...) methods in the class.
+    template<class FormatContext>
+    auto format(const bit::matrix<Block, Allocator>& rhs, FormatContext& ctx) const
+    {
+        // Was there a format specification error?
+        if (m_error) return std::format_to(ctx.out(), "'UNRECOGNIZED FORMAT SPECIFIER FOR BIT-MATRIX'");
+
+        // Special handling requested?
+        if (m_hex) return std::format_to(ctx.out(), "{}", rhs.to_hex());
+        if (m_pretty) return std::format_to(ctx.out(), "{}", rhs.to_pretty_string());
+
+        // Default
+        return std::format_to(ctx.out(), "{}", rhs.to_string());
+    }
+
+    bool m_hex = false;
+    bool m_pretty = false;
+    bool m_error = false;
+};

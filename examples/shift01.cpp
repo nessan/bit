@@ -1,7 +1,6 @@
-/// @brief Simple check on right shifting versus same thing using the string representation.
+/// @brief Simple check on right shifting a @c bit::vector versus same thing using the string representation.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
-
 #include "common.h"
 
 int

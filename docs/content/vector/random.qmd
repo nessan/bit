@@ -19,7 +19,7 @@ At the extremes, if this parameter is `1.0`, the elements will all be 1; if it i
 
 ::: {.callout-warning}
 # The probability value needs to be valid
-This method throws a `std::invalid_argument` exception if the `prob_one` argument is not in the valid range $[0, 1]$.
+This method throws a [`std::invalid_argument`] exception if the `prob_one` argument is not in the valid range $[0, 1]$.
 :::
 
 [Example]{.bt}

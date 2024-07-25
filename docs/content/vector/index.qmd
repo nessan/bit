@@ -14,7 +14,7 @@ We often refer to a `bit::vector` object as a *bit-vector*.
 
 One can dynamically size and resize a `bit::vector` as needs dictate.
 A `std::bitset`, on the other hand, has a _fixed_ size determined at compile time.
-_Boost_ has a [`boost::dynamic_bitset`] class that, as its name suggests, allows for a bitset to be sized at runtime.
+_Boost_ has a [`boost::dynamic_bitset`] class that allows for runtime resizing, as its name suggests.
 However, that class does not support algebraic operations.
 
 It is worth noting that by default, a `bit::vector` prints in *vector-order*.
@@ -45,11 +45,10 @@ namespace bit {
   class vector;
 }
 ```
-
 The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses.
 For example, your code might have a simple line like:
 ``` cpp
-bit::vector v(32);
+bit::vector v{32};
 ```
 This code creates a vector with 32 elements set to 0 by default.
 The bit-vector's 32 elements are packed into a single 64-bit word, so this example has some spare capacity.
@@ -62,15 +61,14 @@ Parameter | Description
 `Allocator` = `std::allocator<Block>`  | The default `Allocator` should be just fine for most purposes, but you can use your custom type to handle all memory allocation/destruction for blocks.
 : {.bordered .hover .responsive}
 
-
 The default `Block` is 64-bits, the *native* size for many modern CPUs.
 
 Of course, if you need to use many smaller bit-vectors and have concerns about conserving space, you might use a different `Block`.
 Perhaps if the bit-vectors all fit in 8 bits, you might have code along the lines:
 
 ``` cpp
-using bit_vector = bit::vector<uint8_t>;
-bit_vector v = ...
+using vector_type = bit::vector<uint8_t>;
+vector_type v = ...
 ```
 
 ::: callout-warning
@@ -83,12 +81,19 @@ In theory, there is no reason that one couldn't intermingle operations between, 
 Item | Description
 ---- | -----------
 `block_type`       | We use a specific [`std::unsigned_integral`] type to store the bit-vector elements in blocks. The default is `std::uint64_t`, where we store 64 elements per block.
-`block_store_type` | The type of container used to store the blocks. The default is a `std::vector<block_type>`.
 `allocator_type`   | The block store vector uses this type of memory manager. The default is a `std::allocator<block_type>`.
-`bits_per_block`   | The number of bit-vector elements each block can hold. The default is 64.
-`blocks_needed(n)` | Class method returning the number of blocks needed to store a bit-vector of size `n`.
  `npos`            | A class constant of type `std::size_t` used to indicate search failures, etc.
  `reference`       | A proxy *sub-class* representing an individual vector element (a single bit).
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+
+Occasionally, you may need to use more implementation-specific types:
+
+Item | Description
+---- | -----------
+`bits_per_block`   | The number of bit-vector elements each block can hold. The default is 64.
+`block_store_type` | We store the blocks in a container of this type, a `std::vector<block_type>`.
+`blocks_needed(n)` | Class method returning the number of blocks needed to store a bit-vector of size `n`.
 : {.bordered .hover .responsive tbl-colwidths="[10,90]"}
 
 ## Instance Methods
@@ -105,7 +110,7 @@ Method | Description
 [`vector::from`]          | Factory methods that construct bit-vectors from the bits in an integer or from strings.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 
-### Access
+### Element Access
 Method | Description
 ------ | -----------
 [`vector::element`]       | Access an element in a bit-vector.
@@ -125,6 +130,22 @@ Method | Description
 [`vector::blocks`]        | Access the underlying block store as a `std::vector<Block>`.
 [`vector::allocator`]     | Read-only access to the underlying `Allocator` for the block store.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Block Access
+Method | Description
+------ | -----------
+[`vector::bits_per_block`]      | The number of bit-vector elements that can fit in one storage block.
+[`vector::block_store_type`]    | We store the underlying blocks in this type of container.
+[`vector::blocks_needed`]       | Computes the number of blocks needed to store a particular bit-vector.
+[`vector::allocator`]           | The memory manager for the block store.
+[`vector::block_count`]         | The number of blocks in the block store.
+[`vector::block`]               | Access an individual block.
+[`vector::block_index_for`]     | Returns the index of the block holding a particular bit-vector element.
+[`vector::bit_index_for`]       | Returns the specific bit inside that block where that particular bit-vector element resides.
+[`vector::blocks`]              | Access the underlying block store as a `block_store_type`
+[`vector::clean`]               | This sets any extra/junk bits in the last occupied block to 0.
+[`vector::block_constructor`]   | Construct a `bit::vector` by copying or _moving_ a prefilled `block_store_type` of blocks.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
 
 ### Iteration
 Method | Description
@@ -185,7 +206,7 @@ Method | Description
 [`vector::to_pretty_string`]  | Returns a formatted representation e.g. `[1 1 0 1 0 1]`.
 [`vector::to_bit_order`]      | Returns a binary-string representation using configurable characters for set and unset elements. The least significant bit is on the right.
 [`vector::to_hex`]            | Returns a compact hex string representation of the bit-vector.
-[`vector::to_polynomial`]     | Interprets the elements of the bit-vector as the coefficients of a polynomial over $\FF$ and returns a string representation of that polynomial.
+[`vector::polynomial`]        | Interprets the elements of a bit-vector as the coefficients of a polynomial over $\FF$ and returns a string representation of that polynomial.
 [`vector::description`]       | Writes some descriptive data about the bit-vector to a stream.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 
@@ -197,14 +218,15 @@ Method | Description
 [`vector::trimmed`]         | Returns a copy of a bit-vector with any leading or trailing zeros removed.
 [`vector::riffled`]         | Returns a copy of a bit-vector with any added interleaved zeros.
 [`vector::dot`]             | Returns the _dot product_ of this bit-vector with another of equal size.
-[`vector::convolution`]     | Returns the _convolution_ of this bit-vector with another bit-vector.
-[`vector::unit_floor`]      | Returns a unit bit-vector with its 1 at the location of our final set bit.
-[`vector::unit_ceil`]       | Returns a unit bit-vector with its 1 at the location one slot past our final set bit.
+[`vector::unit_floor`]      | Returns a unit bit-vector with its `1` at the location of our final set bit.
+[`vector::unit_ceil`]       | Returns a unit bit-vector with its `1` at the location one slot past our final set bit.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 
-You should always use this form to perform checks.
-
 ### Debugging
+
+You can set some compile-time flags that enable range checking and so on.
+You might set these flags in `DEBUG` builds where performance is not the critical concern.
+
 Macro | Description
 ----- | -----------
 [`BIT_DEBUG`]               | This compile-time flag enables extra safety checks.
@@ -223,8 +245,7 @@ Function | Description
 [`vector::join`]            | Joins two or three bit-vectors to create a new one.
 [`vector::dot`]             | Returns the _dot product_ of two equal sized bit-vectors.
 [`vector::convolution`]     | Returns the convolution of two bit-vectors.
-[`vector::polynomial_sum`]  | Evaluates a polynomial over $\FF$.
-[`vector::polynomial_mod`]  | Evaluates $x^e \text{ mod } p(x)$ where the exponent $e$ can be huge and $p(x)$ is a polynomial over $\FF$.
+[`vector::polynomial`]      | Interprets the elements of a bit-vector as the coefficients of a polynomial over $\FF$ and returns a string representation of that polynomial.
 [`vector::operator&`]       | Element-by-element logical `AND` between two equal-sized bit-vectors.
 [`vector::operator^`]       | Element-by-element logical `XOR` between two equal-sized bit-vectors.
 [`vector::operator|`]       | Element-by-element logical `OR`  between two equal-sized bit-vectors.
@@ -233,4 +254,5 @@ Function | Description
 [`vector::operator*`]       | Element-by-element logical `AND` between two equal-sized bit-vectors.
 [`vector::stream<<`]        | Stream input for bit-vectors.
 [`vector::stream>>`]        | Stream output for bit-vectors.
+[`vector::formatter`]       | Connect the `bit::vector` class to [`std::format`] and friends.
 : {.bordered .striped .hover .responsive tbl-colwidths="[32,68]"}

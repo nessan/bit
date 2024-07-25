@@ -121,7 +121,7 @@ public:
         bit_always_assert(ns < m_count, "Argument ns = {} is not less than solution count = {}!", ns, m_count);
 
         // Our solution will have the free variables set bases on the bit-pattern in ns.
-        vector_type x(equation_count());
+        vector_type x{equation_count()};
         for (std::size_t i = 0; i < m_free.size(); ++i) {
             x[m_free[i]] = (ns & 1);
             ns >>= 1;
@@ -153,7 +153,7 @@ private:
             if (m_rhs[i]) return false;
         }
 
-        // Get to here in the degenerate case that both the lhs and rhs are just all zeros. So x can be anything!
+        // Get here only if both the lhs and rhs are all zeros. So x can be anything!
         return true;
     }
 

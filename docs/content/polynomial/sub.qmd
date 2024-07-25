@@ -1,0 +1,39 @@
+---
+title: "`bit::polynomial` --- Sub-polynomials"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method that creates a new distinct polynomial by copying coefficients from this one.
+```cpp
+constexpr polynomial sub(std::size_t n) const;
+```
+Here `n` is the number of *coefficients* to copy.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial p{11};
+    p.set();
+    auto q = p.sub(7);
+    std::cout << std::format("p         = {}\n", p);
+    std::cout << std::format("q         = {}\n", q);
+    std::cout << std::format("q.clear() = {}\n", q.clear());
+    std::cout << std::format("p         = {}\n", p);
+}
+```
+
+[Output]{.bt}
+```bash
+p         = 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7 + x^8 + x^9 + x^10
+q         = 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6
+q.clear() = 0
+p         = 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7 + x^8 + x^9 + x^10
+```
+
+So even though we cleared out `q` the original polynomial `p` is not affected.
+
+### See Also
+[`polynomial::split`]

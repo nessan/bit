@@ -17,12 +17,12 @@ This document contains some technical notes on the joys and travails of mathemat
 
 ## Some things are different!
 
-Over $\R$, the _only_ vector of size zero in the zero vector. \
+Over $\R$, the _only_ self-orthogonal vector is the zero vector. \
 If $\mathbf{x}$ is a vector over $\R$ then
 $$
 \mathbf{x} \cdot \mathbf{x} = 0 \iff \mathbf{x} = \mathbf{0},
 $$
-Put another way, the only _self-orthogonal_ vector over $\R$ is the zero vector.
+Put another way, the only vector of size 0 over $\R$ is the zero vector.
 
 That is *not* true for vectors over $\FF$.
 

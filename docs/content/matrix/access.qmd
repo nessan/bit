@@ -35,7 +35,7 @@ col(std::size_t j) const;                   // <6>
 2. Another way to access element `(i, j)`.
 3. Returns an object of type [`vector::reference`] that lets you write to slot `(i, j)`.
 4. Read-only & read-write access to the elements in row `i` of a bit-matrix.
-5. Synonyms for the `row(i)` methods to allow for alternate "`C`" style indexing a la `matrix[i][j]`.
+5. Synonyms for the `row(i)` methods to allow for alternate `C` style indexing a la `matrix[i][j]`.
 6. Read-only access to the elements in column `i` of a bit-matrix.
 
 ::: {.callout-warning}

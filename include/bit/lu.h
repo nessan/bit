@@ -19,7 +19,7 @@ public:
     using matrix_type = matrix<Block, Allocator>;
     using permutation_type = std::vector<std::size_t>;
 
-    explicit lu(const matrix_type& A) : m_lu(A), m_swap(A.rows()), m_rank(A.rows())
+    explicit lu(const matrix_type& A) : m_lu{A}, m_swap{A.rows()}, m_rank{A.rows()}
     {
         // Only handle square matrices
         bit_always_assert(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
@@ -83,7 +83,7 @@ public:
     permutation_type permutation_vector() const
     {
         std::size_t      N = m_swap.size();
-        permutation_type retval(N);
+        permutation_type retval{N};
         for (std::size_t i = 0; i < N; ++i) retval[i] = i;
         for (std::size_t i = 0; i < N; ++i) std::swap(retval[m_swap[i]], retval[i]);
         return retval;

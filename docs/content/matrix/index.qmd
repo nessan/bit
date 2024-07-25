@@ -41,7 +41,6 @@ Danilevsky's method to compute characteristic polynomials (and the determinant) 
 
 Like everything in the library, this class is in the `bit` namespace.
 We define it in the header `<bit/matrix.h>` as follows:
-
 ```cpp
 namespace bit {
     template<
@@ -50,7 +49,6 @@ namespace bit {
     > class bit::matrix;
 }
 ```
-
 The two template parameters add some visual clutter, but they both have reasonable defaults and disappear in most uses.
 
 For example, your code might have a line like:
@@ -74,23 +72,21 @@ The default [`std::unsigned`] for a `Block` is  64-bits, the _native_ size for m
 Of course, if you need to use many smaller bit-matrices and have concerns about conserving space, you might use a different `Block`.
 Perhaps if the bit-matrices all fit in 32-bits, you might have code along the lines
 ```cpp
-    using bit::matrix = bit::matrix<uint32_t>;
-    bit::matrix mat = ...
+    using matrix_type = bit::matrix<uint32_t>;
+    matrix_type mat = ...
 ```
 
 ::: callout-warning
 # Use a single `Block` type throughout your code!
 You should use just one `Block` type throughout your code.
-In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::matrix<uint32_t>` and a `bit::vector<uint64_t>`.
-However, doing that efficiently makes the code much more complex.
-The library doesn't support this!
+In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::matrix<uint32_t>` and a `bit::vector<uint64_t>`, but doing so efficiently significantly increases code complexity, and the library doesn't support this.
 :::
 
 ## Class Types
 
 Item | Description
 ---- | -----------
- `vector_type`  | Alias for [`bit::vector`] --- the type used for matrix rows (and columns).
+`vector_type`  | Alias for [`bit::vector`] --- the type used for matrix rows (and columns).
 : {.bordered .hover .responsive tbl-colwidths="[20,80]"}
 
 ## Instance Methods
@@ -203,8 +199,8 @@ Method | Description
 ### Other methods
 Method | Description
 ------ | -----------
-[`matrix::probability_invertible`]  | Returns the probability that a "`fair`" square bit-matrix is invertible.
-[`matrix::probability_singular`]    | Returns the probability that a "`fair`" square bit-matrix is singular.
+[`matrix::probability_invertible`]  | Returns the probability that a "fair" square bit-matrix is invertible.
+[`matrix::probability_singular`]    | Returns the probability that a "fair" square bit-matrix is singular.
 : {.bordered .hover .responsive tbl-colwidths="[35,65]"}
 
 ### Debugging
@@ -233,7 +229,6 @@ Function | Description
 [`matrix::transpose`]                   | Returns the transpose of an arbitrary rectangular bit-matrix as a new bit-matrix.
 [`matrix::pow`]                         | Raises a square bit-matrix to a power $n$.
 [`matrix::pow2`]                        | Raises a square bit-matrix to a power $2^n$.
-[`matrix::polynomial_sum`]              | Evaluates a polynomial over GF(2) using a square bit-matrix as the argument.
 [`matrix::invert`]                      | Attempts to return the inverse of a square bit-matrix.
 [`matrix::echelon_form`]                | Returns the {row-echelon} form of an arbitrary bit-matrix.
 [`matrix::reduced_echelon_form`]        | Returns the _reduced_ {row-echelon} form of an arbitrary bit-matrix.

@@ -1,0 +1,125 @@
+---
+title: "`bit::polynomial` --- Polynomial Size"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to query and set the *size* of a polynomial.
+```cpp
+constexpr std::size_t size()     const;         // <1>
+constexpr bool        empty()    const;         // <2>
+constexpr std::size_t capacity() const;         // <3>
+constexpr polynomial& clear();                  // <4>
+constexpr polynomial& resize(std::size_t n);    // <5>
+```
+1. Returns the number of coefficients in the polynomial.
+2. Returns true if the polynomial has size 0. This is treated as a form of the zero polynomial.
+3. Returns the number of coefficients the polynomial can have without causing a memory allocation.
+4. Clears all the coefficients from the polynomial so that `size()` becomes 0. This does not release any used memory.
+5. Resizes the number of coefficients in the polynomial up or down. Any added coefficients are initialized to zero.
+
+## Size versus Degree
+
+It is important to distinguish between the *size* of a polynomial and its *degree*.
+The size is the number of coefficients, while the degree as returned by the [`polynomial::degree`] method
+is the index of its highest non-trivial power term.
+
+For example,
+$$
+p(x) = x + x^3,
+$$
+has a degree 3 and a size that is *at least* 4.
+If we write out all the coefficients it might be that
+$$
+p(x) = 0 + 1*x + 0*x^2 + 1*x^3 + 0*x4 + 0*x5,
+$$
+with two trailing zero coefficients $p_4 = p_5 = 0$ so the polynomial has size 6.
+Those can be eliminated by the [`polynomial::make_monic`] method.
+Even if there are lots of trailing zeros, internally the class methods remain efficient and ignore them.
+
+::: {.callout-note}
+# The zero polynomial
+The zero polynomial might have no coefficients so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
+In either case, the degree will be the special "not a degree" constant `polynomial::ndeg`.
+
+Methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
+:::
+
+## Resizing
+
+The `resize(n)` method alters the polynomial to have `n` coefficients.
+
+If `n > size()` the added coefficients are zeros so the degree of the polynomial is not changed.
+The memory footprint consumed by the polynomial may increase.
+
+On the other hand, if `n < size()` we drop terms in the polynomial which may lower its degree.
+However, even if we decrease the polynomial size, no memory is released.
+
+## Memory Usage
+
+The `capacity()` method returns the number of coefficients that a polynomial *can* have without causing any new memory allocation to happen.
+The method is a pass-through to the [`vector::capacity`] method for the underlying coefficient bit-vector.
+
+A nonzero polynomial has at least `degree() + 1` coefficients but may have many more that as trailing zeros.
+Beyond that, the coefficient bit-vector can have spare capacity that is only ever reachable by using the `resize()` method.
+Resizing up to the capacity causes no memory allocation so is very efficient but of course, having lots of spare capacity can be resource wasteful.
+
+::: {.callout-note}
+# Memory footprint.
+To minimize the memory used by a polynomial use the [`polynomial::shrink_to_fit`] method.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // lambda: Turns the degree of a polynomial into a string.
+    auto deg = [](auto& p) { return p.degree() == bit::polynomial<>::ndeg ? "NONE" : std::format("{}", p.degree()); };
+
+    bit::polynomial<> p;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p.resize(7);
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p[1] = p[3] = 1;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p.resize(3);
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p.clear();
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n", p.size(), deg(p), p.monic());
+}
+```
+
+[Output]{.bt}
+```bash
+Polynomial p(x) = 0 with coefficients [].
+Size: 0, degree: NONE, monic: false.
+
+Polynomial p(x) = 0 with coefficients [0 0 0 0 0 0 0].
+Size: 7, degree: NONE, monic: false.
+
+Polynomial p(x) = x^1 + x^3 with coefficients [0 1 0 1 0 0 0].
+Size: 7, degree: 3, monic: false.
+
+Polynomial p(x) = x^1 with coefficients [0 1 0].
+Size: 3, degree: 1, monic: false.
+
+Polynomial p(x) = 0 with coefficients [].
+Size: 0, degree: NONE, monic: false.
+```
+
+### See Also
+[`polynomial::degree`]      \
+[`polynomial::monic`]       \
+[`polynomial::make_monic`]  \
+[`polynomial::to_string`]   \
+[`polynomial::shrink_to_fit`]

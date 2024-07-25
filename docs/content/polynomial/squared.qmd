@@ -1,0 +1,57 @@
+---
+title: "`bit::polynomial` --- Efficient Squaring"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods that efficiently compute the square of polynomials.
+```cpp
+constexpr polynomial squared()                const;    // <1>
+constexpr void       squared(polynomial& dst) const;    // <2>
+
+```
+1. Returns a new polynomial that is the square of this one.
+2. Fills a destination polynomial with coefficients that make it the square of this one.
+
+The second version can be used for algorithms involving repeated squaring where you want to reuse the `dst` storage.
+
+The `squared` methods are faster than using the multiplication operator.
+
+If $p(x)$ is represented by its coefficient vector $\mathbf{p} = [ p_0, p_1, p_2, \ldots ]$:
+$$
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots,
+$$
+it is easy to verify that the polynomial $p(x)^2$ has coefficients that are the [`vector::riffled`] version of $\mathbf{p}$.
+
+For example, if $p(x) = a + bx$ then
+$$
+p(x)^2 = a^2 + 2 a b x + b^2 x^2
+$$
+In $\FF$, you drop all multiples of 2, and it follows that
+$$
+p(x)^2 = a + b x^2
+$$
+The general case follows by induction.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial<> p{6};
+    p.set();
+
+    std::cout << std::format("p(x)      = {}\n", p);
+    std::cout << std::format("p(x)^2    = {}\n", p.squared());
+    std::cout << std::format("p(x)*p(x) = {}\n", p*p);
+}
+```
+[Output]{.bt}
+```bash
+p(x)      = 1 + x^1 + x^2 + x^3 + x^4 + x^5
+p(x)^2    = 1 + x^2 + x^4 + x^6 + x^8 + x^10
+p(x)*p(x) = 1 + x^2 + x^4 + x^6 + x^8 + x^10
+```
+
+### See Also
+[`vector::riffled`]

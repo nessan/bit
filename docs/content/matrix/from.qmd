@@ -79,9 +79,9 @@ main()
 1. Each row string is prefixed by '0b', so interpreted as binary.
 2. This string has the same digits, but thanks to the '0x' prefix, each row will be interpreted as a hex string.
 3. Construction where the row characters have no suffix, so by default, parsed as hex/base-16 numbers.
-4. Construction where the row characters have a suffix `"_8"`, so parsed as base-8 numbers.
-5. Construction where the row characters have a suffix `"_4"`, so parsed as base-4 numbers.
-6. Construction where the row characters have a suffix `"_2"`, so parsed as base-2 numbers.
+4. Construction where the row characters have a suffix `_8`, so parsed as base-8 numbers.
+5. Construction where the row characters have a suffix `_4`, so parsed as base-4 numbers.
+6. Construction where the row characters have a suffix `_2`, so parsed as base-2 numbers.
 
 [Output]{.bt}
 ```bash

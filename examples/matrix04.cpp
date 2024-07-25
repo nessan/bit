@@ -1,4 +1,4 @@
-/// @brief Basic check on the characteristic_polynomial(M) function.
+/// @brief Basic check on the @c bit::characteristic_polynomial(M) function.
 /// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #include "common.h"
@@ -6,7 +6,8 @@
 int
 main()
 {
-    using matrix_type = bit::matrix<std::uint8_t>;
+    using block_type = std::uint8_t;
+    using matrix_type = bit::matrix<block_type>;
 
     // Read a string and convert to a bit-matrix.
     while (true) {
@@ -18,11 +19,11 @@ main()
         auto mat = matrix_type::from(input);
         if (mat) {
             std::print("'{}' parsed as:\n{}\n", input, *mat);
-            auto c = bit::characteristic_polynomial(*mat);
-            std::print("Matrix has characteristic polynomial p(x): {}\n", c.to_polynomial());
+            auto p = bit::characteristic_polynomial(*mat);
+            std::print("Matrix has characteristic polynomial p(x): {}\n", p);
 
             // Let's see whether the matrix is a zero of characteristic polynomial as it should be?
-            auto sum = polynomial_sum(c, *mat);
+            auto sum = p(*mat);
             if (sum.none())
                 std::print("And happily p(M) yielded the zero bit-matrix as expected.\n");
             else

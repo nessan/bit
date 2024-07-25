@@ -10,24 +10,26 @@ main()
     using block_type = std::uint8_t;
     using vector_type = bit::vector<block_type>;
     using matrix_type = bit::matrix<block_type>;
+    using polynomial_type = bit::polynomial<block_type>;
 
     // Strings we will parse into polynomial coefficients and a bit-matrix.
-    std::string p_str;
+    std::string c_str;
     std::string m_str;
 
     // And we're off ...
     while (true) {
 
-        // Read the polynomial coefficients as a string and convert it to a bit-vector if possible.
+        // Read polynomial coefficients as a string and convert them to a bit-vector if possible.
         std::cout << "Polynomial coefficients (eg. '100101') or 'q' to quit? ";
-        std::getline(std::cin, p_str);
-        if (p_str == "Q" || p_str == "q") break;
-        auto p = vector_type::from(p_str);
-        if (!p) {
-            std::cout << "Failed to parse '" << p_str << "' as a bit-vector!\n";
+        std::getline(std::cin, c_str);
+        if (c_str == "Q" || c_str == "q") break;
+        auto c = vector_type::from(c_str);
+        if (!c) {
+            std::cout << "Failed to parse '" << c_str << "' as a bit-vector of polynomial coefficients!\n";
             continue;
         }
-        std::cout << "Polynomial: " << p->to_polynomial() << '\n';
+        polynomial_type p{*c};
+        std::cout << "Polynomial: " << p << '\n';
 
         // Read another string and convert it to a bit-matrix if possible.
         std::cout << "Matrix elements (eg. '100 010 001' for the 3x3 identity) or 'q' to quit? ";
@@ -40,10 +42,10 @@ main()
         }
 
         // Print the polynomial sum
-        auto sum = bit::polynomial_sum(*p, *M);
-        std::cout << "Polynomial p: " << p->to_polynomial() << '\n';
-        std::cout << "Matrix M:\n" << *M << '\n';
-        std::cout << "p(M):\n" << sum << '\n';
+        auto sum = p(*M);
+        std::cout << "Polynomial p: " << p << '\n';
+        std::cout << "Matrix M:   \n" << *M << '\n';
+        std::cout << "p(M):       \n" << sum << '\n';
     }
     return 0;
 }

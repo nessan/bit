@@ -1,0 +1,121 @@
+---
+title: "`bit::polynomial` --- Polynomial Degree"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to query and make use of a polynomial's *degree*:
+```cpp
+constexpr std::size_t degree() const;       // <1>
+constexpr bool        monic()  const;       // <2>
+constexpr polynomial& make_monic();         // <3>
+```
+1. Returns the degree of the polynomial or `polynomial::ndeg` for the zero polynomial.
+2. Returns true if the polynomial is *monic* --- i.e. has no trailing zero coefficients.
+3. Eliminates any trailing zero coefficients and returns a reference to this polynomial.
+
+::: {.callout-note}
+# The zero polynomial
+The zero polynomial has *no* degree though by convention it is often set to $-\infty$.
+Our polynomial class has a special "not a degree" constant for this purpose `polynomial::ndeg`.
+
+The `make_monic()` method does nothing to a zero polynomial.
+:::
+
+## Degree versus Size
+
+The *size* of a polynomial as returned by the [`polynomial::size`] method is the number of its coefficients.
+The *degree* of a polynomial is the index of its highest non-trivial power term.
+For example,
+$$
+p(x) = x + x^3,
+$$
+has a degree 3 and a size that is *at least* 4.
+If we write out all the coefficients it might be that
+$$
+p(x) = 0 + 1*x + 0*x^2 + 1*x^3 + 0*x4 + 0*x5,
+$$
+with two trailing zero coefficients $p_4 = p_5 = 0$ so the polynomial has size 6.
+In this case, the query `p.monic()` will return `false` and `p.make_monic()` will eliminate those.
+
+::: {.callout-important}
+# The `make_monic()` method does not alter the memory footprint
+Calling `make_monic` on a non-zero polynomial simply ensures that `size() == degree() + 1`.
+No memory is released by this operation --- see the [`polynomial::shrink_to_fit`] method.
+:::
+
+## Efficiency
+
+Operations on and between polynomials generally can ignore trailing zero coefficients.
+This can be an important efficiency consideration in some cases.
+
+Algorithms and methods in the `bit::polynomial` class allow for this and internally work efficiently even if the polynomials are not monic.
+They do that by reimplementing some of the core `bit::vector` functionality to only consider underlying storage blocks up to and including the one containing the highest non-trivial power.
+
+If you are implementing some new piece of functionality it might be efficient to call `make_monic()` as appropriate.
+You may well start out having only monic polynomials where there are no such junk elements but in the course of a method, those can easily get introduced.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // lambda: Turns the degree of a polynomial into a string.
+    auto deg = [](auto& p) { return p.degree() == bit::polynomial<>::ndeg ? "NONE" : std::format("{}", p.degree()); };
+
+    bit::polynomial<> p;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p.resize(7);
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p[1] = p[3] = 1;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p.make_monic();
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p[1] = 0;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n\n", p.size(), deg(p), p.monic());
+
+    p[3] = 0;
+    std::cout << std::format("Polynomial p(x) = {} with coefficients {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, degree: {}, monic: {}.\n", p.size(), deg(p), p.monic());
+}
+```
+
+[Output]{.bt}
+```bash
+Polynomial p(x) = 0 with coefficients [].
+Size: 0, degree: NONE, monic: false.
+
+Polynomial p(x) = 0 with coefficients [0 0 0 0 0 0 0].
+Size: 7, degree: NONE, monic: false.
+
+Polynomial p(x) = x^1 + x^3 with coefficients [0 1 0 1 0 0 0].
+Size: 7, degree: 3, monic: false.
+
+Polynomial p(x) = x^1 + x^3 with coefficients [0 1 0 1].
+Size: 4, degree: 3, monic: true.
+
+Polynomial p(x) = x^3 with coefficients [0 0 0 1].
+Size: 4, degree: 3, monic: true.
+
+Polynomial p(x) = 0 with coefficients [0 0 0 0].
+Size: 4, degree: NONE, monic: false.
+```
+
+### See Also
+[`polynomial::size`]        \
+[`polynomial::resize`]      \
+[`polynomial::empty`]       \
+[`polynomial::clear`]       \
+[`polynomial::zero`]        \
+[`polynomial::nonzero`]     \
+[`polynomial::to_string`]   \
+[`polynomial::shrink_to_fit`]

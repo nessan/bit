@@ -101,9 +101,9 @@ int main()
 1. This string without a prefix is all zeros and ones, so we _assume_ it's a binary encoding.
 2. This string has the same digits, but thanks to the '0x' prefix, it will be interpreted as a hex string.
 3. Construction where the final character has no suffix, so by default, it is parsed as a hex/base-16 number.
-4. Construction where the final character has a suffix `"_8"` so is parsed as a base-8 number.
-5. Construction where the final character has a suffix `"_4"` so is parsed as a base-4 number.
-6. Construction where the final character has a suffix `"_2"` so is parsed as a base-2 number.
+4. Construction where the final character has a suffix `_8` so is parsed as a base-8 number.
+5. Construction where the final character has a suffix `_4` so is parsed as a base-4 number.
+6. Construction where the final character has a suffix `_2` so is parsed as a base-2 number.
 
 [Output]{.bt}
 ```bash

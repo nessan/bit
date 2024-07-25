@@ -4,18 +4,15 @@ title: "`bit::vector` --- Convolutions"
 
 {{< include /content/_common.qmd >}}
 
-Computes the _convolution_ of two bit-vectors either using an instance method or a non-member function.
+Computes the _convolution_ of two bit-vectors.
 
 ```cpp
-constexpr bit::vector convolution(const bit::vector &v);        // <1>
-
 template<std::unsigned_integral Block, typename Allocator>
 constexpr bit::vector<Block, Allocator>
-convolution(const bit::vector<Block, Allocator> &u,             // <2>
+convolution(const bit::vector<Block, Allocator> &u,             // <1>
             const bit::vector<Block, Allocator> &v);
 ```
-1. Instance method that returns the convolution of this bit-vector instance with another bit-vector `v`.
-2. Non-member function that returns the convolution of the two bit-vectors `u` and `v`.
+1. Non-member function that returns the convolution of the two bit-vectors `u` and `v`.
 
 
 If $\mathbf{u}$ has size $m$ and $\mathbf{v}$ has size $n$ then these methods return a bit-vector $\mathbf{w}$ of size $m+n-1$ whose elements are given by the formula
@@ -33,7 +30,7 @@ u(x) &= u_0 + u_1 x + \cdots + u_{m-1} x^{m-1} \\
 v(x) &= v_0 + v_1 x + \cdots + v_{n-1} x^{n-1}
 \end{align}
 $$
-then the $w_k$ are the coefficients for the product polynomial
+Then the $w_k$ are the coefficients for the product polynomial
 
 $$
  u(x) v(x) \equiv w(x) = w_0 + w_1 x + \cdots + w_{m+n-1} x^{m+n-1}.

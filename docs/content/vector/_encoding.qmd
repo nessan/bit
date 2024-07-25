@@ -21,28 +21,28 @@ We allow for hex strings with an optional prefix "0x" or "0X," e.g. "0x3ED02".
 Hex strings are *not* affected by a `bit_order` argument --- we ignore that argument.
 
 Each hex character naturally translates to **four** elements in a `bit::vector`.
-The hex string `"0x0"` is equivalent to the binary string `"0000"`, and so on, up to string `"0xF"` which is the same as the binary `"1111"`.
+The hex string `0x0` is equivalent to the binary string `0000`, and so on, up to string `0xF` which is the same as the binary `1111`.
 
-The hex pair `"0x0F"` will be interpreted in the vector as `00001111`.
+The hex pair `0x0F` will be interpreted in the vector as `00001111`.
 Of course, this is the advantage of hex.
 It is a more compact format that occupies a quarter of the space needed to write out the equivalent binary string.
 
 However, what happens if you want to encode a vector whose size is *not* a multiple of 4?
 We handle that by allowing the final character in the string to have a base that is _not_ 16.
-To accomplish that, we allow for an optional _suffix_, which must be one of `"\_2"`, `"_4"`, or `"_8"`.
+To accomplish that, we allow for an optional _suffix_, which must be one of `_2`, `_4`, or `_8`.
 If present, the prefix gives the base for just the _preceding_ character in the otherwise hex-based string.
 If there is no suffix, the final character is assumed to be hex like all the others.
 
-So the string `"0x1"` (no suffix, so the last character is the default hex base 16) is equivalent to `"0001"`.
-On the other hand, the string `"0x1_8"` (the last character is base 8) is equivalent to `"001"`.
-Similarly, the string `"0x1_4"` (the last character is base 4) is equivalent to `"01"` and finally, the string `"0x1_2"` (the previous character is base 2) is comparable to `"1"`
+So the string `0x1` (no suffix, so the last character is the default hex base 16) is equivalent to `0001`.
+On the other hand, the string `0x1_8` (the last character is base 8) is equivalent to `001`.
+Similarly, the string `0x1_4` (the last character is base 4) is equivalent to `01` and finally, the string `0x1_2` (the previous character is base 2) is comparable to `1`
 
-In the string `"0x3ED01_8"`, the first four characters `'3'`, `'E'`, `'D'`, and `'0'` are interpreted as hex values, and each will consume four slots in the vector.
-However, that final `"1_8"` is parsed as an octal 1, which takes up three slots `001`.
+In the string `0x3ED01_8`, the first four characters `3`, `E`, `D`, and `0` are interpreted as hex values, and each will consume four slots in the vector.
+However, that final `1_8` is parsed as an octal 1, which takes up three slots `001`.
 Therefore, this vector has size 19 (i.e., 4*4 + 3).
 
 ::: {.callout-warning}
 # Careful with that final suffix character
 If the suffix is present, the final character must fit inside the base given by that suffix.
-The string `"0x3_8"` is OK, but trying to parse `"0x3_2"` will result in a `std::nullopt` return value because the final character is not either 0 or 1, which are the only valid options for something that is supposed to be base 2.
+The string `0x3_8` is OK, but trying to parse `0x3_2` will result in a `std::nullopt` return value because the final character is not either 0 or 1, which are the only valid options for something that is supposed to be base 2.
 :::

@@ -5,12 +5,9 @@ title: "`bit::vector` --- Clear"
 {{< include /content/_common.qmd >}}
 
 Clears out the contents of a bit-vector:
-
 ```cpp
 constexpr bit::vector &clear();
 ```
-
-[Paragraph Title]{.bt}
 The bit-vector's `size()` becomes 0, but its capacity is _not_ changed.
 This method returns a reference to `*this` so it can be chained with other calls.
 

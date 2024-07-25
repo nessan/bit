@@ -1,0 +1,62 @@
+---
+title: "`bit::polynomial` --- Arithmetic"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods to perform arithmetic on a polynomial in-place and non-member functions that perform arithmetic between polynomials.
+```cpp
+constexpr polynomial& operator+=(const polynomial& rhs);        // <1>
+constexpr polynomial& operator-=(const polynomial& rhs);
+constexpr polynomial& operator*=(const polynomial& rhs);
+
+constexpr polynomial
+operator+(const polynomial& lhs, const polynomial& rhs);        // <2>
+constexpr polynomial
+operator-(const polynomial& lhs, const polynomial& rhs);
+constexpr polynomial
+operator*(const polynomial& lhs, const polynomial& rhs);
+```
+1. These methods perform arithmetic on the current polynomial in place.
+2. These non-member functions perform arithmetic between two polynomials to produce a new polynomial. The two incoming polynomials are unchanged.
+
+## Polynomials versus bit-vectors
+
+While our polynomials are wrappers around their bit-vector of coefficients, we cannot just forward the addition operator to those data members.
+Vector addition requires *equal-sized* arguments, but we can add polynomials with different degrees.
+
+Polynomial multiplication involves convolving the two coefficient vectors in question.
+
+Note that in $\FF$, subtraction is the same as addition.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto p0 = bit::polynomial<>::random(3);
+    auto q = bit::polynomial<>::random(5);
+    auto p1 = p0;
+    p1 += q;
+    auto p2 = p0;
+    p2 *= q;
+    std::cout << std::format("({}) + ({})   = {}\n", p0, q, p0 + q);
+    std::cout << std::format("({}) - ({})   = {}\n", p0, q, p0 - q);
+    std::cout << std::format("({}) += ({}) -> {}\n", p0, q, p1);
+    std::cout << std::format("({}) * ({})   = {}\n", p0, q, p0 * q);
+    std::cout << std::format("({}) *= ({}) -> {}\n", p0, q, p2);
+}
+```
+
+[Output]{.bt}
+```bash
+(x^1 + x^3) + (x^3 + x^4 + x^5)   = x^1 + x^4 + x^5
+(x^1 + x^3) - (x^3 + x^4 + x^5)   = x^1 + x^4 + x^5
+(x^1 + x^3) += (x^3 + x^4 + x^5) -> x^1 + x^4 + x^5
+(x^1 + x^3) * (x^3 + x^4 + x^5)   = x^4 + x^5 + x^7 + x^8
+(x^1 + x^3) *= (x^3 + x^4 + x^5) -> x^4 + x^5 + x^7 + x^8
+```
+
+### See Also
+[`polynomial::squared`] \
+[`polynomial::times_x`]

@@ -50,8 +50,8 @@ int main()
     auto        p = bit::vector<>::from(1234019u);
     auto        r = bit::polynomial_mod(N, p);
     std::cout << "r(x) = x^" << N << " mod p(x)\n";
-    std::cout << "p(x) = " << p.to_polynomial() << '\n';
-    std::cout << "r(x) = " << r.to_polynomial() << '\n';
+    std::cout << "p(x) = " << bit::polynomial(p) << '\n';
+    std::cout << "r(x) = " << bit::polynomial(r) << '\n';
     return 0;
 }
 ```

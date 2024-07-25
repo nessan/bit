@@ -145,4 +145,4 @@ end_time = timer()
 seconds = end_time - start_time
 
 print(
-    f"Generated characeristic polynomials for {n_matrices} matrices ({n_min} x {n_min} through {n_max} x {n_max}) in a total of {seconds:.3f} seconds.")
+    f"Generated characteristic polynomials for {n_matrices} matrices ({n_min} x {n_min} through {n_max} x {n_max}) in a total of {seconds:.3f} seconds.")

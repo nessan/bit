@@ -5,7 +5,6 @@ title: "`bit::vector` --- String Encodings"
 {{< include /content/_common.qmd >}}
 
 We have methods to encode a bit-vector in various string formats.
-
 ```cpp
 std::string
 to_string(std::string_view pre  = "",
@@ -21,15 +20,11 @@ to_pretty_string(char off='0', char on='1') const;  // <3>
 
 std::string
 to_hex() const;                                     // <4>
-
-std::string
-to_polynomial(std::string_view var = "x") const;    // <5>
 ```
 1. Returns a binary-string representation using the given characters for set and unset elements.
 2. Returns a binary-string representation in _bit-order_ using the given characters for set and unset elements.
 3. Returns a formatted representation e.g. `[1 1 0 1 0 1]`.
 4. Returns a hex-string representation.
-5. Interpret the elements of the bit-vector as the coefficients of a polynomial and get a string representation of that polynomial.
 
 ### Method Arguments
 Argument    | Description
@@ -38,14 +33,11 @@ Argument    | Description
 `post`      | Postfix for the return string --- not used for hex-strings or bit-ordered strings.
 `sep`       | Separator between elements --- not used for hex-strings or bit-ordered strings.
 `on`, `off` | The characters used for set and unset elements --- not used for hex-strings.
-`var`       | When we interpret a bit-vector as the coefficients of a polynomial, we use `x` for the variable, but you can override that by setting `var`.
 : {.bordered .striped .hover .responsive tbl-colwidths="[20,80]"}
 
-By default, `v.to_string()` will return something like `"100101"` but by setting the `pre`, `post`, and `sep`, parameters, one can get `"[1, 0, 0, 1, 0, 1]"`.
+By default, `v.to_string()` will return something like `100101` but by setting the `pre`, `post`, and `sep`, parameters, one can get `[1, 0, 0, 1, 0, 1]`.
 
-For that same bit-vector `v.to_bit_order()` will return `"101001"`, i.e., the low-order bit on the right and the high-order element on the left!
-
-For that same bit-vector `v.to_polynomial()` will return `"1 + x^3 + x^5"`.
+For that same bit-vector `v.to_bit_order()` will return `101001`, i.e., the low-order bit on the right and the high-order element on the left!
 
 ## Character Encodings
 
@@ -62,7 +54,6 @@ int main()
     std::cout << "v:    " << v.to_bit_order('.', '-') << '\n';      // <4>
     std::cout << "v:    " << v.to_pretty_string() << '\n';          // <5>
     std::cout << "v:    " << v.to_string("{", "}", ", ") << '\n';   // <6>
-    std::cout << "v(x): " << v.to_polynomial() << '\n';             // <7>
 }
 ```
 1. `v` has all the even elements set to 1.
@@ -71,7 +62,6 @@ int main()
 4. Printing `v` in _bit_order_ using dots and dashes for the element values. v~0~ is on the right.
 5. Printing `v` in a more formatted, element-by-element style.
 6. Printing `v` in a custom formatted style.
-7. Printing `v` as a polynomial in `x`.
 
 [Output]{.bt}
 ```bash
@@ -80,7 +70,6 @@ v:    0101010101010101
 v:    .-.-.-.-.-.-.-.-
 v:    [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0]
 v:    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}
-v(x): 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14
 ```
 
 ## Example: To Hex
@@ -149,4 +138,5 @@ v9 [0 0 0 0 0 0 0 0 1]   u9 [0 0 0 0 0 0 0 0 1]  match
 
 ### See Also
 [`vector::stream<<`] \
-[`vector::stream>>`]
+[`vector::stream>>`] \
+[`vector::formatter`]

@@ -31,11 +31,18 @@ main()
 
         // Get the bit-matrix (from a single potentially very long line!)
         auto m = bit::matrix<>::from(matrix_string);
-        if (!m) std::print("Failed to parse a bit-matrix from file: '{}'\n", data_file_name);
+        if (!m) {
+            std::print("Failed to parse a bit-matrix from file: '{}'\n", data_file_name);
+            exit(1);
+        }
 
-        // Get the corresponding pre-canned characteristic polynomial.
-        auto c = bit::vector<>::from(coeffs_string);
-        if (!c) std::print("Failed to parse a characteristic polynomial from file: '{}'\n", data_file_name);
+        // Get the corresponding pre-canned characteristic polynomial coefficients.
+        auto coeff = bit::vector<>::from(coeffs_string);
+        if (!coeff) {
+            std::print("Failed to parse a characteristic polynomial from file: '{}'\n", data_file_name);
+            exit(2);
+        }
+        bit::polynomial c{*coeff};
 
         // Progress meter
         ++n_test;
@@ -45,10 +52,10 @@ main()
         auto p = bit::characteristic_polynomial(*m);
 
         // Check our version matches the pre-canned version.
-        if (p != *c) {
+        if (p != c) {
             std::print("TEST {} FAILED! Matrix:\n {}\n", n_test, *m);
-            std::print("Computed characteristic:   {}\n", p.to_polynomial());
-            std::print("Pre-canned characteristic: {}\n", c->to_polynomial());
+            std::print("Computed characteristic:   {}\n", p);
+            std::print("Pre-canned characteristic: {}\n", c);
             exit(1);
         }
     }

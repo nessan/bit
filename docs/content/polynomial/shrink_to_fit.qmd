@@ -1,0 +1,45 @@
+---
+title: "`bit::polynomial` --- Memory Reduction"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method that attempts to minimize the memory footprint of a bit-polynomial.
+```cpp
+constexpr polynomial& shrink_to_fit();
+```
+This is a request to minimize the unused/excess [`vector::capacity`] in the bit-vector holding the polynomial coefficients.
+The method may do nothing though after the call any nonzero polynomial is guaranteed to be *monic*.
+
+The bulk of the memory used by most polynomials is the bit-vector of its coefficients.
+
+`shrink_to_fit()` first uses the [`polynomial::make_monic`]  method to ensure that `size() = degree() + 1` which is the least possible size.
+It then calls the coefficient bit-vector's own [`vector::shrink_to_fit`] method to see if that data member can release any of its memory back to the general pool.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial<> p{1000};
+    p[3] = 1;
+    std::cout << std::format("p(x) = {} has {} coefficients and capacity {}.\n", p, p.size(), p.capacity());
+    p.shrink_to_fit();
+    std::cout << std::format("p(x) = {} has {} coefficients and capacity {}.\n", p, p.size(), p.capacity());
+}
+```
+
+[Output]{.bt}
+```bash
+p(x) = x^3 has 1000 coefficients and capacity 1024.
+p(x) = x^3 has 4 coefficients and capacity 64.
+```
+
+### See Also
+[`polynomial::size`]        \
+[`polynomial::resize`]      \
+[`polynomial::empty`]       \
+[`polynomial::clear`]       \
+[`polynomial::monic`]       \
+[`polynomial::make_monic`]  \
+[`vector::shrink_to_fit`]

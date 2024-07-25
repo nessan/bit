@@ -1,0 +1,75 @@
+---
+title: "`bit::polynomial` --- Monic"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have a method to query if this polynomial is *monic* and another that makes it monic if that is possible.
+```cpp
+constexpr bool        monic() const;    // <1>
+constexpr polynomial& make_monic();     // <2>
+```
+1. Returns `true` if this is a monic polynomial.
+2. Attempts to shrink the polynomial to be monic. This does not change the memory footprint of the polynomial.
+
+A *monic* polynomial has no trailing zero coefficients.
+
+A monic polynomial of degree $n$ will have exactly $n+1$ coefficients $p_0, p_1, \ldots, p_{n-1}$ where
+$$
+p(x) = p_0 + p_q x + \cdots + p_{n-1} x^{n-1},
+$$
+and $p_{n-1} = 1$.
+
+After a call to `make_monic()` any nonzero polynomial will have `size() = degree() + 1`.
+
+::: {.callout-note}
+# The zero polynomial
+The zero polynomial has *no* degree and is not monic.
+
+Polynomial methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
+The `make_monic()` method does nothing to a zero polynomial.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial<> p;
+    std::cout << std::format("p(x) = {} has coefficients = {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, monic: {}.\n\n", p.size(), p.monic());
+
+    p.resize(7);
+    std::cout << std::format("p(x) = {} has coefficients = {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, monic: {}.\n\n", p.size(), p.monic());
+
+    p[1] = p[3] = 1;
+    std::cout << std::format("p(x) = {} has coefficients = {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, monic: {}.\n\n", p.size(), p.monic());
+
+    p.make_monic();
+    std::cout << std::format("p(x) = {} has coefficients = {:p}.\n", p, p.coefficients());
+    std::cout << std::format("Size: {}, monic: {}.\n", p.size(), p.monic());
+}
+```
+
+[Output]{.bt}
+```bash
+p(x) = 0 has coefficients = [].
+Size: 0, monic: false.
+
+p(x) = 0 has coefficients = [0 0 0 0 0 0 0].
+Size: 7, monic: false.
+
+p(x) = x^1 + x^3 has coefficients = [0 1 0 1 0 0 0].
+Size: 7, monic: false.
+
+p(x) = x^1 + x^3 has coefficients = [0 1 0 1].
+Size: 4, monic: true.
+```
+
+### See Also
+[`polynomial::size`]        \
+[`polynomial::degree`]      \
+[`polynomial::to_string`]   \
+[`polynomial::shrink_to_fit`]

@@ -1,0 +1,188 @@
+---
+title:  "The `bit::polynomial` Class"
+---
+{{< include /content/_common.qmd >}}
+
+## Introduction
+
+A `bit::polynomial` represents a polynomial over [GF(2)] (also known as $\FF$), the simplest [Galois Field] that has just two elements 0 & 1, where arithmetic is mod 2.
+
+If $p(x)$ is the bit-polynomial:
+$$
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
+$$
+then the argument $x$ and the polynomial coefficients $p_0, p_1, \ldots$ are all elements of $\FF$.
+
+The `bit::polynomial` class holds the polynomial coefficients in a [`bit::vector`].
+Instance methods forward much of their work to that data member.
+However, some bit-polynomial methods need a separate implementation.
+For example, bit-vector addition only makes sense for two equal-sized bit-vectors, but of course, we have to be able to add two polynomials of different degrees.
+
+::: {.callout-note}
+# Polynomial size and degree
+The *size* of a bit-polynomial is the number of its coefficients.
+The *degree* of a bit-polynomial is the index of the highest non-trivial power in the polynomial.
+*Monic* polynomials are nonzero and have no trailing zero coefficients.
+
+Operations on and between polynomials generally can ignore trailing zero coefficients.
+This can be an important efficiency consideration in some cases.
+
+Algorithms and methods in the `bit::polynomial` class allow for this and internally work efficiently even if the polynomials are not monic.
+They do that by reimplementing some of the core `bit::vector` functionality to only consider underlying storage blocks up to and including the one containing the highest non-trivial power.
+
+We also note that polynomial methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
+:::
+
+## Declaration
+
+Like everything in the library, this class is in the `bit` namespace and is defined in the header `<bit/polynomial.h>` as follows:
+``` cpp
+namespace bit {
+  template<std::unsigned_integral Block = std::uint64_t,
+           Allocator = std::allocator<Block>>
+  class polynomial;
+}
+```
+The `bit::polynomial` class holds the polynomial coefficients in a [`bit::vector`] data member that uses the two template parameters.
+
+The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses.
+For example, your code might have a simple line like:
+``` cpp
+bit::polynomial p{32};
+```
+This code creates a polynomial with 32 coefficients set to 0 by default.
+
+### Template Parameters
+
+Parameter | Description
+--------- | -----------
+`Block` = `std::uint64_t`              | The polynomial coefficients are packed into blocks of some [`std::unsigned_integral`] type. The default size is 64 bits.
+`Allocator` = `std::allocator<Block>`  | The default `Allocator` should be just fine for most purposes, but you can use your custom type to handle all memory allocation/destruction for blocks.
+: {.bordered .hover .responsive}
+
+The default `Block` is 64-bits, the *native* size for many modern CPUs.
+
+Of course, if you need to use many smaller degree bit-polynomials and have concerns about conserving space, you might use a different `Block`.
+Perhaps if the bit-polynomials all have degrees that fit in 8 bits, you might have code along the lines:
+
+``` cpp
+using poly_type= bit::polynomial<uint8_t>;
+poly_type p = ...
+```
+
+::: callout-warning
+# Use a single `Block` type throughout your code!
+In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::polynomial<std::uint32_t>` and a `bit::polynomial<std::uint64_t>`, but doing so efficiently significantly increases code complexity, and the library doesn't support this.
+:::
+
+## Class Constants and Types
+
+Item | Description
+---- | -----------
+`vector_type`  | Alias for [`bit::vector`] --- the type used to store the polynomial coefficients.
+`matrix_type`  | Alias for [`bit::matrix`] --- polynomials can be evaluated for scalar and *square* bit-matrix arguments of this type.
+ `ndeg`        | A class constant of type `std::size_t` used to indicate polynomials of "no degree" (the zero polynomial).
+ `reference`   | A proxy *sub-class* representing an individual polynomial coefficient.
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+## Instance Methods
+
+### Construction
+Method | Description
+------ | -----------
+[`polynomial::constructors`]    | Construct bit-polynomials in various ways.
+[`polynomial::power`]           | Factory method to generate the polynomial $p(x) = x^n$.
+[`polynomial::random`]          | Factory method constructs a bit-polynomial with random coefficients.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Queries
+Method | Description
+------ | -----------
+[`polynomial::size`]        | How many coefficients are there in this polynomial?
+[`polynomial::empty`]       | Does this polynomial have no coefficients? This is treated as a form of the zero polynomial.
+[`polynomial::capacity`]    | How many coefficients can the polynomial have without causing memory allocation.
+[`polynomial::zero`]        | Is this the zero polynomial $p(x) = 0$?
+[`polynomial::nonzero`]     | Is this polynomial nonzero?
+[`polynomial::one`]         | Is this polynomial  $p(x) = 1$?
+[`polynomial::constant`]    | Is this a constant polynomial  $p(x) = 0 \text{ or } 1$?
+[`polynomial::degree`]      | Returns the _degree_ of the polynomial.
+[`polynomial::monic`]       | Is this a *monic* polynomial (so no trailing zero coefficients).
+[`polynomial::count0`]      | How many zero coefficients does this polynomial have?
+[`polynomial::count1`]      | How many one coefficients does this polynomial have?
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Modifiers
+Method | Description
+------ | -----------
+[`polynomial::resize`]      | Resizes the number of coefficients in the polynomial up or down. Any added coefficients are set to zero.
+[`polynomial::clear`]       | Clears all the coefficients from the polynomial so that `size()` becomes 0.
+[`polynomial::make_monic`]  | Eliminates any trailing zero coefficients to make the polynomial *monic*.
+[`polynomial::shrink_to_fit`] | Attempts to free up any memory that is not used by the polynomial.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Coefficient Access
+Method | Description
+------ | -----------
+[`polynomial::operator[]`]      | Access a particular polynomial coefficient naturally.
+[`polynomial::get`]             | Read-only access to a particular polynomial coefficient.
+[`polynomial::set`]             | Write access to a particular polynomial coefficient or all of them at once.
+[`polynomial::reset`]           | Write access to a particular polynomial coefficient or all of them at once.
+[`polynomial::coefficients`]    | Read-only access to the polynomial coefficients as a bit-vector.
+[`polynomial::set_coefficients`] | Write access to the polynomial coefficients as a bit-vector.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Polynomial Evaluation
+Method | Description
+------ | -----------
+[`polynomial::operator()`]  | Evaluate the polynomial for a scalar or bit-matrix argument.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Arithmetic
+Method | Description
+------ | -----------
+[`polynomial::operator+=`]  | Adds another polynomial to this one.
+[`polynomial::operator-=`]  | Subtracts another polynomial from this one.
+[`polynomial::operator*=`]  | Multiplies this polynomial by another one.
+[`polynomial::times_x`]     | Multiplies this polynomial by a power of `x`.
+[`polynomial::squared`]     | Returns a new polynomial that is the square of this one.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### String Conversions
+Method | Description
+------ | -----------
+[`polynomial::to_string`]   | Returns a string representation of the polynomial.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Other Instance Methods
+Method | Description
+------ | -----------
+[`polynomial::sub`]     | Create a distinct sub-polynomial of this one.
+[`polynomial::split`]   | Split polynomial $p(x)$ into $p(x) = l(x) + x^n h(x)$.
+[`polynomial::reduce`]  | Reduces $x^e$ by this polynomial ($e$ can be very large).
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Debugging
+
+You can set some compile-time flags that enable extra safety checks.
+You might set these flags in `DEBUG` builds where performance is not the critical concern.
+
+Macro | Description
+----- | -----------
+[`BIT_DEBUG`]               | This compile-time flag enables extra safety checks.
+[`BIT_NDEBUG`]              | This compile-time flag turns off most safety checks.
+[`bit_debug_assert`]        | These assertions are **only** checked if you set the `BIT_DEBUG` flag at compile time.
+[`bit_assert`]              | These assertions are checked **unless** you set the `BIT_NDEBUG` flag at compile time.
+[`bit_always_assert`]       | These assertions are always checked.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+## Non-member Functions
+
+Function | Description
+-------- | -----------
+[`polynomial::operator+`]   | Add two polynomials to get a new one.
+[`polynomial::operator-`]   | Subtract polynomials to get a new one.
+[`polynomial::operator*`]   | Multiply two polynomials to get a new one.
+[`polynomial::times_x`]     | Multiplies a polynomial by $x^n$ to get a new one.
+[`polynomial::stream>>`]    | Stream output for bit-polynomials.
+[`polynomial::formatter`]   | Connect the `bit::polynomial` class to [`std::format`].
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}

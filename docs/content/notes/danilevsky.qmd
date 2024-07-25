@@ -141,7 +141,7 @@ You can make the same determinant expansion argument if the polynomial coefficie
 That is the version seen in some expositions.
 :::
 
-$C$ is a "`companion`" for the polynomial $c(\lambda)$ and is known as a [companion matrix].
+$C$ is a "companion" for the polynomial $c(\lambda)$ and is known as a [companion matrix].
 
 ### Frobenius Form
 

@@ -71,4 +71,5 @@ Couldn't parse that input as a bit::vector! Quitting ...
 ### See Also
 [`vector::to_string`]     \
 [`vector::to_bit_order`]  \
-[`vector::to_hex`]
+[`vector::to_hex`]        \
+[`vector::formatter`]

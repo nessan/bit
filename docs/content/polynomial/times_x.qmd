@@ -1,0 +1,43 @@
+---
+title: "`bit::polynomial` --- Multiplication by $x^n$"
+---
+
+{{< include /content/_common.qmd >}}
+
+We have methods that multiply a polynomial by $x^n$ where $n$ defaults to 1.
+```cpp
+constexpr polynomial&
+times_x(std::size_t n = 1);                         // <1>
+
+constexpr polynomial
+times_x(const polynomial& p, std::size_t n = 1);    // <2>
+```
+1. This multiplies this polynomial by $x^n$ in place.
+2. This returns a new polynomial that is this one multiplied by $x^n$.
+
+These methods are faster than using the multiplication operator.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto x3 = bit::polynomial<>::power(3);
+    bit::polynomial p{6};
+    p.set();
+
+    std::cout << std::format("p(x)            = {}\n", p);
+    std::cout << std::format("x^3 * p(x)      = {}\n", x3 * p);
+    std::cout << std::format("p(x).times_x(3) = {}\n", p.times_x(3));
+}
+```
+[Output]{.bt}
+```bash
+p(x)            = 1 + x^1 + x^2 + x^3 + x^4 + x^5
+x^3 * p(x)      = x^3 + x^4 + x^5 + x^6 + x^7 + x^8
+p(x).times_x(3) = x^3 + x^4 + x^5 + x^6 + x^7 + x^8
+```
+
+### See Also
+[`polynomial::squared`] \
+[`vector::operator>>=`]

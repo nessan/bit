@@ -7,56 +7,39 @@ title: "`bit::vector` --- Construction"
 Constructors for a bit-vector.
 
 ```cpp
-constexpr bit::vector(std::size_t n = 0);                           // <1>
+explicit constexpr bit::vector(std::size_t n = 0);                 // <1>
 
-template<std::unsigned_integral Src>
-constexpr bit::vector(std::initializer_list<Src> src);              // <2>
-
-template<std::unsigned_integral Src>
-constexpr bit::vector(const std::vector<Src>& src);                 // <3>
+explicit constexpr bit::vector(std::size_t n, Block value);        // <2>
 
 template<typename Iter>
     requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
-constexpr bit::vector(Iter b, Iter e);                              // <4>
+explicit constexpr bit::vector(Iter b, Iter e);                    // <3>
 
 template<std::size_t N>
-explicit constexpr bit::vector(const std::bitset<N> &bs);           // <5>
+explicit constexpr bit::vector(const std::bitset<N> &bs);           // <4>
 
 explicit constexpr
-bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <6>
+bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <5>
 
-template<typename T>
-    requires std::same_as<std::remove_cvref_t<T>, block_store_type>
-explicit constexpr bit::vector(std::size_t n, T&& blocks, bool is_clean = false);   // <7>
-
-explicit bit::vector(std::size_t n, Block value);                   // <8>
-
-explicit
-bit::vector(std::string_view str, bool bit_order = false);          // <9>
+explicit bit::vector(std::string_view str, bool bit_order = false); // <6>
 
 ```
 1. Constructs a bit-vector with `n` elements all set to 0.                  \
    The _default_ constructor creates the empty vector.
-2. Construct a bit-vector from an initializer list of unsigned integers.    \
+2. Create a bit-vector of size `n` by repeatedly copying the bits of a constant block value.
+3. Construct a bit-vector from any iteration of unsigned integers.          \
    The bits from each get appended to the vector.
-3. Construct a bit-vector from a `std::vector` of unsigned integers.        \
-   The bits from each element get appended to the vector.
-4. Construct a bit-vector from any iteration of unsigned integers.          \
-   The bits from each get appended to the vector.
-5. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
-6. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
+4. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
+5. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
    Element `i` in the vector is set to 1 if `f(i) != 0`; otherwise it is 0.
-7. Create a bit-vector by *copying* or *moving* a pre-filled container of blocks.
-8. Create a bit-vector of size `n` by repeatedly copying the bits of a constant block value.
-9. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
+6. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
    See below.
 
 ### Template Parameters
 
 Parameter   | Description
 ---------   | -----------
-`Src`       | The type of the unsigned integers used to fill the vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can create a bit-vector from a list of 32-bit unsigned integers while the storage scheme for the vector remains the default 64-bit type.
-`Iter`      | An iterator--might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` must be some unsigned integer type.
+`Iter`      | An iterator---might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` must be some unsigned integer type but not necessarily the same as `Block`.
 `std::invocable` | [`std::invocable`] is the signature for a function over an index.
 
 : {.bordered .hover .responsive tbl-colwidths="[25,75]"}
@@ -79,116 +62,43 @@ Here are some examples of constructing a `bit::vector` from non-string data.
 [Example]{.bt}
 ```cpp
 #include <bit/bit.h>
-int
-main()
+int main()
 {
-    bit::vector           v0;                                           // <1>
-    bit::vector           v1(32);                                       // <2>
-    bit::vector           v2({uint16_t(65535), uint16_t(0)});           // <3>
+    bit::vector           v1;                                           // <1>
+    bit::vector           v2(32);                                       // <2>
     std::vector<uint16_t> vec{65535, 0};
-    bit::vector           v3(vec);                                      // <4>
-    bit::vector           v4(vec.cbegin(), vec.cend());                 // <5>
-    bit::vector           v5(32, [](size_t k) { return (k + 1) % 2; }); // <6>
-    std::bitset<32>       b6(65535);
-    bit::vector           v6(b6);                                       // <7>
+    bit::vector           v3(vec.cbegin(), vec.cend());                 // <3>
+    bit::vector           v4(32, [](size_t k) { return (k + 1) % 2; }); // <4>
+    std::bitset<32>       bs(65535);
+    bit::vector           v5(bs);                                       // <5>
     std::cout << "v1 = " << v1.to_string()    << '\n';
     std::cout << "v2 = " << v2.to_string()    << '\n';
     std::cout << "v3 = " << v3.to_string()    << '\n';
     std::cout << "v4 = " << v4.to_string()    << '\n';
+    std::cout << "bs = " << bs                << '\n';
     std::cout << "v5 = " << v5.to_string()    << '\n';
-    std::cout << "v6 = " << v6.to_string()    << '\n';
-    std::cout << "b6 = " << b6                << '\n';
-    std::cout << "v6 = " << v6.to_string()    << '\n';
-    std::cout << "v6 = " << v6.to_bit_order() << " in bit-order!\n";
+    std::cout << "v5 = " << v5.to_bit_order() << " in bit-order!\n";
 }
 ```
 1. Default constructor makes an empty bit-vector.
-2. `bit::vector` of size 32--elements default to 0.
-3. `bit::vector` constructed from an initializer list of two 16-bit integers.
-4. `bit::vector` constructed from a `std::vector` with the same two 16-bit integers.
-5. `bit::vector` constructed from an iterator pair over the same two 16-bit integers.
-6. `bit::vector` constructed using a lambda that returns true if the element index is even.
-7. `bit::vector` constructed from a `std::bitset`.
+2. `bit::vector` of size 32 whose elements default to 0.
+3. `bit::vector` constructed from an iteration over a `std::vector` containing two 16-bit integers.
+4. `bit::vector` constructed using a lambda that returns true if the element index is even.
+5. `bit::vector` constructed from a `std::bitset`.
 
 [Output]{.bt}
 ```bash
-v1 = 00000000000000000000000000000000
-v2 = 11111111111111110000000000000000
+v1 =
+v2 = 00000000000000000000000000000000
 v3 = 11111111111111110000000000000000
-v4 = 11111111111111110000000000000000
-v5 = 10101010101010101010101010101010
-b6 = 00000000000000001111111111111111                <1>
-v6 = 11111111111111110000000000000000                <2>
-v6 = 00000000000000001111111111111111 in bit-order!  <3>
+v4 = 10101010101010101010101010101010
+bs = 00000000000000001111111111111111                   # <1>
+v5 = 11111111111111110000000000000000                   # <2>
+v5 = 00000000000000001111111111111111 in bit-order!     # <3>
 ```
 1. Note that the `std::bitset` prints with in _bit-order_.
 2. This `bit::vector` has the same elements but prints in _vector-order_.
 3. We can also print a `bit::vector` in bit-order if required.
-
-## Construction from a prefilled store
-
-Sometimes, none of the standard construction methods we provide work for your application.
-For those cases, we provide a method to take a block store of bits you have prefilled in some manner and then use them to construct a `bit::vector`.
-
-::: {.callout-important}
-Your block store must match the `block_store_type` of the `bit::vector` you wish to construct.
-It must also have precisely the correct size --- if you are constructing a bit-vector of size `n`, the store size must equal the value returned from `blocks_needed(n)`.
-:::
-
-Suppose `my_store` is a prefilled store of bits you wish to use to construct a bit-vector of size `n`.
-If you invoke the constructor as:
-```cpp
-bit::vector v(n, std::move(my_store));
-```
-Then `my_store` is *moved* directly into place as the bit-vector's elements.
-This construction makes no copies of the blocks and will be very efficient.
-However, if you use this route, `my_store` will no longer be valid after the call.
-
-On the other hand, if you invoke the constructor as:
-```cpp
-bit::vector v(n, my_store);
-```
-Then `my_store` is *copied* into the bit-vector and remains valid after the call, though unconnected from the bit-vector.
-
-::: {.callout-tip}
-The constructor takes an optional third `is_clean` argument.
-If `false` (the default), the constructor cleans out any _junk_ bits in the final block of the store arguments.
-If you are sure those bits are all zero you can preempt that cleaning call.
-:::
-
-[Example]{.bt}
-```cpp
-#include <bit/bit.h>
-int main()
-{
-    using vector_type = bit::vector<std::uint8_t>;
-    using block_store_type = vector_type::block_store_type;
-
-    std::size_t n = 22;                         // <1>
-    block_store_type  blocks(vector_type::blocks_needed(n));
-    std::fill(blocks.begin(), blocks.end(), std::numeric_limits<vector_type::block_type>::max());
-
-    vector_type u{n, blocks};                   // <2>
-    std::cout << "bit::vector(" << n << ", blocks)            = " << u    << '\n';
-    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
-
-    vector_type v{22, std::move(blocks)};       // <3>
-    std::cout << "bit::vector(" << n << ", std::move(blocks)) = " << u    << '\n';
-    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
-}
-```
-1. Fill three 8-bit blocks with ones.
-2. Copy 22 of those bits to a bit-vector and automatically clean out the two junk ones at the end.
-3. Move all the blocks into a bit-vector and automatically clean out the two junk ones at the end. \
-   Now, after the move, the original `blocks` store is empty!
-
-[Output]{.bt}
-```bash
-bit::vector(22, blocks)            = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
-post-construction blocks size      = 3
-bit::vector(22, std::move(blocks)) = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
-post-construction blocks size      = 0
-```
 
 ## Construction from strings
 
@@ -218,12 +128,12 @@ int main()
 ```
 1. Construction from a string without a prefix.
 All characters are 0's and 1's so the string is interpreted as being binary,
-2. Construction from the identical binary string with the prefix `"0b"`.
-3. Construction from the same digits, but each one is now interpreted as a hex character thanks to the `"0x"` prefix
+2. Construction from the identical binary string with the prefix `0b`.
+3. Construction from the same digits, but each one is now interpreted as a hex character thanks to the `0x` prefix
 4. Construction where the final character has no suffix, so by default, it is parsed as a hex/base-16 number.
-5. Construction where the final character has a suffix `"_8"` so, parsed as a base-8 number.
-6. Construction where the final character has a suffix `"_4"` so, parsed as a base-4 number.
-7. Construction where the final character has a suffix `"_2"` so, parsed as a base-2 number.
+5. Construction where the final character has a suffix `_8` so, parsed as a base-8 number.
+6. Construction where the final character has a suffix `_4` so, parsed as a base-4 number.
+7. Construction where the final character has a suffix `_2` so, parsed as a base-2 number.
 
 [Output]{.bt}
 ```bash
@@ -237,4 +147,5 @@ v7 = [1 1 1 1 1]
 ```
 
 ### See Also
-[`vector::from`]
+[`vector::from`]    \
+[`vector::block_constructor`]

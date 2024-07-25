@@ -1,14 +1,15 @@
-#include "common.h"
-
+#include <bit/bit.h>
 int main()
 {
-    using vector_type = bit::vector<std::uint8_t>;
+    // lambda: Turns the degree of a polynomial into a string.
+    auto deg = [](auto& p) { return p.degree() == bit::polynomial<>::ndeg ? "NONE" : std::format("{}", p.degree()); };
 
-    std::size_t N = 17;
-    auto u = vector_type::ones(N);
-    auto v = u.riffled();
-    std::cout << "u           = " << u << " has size " << u.size() << '\n';
-    std::cout << "u.riffled() = " << v << " has size " << v.size() << '\n';
+    auto p0 = bit::polynomial<>::random(0);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p0, deg(p0));
 
-    return 0;
+    auto p1 = bit::polynomial<>::random(7);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p1, deg(p1));
+
+    auto p2 = bit::polynomial<>::random(7, 0.9);
+    std::cout << std::format("p0(x) = {} has degree: {}.\n", p2, deg(p2));
 }

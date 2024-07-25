@@ -100,4 +100,4 @@ dot(M, N):
 ```
 
 ### See Also
-[`matrix::polynomial_sum`]
+[`polynomial::operator()`]
