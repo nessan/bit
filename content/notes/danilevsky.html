@@ -29,7 +29,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/notes/mod.html" rel="next">
+<link href="../../content/notes/reduction.html" rel="next">
 <link href="../../content/notes/design.html" rel="prev">
 <link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
@@ -483,8 +483,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modulo Techniques</span></a>
+  <a href="../../content/notes/reduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Polynomial Reduction</span></a>
   </div>
 </li>
       </ul>
@@ -540,10 +540,12 @@ window.Quarto = {
 
 <!-- Shortcuts and links used throughout the documentation -->
 <!-- Some math shortcuts we use frequently in the documentation -->
+<div class="hidden">
 <p><span class="math display">\[
-\newcommand{FF}{\mathbb{F}_2}
-\newcommand{R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
 \]</span></p>
+</div>
 <!-- Our check/assert macros and compiler flags that control them -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
@@ -1332,8 +1334,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/notes/mod.html" class="pagination-link" aria-label="Modulo Techniques">
-        <span class="nav-page-text">Modulo Techniques</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/notes/reduction.html" class="pagination-link" aria-label="Polynomial Reduction">
+        <span class="nav-page-text">Polynomial Reduction</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1373,17 +1375,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
           lineNumber: el.dataset.lineNumber === "true" ? true : false,
           lineNumberPunc: el.dataset.lineNumberPunc || ":",
           noEnd: el.dataset.noEnd === "true" ? true : false,
-          titlePrefix: el.dataset.algTitle || "Algorithm"
+          titlePrefix: el.dataset.captionPrefix || "Algorithm"
         };
         pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
       });
     })(document);
     (function(d) {
       d.querySelectorAll(".pseudocode-container").forEach(function(el) {
-        titleSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
-        titlePrefix = el.dataset.algTitle;
-        titleIndex = el.dataset.chapterLevel ? el.dataset.chapterLevel + "." + el.dataset.pseudocodeIndex : el.dataset.pseudocodeIndex;
-        titleSpan.innerHTML = titlePrefix + " " + titleIndex + " ";
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
       });
     })(document);
     </script>

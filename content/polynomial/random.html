@@ -513,8 +513,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modulo Techniques</span></a>
+  <a href="../../content/notes/reduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Polynomial Reduction</span></a>
   </div>
 </li>
       </ul>
@@ -557,10 +557,12 @@ window.Quarto = {
 
 <!-- Shortcuts and links used throughout the documentation -->
 <!-- Some math shortcuts we use frequently in the documentation -->
+<div class="hidden">
 <p><span class="math display">\[
-\newcommand{FF}{\mathbb{F}_2}
-\newcommand{R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
 \]</span></p>
+</div>
 <!-- Our check/assert macros and compiler flags that control them -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
@@ -593,19 +595,22 @@ The probability value needs to be valid
 <div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p0 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p0<span class="op">,</span> p0<span class="op">.</span>degree<span class="op">());</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// lambda: Turns the degree of a polynomial into a string.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> deg <span class="op">=</span> <span class="op">[](</span><span class="kw">auto</span><span class="op">&amp;</span> p<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> p<span class="op">.</span>degree<span class="op">()</span> <span class="op">==</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>ndeg <span class="op">?</span> <span class="st">"NONE"</span> <span class="op">:</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"</span><span class="sc">{}</span><span class="st">"</span><span class="op">,</span> p<span class="op">.</span>degree<span class="op">());</span> <span class="op">};</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p1 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">7</span><span class="op">);</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p1<span class="op">,</span> p1<span class="op">.</span>degree<span class="op">());</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p0 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree: </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p0<span class="op">,</span> deg<span class="op">(</span>p0<span class="op">));</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p2 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">7</span><span class="op">,</span> <span class="fl">0.9</span><span class="op">);</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p2<span class="op">,</span> p2<span class="op">.</span>degree<span class="op">());</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p1 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">7</span><span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree: </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p1<span class="op">,</span> deg<span class="op">(</span>p1<span class="op">));</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p2 <span class="op">=</span> bit<span class="op">::</span>polynomial<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">7</span><span class="op">,</span> <span class="fl">0.9</span><span class="op">);</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"p0(x) = </span><span class="sc">{}</span><span class="st"> has degree: </span><span class="sc">{}</span><span class="st">.</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> p2<span class="op">,</span> deg<span class="op">(</span>p2<span class="op">));</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="bt">Output (will vary from run to run)</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> 1 has degree 0.</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> 1 + x^3 + x^7 has degree 7.</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7 has degree 7.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> 0 has degree: NONE.</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^3 + x^5 + x^7 has degree: 7.</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">p0</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7 has degree: 7.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
 <p><a href="../../content/polynomial/constructors.html"><code>polynomial::constructors</code></a><br>

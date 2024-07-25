@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)</title>
+<title>Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -143,11 +109,11 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta property="og:title" content="Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2) - Computing \(x^N\) mod \(P(x)\)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://nessan.github.io/bit/content/notes/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -229,7 +195,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+          <h1 class="quarto-secondary-nav-title">Modular Reduction of <span class="math inline">\(x^N\)</span> in GF(2)</h1>
         </a>     
     </div>
   </nav>
@@ -516,8 +482,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/notes/mod.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Modulo Techniques</span></a>
+  <a href="../../content/notes/reduction.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Polynomial Reduction</span></a>
   </div>
 </li>
       </ul>
@@ -533,17 +499,25 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#an-iterative-technique" id="toc-an-iterative-technique" class="nav-link" data-scroll-target="#an-iterative-technique">An Iterative Technique</a></li>
-  <li><a href="#square-and-multiply" id="toc-square-and-multiply" class="nav-link" data-scroll-target="#square-and-multiply">Square and Multiply</a></li>
+  <li><a href="#power-polynomials-xn" id="toc-power-polynomials-xn" class="nav-link" data-scroll-target="#power-polynomials-xn">Power Polynomials <span class="math inline">\(x^N\)</span></a></li>
+  <li><a href="#an-iterative-technique-for-xn-mod-px" id="toc-an-iterative-technique-for-xn-mod-px" class="nav-link" data-scroll-target="#an-iterative-technique-for-xn-mod-px">An Iterative Technique for <span class="math inline">\(x^N \mod P(x)\)</span></a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#a-multiply-square-technique-for-xn-mod-px" id="toc-a-multiply-square-technique-for-xn-mod-px" class="nav-link" data-scroll-target="#a-multiply-square-technique-for-xn-mod-px">A Multiply &amp; Square Technique for <span class="math inline">\(x^N \mod P(x)\)</span></a>
+  <ul class="collapse">
+  <li><a href="#the-multiply-step" id="toc-the-multiply-step" class="nav-link" data-scroll-target="#the-multiply-step">The Multiply Step</a></li>
+  <li><a href="#the-square-step" id="toc-the-square-step" class="nav-link" data-scroll-target="#the-square-step">The Square Step</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/reduction.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Computing <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span></h1>
+<h1 class="title d-none d-lg-block">Modular Reduction of <span class="math inline">\(x^N\)</span> in GF(2)</h1>
 </div>
 
 
@@ -560,126 +534,215 @@ window.Quarto = {
 </header>
 
 
-<!-- Shortcuts and links used throughout the documentation -->
-<!-- Some math shortcuts we use frequently in the documentation -->
+<div class="hidden">
 <p><span class="math display">\[
-\newcommand{FF}{\mathbb{F}_2}
-\newcommand{R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\renewcommand{\mod}{\mid}
 \]</span></p>
-<!-- Our check/assert macros and compiler flags that control them -->
-<!-- Formatted links to the pages for the bit::vector class -->
-<!-- Formatted links to the pages for the bit::matrix class -->
-<!-- Formatted links to the pages for the bit::gauss class -->
-<!-- Formatted links to the pages for the bit::lu class -->
-<!-- Formatted links to the pages for the bit::polynomial class -->
-<!-- Formatted links to the pages for items in the standard library -->
-<!--Links to other software tools we reference -->
-<!-- Pages and Wikipedia articles referenced in the documentation -->
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>We wish to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
-<p>It can be challenging to read a lot of references to “mod” in text, so we will use “<span class="math inline">\(\mid\)</span>” to represent the modulo operation: <span class="math display">\[
-    x^N \mid P(x) \equiv x^N\bmod{P(x)}.
+<p>Let <span class="math inline">\(P(x)\)</span> be a nonzero polynomial of degree <span class="math inline">\(n\)</span> over <span class="math inline">\(\FF\)</span>.</p>
+<p>Any polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be decomposed as: <span class="math display">\[
+    h(x) = q(x) P(x) + r(x),
+\]</span> <span class="math inline">\(q(x)\)</span> is the <em>quotient</em> polynomial for <span class="math inline">\(h(x)\)</span>, and the <em>remainder</em> polynomial <span class="math inline">\(r(x)\)</span> has degree less than <span class="math inline">\(n\)</span>.</p>
+<p>We say that <span class="math inline">\(r(x)\)</span> is the <em>modular reduction</em> of <span class="math inline">\(h(x)\)</span> by <span class="math inline">\(P(x)\)</span> <span class="math display">\[
+    r(x) = h(x)\bmod{P(x)}.
+\]</span> As a shorthand, we will also use “<span class="math inline">\(\mod\)</span>” to represent the modulo operation and write: <span class="math display">\[
+    r(x) = h(x) \mod P(x) \equiv h(x)\bmod{P(x)}.
 \]</span></p>
 </section>
-<section id="an-iterative-technique" class="level2">
-<h2 class="anchored" data-anchor-id="an-iterative-technique">An Iterative Technique</h2>
-<p>Without any loss of generality, we can assume that <span class="math inline">\(P(x)\)</span> is <em>monic</em>, of, say, degree <span class="math inline">\(n\)</span>. Then there is a polynomial <span class="math inline">\(p(x)\)</span> of degree less than <span class="math inline">\(n\)</span> such that <span class="math display">\[
-P(x) = x^n + p(x) = x^n + p_{n-1} x^{n-1} + \cdots + p_1 x + p_0.
-\]</span> The bit-vector of its coefficients can represent the polynomial <span class="math inline">\(p(x)\)</span>: <span class="math display">\[
-p(x) \sim \mathbf{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
+<section id="power-polynomials-xn" class="level2">
+<h2 class="anchored" data-anchor-id="power-polynomials-xn">Power Polynomials <span class="math inline">\(x^N\)</span></h2>
+<p>The simplest, single-term, polynomials <span class="math inline">\(h(x) = x^N\)</span> are of particular importance especially for cases where <span class="math inline">\(N \gg 1\)</span>.</p>
+<p>This is because some numerical algorithms have a critical iteration step that can formally be written as: <span class="math display">\[
+    \bold{v} \gets M \cdot \bold{v},
+\]</span> where <span class="math inline">\(\bold{v}\)</span> is a bit-vector bucket of <span class="math inline">\(n\)</span> bits and <span class="math inline">\(M\)</span> is an <span class="math inline">\(n \times n\)</span> bit-matrix.</p>
+<p>For example, many well-known random number generators can be cast into this form where a <em>state vector</em> <span class="math inline">\(\bold{v}\)</span> is advanced at each step before it is reduced to the next random number. We note in passing that the generator is unlikely to be coded as matrix-vector multiply in GF(2) — <span class="math inline">\(M\)</span> is typically rather sparse and special so the iteration can be carried much more efficiently by other means. Nevertheless, the mathematical analysis of the generator will depend on the structure of <span class="math inline">\(M\)</span>.</p>
+<p>Now suppose you want to jump very far ahead in a random number stream. This lets one start a parallel thread of computation using the same set of random numbers but so far ahead that there is no danger of overlaps. To jump <span class="math inline">\(N\)</span> steps ahead where <span class="math inline">\(N \gg 1\)</span> we need to compute <span class="math display">\[
+    M^N \cdot \bold{v}.
+\]</span> Even if <span class="math inline">\(M\)</span> is sparse and special there usually is no easy way to compute <span class="math inline">\(M^N\)</span>.</p>
+<p>But suppose that <span class="math inline">\(P(x)\)</span> is the known degree <span class="math inline">\(n\)</span> characteristic polynomial for <span class="math inline">\(M\)</span> then the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton theorem</a> tells us that: <span class="math display">\[
+    P(M) = 0.
+\]</span> We can use that as follows — first, express <span class="math inline">\(x^N\)</span> as <span class="math display">\[
+    x^N = q(x)P(x) + r(x),
+\]</span> then using Cayley Hamilton we get <span class="math display">\[
+    M^N = q(M)P(M) + r(M) = r(M).
+\]</span> So we can replace <span class="math inline">\(M^N\)</span> by <span class="math inline">\(r(M)\)</span> where the degree of <span class="math inline">\(r\)</span> is less than <span class="math inline">\(n\)</span> and typically <span class="math inline">\(N \gg n\)</span>.</p>
+<p>Thus, once we know <span class="math inline">\(r(x) = x^N \mod P(x)\)</span>, we can jump <span class="math inline">\(N\)</span> steps ahead in the algorithm by computing the inexpensive polynomial sum <span class="math inline">\(r(M)\)</span>.</p>
+<p>For more details see <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf">this paper</a>.</p>
+</section>
+<section id="an-iterative-technique-for-xn-mod-px" class="level2">
+<h2 class="anchored" data-anchor-id="an-iterative-technique-for-xn-mod-px">An Iterative Technique for <span class="math inline">\(x^N \mod P(x)\)</span></h2>
+<p><span class="math inline">\(P(x)\)</span> has degree <span class="math inline">\(n\)</span> so there is a polynomial <span class="math inline">\(p(x)\)</span> of degree less than <span class="math inline">\(n\)</span> such that <span class="math display">\[
+    P(x) = p(x) + x^n = p_0 + p_1 x + \cdots + p_{n-1} x^{n-1} + x^n.
+\]</span> <span class="math inline">\(p(x)\)</span> can be represented as the vector of its coefficients: <span class="math display">\[
+    p(x) \sim \bold{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
 \]</span></p>
-<p>There are three cases to consider as we compute <span class="math inline">\(x^N\)</span> mod <span class="math inline">\(P(x)\)</span>.</p>
-<p><span class="bt">Case <span class="math inline">\(N &lt; n\)</span>:</span> If <span class="math inline">\(N &lt; n\)</span> then <span class="math inline">\(P(x)\)</span> does not divide <span class="math inline">\(x^N\)</span> so <span class="math display">\[
-x^N \mid P(x) = x^N.
-\]</span> Therefore, we can write: <span class="math display">\[
-x^N \mid P(x) \sim \mathbf{u}_N.
-\]</span> Here <span class="math inline">\(\mathbf{u}_N\)</span> is the unit bit-vector of size <span class="math inline">\(n\)</span>, which is all zeros except for a one in the <span class="math inline">\(N^{\mathrm{th}}\)</span> slot.</p>
-<p><span class="bt">Case <span class="math inline">\(N = n\)</span>:</span> In this case <span class="math inline">\(P(x) = x^N + p(x)\)</span> so <span class="math inline">\(x^N = P(x) - p(x)\)</span>.</p>
-<p>Therefore <span class="math display">\[x^N \mid P(x) = -p(x).
-\]</span> In <span class="math inline">\(\FF\)</span> we can ignore that minus sign.</p>
-<p>Combining the two cases considered so far, we have: <span class="math display">\[
-x^N \mid P(x) \sim
-\begin{cases}
-    \mathbf{u}_N &amp; N &lt; n \\
-    \mathbf{p}   &amp; N = n
-\end{cases}
+<p>There are three cases to consider as we compute <span class="math inline">\(x^N \mod P(x)\)</span>.</p>
+<section id="case-n-n" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n">Case <span class="math inline">\(N &lt; n\)</span>:</h4>
+<p>If <span class="math inline">\(N &lt; n\)</span> then <span class="math inline">\(P(x)\)</span> does not divide <span class="math inline">\(x^N\)</span> so <span class="math display">\[
+    x^N \mod P(x) = x^N.
+\]</span> Defining <span class="math inline">\(\bold{u}_N\)</span> as the <em>unit</em> bit-vector of size <span class="math inline">\(n\)</span>, which is all zeros except for a one in the <span class="math inline">\(N^{\mathrm{th}}\)</span> slot, we can write: <span class="math display">\[
+    x^N \mod P(x) \sim \bold{u}_N \text{ if } N &lt; n.
 \]</span></p>
-<p><span class="bt">Case <span class="math inline">\(N &gt; n\)</span>:</span> It remains to determine <span class="math inline">\(x^N \mid P(x)\)</span> for <span class="math inline">\(N &gt; n\)</span>.</p>
+</section>
+<section id="case-n-n-1" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n-1">Case <span class="math inline">\(N = n\)</span>:</h4>
+<p>In this case <span class="math inline">\(P(x) = p(x) + x^N\)</span> so <span class="math inline">\(x^N = P(x) - p(x)\)</span>.</p>
+<p>Therefore <span class="math display">\[
+    x^N \mod P(x) = -p(x).
+\]</span> In <span class="math inline">\(\FF\)</span> we can ignore that minus sign and write <span class="math display">\[
+    x^N \mod P(x) \sim \bold{p}  \text{ if } N = n.
+\]</span></p>
+</section>
+<section id="case-n-n-2" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n-2">Case <span class="math inline">\(N &gt; n\)</span>:</h4>
+<p>It remains to determine <span class="math inline">\(x^N \mod P(x)\)</span> for <span class="math inline">\(N &gt; n\)</span>.</p>
 <p>Now <em>any</em> polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be written as some multiple of <span class="math inline">\(P(x)\)</span> plus a remainder term: <span class="math display">\[
-h(x) = q(x) P(x) + r(x)
+    h(x) = q(x) P(x) + r(x)
 \]</span> where the <em>quotient</em> <span class="math inline">\(q(x)\)</span> and <em>remainder</em> <span class="math inline">\(r(x)\)</span> are polynomials over <span class="math inline">\(\FF\)</span> and the degree of <span class="math inline">\(r(x)\)</span> is strictly less than <span class="math inline">\(n\)</span>. <span class="math display">\[
-r(x) \equiv h(x) \mid P(x)
+    r(x) \equiv h(x) \mod P(x)
 \]</span></p>
-<p>Suppose we already know the explicit form for <span class="math inline">\(r(x) = h(x) \mid P(x)\)</span> <span class="math display">\[
-r(x) = r_{n-1} x^{n-1} + r_{n-2} x^{n-2} +\cdots + r_1 x + r_0.
+<p>Suppose we already know the explicit form for <span class="math inline">\(r(x) = h(x) \mod P(x)\)</span> <span class="math display">\[
+    r(x) = r_0 + r_1 x + \cdots + r_{n-2} x^{n-2} + r_{n-1} x^{n-1}.
 \]</span> That is, we know the elements in the bit-vector of coefficients for <span class="math inline">\(r(x)\)</span> <span class="math display">\[
-r(x) \sim \mathbf{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
+    r(x) \sim \bold{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
 \]</span></p>
 <p>Now <span class="math display">\[
-x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mid P(x) = x\,r(x) \mid P(x).
+    x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mod P(x) = x\,r(x) \mod P(x).
 \]</span> Thus <span class="math display">\[
-x\,h(x) \mid P(x) = r_{n-1} x^n \mid P(x) + \left(r_{n-2} x^{n-1} + \cdots + r_1 x^2 + r_0 x \right) \mid P(x).
+    x\,h(x) \mod P(x) = \left(r_0 x + r_1 x^2 + \cdots + r_{n-2} x^{n-1}\right) \mod P(x) + r_{n-1} x^n \mod P(x).
 \]</span> Using our two known cases for <span class="math inline">\(N &lt; n\)</span> and <span class="math inline">\(N = n\)</span> we get <span class="math display">\[
-x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} + \lbrack r_{n-2} \ldots r_0 0 \rbrack.
-\]</span> Thus <span class="math display">\[
-h(x) \mid P(x) \sim \mathbf{r} \implies x\,h(x) \mid P(x) \sim r_{n-1} \mathbf{p} \; \wedge \; (\mathbf{r} \ll 1 ).
-\]</span> Here <span class="math inline">\(\mathbf{r} \ll 1\)</span> means we shift <span class="math inline">\(\mathbf{r}\)</span> one place to the left and introduce a zero on the far right.</p>
-<p>In our case <span class="math inline">\(h(x) = x^N\)</span> and we will use the notation <span class="math display">\[
-x^N \mid P(x) = r^N(x) \sim \mathbf{r}^N,
-\]</span> where <span class="math display">\[
-\mathbf{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack.
-\]</span></p>
-<p>In conclusion, we can compute <span class="math inline">\(x^N \mid P(x)\)</span> directly for small values of <span class="math inline">\(N\)</span> and iteratively for larger values of <span class="math inline">\(N\)</span> using the relations: <span class="math display">\[
-x^N \mid P(x) \sim
-\begin{cases}
-\mathbf{u}_N         &amp; N &lt; n \\
-\mathbf{p}           &amp; N = n \\
-r_{n-1}^{N-1} \, \mathbf{p} \; \wedge \; \left(\mathbf{r}^{N-1} \ll 1 \right)
-                 &amp; N &gt; n \text{ where } x^{N-1} \mid P(x) \sim \mathbf{r}^{N-1}
-\end{cases}
+    x\,h(x) \mod P(x) \sim \lbrack 0 r_0 \ldots r_{n-2} \rbrack + r_{n-1} \bold{p}.
+\]</span> Thus if we know that <span class="math inline">\(h(x) \mod P(x) \sim \bold{r}\)</span> then <span class="math display">\[
+    x\,h(x) \mod P(x) \sim (\bold{r} \gg 1 ) \; \wedge \; r_{n-1} \bold{p}.
+\]</span> Here <span class="math inline">\(\bold{r} \gg 1\)</span> means we shift <span class="math inline">\(\bold{r}\)</span> one place to the right and introduce a zero on the left.</p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>Using the notation <span class="math display">\[
+    x^N \mod P(x) = r^N(x) \sim \bold{r}^N,
+\]</span> where <span class="math inline">\(\bold{r}^N\)</span> is a bit-vector of size <span class="math inline">\(n\)</span>: <span class="math display">\[
+    \bold{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack,
+\]</span> we can compute <span class="math inline">\(\bold{r}^N\)</span> directly for small values of <span class="math inline">\(N\)</span> and iteratively for larger values of <span class="math inline">\(N\)</span>: <span class="math display">\[
+    \bold{r}^N =
+    \begin{cases}
+        \bold{u}_N    &amp; \text{ for } N &lt; n \\
+        \bold{p}      &amp; \text{ for } N = n \\
+        \left(\bold{r}^{N-1} \gg 1 \right) \; \wedge \; r_{n-1}^{N-1} \, \bold{p}   &amp; \text{ for } N &gt; n
+    \end{cases}
 \]</span></p>
 </section>
-<section id="square-and-multiply" class="level2">
-<h2 class="anchored" data-anchor-id="square-and-multiply">Square and Multiply</h2>
-<p>This iterative scheme is too slow for large <span class="math inline">\(N\)</span>.</p>
-<p>We can speed it up considerably by using a “square and multiply” approach, which uses the decomposition: <span class="math display">\[
-x^N =
-\begin{cases}
-x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
-\left( x^{\frac{N}{2}} \right)^2        &amp; N \text{ even.}
-\end{cases}
-\]</span></p>
-<p><span class="bt">Multiply and square algorithm:</span> We’re computing <span class="math inline">\(x^N \mid P(x)\)</span> where the degree of <span class="math inline">\(P(x)\)</span> is <span class="math inline">\(n\)</span> and <span class="math inline">\(N &gt; n\)</span>.</p>
-<p>Now we know that <span class="math inline">\(x^N \mid P(x) \sim \mathbf{p}\)</span> so start by initializing a counter <span class="math inline">\(M = N-n\)</span> and a return value <span class="math inline">\(\mathbf{r} = \mathbf{p}\)</span>.</p>
-<p>The second case above shows that we will also need to do some squaring steps where <span class="math inline">\(s(x)\)</span> starts as just <span class="math inline">\(s(x) = x\)</span> and then gets squared as often as needed and, of course, reduced modulo <span class="math inline">\(P(x)\)</span>: <span class="math display">\[
-    s(x) \mid P(x) = x \mid P(x) \rightarrow x^2 \mid P(x)  \rightarrow x^4 \mid P(x)  \rightarrow \cdots
-\]</span> Now <span class="math inline">\(x \mid P(x) = x\)</span> so we can initialize <span class="math inline">\(\mathbf{s} = \mathbf{u}_1\)</span> the unit vector with a single set bit at index number 1.</p>
-<div id="alg-ms" class="pseudocode-container" data-line-number-punc=":" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-alg-title="Algorithm" data-line-number="true" data-pseudocode-index="1">
+</section>
+<section id="a-multiply-square-technique-for-xn-mod-px" class="level2">
+<h2 class="anchored" data-anchor-id="a-multiply-square-technique-for-xn-mod-px">A Multiply &amp; Square Technique for <span class="math inline">\(x^N \mod P(x)\)</span></h2>
+<p>For cases of practical interest where <span class="math inline">\(N \gg 1\)</span>, the iterative scheme outlined above is much too slow.</p>
+<p>We can speed it up considerably by using a “multiply &amp; square” approach — there are variations on the theme but observe that we can always write: <span class="math display">\[
+    x^N =
+    \begin{cases}
+        x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
+        \left( x^{\frac{N}{2}} \right)^2        &amp; N \text{ even.}
+    \end{cases}
+\]</span> Of course, in our case, we want to compute <span class="math inline">\(x^N \mod P(x)\)</span> as opposed to just computing the value of <span class="math inline">\(x^N\)</span> but we can still borrow one of the fast exponentiation techniques described <a href="https://en.wikipedia.org/wiki/Modular_exponentiation">here</a> or more comprehensively in Knuth’s <em>The Art of Computer Programming, Vol 2</em>.</p>
+<p>To see that, we first note that if <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are polynomials over <span class="math inline">\(\FF\)</span> where <span class="math display">\[
+\begin{align}
+    f(x) \mod P(x) &amp;= r_f(x), \\
+    g(x) \mod P(x) &amp;= r_g(x)
+\end{align}
+\]</span> then it is easily verified that <span class="math display">\[
+    f(x) g(x) \mod P(x) = r_f(x) r_g(x) \mod P(x).
+\]</span> So while the product polynomial <span class="math inline">\(f(x) g(x)\)</span> may have a very high degree, we can always just work with the much simpler product <span class="math inline">\(r_f(x) r_g(x)\)</span> whose degree is at most <span class="math inline">\(2n -2\)</span>.</p>
+<p>In our case, suppose we already know <span class="math inline">\(r(x) = x^k \mod P(x)\)</span> for some power <span class="math inline">\(k\)</span> i.e.&nbsp;we know the coefficients <span class="math inline">\(\bold{r}\)</span> of the polynomial <span class="math inline">\(r(x)\)</span>: <span class="math display">\[
+    r(x) \sim \bold{r} = [r_0 r_1 \ldots r_{n-1}].
+\]</span> To get to <span class="math inline">\(x^N \mod P(x)\)</span> from there, the multiply and square algorithm requires two procedures:</p>
+<div class="table-responsive">
+<table class="table-bordered table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Step</th>
+<th style="text-align: center;">Procedure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>MultiplyStep</code></td>
+<td style="text-align: center;"><span class="math inline">\(\bold{r} \gets x r(x) \mod P(x)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>SquareStep</code></td>
+<td style="text-align: center;"><span class="math inline">\(\bold{r} \gets r(x)^2 \mod P(x)\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>With those in place we can proceed as follows (this is just a sketch):</p>
+<div id="multiply_and_square" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-caption-prefix="Algorithm">
 <div class="pseudocode">
-\begin{algorithm} \caption{Computing $x^N$ mod $P(x)$} \begin{algorithmic} \Procedure{Mod}{$N, \mathbf{p}$} \State $n = \text{len}(\mathbf{p}) + 1 \State $M = N - n$ \State $\mathbf{r} = \mathbf{p}$ \State set $s$ to the appropriate unit bit-vector \While {$M \ne 0$} \If $M$ is odd \State $\mathbf{r} \equiv r(x)*s(x) \mid P(x) \EndIf \State $M \ll 1$ \If $M = 0$ \Break \EndIf \State set $\mathbf{s} \equiv s(x)^2 \mid P(x)$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
+\begin{algorithm} \caption{Modular Reduction of $x^N$} \begin{algorithmic} \Require $\mathbf{p}$, a bit-vector of size $n$, where $P(x) = x^n + p(x)$ and $\mathbf{p} \sim p(x)$. Unchanged on output. \Require $\mathbf{r}$, a destination bit-vector of size $n$. On output $\mathbf{r} \sim r(x) = x^N \mid P(x)$. \Procedure{reduce}{$N$, $\mathbf{p}$} \State $\mathbf{r} \gets \mathbf{0}$ \State $r_1 = 1$ \While{$N &gt; 0$} \If{$N \text{ mod } 2 = 1$} \State \Call{MultiplyStep}{$\mathbf{r}$} \EndIf \State \Call{SquareStep}{$\mathbf{r}$} \State $N \gets N \gg 1$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
 </div>
-<p><span class="bt">From there, we can build some code along the following lines</span></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Initialize the counter M to N = n,</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// r to p, and s to the correct unit vector.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Loop through the counter values, halving M each time</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span>M <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M is odd<span class="op">)</span> r <span class="op">=</span> mod<span class="op">(</span>r<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    M <span class="op">&gt;&gt;=</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>M <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> mod<span class="op">(</span>s<span class="op">(</span>x<span class="op">)*</span>s<span class="op">(</span>x<span class="op">),</span> P<span class="op">(</span>x<span class="op">));</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This hinges on computing the terms <span class="math inline">\(\left( r(x) s(x) \right) \mid P(x)\)</span> and <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
-<p>Now <span class="math inline">\(r(x) \mid P(x) \sim \mathbf{r}\)</span> and <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> for known vectors <span class="math inline">\(\mathbf{r}\)</span> and <span class="math inline">\(\mathbf{s}\)</span>.</p>
-<p>This means that the product <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> is given by <span class="math display">\[
-r(x)s(x) \mid P(x) = r_0 s(x) \vert P(x)  + r_1 x s(x) \vert P(x) + \cdots + r_{n-1} x^{n-1} s(x) \vert P(x).
-\]</span> From an earlier observation above we know that if <span class="math inline">\(s(x) \mid P(x) \sim \mathbf{s}\)</span> then <span class="math display">\[
-x s(x) \mid P(x) \sim  s_{n-1} \mathbf{p} \wedge ( \mathbf(s) \ll 1).
-\]</span> We can use this iteratively and create a loop that computes <span class="math inline">\(r(x)s(x) \mid P(x)\)</span> and a similar one to compute <span class="math inline">\(s(x)^2 \mid P(x)\)</span>.</p>
+<p>Of course, the actual code handles the decomposition of <span class="math inline">\(P(x)\)</span> into the <span class="math inline">\(x^n + p(x)\)</span> and manages edge cases such as <span class="math inline">\(P(x) = 1\)</span>. It also handles the trivial cases where <span class="math inline">\(N \le n\)</span>, and for larger values of <span class="math inline">\(N\)</span> uses its binary representation in the main loop. Nevertheless, the sketch shows the importance of the two sub-procedures, <code>MultiplyStep</code> and <code>SquareStep</code> which we discuss next.</p>
+<section id="the-multiply-step" class="level3">
+<h3 class="anchored" data-anchor-id="the-multiply-step">The Multiply Step</h3>
+<p>If <span class="math inline">\(q(x)\)</span> is a polynomial of degree less than <span class="math inline">\(n\)</span> so that <span class="math display">\[
+    q(x) \mod P(x) = q(x),
+\]</span> then the following procedure performs the step <span class="math display">\[
+    q(x) \gets x q(x) \mod P(x),
+\]</span> where <span class="math inline">\(q(x)\)</span> is represented by the bit-vector of its <span class="math inline">\(n\)</span> coefficients <span class="math inline">\(\bold{q} = [q_0, q_1, \ldots, q_{n-1}]\)</span>.</p>
+<div id="MultiplyStep" class="pseudocode-container quarto-float" data-pseudocode-number="2" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{The step: $q(x) \gets x q(x) \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{MultiplyStep}{$\mathbf{q}$} \State $tmp \gets q_{n-1}$ \State $\mathbf{q} \gets \mathbf{q} \gg 1$ \If {$tmp$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{p}$ \EndIf \EndProcedure \end{algorithmic} \end{algorithm}
+</div>
+</div>
+</section>
+<section id="the-square-step" class="level3">
+<h3 class="anchored" data-anchor-id="the-square-step">The Square Step</h3>
+<p>In GF(2) if a polynomial <span class="math inline">\(q(x)\)</span> is represented by the coefficient bit-vector <span class="math inline">\(\bold{q} = [q_0, q_1, q_2, \ldots, q_{n-1}]\)</span>: <span class="math display">\[
+    q(x) = q_0 + q_1 x + q_2 x^2 + \ldots q_{n-1} x^{n-1},
+\]</span> one can easily show that <span class="math display">\[
+    q(x)^2 = q_0 + q_1 x^2 + q_2 x^4 + \cdots + q_{n-1} x^{2n-2},
+\]</span> so <span class="math inline">\(s(x) = q(x)^2\)</span> is represented by <em>riffling</em> the bit-vector <span class="math inline">\(\bold{q}\)</span> <span class="math display">\[
+    s(x) = q(x)^2 \sim \bold{s} = [q_0, 0, q_1, 0, q_2, \ldots, 0, q_{n-1}],
+\]</span> i.e.&nbsp;the bit-vector we get by interspersing the elements of <span class="math inline">\(\bold{q}\)</span> with zeros.</p>
+<p>Riffling can be done very efficiently block by block and the library has a <code>riffled(...)</code> method which takes a bit-vector <span class="math inline">\(\bold{q}\)</span> and fills a destination bit-vector <span class="math inline">\(\bold{s}\)</span> with a <em>riffled</em> version of <span class="math inline">\(\bold{q}\)</span>.</p>
+<p>The library also has a method <code>split(...)</code> that takes a bit-vector <span class="math inline">\(\bold{s}\)</span>, a number <span class="math inline">\(n\)</span>, and then fills two other bit-vectors <span class="math inline">\(\bold{l}\)</span> and <span class="math inline">\(\bold{h}\)</span> where <span class="math inline">\(\bold{l}\)</span> gets the first <span class="math inline">\(n\)</span> elements in <span class="math inline">\(\bold{v}\)</span> and <span class="math inline">\(\bold{h}\)</span> gets the rest. <span class="math display">\[
+\begin{align}
+    \bold{l} &amp;= [s_0, s_1, \ldots, s_{n-1}], \\
+    \bold{h} &amp;= [s_n, s_{n+1}, \dots].
+\end{align}
+\]</span> In polynomial terms this is equivalent to the decomposition: <span class="math display">\[
+    s(x) = l(x) + x^n \, h(x),
+\]</span> where the degree of <span class="math inline">\(l(x)\)</span> is less than <span class="math inline">\(n\)</span>.</p>
+<p>Given that <span class="math inline">\(s(x) = q(x)^2\)</span> we have <span class="math display">\[
+    q(x)^2 \mod P(x) = s(x) \mod P(x) = l(x) \mod P(x) + x^n h(x) \mod P(x),
+\]</span> and because the degree of <span class="math inline">\(l(x)\)</span> is less than <span class="math inline">\(n\)</span> we have <span class="math display">\[
+    q(x)^2 \mod P(x) = l(x) + x^n h(x) \mod P(x).
+\]</span> Writing <span class="math inline">\(h(x)\)</span> as <span class="math display">\[
+h(x) = \sum_{i=0}^{n-1} h_i x^i
+\]</span> it follows that <span class="math display">\[
+    q(x)^2 \mod P(x) =  l(x) + \sum_{i=0}^{n} h_i x^{n + i} \mod P(x).
+\]</span> Define the bit-vectors <span class="math inline">\(\bold{x}^i\)</span> by the equivalence: <span class="math display">\[
+    \bold{x}^i \sim x^{n+i} \mid P(x) \text{ for } i = 0, \ldots, n-1.
+\]</span> Now we know that <span class="math inline">\(x^n \mod P(x) = p(x)\)</span> so <span class="math display">\[
+    \bold{x}^0 = \bold{p}.
+\]</span> With that starting point, we can easily fill in bit vectors <span class="math inline">\(\bold{x}^i\)</span> for <span class="math inline">\(i = 1, \ldots, n-1\)</span> by using <a href="#MultiplyStep" class="quarto-xref">Algorithm 2</a>.</p>
+<p>The squaring step looks like the following:</p>
+<div id="SquareStep" class="pseudocode-container quarto-float" data-pseudocode-number="3" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{The step: $q(x) \gets q(x)^2 \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{x}^i$ are known bit-vectors, where $\mathbf{x}^i \sim x^{n+i} \mid P(x)$. \Require $\mathbf{s}, \mathbf{l}$ and $\mathbf{h}$ are available workspace bit-vectors. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{SquareStep}{$\mathbf{q}$} \State // \textit{Riffle $\mathbf{q}$ into $\mathbf{s}$.} \State \Call{riffle}{$\mathbf{q}$, $\mathbf{s}$} \State // \textit{Fill $\mathbf{l}$ with a copy of the first $n$ elements from $\mathbf{s}$ and $\mathbf{h}$ with the rest.} \State \Call{split}{$\mathbf{s}$, $n$, $\mathbf{l}$, $\mathbf{h}$} \State $\mathbf{q} \gets \mathbf{l}$ \For {$i \gets 0, n-1$} \If{$h_i$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{x}^i$ \EndIf \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>Some efficiencies can easily be implemented in that algorithm’s loop as, for example, at most every second element in <span class="math inline">\(\bold{h}\)</span> is ever set.</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1109,7 +1172,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/mod.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/reduction.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
@@ -1137,17 +1200,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
           lineNumber: el.dataset.lineNumber === "true" ? true : false,
           lineNumberPunc: el.dataset.lineNumberPunc || ":",
           noEnd: el.dataset.noEnd === "true" ? true : false,
-          titlePrefix: el.dataset.algTitle || "Algorithm"
+          titlePrefix: el.dataset.captionPrefix || "Algorithm"
         };
         pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
       });
     })(document);
     (function(d) {
       d.querySelectorAll(".pseudocode-container").forEach(function(el) {
-        titleSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
-        titlePrefix = el.dataset.algTitle;
-        titleIndex = el.dataset.chapterLevel ? el.dataset.chapterLevel + "." + el.dataset.pseudocodeIndex : el.dataset.pseudocodeIndex;
-        titleSpan.innerHTML = titlePrefix + " " + titleIndex + " ";
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
       });
     })(document);
     </script>
