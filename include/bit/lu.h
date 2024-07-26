@@ -93,7 +93,7 @@ public:
     constexpr void permute(matrix_type& B) const
     {
         std::size_t N = m_swap.size();
-        bit_assert(B.rows() == N, "Matrix has {} rows but row-swap instruction vector has {}.", B.rows(), N);
+        bit_debug_assert(B.rows() == N, "Matrix has {} rows but row-swap instruction vector has {}.", B.rows(), N);
         for (std::size_t i = 0; i < N; ++i) B.swap_rows(i, m_swap[i]);
     }
 
@@ -101,7 +101,7 @@ public:
     constexpr void permute(vector_type& b) const
     {
         std::size_t N = m_swap.size();
-        bit_assert(b.size() == N, "Vector has {} elements but row-swap instruction vector has {}.", b.size(), N);
+        bit_debug_assert(b.size() == N, "Vector has {} elements but row-swap instruction vector has {}.", b.size(), N);
         for (std::size_t i = 0; i < N; ++i)
             if (m_swap[i] != i) b.swap_elements(i, m_swap[i]);
     }
@@ -110,7 +110,7 @@ public:
     std::optional<vector_type> operator()(const vector_type& b) const
     {
         auto N = m_lu.rows();
-        bit_assert(b.size() == N, "RHS b has {} elements but elements but LHS matrix has {} rows.", b.size(), N);
+        bit_debug_assert(b.size() == N, "RHS b has {} elements but elements but LHS matrix has {} rows.", b.size(), N);
 
         // Can we solve this at all?
         if (singular()) return std::nullopt;
@@ -139,7 +139,7 @@ public:
     std::optional<matrix_type> operator()(const matrix_type& B) const
     {
         auto N = m_lu.rows();
-        bit_assert(B.rows() == N, "RHS B has {} rows but elements but LHS matrix has {} rows.", B.rows(), N);
+        bit_debug_assert(B.rows() == N, "RHS B has {} rows but elements but LHS matrix has {} rows.", B.rows(), N);
 
         // Can we solve this at all?
         if (singular()) return std::nullopt;

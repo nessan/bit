@@ -9,9 +9,7 @@ $$
 :::
 
 <!-- Our check/assert macros and compiler flags that control them -->
-[`BIT_DEBUG`]:                          /content/bit_assert/index.qmd#compiler-flags
-[`BIT_NDEBUG`]:                         /content/bit_assert/index.qmd#compiler-flags
-[`bit_assert`]:                         /content/bit_assert/index.qmd
+[`BIT_DEBUG`]:                          /content/bit_assert/index.qmd
 [`bit_debug_assert`]:                   /content/bit_assert/index.qmd
 [`bit_always_assert`]:                  /content/bit_assert/index.qmd
 

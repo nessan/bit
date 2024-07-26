@@ -545,7 +545,7 @@ public:
     /// @note  There is a non-member function @c transpose(bit::matrix) for arbitrary rectangular bit-matrices.
     constexpr matrix& to_transpose()
     {
-        bit_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_always_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
         for (std::size_t i = 1; i < rows(); ++i) {
             for (std::size_t j = 0; j < i; ++j) {
                 bool tmp = m_row[i][j];
@@ -691,7 +691,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& set_diagonal(int d = 0)
     {
-        bit_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_debug_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -723,7 +723,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& reset_diagonal(int d = 0)
     {
-        bit_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_debug_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -755,7 +755,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& flip_diagonal(int d = 0)
     {
-        bit_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_debug_assert(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -1202,7 +1202,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 pow(const matrix<Block, Allocator>& M, std::size_t n)
 {
-    bit_assert(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
+    bit_always_assert(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
 
     // Edge case: M^0 = I?
     if (n == 0) return matrix<Block, Allocator>::identity(M.rows());
@@ -1231,7 +1231,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 pow2(const matrix<Block, Allocator>& M, std::size_t n)
 {
-    bit_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
+    bit_always_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
 
     // Note the 2^0 = 1 so M^(2^0) = M and hence we start with a straight copy of M.
     matrix<Block, Allocator> retval{M};
@@ -1327,7 +1327,7 @@ template<std::unsigned_integral Block, typename Allocator>
 std::optional<matrix<Block, Allocator>>
 invert(const matrix<Block, Allocator>& M)
 {
-    bit_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
+    bit_always_assert(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
 
     // Create the augmented matrix M|I
     auto n = M.rows();

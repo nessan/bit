@@ -20,9 +20,11 @@ characteristic_polynomial(const matrix<Block, Allocator>& A)
     // Matrix needs to be non-empty and square.
     bit_always_assert(A.is_square(), "Matrix is {} x {} but it needs to be square!", A.rows(), A.cols());
 
-    // Get the Frobenius form of A as a vector of companion matrices (matrix gets destroyed doing that so use a copy).
+    // Make working copy of A.
     matrix<Block, Allocator> A_copy{A};
-    auto                     companion_matrices = compact_frobenius_form(A_copy);
+
+    // Get the Frobenius form of A as a vector of companion matrices (matrix gets destroyed doing that so use a copy).
+    auto companion_matrices = compact_frobenius_form(A_copy);
     bit_always_assert(companion_matrices.size() > 0, "Something went wrong--the Frobenius form of A is empty!");
 
     auto retval = companion_matrix_characteristic_polynomial(companion_matrices[0]);
@@ -97,7 +99,7 @@ danilevsky(matrix<Block, Allocator>& A, std::size_t n = 0)
     if (n == 0) n = N;
 
     // If we were asked to look at a specific sub-matrix it better fit.
-    bit_always_assert(n <= N, "Asked to look at {} rows but matrix has only {} of them!", n, N);
+    bit_debug_assert(n <= N, "Asked to look at {} rows but matrix has only {} of them!", n, N);
 
     // Handle an edge case.
     if (n == 1) {

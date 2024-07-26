@@ -108,7 +108,7 @@ public:
     /// @param i Must have @c i<n -- that is only checked on non-release builds.
     static constexpr vector unit(std::size_t n, std::size_t i)
     {
-        bit_assert(i < n, "Unit axis i = {} should be less than the bit-vector size n = {}", i, n);
+        bit_debug_assert(i < n, "Unit axis i = {} should be less than the bit-vector size n = {}", i, n);
         vector retval{n};
         retval.set(i);
         return retval;

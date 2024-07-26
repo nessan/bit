@@ -98,7 +98,7 @@ public:
     /// If there are free variables this will be a random choice over any of the possible 2^f variants.
     vector_type operator()() const
     {
-        // If we are asked for a solution and there are none then we throw an exception
+        // If we are asked for a solution and there are none then barf.
         bit_always_assert(is_consistent(), "System is inconsistent so has NO solutions");
 
         // Default all the elements of x to random values.
@@ -117,7 +117,7 @@ public:
     /// @note The numbering of the solutions is certainly not unique
     vector_type operator()(std::size_t ns) const
     {
-        // If we are asked for a solution and there are none then we throw an exception
+        // If we are asked for a non-existent solution we barf.
         bit_always_assert(ns < m_count, "Argument ns = {} is not less than solution count = {}!", ns, m_count);
 
         // Our solution will have the free variables set bases on the bit-pattern in ns.

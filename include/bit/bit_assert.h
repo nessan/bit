@@ -1,4 +1,4 @@
-/// @brief Three replacements for the standard `assert(condition)` macro that add an informational message.
+/// @brief Two replacements for the standard `assert(condition)` macro that add an informational message.
 /// @link  https://nessan.github.io/bit
 /// SPDX-FileCopyrightText:  2024 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
@@ -9,30 +9,19 @@
 #include <iostream>
 #include <string>
 
-/// @brief Exit using the bit::exit(...) method automatically adding location information to the payload.
+/// @brief This is called if an assertion fails -- exits the program using the @c bit::exit(...) method.
+/// @note  This is a macro that automatically adds the needed location information to the payload.
 #define bit_assertion_failed(...) bit::exit(__func__, __FILE__, __LINE__, std::format(__VA_ARGS__))
 
 /// @def The `bit_always_assert` macro cannot be switched off with compiler flags.
 #define bit_always_assert(cond, ...) \
     if (!(cond)) bit_assertion_failed("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
 
-// If BIT_NDEBUG is set then BIT_DEBUG should *not* be set.
-#if defined(BIT_NDEBUG)
-    #undef BIT_DEBUG
-#endif
-
 /// @def The `bit_debug_assert` macro expands to a no-op *unless* the `BIT_DEBUG` flag is set.
 #ifdef BIT_DEBUG
     #define bit_debug_assert(cond, ...) bit_always_assert(cond, __VA_ARGS__)
 #else
     #define bit_debug_assert(cond, ...) void(0)
-#endif
-
-/// @def The `bit_assert`macro expands to a no-op *only if* the `BIT_NDEBUG` flag is set.
-#ifdef BIT_NDEBUG
-    #define bit_assert(cond, ...) void(0)
-#else
-    #define bit_assert(cond, ...) bit_always_assert(cond, __VA_ARGS__)
 #endif
 
 namespace bit {

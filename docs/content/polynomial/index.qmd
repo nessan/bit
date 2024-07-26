@@ -163,15 +163,13 @@ Method | Description
 
 ### Debugging
 
-You can set some compile-time flags that enable extra safety checks.
-You might set these flags in `DEBUG` builds where performance is not the critical concern.
+You can set a compile-time flag to enable extra safety checks.
+These checks can have a severe performance penalty so typically are only turned on for development.
 
 Macro | Description
 ----- | -----------
 [`BIT_DEBUG`]               | This compile-time flag enables extra safety checks.
-[`BIT_NDEBUG`]              | This compile-time flag turns off most safety checks.
 [`bit_debug_assert`]        | These assertions are **only** checked if you set the `BIT_DEBUG` flag at compile time.
-[`bit_assert`]              | These assertions are checked **unless** you set the `BIT_NDEBUG` flag at compile time.
 [`bit_always_assert`]       | These assertions are always checked.
 : {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
 

@@ -289,7 +289,7 @@ public:
     constexpr matrix_type operator()(const matrix_type& M) const
     {
         // The bit-matrix argument must be square.
-        bit_assert(M.is_square(), "Matrix must be square -- not {} x {}!", M.rows(), M.cols());
+        bit_always_assert(M.is_square(), "Matrix must be square -- not {} x {}!", M.rows(), M.cols());
 
         // The returned bit-matrix will be N x N.
         auto N = M.rows();

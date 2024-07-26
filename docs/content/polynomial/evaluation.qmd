@@ -57,8 +57,7 @@ The sum uses [Horner's method](https://en.wikipedia.org/wiki/Horner%27s_method).
 
 ::: {.callout-warning}
 # The bit-matrix argument must be square
-The input matrix must be square, and the [`bit_assert`] macro checks that pre-condition.
-Setting the `BIT_NDEBUG` flag at compile time turns off that check.
+The input matrix must be square, and the [`bit_always_assert`] macro checks that pre-condition.
 :::
 
 [Example]{.bt}

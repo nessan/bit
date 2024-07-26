@@ -218,14 +218,7 @@ Our assertions come with the ability to print an explanation of what caused any 
 
 The most commonly used form in the library is `bit_debug_assert(...)`.
 This form expands to nothing *unless* the programmer sets the `BIT_DEBUG` flag at compile time.
-That is typically done automatically _only_ for debug software builds and is _never_ done for release/optimized builds.
+That is typically done automatically *only* for debug software builds and is *never* done for release/optimized builds.
 
-There are a couple of other versions of our assert macros.
-
-The `bit_assert(...)` macro is always on unless the programmer sets the `BIT_NDEBUG` flag at compile time.
-Typically, we employ this form if the assertion check is relatively cheap compared to the work done in the function call.
-For example, the bit-matrix inversion function uses this form of assertion to check that the input bit-matrix is square.
-That check cost is negligible compared to the typical cost of inverting a bit-matrix, but to extract every ounce of efficiency, you can set the `BIT_NDEBUG` flag during compile time.
-
-Finally, some checks must always be performed.
-The `bit_always_assert(...)` form handles those cases.
+There is also a version `bit_always_assert(...)` for checks that should always be carried out no matter what flags are passed to the compiler.
+Typically these are for assertions where the cost of the check is cheap compared to the cost of the work done in the method.
