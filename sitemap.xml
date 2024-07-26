@@ -26,11 +26,11 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/pow.html</loc>
-    <lastmod>2024-07-17T16:21:43.194Z</lastmod>
+    <lastmod>2024-07-26T14:24:12.984Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/invert.html</loc>
-    <lastmod>2024-05-13T13:49:44.717Z</lastmod>
+    <lastmod>2024-07-26T14:23:38.269Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/set_if.html</loc>
@@ -98,7 +98,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/index.html</loc>
-    <lastmod>2024-07-21T13:33:31.086Z</lastmod>
+    <lastmod>2024-07-26T14:32:34.169Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/reduce.html</loc>
@@ -250,7 +250,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/bit_assert/index.html</loc>
-    <lastmod>2024-07-21T13:20:17.005Z</lastmod>
+    <lastmod>2024-07-26T14:17:34.796Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/index.html</loc>
@@ -270,7 +270,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/notes/design.html</loc>
-    <lastmod>2024-05-13T13:49:44.723Z</lastmod>
+    <lastmod>2024-07-26T14:21:58.206Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/notes/gf2.html</loc>
@@ -334,7 +334,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/index.html</loc>
-    <lastmod>2024-07-21T12:53:57.144Z</lastmod>
+    <lastmod>2024-07-26T14:29:03.057Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/sub.html</loc>
@@ -406,7 +406,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/evaluation.html</loc>
-    <lastmod>2024-07-21T13:56:58.765Z</lastmod>
+    <lastmod>2024-07-26T14:24:40.119Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/split.html</loc>
@@ -450,7 +450,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/index.html</loc>
-    <lastmod>2024-07-21T13:23:01.157Z</lastmod>
+    <lastmod>2024-07-26T14:25:01.210Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/companion.html</loc>

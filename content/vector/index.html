@@ -1210,7 +1210,7 @@ Use a single <code>Block</code> type throughout your code!
 </section>
 <section id="debugging" class="level3">
 <h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
-<p>You can set some compile-time flags that enable range checking and so on. You might set these flags in <code>DEBUG</code> builds where performance is not the critical concern.</p>
+<p>You can set a compile-time flag <a href="../../content/bit_assert/index.html"><code>BIT_DEBUG</code></a> to enable range checking and other assertions. These checks can have a substantial performance impact so typically are only used during development.</p>
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
@@ -1225,20 +1225,12 @@ Use a single <code>Block</code> type throughout your code!
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="../../content/bit_assert/index.html#compiler-flags"><code>BIT_DEBUG</code></a></td>
+<td><a href="../../content/bit_assert/index.html"><code>BIT_DEBUG</code></a></td>
 <td>This compile-time flag enables extra safety checks.</td>
 </tr>
 <tr class="even">
-<td><a href="../../content/bit_assert/index.html#compiler-flags"><code>BIT_NDEBUG</code></a></td>
-<td>This compile-time flag turns off most safety checks.</td>
-</tr>
-<tr class="odd">
 <td><a href="../../content/bit_assert/index.html"><code>bit_debug_assert</code></a></td>
 <td>These assertions are <strong>only</strong> checked if you set the <code>BIT_DEBUG</code> flag at compile time.</td>
-</tr>
-<tr class="even">
-<td><a href="../../content/bit_assert/index.html"><code>bit_assert</code></a></td>
-<td>These assertions are checked <strong>unless</strong> you set the <code>BIT_NDEBUG</code> flag at compile time.</td>
 </tr>
 <tr class="odd">
 <td><a href="../../content/bit_assert/index.html"><code>bit_always_assert</code></a></td>
