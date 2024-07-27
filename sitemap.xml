@@ -26,11 +26,11 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/pow.html</loc>
-    <lastmod>2024-07-26T14:24:12.984Z</lastmod>
+    <lastmod>2024-07-27T10:27:06.126Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/invert.html</loc>
-    <lastmod>2024-07-26T14:23:38.269Z</lastmod>
+    <lastmod>2024-07-27T10:27:06.126Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/set_if.html</loc>
@@ -98,7 +98,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/index.html</loc>
-    <lastmod>2024-07-26T14:32:34.169Z</lastmod>
+    <lastmod>2024-07-27T10:27:06.126Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/reduce.html</loc>
@@ -174,7 +174,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/access.html</loc>
-    <lastmod>2024-05-13T13:49:44.724Z</lastmod>
+    <lastmod>2024-07-27T10:27:24.721Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/join.html</loc>
@@ -249,8 +249,8 @@
     <lastmod>2024-05-13T13:49:44.708Z</lastmod>
   </url>
   <url>
-    <loc>https://nessan.github.io/bit/content/bit_assert/index.html</loc>
-    <lastmod>2024-07-26T14:17:34.796Z</lastmod>
+    <loc>https://nessan.github.io/bit/content/bit_assertion/index.html</loc>
+    <lastmod>2024-07-27T11:05:26.950Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/index.html</loc>
@@ -270,7 +270,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/notes/design.html</loc>
-    <lastmod>2024-07-26T14:21:58.206Z</lastmod>
+    <lastmod>2024-07-27T10:55:30.654Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/notes/gf2.html</loc>
@@ -334,7 +334,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/index.html</loc>
-    <lastmod>2024-07-26T14:29:03.057Z</lastmod>
+    <lastmod>2024-07-27T10:58:25.243Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/vector/sub.html</loc>
@@ -394,7 +394,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/access.html</loc>
-    <lastmod>2024-07-21T13:55:26.633Z</lastmod>
+    <lastmod>2024-07-27T10:27:24.744Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/times_x.html</loc>
@@ -406,7 +406,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/evaluation.html</loc>
-    <lastmod>2024-07-26T14:24:40.119Z</lastmod>
+    <lastmod>2024-07-27T10:27:06.188Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/polynomial/split.html</loc>
@@ -442,7 +442,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/access.html</loc>
-    <lastmod>2024-07-21T13:31:26.952Z</lastmod>
+    <lastmod>2024-07-27T10:27:24.721Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/dot.html</loc>
@@ -450,7 +450,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/index.html</loc>
-    <lastmod>2024-07-26T14:25:01.210Z</lastmod>
+    <lastmod>2024-07-27T10:27:06.126Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/companion.html</loc>
@@ -482,7 +482,7 @@
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/swap.html</loc>
-    <lastmod>2024-05-13T13:49:44.720Z</lastmod>
+    <lastmod>2024-07-27T10:27:24.721Z</lastmod>
   </url>
   <url>
     <loc>https://nessan.github.io/bit/content/matrix/set.html</loc>

@@ -461,19 +461,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assert/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/bit_assertion/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Assertions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assert/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../content/bit_assertion/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assert/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../content/bit_assertion/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -576,7 +576,7 @@ window.Quarto = {
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our check/assert macros and compiler flags that control them -->
+<!-- Our assertion macros and compiler flags that control them -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
@@ -760,8 +760,8 @@ Assertions have messages
 <p>Our assertions come with the ability to print an explanation of what caused any failure.</p>
 </div>
 </div>
-<p>The most commonly used form in the library is <code>bit_debug_assert(...)</code>. This form expands to nothing <em>unless</em> the programmer sets the <code>BIT_DEBUG</code> flag at compile time. That is typically done automatically <em>only</em> for debug software builds and is <em>never</em> done for release/optimized builds.</p>
-<p>There is also a version <code>bit_always_assert(...)</code> for checks that should always be carried out no matter what flags are passed to the compiler. Typically these are for assertions where the cost of the check is cheap compared to the cost of the work done in the method.</p>
+<p>The most commonly used form in the library is <code>bit_debug_assertion(...)</code>. This form expands to nothing <em>unless</em> the programmer sets the <code>BIT_DEBUG</code> flag at compile time. That is typically done automatically <em>only</em> for debug software builds and is <em>never</em> done for release/optimized builds.</p>
+<p>There is also a version <code>bit_assertion(...)</code> that is very similar to the [<code>std::assert</code>] macro with the addition of a message. Typically these are for assertions where the cost of the check is cheap compared to the cost of the work done in the method. This form expands to nothing <em>only if</em> the <code>NDEBUG</code> flag is set a compile time.</p>
 
 
 </section>

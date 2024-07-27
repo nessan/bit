@@ -534,8 +534,8 @@ window.Quarto = {
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   <li><a href="#design-rationale" id="toc-design-rationale" class="nav-link" data-scroll-target="#design-rationale">Design Rationale</a>
   <ul class="collapse">
-  <li><a href="#bit_debug_assert" id="toc-bit_debug_assert" class="nav-link" data-scroll-target="#bit_debug_assert"><code>bit_debug_assert</code></a></li>
-  <li><a href="#bit_always_assert" id="toc-bit_always_assert" class="nav-link" data-scroll-target="#bit_always_assert"><code>bit_always_assert</code></a></li>
+  <li><a href="#bit_debug_assertion" id="toc-bit_debug_assertion" class="nav-link" data-scroll-target="#bit_debug_assertion"><code>bit_debug_assertion</code></a></li>
+  <li><a href="#bit_assertion" id="toc-bit_assertion" class="nav-link" data-scroll-target="#bit_assertion"><code>bit_assertion</code></a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul></li>
   </ul>
@@ -582,9 +582,9 @@ window.Quarto = {
 <!-- Pages and Wikipedia articles referenced in the documentation -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The <code>bit_assert.h</code> header has two replacements for the standard <a href="https://www.cplusplus.com/reference/cassert/assert/"><code>assert</code></a> macro — they allow for an additional string output that you can use to print the values of the variables that triggered any failure.</p>
-<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a>bit_debug_assert<span class="op">(</span>condition<span class="op">,</span> message<span class="op">)</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a>bit_always_assert<span class="op">(</span>condition<span class="op">,</span> message<span class="op">)</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>bit_assertion.h</code> header has two replacements for the standard <a href="https://www.cplusplus.com/reference/cassert/assert/"><code>assert</code></a> macro — they allow for an additional string output that you can use to print the values of the variables that triggered any failure.</p>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a>bit_debug_assertion<span class="op">(</span>condition<span class="op">,</span> message<span class="op">)</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a>bit_assertion<span class="op">(</span>condition<span class="op">,</span> message<span class="op">)</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
@@ -607,7 +607,7 @@ Compiler Flag
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you set the <code>BIT_DEBUG</code> flag, the library will perform demanding but potentially useful safety assertions on indices, size equality checks, etc. Otherwise all the <code>bit_debug_assert</code> calls are no-ops.</p>
+<p>If you set the <code>BIT_DEBUG</code> flag, the library will perform demanding but potentially useful safety assertions on indices, size equality checks, etc. Otherwise all the <code>bit_debug_assertion</code> calls are no-ops.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -630,12 +630,12 @@ Microsoft compiler
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// </span><span class="an">@brief</span><span class="co"> Set the element at index `i` to 1.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>set<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    bit_debug_assert<span class="op">(</span>i <span class="op">&lt;</span> <span class="va">m_size</span><span class="op">,</span> <span class="st">"index `i` = "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" must be &lt; `m_size` which is "</span> <span class="op">&lt;&lt;</span> <span class="va">m_size</span><span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    bit_debug_assertion<span class="op">(</span>i <span class="op">&lt;</span> <span class="va">m_size</span><span class="op">,</span> <span class="st">"index `i` = "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" must be &lt; `m_size` which is "</span> <span class="op">&lt;&lt;</span> <span class="va">m_size</span><span class="op">);</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Here <code>m_size</code> is holds the size of the vector — so we must have <code>i &lt; m_size</code></p>
 <p>To check every element access, set the <code>BIT_DEBUG</code> flag during compiles. If the assertion fails, the program exits with an error message that gives the offending values.</p>
-<p>The <code>bit_debug_assert</code> line expands to <em>nothing</em> if the <code>BIT_DEBUG</code> flag is not set during compiles.</p>
+<p>The <code>bit_debug_assertion</code> line expands to <em>nothing</em> if the <code>BIT_DEBUG</code> flag is not set during compiles.</p>
 <p><span class="bt">Example — Message from an assertion failure</span></p>
 <div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="annotated-cell-3-2"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
@@ -664,25 +664,25 @@ Microsoft compiler
 </section>
 <section id="design-rationale" class="level2">
 <h2 class="anchored" data-anchor-id="design-rationale">Design Rationale</h2>
-<section id="bit_debug_assert" class="level3">
-<h3 class="anchored" data-anchor-id="bit_debug_assert"><code>bit_debug_assert</code></h3>
-<p>In the development cycle, it can be helpful to range-check indices and so on. However, those checks are expensive and can slow down numerical code by orders of magnitude. Therefore, we don’t want there to be any chance that those verifications are accidentally left “on” in the production code. The <code>bit_debug_assert(...)</code> form covers this type of verification. Turning on these checks requires the programmer to take a specific action — namely, she must set the <code>BIT_DEBUG</code> flag during compile time.</p>
+<section id="bit_debug_assertion" class="level3">
+<h3 class="anchored" data-anchor-id="bit_debug_assertion"><code>bit_debug_assertion</code></h3>
+<p>In the development cycle, it can be helpful to range-check indices and so on. However, those checks are expensive and can slow down numerical code by orders of magnitude. Therefore, we don’t want there to be any chance that those verifications are accidentally left “on” in the production code. The <code>bit_debug_assertion(...)</code> form covers this type of verification. Turning on these checks requires the programmer to take a specific action — namely, she must set the <code>BIT_DEBUG</code> flag during compile time.</p>
 <p>For example, here is a pre-condition from a hypothetical <code>dot(Vector u, Vector v)</code> function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bit_debug_assert<span class="op">(</span>u<span class="op">.</span>size<span class="op">()</span> <span class="op">==</span> v<span class="op">.</span>size<span class="op">(),</span> <span class="st">"Vector sizes </span><span class="sc">{}</span><span class="st"> and </span><span class="sc">{}</span><span class="st"> DO NOT match!"</span><span class="op">,</span> u<span class="op">.</span>size<span class="op">(),</span> v<span class="op">.</span>size<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bit_debug_assertion<span class="op">(</span>u<span class="op">.</span>size<span class="op">()</span> <span class="op">==</span> v<span class="op">.</span>size<span class="op">(),</span> <span class="st">"Vector sizes </span><span class="sc">{}</span><span class="st"> and </span><span class="sc">{}</span><span class="st"> DO NOT match!"</span><span class="op">,</span> u<span class="op">.</span>size<span class="op">(),</span> v<span class="op">.</span>size<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This code checks that the two vector arguments have equal length — a necessary constraint for the dot product operation to make sense. If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.</p>
 <p>The check here is <strong>off</strong> by default, and you need to do something special (i.e., define the <code>BIT_DEBUG</code> flag at compile time) to enable it. The idea is that production code may do many of these dot products, and we do not generally want to pay for the check. However, enabling these sorts of checks may be very useful during development.</p>
-<p>The <code>bit_debug_assert(...)</code> macro expands to nothing <strong>unless</strong> you set the <code>BIT_DEBUG</code> flag at compile time.</p>
+<p>The <code>bit_debug_assertion(...)</code> macro expands to nothing <strong>unless</strong> you set the <code>BIT_DEBUG</code> flag at compile time.</p>
 </section>
-<section id="bit_always_assert" class="level3">
-<h3 class="anchored" data-anchor-id="bit_always_assert"><code>bit_always_assert</code></h3>
-<p>There may be other checks you never want to be turned off. The <code>bit_always_assert(...)</code> form accomplishes those tasks — it is unaffected by compiler flags.</p>
+<section id="bit_assertion" class="level3">
+<h3 class="anchored" data-anchor-id="bit_assertion"><code>bit_assertion</code></h3>
+<p>There may be other checks you never want to be turned off. The <code>bit_assertion(...)</code> form accomplishes those tasks — it is unaffected by compiler flags.</p>
 <p>For example, a pre-condition for a matrix inversion method is that the input matrix must be square. Here is how we do that check in an <code>invert(const Matrix&amp; M)</code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bit_always_assert<span class="op">(</span>M<span class="op">.</span>is_square<span class="op">(),</span> <span class="st">"Cannot invert a </span><span class="sc">{}</span><span class="st"> x </span><span class="sc">{}</span><span class="st"> NON-square matrix!"</span><span class="op">,</span> M<span class="op">.</span>rows<span class="op">(),</span> M<span class="op">.</span>cols<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bit_assertion<span class="op">(</span>M<span class="op">.</span>is_square<span class="op">(),</span> <span class="st">"Cannot invert a </span><span class="sc">{}</span><span class="st"> x </span><span class="sc">{}</span><span class="st"> NON-square matrix!"</span><span class="op">,</span> M<span class="op">.</span>rows<span class="op">(),</span> M<span class="op">.</span>cols<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can only invert square matrices. The <code>M.is_square()</code> call checks that condition and, on failure, exits the program with a helpful message.</p>
 <p>Here the cost of the check is very slight compared to the work done by the <code>invert(...)</code> method, so leaving it on even in production code is not a problem.</p>
-<p>The decision to use one form vs.&nbsp;the other depends on the cost of doing the check versus the work done by the method in question. A primary use case for <code>bit_debug_assert</code> is to do things like bounds checking on indices — from experience, this is vital during development. However, bounds-checking every index operation incurs a considerable performance penalty and can slow down numerical code by orders of magnitude. So it makes sense to have the checks in place for development but to ensure they are never there in release builds.</p>
-<p>The first form, <code>bit_debug_assert(...)</code>, covers these types of checks. Turning on <code>bit_debug_assert</code> asserts requires the programmer to take a specific action, namely, setting the <code>BIT_DEBUG</code> flag during compile time.</p>
-<p>On the other hand, some assertions are relatively cheap, especially compared to the work done by the containing function. For example, a pre-condition for the <a href="../../content/matrix/invert.html"><code>matrix::invert</code></a> method is that the input bit-matrix is square. There is probably no harm if we always do that assert, which is very cheap compared to the typical cost of inverting a bit-matrix. The second form, <code>bit_always_assert(...)</code>, is suitable for those cheaper verifications.</p>
+<p>The decision to use one form vs.&nbsp;the other depends on the cost of doing the check versus the work done by the method in question. A primary use case for <code>bit_debug_assertion</code> is to do things like bounds checking on indices — from experience, this is vital during development. However, bounds-checking every index operation incurs a considerable performance penalty and can slow down numerical code by orders of magnitude. So it makes sense to have the checks in place for development but to ensure they are never there in release builds.</p>
+<p>The first form, <code>bit_debug_assertion(...)</code>, covers these types of checks. Turning on <code>bit_debug_assertion</code> asserts requires the programmer to take a specific action, namely, setting the <code>BIT_DEBUG</code> flag during compile time.</p>
+<p>On the other hand, some assertions are relatively cheap, especially compared to the work done by the containing function. For example, a pre-condition for the <a href="../../content/matrix/invert.html"><code>matrix::invert</code></a> method is that the input bit-matrix is square. There is probably no harm if we always do that assert, which is very cheap compared to the typical cost of inverting a bit-matrix. The second form, <code>bit_assertion(...)</code>, is suitable for those cheaper verifications.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -693,7 +693,7 @@ Macro-land
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither do these <code>bit_assert</code> macros.</p>
+<p>We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither do these <code>bit_assertion</code> macros.</p>
 </div>
 </div>
 </section>
