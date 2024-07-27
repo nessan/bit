@@ -20,7 +20,7 @@ These methods return a reference to `*this`, so can be chained with other calls.
 Generally, these methods do *not* check whether the indices are in bounds.
 If they aren't, the behavior is undefined (but bound to be wrong!)
 All of them will perform range checking if you set the `BIT_DEBUG` at compile time.
-See [`bit_assert`].
+See [`bit_assertion`].
 :::
 
 [Example]{.bt}

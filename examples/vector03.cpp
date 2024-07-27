@@ -14,11 +14,11 @@ simple_sub(const bit::vector<Block, Allocator>& src, std::size_t begin, std::siz
     if (src.empty() || len == 0) return bit::vector<Block, Allocator>{};
 
     // Optionally check the begin index
-    bit_debug_assert(begin < src.size(), "begin = {}, src.size() = {}", begin, src.size());
+    bit_debug_assertion(begin < src.size(), "begin = {}, src.size() = {}", begin, src.size());
 
     // Optionally check the end index (one beyond the last valid index)
     std::size_t end = begin + len;
-    bit_debug_assert(end <= src.size(), "end = {}, src.size() = {}", end, src.size());
+    bit_debug_assertion(end <= src.size(), "end = {}, src.size() = {}", end, src.size());
 
     // Create the correct sized sub-vector all initialized to 0's
     bit::vector<Block, Allocator> retval(len);

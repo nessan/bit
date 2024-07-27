@@ -5,7 +5,7 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assert.h"
+#include "bit_assertion.h"
 #include "matrix.h"
 
 #include <optional>
@@ -26,10 +26,10 @@ public:
     gauss(const matrix_type& A, const vector_type& b)
     {
         // Only handle square matrices.
-        bit_always_assert(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
+        bit_assertion(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
 
         // The number of rows in the lhs matrix and the rhs vector must agree.
-        bit_always_assert(A.rows() == b.size(), "A.rows() = {} but b.size() = {}.", A.rows(), b.size());
+        bit_assertion(A.rows() == b.size(), "A.rows() = {} but b.size() = {}.", A.rows(), b.size());
 
         // Create the augmented matrix A|b and convert that to reduced row echelon form
         vector_type pivots;
@@ -99,7 +99,7 @@ public:
     vector_type operator()() const
     {
         // If we are asked for a solution and there are none then barf.
-        bit_always_assert(is_consistent(), "System is inconsistent so has NO solutions");
+        bit_assertion(is_consistent(), "System is inconsistent so has NO solutions");
 
         // Default all the elements of x to random values.
         auto x = vector_type::random(equation_count());
@@ -118,7 +118,7 @@ public:
     vector_type operator()(std::size_t ns) const
     {
         // If we are asked for a non-existent solution we barf.
-        bit_always_assert(ns < m_count, "Argument ns = {} is not less than solution count = {}!", ns, m_count);
+        bit_assertion(ns < m_count, "Argument ns = {} is not less than solution count = {}!", ns, m_count);
 
         // Our solution will have the free variables set bases on the bit-pattern in ns.
         vector_type x{equation_count()};

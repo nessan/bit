@@ -83,4 +83,4 @@ v.back():  0
 ### See Also
 [`vector::reference`] \
 [`vector::size`] \
-[`bit_assert`]
+[`bit_assertion`]

@@ -1,4 +1,4 @@
-/// @brief Two replacements for the standard `assert(condition)` macro that add an informational message.
+/// @brief Two replacements for the standard @c assert(condition) macro that add an informational message.
 /// @link  https://nessan.github.io/bit
 /// SPDX-FileCopyrightText:  2024 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
@@ -9,19 +9,28 @@
 #include <iostream>
 #include <string>
 
+/// @brief Enforce flag consistency.
+#ifdef NDEBUG
+    #undef BIT_DEBUG
+#endif
+
 /// @brief This is called if an assertion fails -- exits the program using the @c bit::exit(...) method.
 /// @note  This is a macro that automatically adds the needed location information to the payload.
-#define bit_assertion_failed(...) bit::exit(__func__, __FILE__, __LINE__, std::format(__VA_ARGS__))
+#define bit_exit(...) bit::exit(__func__, __FILE__, __LINE__, std::format(__VA_ARGS__))
 
-/// @def The `bit_always_assert` macro cannot be switched off with compiler flags.
-#define bit_always_assert(cond, ...) \
-    if (!(cond)) bit_assertion_failed("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
-
-/// @def The `bit_debug_assert` macro expands to a no-op *unless* the `BIT_DEBUG` flag is set.
+/// @brief The @c bit_debug_assertion macro expands to a no-op @b unless the @c BIT_DEBUG flag is set.
 #ifdef BIT_DEBUG
-    #define bit_debug_assert(cond, ...) bit_always_assert(cond, __VA_ARGS__)
+    #define bit_debug_assertion(cond, ...) bit_exit("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
 #else
-    #define bit_debug_assert(cond, ...) void(0)
+    #define bit_debug_assertion(cond, ...) void(0)
+#endif
+
+/// @brief The @c bit_assertion macro expands to a no-op @b if the @c NDEBUG flag is set.
+/// @note  This is the same behaviour as the like the standard @c assert macro.
+#ifdef NDEBUG
+    #define bit_assertion(cond, ...) void(0)
+#else
+    #define bit_assertion(cond, ...) bit_exit("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
 #endif
 
 namespace bit {
@@ -40,7 +49,7 @@ basename(std::string_view path)
 }
 
 /// @brief This function prints an error message with source code location information and exits the program.
-/// @note  Generally this is only called from the @c bit_assertion_failed macro which adds the needed location info.
+/// @note  Generally this is only called from the @c bit_exit macro which adds the needed location info.
 inline void
 exit(std::string_view func, std::string_view path, std::size_t line, std::string_view payload = "")
 {

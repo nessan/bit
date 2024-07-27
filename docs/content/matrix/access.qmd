@@ -82,4 +82,4 @@ Col 2: [1 0 1 0]
 
 ### See Also
 [`vector::reference`] \
-[`bit_assert`]
+[`bit_assertion`]

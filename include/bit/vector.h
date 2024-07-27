@@ -5,7 +5,7 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assert.h"
+#include "bit_assertion.h"
 #include <array>
 #include <bit>
 #include <bitset>
@@ -108,7 +108,7 @@ public:
     /// @param i Must have @c i<n -- that is only checked on non-release builds.
     static constexpr vector unit(std::size_t n, std::size_t i)
     {
-        bit_debug_assert(i < n, "Unit axis i = {} should be less than the bit-vector size n = {}", i, n);
+        bit_debug_assertion(i < n, "Unit axis i = {} should be less than the bit-vector size n = {}", i, n);
         vector retval{n};
         retval.set(i);
         return retval;
@@ -246,8 +246,8 @@ public:
     /// @brief Swap the values of elements at locations i & j
     constexpr vector& swap_elements(std::size_t i, std::size_t j)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
-        bit_debug_assert(j < m_size, "Index j = {} must be < m_size = {}", j, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
+        bit_debug_assertion(j < m_size, "Index j = {} must be < m_size = {}", j, m_size);
         if (test(i) != test(j)) {
             flip(i);
             flip(j);
@@ -491,8 +491,8 @@ public:
         if (begin == 0 && len == m_size) return vector{*this};
 
         // DEBUG builds will check the starting position of the sub-vector & the length.
-        bit_debug_assert(begin < m_size, "begin = {}, m_size = {}", begin, m_size);
-        bit_debug_assert(begin + len < m_size, "begin = {}, len = {}, m_size = {}", begin, len, m_size);
+        bit_debug_assertion(begin < m_size, "begin = {}, m_size = {}", begin, m_size);
+        bit_debug_assertion(begin + len < m_size, "begin = {}, len = {}, m_size = {}", begin, len, m_size);
 
         // Create the right sized rub-vector all initialized to 0's
         vector retval{len};
@@ -701,14 +701,14 @@ public:
     /// @brief Read-write access to the element at index @c i
     constexpr reference element(std::size_t i)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
         return reference(*this, i);
     }
 
     /// @brief Read-only access to the element at index @c i
     constexpr bool element(std::size_t i) const
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
         return test(i);
     }
 
@@ -722,7 +722,7 @@ public:
     constexpr reference back()
     {
         auto n = size();
-        bit_debug_assert(n > 0, "Empty bit-vector!");
+        bit_debug_assertion(n > 0, "Empty bit-vector!");
         return element(n - 1);
     }
 
@@ -730,7 +730,7 @@ public:
     constexpr reference back() const
     {
         auto n = size();
-        bit_debug_assert(n > 0, "Empty bit-vector!");
+        bit_debug_assertion(n > 0, "Empty bit-vector!");
         return element(n - 1);
     }
 
@@ -749,7 +749,7 @@ public:
     /// @brief Check whether the bit-vector element at index @c i is set
     constexpr bool test(std::size_t i) const
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
         return block_ref_for(i) & block_mask_for(i);
     }
 
@@ -757,7 +757,7 @@ public:
     constexpr bool all() const
     {
         // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assert(!empty(), "Calling this method for an empty vector is likely an error!");
+        bit_debug_assertion(!empty(), "Calling this method for an empty vector is likely an error!");
 
         // The "logical connective" for all() is AND with the identity TRUE, hence the return value for the empty set.
         if (empty()) return true;
@@ -777,7 +777,7 @@ public:
     constexpr bool any() const
     {
         // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assert(!empty(), "Calling this method for an empty vector is likely an error!");
+        bit_debug_assertion(!empty(), "Calling this method for an empty vector is likely an error!");
 
         // The "logical connective" for any() is OR with the identity FALSE, hence the return value for the empty set.
         for (auto b : m_blocks)
@@ -790,7 +790,7 @@ public:
     constexpr bool none() const
     {
         // Handle empty vectors with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assert(!empty(), "Calling this method for an empty vector is likely an error!");
+        bit_debug_assertion(!empty(), "Calling this method for an empty vector is likely an error!");
         return !any();
     }
 
@@ -907,7 +907,7 @@ public:
     /// @brief Set the element in the bit-vector at index @c i to 1.
     constexpr vector& set(std::size_t i)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < `m_size` = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < `m_size` = {}", i, m_size);
         block_ref_for(i) |= block_mask_for(i);
         return *this;
     }
@@ -916,11 +916,11 @@ public:
     constexpr vector& set(std::size_t first, std::size_t len)
     {
         // Check index ranges if appropriate and also handle the edge case where len == 0
-        bit_debug_assert(first < m_size, "first = {} but size() = {}", first, m_size);
+        bit_debug_assertion(first < m_size, "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
 
         std::size_t final = first + len - 1;
-        bit_debug_assert(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
+        bit_debug_assertion(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
 
         // Indices of the first and final elements in our block store.
         std::size_t first_block = block_index_for(first);
@@ -954,7 +954,7 @@ public:
     /// @brief Reset the element at index @c i in the bit-vector to 0.
     constexpr vector& reset(std::size_t i)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < size() = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < size() = {}", i, m_size);
         block_ref_for(i) &= Block(~block_mask_for(i));
         return *this;
     }
@@ -963,10 +963,10 @@ public:
     constexpr vector& reset(std::size_t first, std::size_t len)
     {
         // Check index ranges if appropriate and also handle the edge case where len == 0
-        bit_debug_assert(first < m_size, "first = {} but size() = {}", first, m_size);
+        bit_debug_assertion(first < m_size, "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
         std::size_t final = first + len - 1;
-        bit_debug_assert(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
+        bit_debug_assertion(final < m_size, "len = {} => final = {} but size() = {}", len, final, m_size);
 
         // Indices of the first and final elements in our block store.
         std::size_t first_block = block_index_for(first);
@@ -1000,7 +1000,7 @@ public:
     /// @brief Flip element at @c i in the bit-vector.
     constexpr vector& flip(std::size_t i)
     {
-        bit_debug_assert(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
+        bit_debug_assertion(i < m_size, "Index i = {} must be < m_size = {}", i, m_size);
         block_ref_for(i) ^= block_mask_for(i);
         return *this;
     }
@@ -1009,10 +1009,10 @@ public:
     constexpr vector& flip(std::size_t first, std::size_t len)
     {
         // Check index ranges if appropriate and also handle the edge case where len == 0
-        bit_debug_assert(first < size(), "first = {} but size() = {}", first, m_size);
+        bit_debug_assertion(first < size(), "first = {} but size() = {}", first, m_size);
         if (len == 0) return *this;
         std::size_t final = first + len - 1;
-        bit_debug_assert(final < size(), "len = {} => final = {} but size() = {}", len, final, m_size);
+        bit_debug_assertion(final < size(), "len = {} => final = {} but size() = {}", len, final, m_size);
 
         // Locations of the first and last elements in our block store.
         std::size_t first_block = block_index_for(first);
@@ -1065,7 +1065,7 @@ public:
     /// @brief AND this bit-vector with another of equal size.
     constexpr vector& operator&=(const vector& rhs)
     {
-        bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
+        bit_debug_assertion(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
         for (std::size_t i = 0; i < block_count(); ++i) block(i) &= rhs.block(i);
         return *this;
     }
@@ -1073,7 +1073,7 @@ public:
     /// @brief OR this bit-vector with another of equal size.
     constexpr vector& operator|=(const vector& rhs)
     {
-        bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
+        bit_debug_assertion(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
         for (std::size_t i = 0; i < block_count(); ++i) block(i) |= rhs.block(i);
         return *this;
     }
@@ -1081,7 +1081,7 @@ public:
     /// @brief XOR this bit-vector with another of equal size.
     constexpr vector& operator^=(const vector& rhs)
     {
-        bit_debug_assert(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
+        bit_debug_assertion(size() == rhs.size(), "Sizes don't match {} != {}", size(), rhs.size());
         for (std::size_t i = 0; i < block_count(); ++i) block(i) ^= rhs.block(i);
         return *this;
     }
@@ -1107,7 +1107,7 @@ public:
     constexpr bool dot(const vector& rhs) const
     {
         // DEBUG builds will check that the two bit-vectors are indeed equally sized otherwise we assume it is true.
-        bit_debug_assert(size() == rhs.size(), "bit-vector sizes don't match {} != {}", size(), rhs.size());
+        bit_debug_assertion(size() == rhs.size(), "bit-vector sizes don't match {} != {}", size(), rhs.size());
         Block sum = 0;
         for (std::size_t k = 0; k < block_count(); ++k) sum ^= static_cast<Block>(block(k) & rhs.block(k));
         return std::popcount(sum) % 2;
@@ -1240,8 +1240,8 @@ public:
         if (ws == 0) return *this;
 
         // Do a couple of optional sanity checks
-        bit_debug_assert(i0 < size(), "i0 = {} but size() = {}", i0, size());
-        bit_debug_assert(i0 + ws - 1 < size(), "i0 = {}, with.size() = {}, but size = {}", i0, ws, size());
+        bit_debug_assertion(i0 < size(), "i0 = {} but size() = {}", i0, size());
+        bit_debug_assertion(i0 + ws - 1 < size(), "i0 = {}, with.size() = {}, but size = {}", i0, ws, size());
 
         // TODO: Replace this loop with something that works on blocks at a time!
         for (std::size_t i = 0; i < ws; ++i) operator[](i0 + i) = with[i];
@@ -1448,9 +1448,8 @@ public:
         requires std::same_as<std::remove_cvref_t<T>, block_store_type>
     explicit constexpr vector(std::size_t n, T&& blocks, bool is_clean = false) : vector()
     {
-        // Check that the size of the bit-vector matches with the number of passed in blocks.
-        std::size_t needed = blocks_needed(n);
-        bit_always_assert(needed == blocks.size(), "needed = {}, blocks.size() = {}", needed, blocks.size());
+        // Check that the size of the bit-vector we are constructing matches with the number of passed in blocks.
+        bit_assertion(blocks_needed(n) == blocks.size(), "{} != {}", blocks_needed(n), blocks.size());
 
         // Size is OK & we then copy or move the passed in block store.
         m_size = n;
@@ -1887,7 +1886,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 operator&(const vector<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
-    bit_debug_assert(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
+    bit_debug_assertion(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
     vector<Block, Allocator> retval{lhs};
     retval &= rhs;
     return retval;
@@ -1898,7 +1897,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 operator^(const vector<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
-    bit_debug_assert(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
+    bit_debug_assertion(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
     vector<Block, Allocator> retval{lhs};
     retval ^= rhs;
     return retval;
@@ -1909,7 +1908,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 operator|(const vector<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
-    bit_debug_assert(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
+    bit_debug_assertion(lhs.size() == rhs.size(), "sizes don't match {} != {}", lhs.size(), rhs.size());
     vector<Block, Allocator> retval{lhs};
     retval |= rhs;
     return retval;
@@ -1945,7 +1944,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 diff(const vector<Block, Allocator>& u, const vector<Block, Allocator>& v)
 {
-    bit_debug_assert(u.size() == v.size(), "Sizes don't match {} != {}", u.size(), v.size());
+    bit_debug_assertion(u.size() == v.size(), "Sizes don't match {} != {}", u.size(), v.size());
 
     vector<Block, Allocator> w{u};
 

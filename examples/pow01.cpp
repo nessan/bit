@@ -10,7 +10,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 old(const matrix<Block, Allocator>& M, std::size_t n)
 {
-    bit_always_assert(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
+    bit_assertion(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
 
     // Note the M^0 is the identity matrix so we start with that
     matrix<Block, Allocator> retval = matrix<Block, Allocator>::identity(M.rows());

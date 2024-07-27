@@ -86,4 +86,4 @@ After call v = []
 ### See Also
 [`polynomial::reference`] \
 [`polynomial::size`]      \
-[`bit_assert`]
+[`bit_assertion`]

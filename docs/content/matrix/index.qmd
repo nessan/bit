@@ -207,8 +207,8 @@ Method | Description
 Macro | Description
 ----- | -----------
 [`BIT_DEBUG`]                       | This compile-time flag enables extra safety checks.
-[`bit_debug_assert`]                | These assertions are only checked if the `BIT_DEBUG` flag is set at compile time.
-[`bit_always_assert`]               | Use this form for checks that must always be performed.
+[`bit_debug_assertion`]                | These assertions are only checked if the `BIT_DEBUG` flag is set at compile time.
+[`bit_assertion`]               | Use this form for checks that must always be performed.
 : {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
 
 ## Non-member Functions

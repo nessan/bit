@@ -5,7 +5,7 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assert.h"
+#include "bit_assertion.h"
 #include "danilevsky.h"
 #include "gauss.h"
 #include "lu.h"

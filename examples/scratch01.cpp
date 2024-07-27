@@ -1,8 +1,5 @@
-
-
-#ifndef BIT_DEBUG
-    #define BIT_DEBUG
-#endif
+#undef  NDEBUG
+#define BIT_DEBUG
 #include <bit/bit.h>
 int main()
 {
