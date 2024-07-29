@@ -461,19 +461,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Assertions</span></a>
+  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -542,7 +542,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#alternative-ideas" id="toc-alternative-ideas" class="nav-link" data-scroll-target="#alternative-ideas">Alternative Ideas</a></li>
   </ul></li>
-  <li><a href="#assertions" id="toc-assertions" class="nav-link" data-scroll-target="#assertions">Assertions</a></li>
+  <li><a href="#bounds-checking" id="toc-bounds-checking" class="nav-link" data-scroll-target="#bounds-checking">Bounds checking</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/notes/design.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -576,7 +576,7 @@ window.Quarto = {
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our assertion macros and compiler flags that control them -->
+<!-- Our verify macro and compiler flag that controls it -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
@@ -743,25 +743,10 @@ Some methods only work on square matrices
 <p>Apart from using column-major versus row-major mode, the other potentially sensible idea would be to base the whole library on bit-matrices where bit-vectors are either <span class="math inline">\(n \times 1\)</span> or <span class="math inline">\(1 \times n\)</span> bit-matrices.</p>
 </section>
 </section>
-<section id="assertions" class="level2">
-<h2 class="anchored" data-anchor-id="assertions">Assertions</h2>
+<section id="bounds-checking" class="level2">
+<h2 class="anchored" data-anchor-id="bounds-checking">Bounds checking</h2>
 <p>In the development cycle, it can be helpful to confirm that indices are in bounds and perform other range checks. However, those checks are expensive and can slow down numerical code by orders of magnitude. We don’t want those verifications accidentally left “on” in our production code.</p>
-<p>For this reason, we include our versions of the standard [<code>std::assert</code>] macro.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Assertions have messages
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Our assertions come with the ability to print an explanation of what caused any failure.</p>
-</div>
-</div>
-<p>The most commonly used form in the library is <code>bit_debug_assertion(...)</code>. This form expands to nothing <em>unless</em> the programmer sets the <code>BIT_DEBUG</code> flag at compile time. That is typically done automatically <em>only</em> for debug software builds and is <em>never</em> done for release/optimized builds.</p>
-<p>There is also a version <code>bit_assertion(...)</code> that is very similar to the [<code>std::assert</code>] macro with the addition of a message. Typically these are for assertions where the cost of the check is cheap compared to the cost of the work done in the method. This form expands to nothing <em>only if</em> the <code>NDEBUG</code> flag is set a compile time.</p>
+<p>For this reason, we include the <a href="../../content/verify/index.html"><code>bit_verify</code></a> macro. The macro expands to nothing <em>unless</em> the programmer sets the <code>BIT_VERIFY</code> flag at compile time. That is typically done automatically <em>only</em> for debug software builds and is <em>never</em> done for release/optimized builds.</p>
 
 
 </section>

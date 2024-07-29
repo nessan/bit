@@ -459,19 +459,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Assertions</span></a>
+  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -563,7 +563,7 @@ window.Quarto = {
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our assertion macros and compiler flags that control them -->
+<!-- Our verify macro and compiler flag that controls it -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
@@ -620,7 +620,7 @@ Size checking
 </div>
 <div class="callout-body-container callout-body">
 <p>The two vectors in question must be of the same size.<br>
-Set the <code>BIT_DEBUG</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.</p>
+Set the <code>BIT_VERIFY</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.</p>
 </div>
 </div>
 <div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="kw">operator</span><span class="op">~()</span> <span class="at">const</span><span class="op">;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

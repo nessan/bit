@@ -459,19 +459,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Assertions</span></a>
+  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -563,7 +563,7 @@ window.Quarto = {
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our assertion macros and compiler flags that control them -->
+<!-- Our verify macro and compiler flag that controls it -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
@@ -614,7 +614,7 @@ p(\lambda) = \lambda ^7 + \lambda ^6 + \lambda ^5 + \lambda ^4 + \lambda ^3 + \l
 <div class="sourceCode" id="annotated-cell-4"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-4-1"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="annotated-cell-4-2"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
 <span id="annotated-cell-4-3"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// For this example - turn off BIT_DEBUG and enable optimization here!</span></span>
+<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// For this example - turn off BIT_VERIFY and enable optimization here!</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-5" class="code-annotation-target"><a href="#annotated-cell-4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">512</span><span class="op">);</span></span>
 <span id="annotated-cell-4-6"><a href="#annotated-cell-4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> p <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
 <span id="annotated-cell-4-7"><a href="#annotated-cell-4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Characteristic polynomial:</span><span class="sc">\n</span><span class="st">"</span> <span class="op">&lt;&lt;</span> p <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span><span class="op">;</span></span>

@@ -459,19 +459,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Assertions</span></a>
+  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/bit_assertion/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -563,7 +563,7 @@ window.Quarto = {
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our assertion macros and compiler flags that control them -->
+<!-- Our verify macro and compiler flag that controls it -->
 <!-- Formatted links to the pages for the bit::vector class -->
 <!-- Formatted links to the pages for the bit::matrix class -->
 <!-- Formatted links to the pages for the bit::gauss class -->
@@ -628,7 +628,7 @@ Bounds checking
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Generally, these methods do <em>not</em> check whether the index <code>i</code> is in bounds. The behavior is undefined if it is out of bounds, but it will surely not be good! Set the <code>BIT_DEBUG</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.</p>
+<p>Generally, these methods do <em>not</em> check whether the index <code>i</code> is in bounds. The behavior is undefined if it is out of bounds, but it will surely not be good! Set the <code>BIT_VERIFY</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.</p>
 </div>
 </div>
 <p><span class="bt">Example</span></p>
@@ -672,7 +672,7 @@ Bounds checking
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
 <p><a href="../../content/vector/reference.html"><code>vector::reference</code></a><br>
 <a href="../../content/vector/size.html"><code>vector::size</code></a><br>
-<a href="../../content/bit_assertion/index.html"><code>bit_assertion</code></a></p>
+<a href="../../content/verify/index.html"><code>bit_verify</code></a></p>
 
 
 </section>

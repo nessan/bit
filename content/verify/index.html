@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2) - bit::vector — Appending Elements</title>
+<title>Linear Algebra over GF(2) - Verification Checks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,6 +63,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../content/verify/index.qmd#compiler-flags" rel="next">
 <link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -140,13 +141,13 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2) - bit::vector — Appending Elements">
+<meta property="og:title" content="Linear Algebra over GF(2) - Verification Checks">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
+<meta property="og:image" content="https://nessan.github.io/bit/content/verify/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2) - bit::vector — Appending Elements">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - Verification Checks">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/content/vector/assets/images/logo.jpg">
+<meta name="twitter:image" content="https://nessan.github.io/bit/content/verify/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -226,7 +227,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Appending Elements</h1>
+          <h1 class="quarto-secondary-nav-title">Verification Checks</h1>
         </a>     
     </div>
   </nav>
@@ -459,7 +460,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/verify/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Verifications</span></a>
   </div>
 </li>
@@ -529,17 +530,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#template-parameters" id="toc-template-parameters" class="nav-link active" data-scroll-target="#template-parameters">Template Parameters</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#compiler-flags" id="toc-compiler-flags" class="nav-link" data-scroll-target="#compiler-flags">Compiler Flags</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#design-rationale" id="toc-design-rationale" class="nav-link" data-scroll-target="#design-rationale">Design Rationale</a>
+  <ul class="collapse">
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/vector/append.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/verify/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Appending Elements</h1>
+<h1 class="title d-none d-lg-block">Verification Checks</h1>
 </div>
 
 
@@ -573,143 +579,103 @@ window.Quarto = {
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<p>We have methods that add bits/elements taken from various sources to the end of a bit-vector.</p>
-<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span><span class="dt">bool</span> src<span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span><span class="at">const</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>src<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">Appends a single value to the end of the bit-vector. It is a synonym for the <a href="../../content/vector/push-pop.html"><code>vector::push</code></a> method.</span>
-</dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="2">Appends all the elements from <code>src</code> to the end of the bit-vector.</span>
-</dd>
-</dl>
-<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span>Src src<span class="op">);</span></span>
-<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span><span class="bu">std::</span>initializer_list<span class="op">&lt;</span>Src<span class="op">&gt;</span> src<span class="op">);</span></span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Src<span class="op">&gt;&amp;</span> src<span class="op">);</span></span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> Iter<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-11" class="code-annotation-target"><a href="#annotated-cell-2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span>Iter b<span class="op">,</span> Iter e<span class="op">);</span></span>
-<span id="annotated-cell-2-12"><a href="#annotated-cell-2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-14" class="code-annotation-target"><a href="#annotated-cell-2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>append<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>bitset<span class="op">&lt;</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>bs<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="1">Appends the bits from a single word <code>src</code>, which is some unsigned integer type.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Takes an initializer-style list of unsigned integers and appends their bits to the vector.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="8" data-code-annotation="3">Takes a <code>std::vector</code> of unsigned integers and appends their bits to the vector.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="4">4</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="11" data-code-annotation="4">Takes any iteration of unsigned integers and appends their bits to the vector.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="5">5</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="14" data-code-annotation="5">Appends all <code>N</code> bits from a <code>std:::bitset&lt;N&gt;</code> to the vector.</span>
-</dd>
-</dl>
-<p>These methods return a reference to <code>*this</code> so they can be chained with other calls.</p>
-<section id="template-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="template-parameters">Template Parameters</h3>
-<div class="table-responsive">
-<table class="table-bordered table-hover caption-top table">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 90%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Src</code></td>
-<td>The type of the unsigned integers whose bits are getting appended to the vector. There is <em>no</em> requirement that <code>Src</code> and <code>Block</code> are the same. For example, we can add the bits from a list of 32-bit unsigned integers while the storage scheme for the vector remains the default 64-bit type.</td>
-</tr>
-<tr class="even">
-<td><code>Iter</code></td>
-<td>An iterator–might be the type returned by any <code>std::cbegin(collection)</code> etc. <code>Iter::value_type</code> should be some unsigned integer type.</td>
-</tr>
-</tbody>
-</table>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We have a macro that is used to check a condition and, on failures, cause the program to exit with a customizable message.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bit_verify<span class="op">(</span>condition<span class="op">,</span> <span class="op">...)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the <code>BIT_VERIFY</code> flag is set at compile time then <code>condition</code> is checked and if it fails the program exits with a custom message synthesized from the rest of the arguments. If the <code>BIT_VERIFY</code> flag is <em>not</em> set then the macro expands to a no-op.</p>
+<p>Assuming a check is “on”, if <code>condition</code> evaluates to <code>false</code> then <code>bit_verify</code> calls</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit_exit<span class="op">(</span>message<span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>bit_exit(message)</code> macro passes the <code>message</code> and the source code location of the failure to <code>bit::exit(...)</code>. That function prints the source code location of the failure along with the <code>message</code> payload and then <strong>exits</strong> the program.</p>
+<p>The <code>bit::exit</code> function needs source code location parameters (the filename, the line number, and the function name), and the <code>bit_exit</code> macro automatically adds those. You typically use the <code>message</code> argument to print the values of the variables that triggered the failure. The message can be anything that can be formatted using the facilities in <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p><span class="bt">Example</span></p>
-<div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="annotated-cell-3-2"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="annotated-cell-3-3"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-4" class="code-annotation-target"><a href="#annotated-cell-3-4" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector v<span class="op">;</span></span>
-<span id="annotated-cell-3-5"><a href="#annotated-cell-3-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-6" class="code-annotation-target"><a href="#annotated-cell-3-6" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>append<span class="op">(</span><span class="dt">uint8_t</span><span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
-<span id="annotated-cell-3-7"><a href="#annotated-cell-3-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-3-8" class="code-annotation-target"><a href="#annotated-cell-3-8" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>append<span class="op">({</span><span class="dt">uint8_t</span><span class="op">(</span><span class="dv">255</span><span class="op">),</span> <span class="dt">uint8_t</span><span class="op">(</span><span class="dv">0</span><span class="op">)});</span></span>
-<span id="annotated-cell-3-9"><a href="#annotated-cell-3-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-3-10" class="code-annotation-target"><a href="#annotated-cell-3-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">uint8_t</span><span class="op">&gt;</span> vec<span class="op">{</span><span class="dv">255</span><span class="op">,</span> <span class="dv">0</span><span class="op">};</span></span>
-<span id="annotated-cell-3-11"><a href="#annotated-cell-3-11" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>append<span class="op">(</span>vec<span class="op">);</span></span>
-<span id="annotated-cell-3-12"><a href="#annotated-cell-3-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-3-13" class="code-annotation-target"><a href="#annotated-cell-3-13" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>append<span class="op">(</span>vec<span class="op">.</span>cbegin<span class="op">(),</span> vec<span class="op">.</span>cend<span class="op">());</span></span>
-<span id="annotated-cell-3-14"><a href="#annotated-cell-3-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-3-15" class="code-annotation-target"><a href="#annotated-cell-3-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>bitset<span class="op">&lt;</span><span class="dv">8</span><span class="op">&gt;</span> bs<span class="op">(</span><span class="dv">255</span><span class="op">);</span></span>
-<span id="annotated-cell-3-16"><a href="#annotated-cell-3-16" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>append<span class="op">(</span>bs<span class="op">);</span></span>
-<span id="annotated-cell-3-17"><a href="#annotated-cell-3-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v<span class="op">.</span>to_string<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<span id="annotated-cell-3-18"><a href="#annotated-cell-3-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout-title-container flex-fill">
+Microsoft compiler
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Microsoft’s old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine. Add the <code>/Zc:preprocessor</code> flag to use that upgrade at compile time. Our <code>CMake</code> module <code>compiler_init</code> does that automatically for you.</p>
+</div>
+</div>
+</section>
+<section id="compiler-flags" class="level2">
+<h2 class="anchored" data-anchor-id="compiler-flags">Compiler Flags</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>BIT_VERIFY</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you set the <code>BIT_VERIFY</code> flag, the library will perform demanding but potentially useful safety assertions on indices, size equality checks, etc. Otherwise, all the <code>bit_verify</code> calls are no-ops</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p><span class="bt">Example — Snippet from the <code>bit::vector&lt;&gt;::set</code> method</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// </span><span class="an">@brief</span><span class="co"> Set the element at index `i` to 1.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>set<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    bit_verify<span class="op">(</span>i <span class="op">&lt;</span> <span class="va">m_size</span><span class="op">,</span> <span class="st">"index `i` = "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" must be &lt; `m_size` which is "</span> <span class="op">&lt;&lt;</span> <span class="va">m_size</span><span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here <code>m_size</code> is holds the size of the vector — so we must have <code>i &lt; m_size</code></p>
+<p>To check every element access, set the <code>BIT_VERIFY</code> flag during compiles. If the assertion fails, the program exits with an error message that gives the offending values.</p>
+<p>The <code>bit_verify</code> line expands to <em>nothing</em> if the <code>BIT_VERIFY</code> flag is not set during compiles.</p>
+<p><span class="bt">Example — Message from an assertion failure</span></p>
+<div class="sourceCode" id="annotated-cell-5"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-1" class="code-annotation-target"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define BIT_VERIFY</span></span>
+<span id="annotated-cell-5-2"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="annotated-cell-5-3"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-5" class="code-annotation-target"><a href="#annotated-cell-5-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t n <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector<span class="op">&lt;&gt;</span> v<span class="op">(</span>n<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-7" class="code-annotation-target"><a href="#annotated-cell-5-7" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set<span class="op">(</span>n<span class="op">);</span></span>
+<span id="annotated-cell-5-8"><a href="#annotated-cell-5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="annotated-cell-5-9"><a href="#annotated-cell-5-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="4" data-code-annotation="1">Default constructor makes an empty vector.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="1" data-code-annotation="1">For the sake of the example we added code to make sure the <code>bit_verify</code> is triggered. In normal usage, the flag is passed through the compiler command line.</span>
 </dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="6" data-code-annotation="2">Appends eight zeros.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="5" data-code-annotation="2">Construct a vector of size 12 and then attempt to set the “last” element.</span>
 </dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="8" data-code-annotation="3">Appends a list of eight 1-bits and eight 0-bits.</span>
-</dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="4">4</dt>
-<dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="10" data-code-annotation="4">Appends a <code>std::vector</code> with eight 1-bits and eight 0-bits.</span>
-</dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="5">5</dt>
-<dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="13" data-code-annotation="5">Appends a <code>std::vector</code> with eight 1-bits and eight 0-bits using the usual iterators.</span>
-</dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="6">6</dt>
-<dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="15" data-code-annotation="6">Appends a <code>std::bitset</code> with eight 1-bits.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="7" data-code-annotation="3">A deliberate but typical <em>off-by-one</em> index error as the valid indices are from 0 to <code>n-1</code>, which is 11.</span>
 </dd>
 </dl>
 <p><span class="bt">Output</span></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span> 00000000</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span> 000000001111111100000000</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span> 0000000011111111000000001111111100000000</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span> 00000000111111110000000011111111000000001111111100000000</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">v:</span> 0000000011111111000000001111111100000000111111110000000011111111</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">BIT</span> VERIFY FAILED:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Function</span> <span class="st">'set'</span> <span class="er">(</span><span class="ex">vector.h,</span> line 911<span class="kw">)</span><span class="bu">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Statement</span> <span class="st">'i &lt; m_size'</span> is NOT true: Index i = 12 must be <span class="op">&lt;</span> <span class="kw">`</span><span class="ex">m_size</span><span class="kw">`</span> = 12</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The program will then exit.</p>
 </section>
+<section id="design-rationale" class="level2">
+<h2 class="anchored" data-anchor-id="design-rationale">Design Rationale</h2>
+<p>In the development cycle, it can be helpful to range-check indices and so on. However, those checks are expensive and can slow down numerical code by orders of magnitude. Therefore, we don’t want there to be any chance that those verifications are accidentally left “on” in the production code. Our <code>bit_verify(...)</code> macro covers this type of verification. Turning on the checks requires the programmer to take a specific action — namely, she must set the <code>BIT_VERIFY</code> flag during compile time.</p>
+<p>For example, here is a pre-condition from a hypothetical <code>dot(Vector u, Vector v)</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bit_verify<span class="op">(</span>u<span class="op">.</span>size<span class="op">()</span> <span class="op">==</span> v<span class="op">.</span>size<span class="op">(),</span> <span class="st">"Vector sizes </span><span class="sc">{}</span><span class="st"> and </span><span class="sc">{}</span><span class="st"> DO NOT match!"</span><span class="op">,</span> u<span class="op">.</span>size<span class="op">(),</span> v<span class="op">.</span>size<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This code checks that the two vector arguments have equal length — a necessary constraint for the dot product operation to make sense. If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.</p>
+<p>The check here is <strong>off</strong> by default, and you need to do something special (i.e., define the <code>BIT_VERIFY</code> flag at compile time) to enable it. The idea is that production code may do many of these dot products, and we do not generally want to pay for the check. However, enabling these sorts of checks may be very useful during development.</p>
+<p>The <code>bit_verify(...)</code> macro expands to nothing <strong>unless</strong> you set the <code>BIT_VERIFY</code> flag at compile time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Macro-land
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither does <code>bit_verify</code>.</p>
+</div>
+</div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p><a href="../../content/vector/push-pop.html"><code>vector::push</code></a><br>
-<a href="../../content/vector/clear.html"><code>vector::clear</code></a><br>
-<a href="../../content/vector/join.html"><code>vector::join</code></a><br>
-<a href="../../content/vector/copy.html"><code>vector::copy</code></a></p>
+<p><a href="https://www.cplusplus.com/reference/cassert/assert/"><code>assert</code></a></p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1122,6 +1088,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../content/verify/index.html#compiler-flags" class="pagination-link" aria-label="Compiler Flags">
+        <span class="nav-page-text">Compiler Flags</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1130,7 +1105,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/vector/append.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/content/verify/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
