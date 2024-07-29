@@ -23,7 +23,7 @@ sub(std::size_t n) const const;                                             // <
 ::: {.callout-warning}
 # Bounds checking
 `(i0, j0)` has to be a valid index pair, and the requested dimensions must fit as a valid sub-matrix.
-Set the `BIT_DEBUG` flag at compile time to check these conditions --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check these conditions --- any violation will cause the program to abort with a helpful message.
 :::
 
 [Example]{.bt}

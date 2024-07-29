@@ -5,7 +5,7 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assertion.h"
+#include "verify.h"
 #include "matrix.h"
 #include "polynomial.h"
 
@@ -18,14 +18,14 @@ polynomial<Block, Allocator>
 characteristic_polynomial(const matrix<Block, Allocator>& A)
 {
     // Matrix needs to be non-empty and square.
-    bit_assertion(A.is_square(), "Matrix is {} x {} but it needs to be square!", A.rows(), A.cols());
+    bit_verify(A.is_square(), "Matrix is {} x {} but it needs to be square!", A.rows(), A.cols());
 
     // Make working copy of A.
     matrix<Block, Allocator> A_copy{A};
 
     // Get the Frobenius form of A as a vector of companion matrices (matrix gets destroyed doing that so use a copy).
     auto companion_matrices = compact_frobenius_form(A_copy);
-    bit_assertion(companion_matrices.size() > 0, "Something went wrong--the Frobenius form of A is empty!");
+    bit_verify(companion_matrices.size() > 0, "Something went wrong--the Frobenius form of A is empty!");
 
     auto retval = companion_matrix_characteristic_polynomial(companion_matrices[0]);
     for (std::size_t i = 1; i < companion_matrices.size(); ++i)
@@ -63,7 +63,7 @@ std::vector<vector<Block, Allocator>>
 compact_frobenius_form(const matrix<Block, Allocator>& A)
 {
     // The matrix needs to be non-empty and square
-    bit_assertion(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
+    bit_verify(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
 
     // Our return value is a vector of top rows for one or more companion matrices
     std::vector<vector<Block, Allocator>> retval;
@@ -92,14 +92,14 @@ vector<Block, Allocator>
 danilevsky(matrix<Block, Allocator>& A, std::size_t n = 0)
 {
     // The bit-matrix needs to be non-empty and square
-    bit_assertion(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
+    bit_verify(A.is_square(), "Matrix is {} x {} but it should be square!", A.rows(), A.cols());
 
     // Default case is to work on all of A
     std::size_t N = A.rows();
     if (n == 0) n = N;
 
     // If we were asked to look at a specific sub-matrix it better fit.
-    bit_debug_assertion(n <= N, "Asked to look at {} rows but matrix has only {} of them!", n, N);
+    bit_verify(n <= N, "Asked to look at {} rows but matrix has only {} of them!", n, N);
 
     // Handle an edge case.
     if (n == 1) {

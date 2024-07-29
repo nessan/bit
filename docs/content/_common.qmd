@@ -8,11 +8,9 @@ $$
 $$
 :::
 
-<!-- Our assertion macros and compiler flags that control them -->
-[`BIT_DEBUG`]:                          /content/bit_assertion/index.qmd
-[`NDEBUG`]:                             /content/bit_assertion/index.qmd
-[`bit_assertion`]:                      /content/bit_assertion/index.qmd
-[`bit_debug_assertion`]:                /content/bit_assertion/index.qmd
+<!-- Our verify macro and compiler flag that controls it -->
+[`BIT_VERIFY`]:                         /content/verify/index.qmd
+[`bit_verify`]:                         /content/verify/index.qmd
 
 <!-- Formatted links to the pages for the bit::vector class -->
 [`bit::vector`]:                        /content/vector/index.qmd

@@ -224,15 +224,13 @@ Method | Description
 
 ### Debugging
 
-You can set a compile-time flag [`BIT_DEBUG`] to enable range checking and other assertions.
+You can set a compile-time flag [`BIT_VERIFY`] to enable range checking and other assertions.
 These checks can have a substantial performance impact so typically are only used during development.
 
 Macro | Description
 ----- | -----------
-[`BIT_DEBUG`]               | This compile-time flag enables extra safety checks at the cost of performance.
-[`NDEBUG`]                  | This compile-time flag disables all our safety checks --- even the cheap ones.
-[`bit_debug_assertion`]     | These assertions are **only** checked if you set the `BIT_DEBUG` flag at compile time.
-[`bit_assertion`]           | These assertions are checked **unless* you set the `NDEBUG` flag at compile time.
+[`BIT_VERIFY`]              | This compile-time flag enables extra safety checks at the cost of performance.
+[`bit_verify`]              | These checks are **only** performed if you set the `BIT_VERIFY` flag at compile time.
 : {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
 
 ## Non-member Functions

@@ -23,7 +23,7 @@ replace(const bit::matrix &with);                                   // <3>
 ::: {.callout-warning}
 # Sizes must be compatible
 The sub-matrix `with` we are copying from must fit inside the existing bit-matrix!
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 These methods return a reference to `*this` so they can be chained with other calls.

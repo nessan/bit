@@ -3,8 +3,8 @@
 /// SPDX-License-Identifier: MIT
 
 // NOTE: Speed is not important here and we always want bounds checking.
-#ifndef BIT_DEBUG
-    #define BIT_DEBUG
+#ifndef BIT_VERIFY
+    #define BIT_VERIFY
 #endif
 
 #include "common.h"

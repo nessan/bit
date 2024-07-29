@@ -41,7 +41,7 @@ col(std::size_t j) const;                   // <6>
 ::: {.callout-warning}
 # Range checks
 In general, these methods do *not* check whether an index is in bounds, and if it isn't, the behavior is undefined (but bound to be wrong!)
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 [Example]{.bt}
@@ -82,4 +82,4 @@ Col 2: [1 0 1 0]
 
 ### See Also
 [`vector::reference`] \
-[`bit_assertion`]
+[`bit_verify`]

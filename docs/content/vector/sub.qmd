@@ -16,7 +16,7 @@ constexpr bit::vector sub(int len) const;                               // <2>
 ::: {.callout-warning}
 # Range checking
 `begin` has to be a valid index, and `abs(len)` elements must be available for copying.
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 

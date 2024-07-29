@@ -29,7 +29,7 @@ These methods all return a reference to `*this` so they can be chained with othe
 ::: {.callout-warning}
 # Dimensions must match
 The two bit-matrices in question must have the same dimensions.
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 There is one other bit-twiddling method:

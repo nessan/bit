@@ -168,9 +168,8 @@ These checks can have a severe performance penalty so typically are only turned 
 
 Macro | Description
 ----- | -----------
-[`BIT_DEBUG`]               | This compile-time flag enables extra safety checks.
-[`bit_debug_assertion`]        | These assertions are **only** checked if you set the `BIT_DEBUG` flag at compile time.
-[`bit_assertion`]       | These assertions are always checked.
+[`BIT_VERIFY`]          | This compile-time flag enables extra safety checks.
+[`bit_verify`]          | These checks are **only** done if you set the `BIT_VERIFY` flag at compile time.
 : {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
 
 ## Non-member Functions

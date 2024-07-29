@@ -206,7 +206,7 @@ public:
     /// @brief Read-only access to the i'th polynomial coefficient.
     constexpr bool get(std::size_t i) const
     {
-        bit_debug_assertion(i < size(), "Trying to access p_{} but coefficients stop at p_{}.", i, size() - 1);
+        bit_verify(i < size(), "Trying to access p_{} but coefficients stop at p_{}.", i, size() - 1);
         return m_coeffs.element(i);
     }
 
@@ -215,7 +215,7 @@ public:
     /// @note  You can a "natural" version of this method using the @c operator[](i) method.
     constexpr polynomial& set(std::size_t i, bool val = true)
     {
-        bit_debug_assertion(i < size(), "Trying to set p_{} to {} but coefficients stop at p_{}.", i, val, size() - 1);
+        bit_verify(i < size(), "Trying to set p_{} to {} but coefficients stop at p_{}.", i, val, size() - 1);
         if (val) {
             m_coeffs.set(i);
             if (i > m_degree || m_degree == ndeg) m_degree = i;
@@ -289,7 +289,7 @@ public:
     constexpr matrix_type operator()(const matrix_type& M) const
     {
         // The bit-matrix argument must be square.
-        bit_assertion(M.is_square(), "Matrix must be square -- not {} x {}!", M.rows(), M.cols());
+        bit_verify(M.is_square(), "Matrix must be square -- not {} x {}!", M.rows(), M.cols());
 
         // The returned bit-matrix will be N x N.
         auto N = M.rows();

@@ -5,10 +5,10 @@
 /// SPDX-License-Identifier: MIT
 #pragma once
 
-#include "bit_assertion.h"
+#include "vector.h"
+#include "matrix.h"
+#include "polynomial.h"
 #include "danilevsky.h"
 #include "gauss.h"
 #include "lu.h"
-#include "matrix.h"
-#include "polynomial.h"
-#include "vector.h"
+#include "verify.h"

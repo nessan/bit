@@ -203,23 +203,12 @@ Arbitrary $m \times n$ bit-matrices are supported, but some methods only make se
 
 Apart from using column-major versus row-major mode, the other potentially sensible idea would be to base the whole library on bit-matrices where bit-vectors are either $n \times 1$ or $1 \times n$ bit-matrices.
 
-## Assertions
+## Bounds checking
 
 In the development cycle, it can be helpful to confirm that indices are in bounds and perform other range checks.
 However, those checks are expensive and can slow down numerical code by orders of magnitude.
 We don't want those verifications accidentally left "on" in our production code.
 
-For this reason, we include our versions of the standard [`std::assert`] macro.
-
-::: {.callout-tip}
-# Assertions have messages
-Our assertions come with the ability to print an explanation of what caused any failure.
-:::
-
-The most commonly used form in the library is `bit_debug_assertion(...)`.
-This form expands to nothing *unless* the programmer sets the `BIT_DEBUG` flag at compile time.
+For this reason, we include the [`bit_verify`] macro.
+The macro expands to nothing *unless* the programmer sets the `BIT_VERIFY` flag at compile time.
 That is typically done automatically *only* for debug software builds and is *never* done for release/optimized builds.
-
-There is also a version `bit_assertion(...)` that is very similar to the  [`std::assert`] macro with the addition of a message.
-Typically these are for assertions where the cost of the check is cheap compared to the cost of the work done in the method.
-This form expands to nothing *only if* the `NDEBUG` flag is set a compile time.

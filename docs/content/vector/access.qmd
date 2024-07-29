@@ -34,7 +34,7 @@ constexpr reference back()
 # Bounds checking
 Generally, these methods do *not* check whether the index `i` is in bounds.
 The behavior is undefined if it is out of bounds, but it will surely not be good!
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 [Example]{.bt}
@@ -83,4 +83,4 @@ v.back():  0
 ### See Also
 [`vector::reference`] \
 [`vector::size`] \
-[`bit_assertion`]
+[`bit_verify`]

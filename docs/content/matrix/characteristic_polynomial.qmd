@@ -62,7 +62,7 @@ Therefore, we expect to get the $\FF$ coefficients as `11111111`, which agrees w
 #include <bit/bit.h>
 int main()
 {
-    // For this example - turn off BIT_DEBUG and enable optimization here!
+    // For this example - turn off BIT_VERIFY and enable optimization here!
     auto M = bit::matrix<>::random(512);        // <1>
     auto p = bit::characteristic_polynomial(M);
     std::cout << "Characteristic polynomial:\n" << p << "\n\n";

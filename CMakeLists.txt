@@ -30,8 +30,8 @@ if (PROJECT_IS_TOP_LEVEL)
     include(compiler_init)
     compiler_init(bit)
 
-    # Debug builds get the BIT_DEBUG flag set otherwise we set the BIT_NDEBUG flag
-    target_compile_definitions(bit INTERFACE $<IF:$<CONFIG:Debug>, BIT_DEBUG=1, BIT_NDEBUG=1>)
+    # Debug builds get the BIT_VERIFY flag set.
+    target_compile_definitions(bit INTERFACE $<$<CONFIG:Debug>: -DBIT_VERIFY>)
 
     # For neatness, we put the example executables in build/bin/.
     include(GNUInstallDirs)

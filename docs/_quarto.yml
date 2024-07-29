@@ -157,12 +157,12 @@ website:
             - text: "---"
             - section: "Debugging"
               contents:
-                  - text: "Assertions"
-                    href: content/bit_assertion/index.qmd
+                  - text: "Verifications"
+                    href: content/verify/index.qmd
                   - text: "Compiler Flags"
-                    href: content/bit_assertion/index.qmd#compiler-flags
+                    href: content/verify/index.qmd#compiler-flags
                   - text: "Design Rationale"
-                    href: content/bit_assertion/index.qmd#design-rationale
+                    href: content/verify/index.qmd#design-rationale
             - text: "---"
             - section: "Technical Notes"
               contents:

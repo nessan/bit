@@ -16,7 +16,7 @@ constexpr bit::vector &replace(const bit::vector &with);                  // <2>
 ::: {.callout-warning}
 # Sizes must be compatible
 The sub-vector `with` we are copying from must fit inside the existing bit-vector! \
-Set the `BIT_DEBUG` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
 :::
 
 Both methods return a reference to `*this` so can be chained with other calls.

@@ -15,8 +15,8 @@ constexpr bool none() const;    // <3>
 
 ::: {.callout-caution}
 # Empty bit-vectors
-Calling these methods for an empty bit-vector is likely an error --- if you set the `BIT_DEBUG` flag at compile time, we throw an exception with a helpful message.
-If the `BIT_DEBUG` flag is not set, `all()` and `none()` _both_ return `true` while `any()` will return `false`.
+Calling these methods for an empty bit-vector is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
+If the `BIT_VERIFY` flag is not set, `all()` and `none()` _both_ return `true` while `any()` will return `false`.
 :::
 
 [Example]{.bt}

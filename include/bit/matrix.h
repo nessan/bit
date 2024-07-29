@@ -382,8 +382,8 @@ public:
     /// @brief Read-only element access for the bit-matrix.
     constexpr bool element(std::size_t i, std::size_t j) const
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         return m_row[i][j];
     }
 
@@ -391,8 +391,8 @@ public:
     /// @return A @c bit::vector::reference
     constexpr auto element(std::size_t i, std::size_t j)
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         return m_row[i][j];
     }
 
@@ -406,14 +406,14 @@ public:
     /// @brief Read-only access to row @c i in the bit-matrix.
     constexpr const vector_type& row(std::size_t i) const
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
         return m_row[i];
     }
 
     /// @brief Read-write access to row @c i in the bit-matrix.
     constexpr vector_type& row(std::size_t i)
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
         return m_row[i];
     }
 
@@ -426,7 +426,7 @@ public:
     /// @brief Read-only access to columns @c j
     constexpr vector_type col(std::size_t j) const
     {
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         vector_type retval(rows());
         for (std::size_t i = 0; i < rows(); ++i) retval[i] = m_row[i][j];
         return retval;
@@ -437,15 +437,15 @@ public:
     constexpr matrix sub(std::size_t i0, std::size_t j0, std::size_t r, std::size_t c) const
     {
         // Start point OK?
-        bit_debug_assertion(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
-        bit_debug_assertion(j0 < cols(), "i0 = {},  rows() = {}", j0, cols());
+        bit_verify(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
+        bit_verify(j0 < cols(), "i0 = {},  rows() = {}", j0, cols());
 
         // Edge case?
         if (r == 0 || c == 0) return matrix{};
 
         // End point OK?
-        bit_debug_assertion(i0 + r - 1 < rows(), "i0 + r - 1 = {}, rows() = {}", i0 + r - 1, rows());
-        bit_debug_assertion(j0 + c - 1 < cols(), "j0 + c - 1 = {}, cols() = {}", j0 + c - 1, cols());
+        bit_verify(i0 + r - 1 < rows(), "i0 + r - 1 = {}, rows() = {}", i0 + r - 1, rows());
+        bit_verify(j0 + c - 1 < cols(), "j0 + c - 1 = {}, cols() = {}", j0 + c - 1, cols());
 
         // Set up the return value with the correct number of columns for each row.
         // Then reserve the space for the correct number of rows.
@@ -545,7 +545,7 @@ public:
     /// @note  There is a non-member function @c transpose(bit::matrix) for arbitrary rectangular bit-matrices.
     constexpr matrix& to_transpose()
     {
-        bit_assertion(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
         for (std::size_t i = 1; i < rows(); ++i) {
             for (std::size_t j = 0; j < i; ++j) {
                 bool tmp = m_row[i][j];
@@ -559,8 +559,8 @@ public:
     /// @brief Swap rows @c i0 and @c i1
     constexpr matrix& swap_rows(std::size_t i0, std::size_t i1)
     {
-        bit_debug_assertion(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
-        bit_debug_assertion(i1 < rows(), "i1 = {},  rows() = {}", i1, rows());
+        bit_verify(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
+        bit_verify(i1 < rows(), "i1 = {},  rows() = {}", i1, rows());
         std::swap(m_row[i0], m_row[i1]);
         return *this;
     }
@@ -568,8 +568,8 @@ public:
     /// @brief Swap columns @c j0 and @c j1
     constexpr matrix& swap_cols(std::size_t j0, std::size_t j1)
     {
-        bit_debug_assertion(j0 < cols(), "j0 = {},  cols() = {}", j0, cols());
-        bit_debug_assertion(j1 < cols(), "j1 = {},  cols() = {}", j1, cols());
+        bit_verify(j0 < cols(), "j0 = {},  cols() = {}", j0, cols());
+        bit_verify(j1 < cols(), "j1 = {},  cols() = {}", j1, cols());
         if (j0 == j1) return *this;
         for (std::size_t i = 0; i < rows(); ++i) {
             bool tmp = m_row[i][j0];
@@ -582,16 +582,16 @@ public:
     /// @brief Test whether a specific element is set.
     constexpr bool test(std::size_t i, std::size_t j) const
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         return m_row[i].test(j);
     }
 
     /// @brief Test whether all the elements are set.
     constexpr bool all() const
     {
-        // Handle empty matrices with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assertion(!empty(), "Calling this method for an empty matrix is likely an error!");
+        // Handle empty matrices with an exception if we're in a `BIT_VERIFY` scenario
+        bit_verify(!empty(), "Calling this method for an empty matrix is likely an error!");
 
         for (const auto& row : m_row)
             if (!row.all()) return false;
@@ -601,8 +601,8 @@ public:
     /// @brief Test whether any of the elements are set.
     constexpr bool any() const
     {
-        // Handle empty matrices with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assertion(!empty(), "Calling this method for an empty matrix is likely an error!");
+        // Handle empty matrices with an exception if we're in a `BIT_VERIFY` scenario
+        bit_verify(!empty(), "Calling this method for an empty matrix is likely an error!");
 
         for (const auto& row : m_row)
             if (row.any()) return true;
@@ -612,8 +612,8 @@ public:
     /// @brief Test whether none of the elements are set.
     constexpr bool none() const
     {
-        // Handle empty matrices with an exception if we're in a `BIT_DEBUG` scenario
-        bit_debug_assertion(!empty(), "Calling this method for an empty matrix is likely an error!");
+        // Handle empty matrices with an exception if we're in a `BIT_VERIFY` scenario
+        bit_verify(!empty(), "Calling this method for an empty matrix is likely an error!");
 
         for (const auto& row : m_row)
             if (!row.none()) return false;
@@ -631,7 +631,7 @@ public:
     /// @brief Compute the number of set elements on the bit-matrix diagonal.
     constexpr std::size_t count_diagonal() const
     {
-        bit_debug_assertion(is_square(), "Matrix is {} x {} but it should be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} but it should be square!", rows(), cols());
         std::size_t retval = 0;
         for (std::size_t i = 0; i < rows(); ++i)
             if (m_row[i][i]) ++retval;
@@ -674,8 +674,8 @@ public:
     /// @brief Set the element at a specific bit-matrix location.
     constexpr matrix& set(std::size_t i, std::size_t j)
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         m_row[i].set(j);
         return *this;
     }
@@ -691,7 +691,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& set_diagonal(int d = 0)
     {
-        bit_debug_assertion(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -706,8 +706,8 @@ public:
     /// @brief Reset the element in a specific bit-matrix location.
     constexpr matrix& reset(std::size_t i, std::size_t j)
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         m_row[i].reset(j);
         return *this;
     }
@@ -723,7 +723,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& reset_diagonal(int d = 0)
     {
-        bit_debug_assertion(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -738,8 +738,8 @@ public:
     /// @brief Flip a the element in a specific bit-matrix location.
     constexpr matrix& flip(std::size_t i, std::size_t j)
     {
-        bit_debug_assertion(i < rows(), "i = {}, rows() = {}", i, rows());
-        bit_debug_assertion(j < cols(), "j = {}, cols() = {}", j, cols());
+        bit_verify(i < rows(), "i = {}, rows() = {}", i, rows());
+        bit_verify(j < cols(), "j = {}, cols() = {}", j, cols());
         m_row[i].flip(j);
         return *this;
     }
@@ -755,7 +755,7 @@ public:
     /// @param d `d > 0` for a super-diagonal, `d < 0` for a sub-diagonal, `d == 0` for the main diagonal (default).
     constexpr matrix& flip_diagonal(int d = 0)
     {
-        bit_debug_assertion(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Method (silently) does nothing if the diagonal is out of range
         if (const auto ad = static_cast<std::size_t>(abs(d)); ad < rows()) {
@@ -772,7 +772,7 @@ public:
     constexpr matrix& add_identity()
     {
         // Check the precondition for debug builds.
-        bit_debug_assertion(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
+        bit_verify(is_square(), "Matrix is {} x {} -- needs to be square!", rows(), cols());
 
         // Run through the diagonal "adding" ones.
         for (std::size_t i = 0; i < rows(); ++i) element(i, i) ^= 1;
@@ -803,8 +803,8 @@ public:
     /// @brief Element by element AND'ing.
     constexpr matrix& operator&=(const matrix& rhs)
     {
-        bit_debug_assertion(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
-        bit_debug_assertion(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
+        bit_verify(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
+        bit_verify(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
         for (std::size_t i = 0; i < rows(); ++i) row(i) &= rhs.row(i);
         return *this;
     }
@@ -812,8 +812,8 @@ public:
     /// @brief Element by element OR'ing.
     constexpr matrix& operator|=(const matrix& rhs)
     {
-        bit_debug_assertion(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
-        bit_debug_assertion(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
+        bit_verify(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
+        bit_verify(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
         for (std::size_t i = 0; i < rows(); ++i) row(i) |= rhs.row(i);
         return *this;
     }
@@ -821,8 +821,8 @@ public:
     /// @brief Element by element XOR'ing.
     constexpr matrix& operator^=(const matrix& rhs)
     {
-        bit_debug_assertion(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
-        bit_debug_assertion(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
+        bit_verify(rhs.rows() == rows(), "rhs.rows() = {}, rows() = {}", rhs.rows(), rows());
+        bit_verify(rhs.cols() == cols(), "rhs.cols() = {}, cols() = {}", rhs.cols(), cols());
         for (std::size_t i = 0; i < rows(); ++i) row(i) ^= rhs.row(i);
         return *this;
     }
@@ -896,12 +896,12 @@ public:
     constexpr matrix& replace(std::size_t i0, std::size_t j0, const matrix& with)
     {
         // Start point OK?
-        bit_debug_assertion(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
-        bit_debug_assertion(j0 < cols(), "i0 = {},  rows() = {}", j0, cols());
+        bit_verify(i0 < rows(), "i0 = {},  rows() = {}", i0, rows());
+        bit_verify(j0 < cols(), "i0 = {},  rows() = {}", j0, cols());
 
         // Size of replacement OK?
-        bit_debug_assertion(i0 + with.rows() - 1 < rows(), "i1 = {}, rows() = {}", i0 + with.rows() - 1, rows());
-        bit_debug_assertion(j0 + with.cols() - 1 < cols(), "j1 = {}, cols() = {}", j0 + with.cols() - 1, cols());
+        bit_verify(i0 + with.rows() - 1 < rows(), "i1 = {}, rows() = {}", i0 + with.rows() - 1, rows());
+        bit_verify(j0 + with.cols() - 1 < cols(), "j1 = {}, cols() = {}", j0 + with.cols() - 1, cols());
 
         // Just use the bit-vector replacement mechanism for each effected row ...
         for (std::size_t i = 0; i < with.rows(); ++i) row(i0 + i).replace(j0, with.row(i));
@@ -1032,7 +1032,7 @@ public:
     /// @param pivot_col If present, on return this will have a set bit for every column with a pivot in this matrix.
     matrix& to_echelon_form(vector_type* pivot_col = 0)
     {
-        bit_assertion(!empty(), "Empty matrices are not supported by this method!");
+        bit_verify(!empty(), "Empty matrices are not supported by this method!");
 
         // Were we asked to track which columns contain pivots?
         if (pivot_col) {
@@ -1128,7 +1128,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 dot(const matrix<Block, Allocator>& lhs, const vector<Block, Allocator>& rhs)
 {
-    bit_debug_assertion(lhs.cols() == rhs.size(), "Matrix cols = {}, vector size = {}", lhs.cols(), rhs.size());
+    bit_verify(lhs.cols() == rhs.size(), "Matrix cols = {}, vector size = {}", lhs.cols(), rhs.size());
     std::size_t              r = lhs.rows();
     vector<Block, Allocator> retval{r};
     for (std::size_t i = 0; i < r; ++i) retval[i] = bit::dot(lhs.row(i), rhs);
@@ -1141,7 +1141,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr vector<Block, Allocator>
 dot(const vector<Block, Allocator>& lhs, const matrix<Block, Allocator>& rhs)
 {
-    bit_debug_assertion(lhs.size() == rhs.rows(), "Matrix rows = {}, vector size = {}", rhs.rows(), lhs.size());
+    bit_verify(lhs.size() == rhs.rows(), "Matrix rows = {}, vector size = {}", rhs.rows(), lhs.size());
     std::size_t              c = rhs.cols();
     vector<Block, Allocator> retval{c};
     for (std::size_t j = 0; j < c; ++j) retval[j] = bit::dot(lhs, rhs.col(j));
@@ -1153,7 +1153,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 dot(const matrix<Block, Allocator>& lhs, const matrix<Block, Allocator>& rhs)
 {
-    bit_debug_assertion(lhs.cols() == rhs.rows(), "lhs.cols() = {}, rhs.rows() = {}", lhs.cols(), rhs.rows());
+    bit_verify(lhs.cols() == rhs.rows(), "lhs.cols() = {}, rhs.rows() = {}", lhs.cols(), rhs.rows());
     std::size_t              r = lhs.rows();
     std::size_t              c = rhs.cols();
     matrix<Block, Allocator> retval{r, c};
@@ -1202,7 +1202,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 pow(const matrix<Block, Allocator>& M, std::size_t n)
 {
-    bit_assertion(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
+    bit_verify(M.is_square(), "Matrix is {} x {} but it should be square!", M.rows(), M.cols());
 
     // Edge case: M^0 = I?
     if (n == 0) return matrix<Block, Allocator>::identity(M.rows());
@@ -1231,7 +1231,7 @@ template<std::unsigned_integral Block, typename Allocator>
 constexpr matrix<Block, Allocator>
 pow2(const matrix<Block, Allocator>& M, std::size_t n)
 {
-    bit_assertion(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
+    bit_verify(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
 
     // Note the 2^0 = 1 so M^(2^0) = M and hence we start with a straight copy of M.
     matrix<Block, Allocator> retval{M};
@@ -1327,7 +1327,7 @@ template<std::unsigned_integral Block, typename Allocator>
 std::optional<matrix<Block, Allocator>>
 invert(const matrix<Block, Allocator>& M)
 {
-    bit_assertion(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
+    bit_verify(M.is_square(), "Matrix has dimensions {} x {} but it should be square!", M.rows(), M.cols());
 
     // Create the augmented matrix M|I
     auto n = M.rows();
@@ -1352,8 +1352,8 @@ print(std::ostream& strm, const bit::matrix<Block, Alloc>& A, const bit::vector<
       std::string_view delim = "\t")
 {
     // If either is empty there was likely a bug somewhere!
-    bit_debug_assertion(!A.empty(), "Matrix A is empty which is likely an error!");
-    bit_debug_assertion(!b.empty(), "Vector b is empty which is likely an error!");
+    bit_verify(!A.empty(), "Matrix A is empty which is likely an error!");
+    bit_verify(!b.empty(), "Vector b is empty which is likely an error!");
 
     // Most rows we ever print
     auto nr = std::max(A.rows(), b.size());
@@ -1392,9 +1392,9 @@ print(std::ostream& strm, const bit::matrix<Block, Alloc>& A, const bit::vector<
       const bit::vector<Block, Alloc>& x, std::string_view delim = "\t")
 {
     // If any are empty there was likely a bug somewhere!
-    bit_debug_assertion(!A.empty(), "Matrix A is empty which is likely an error!");
-    bit_debug_assertion(!b.empty(), "Vector b is empty which is likely an error!");
-    bit_debug_assertion(!x.empty(), "Vector x is empty which is likely an error!");
+    bit_verify(!A.empty(), "Matrix A is empty which is likely an error!");
+    bit_verify(!b.empty(), "Vector b is empty which is likely an error!");
+    bit_verify(!x.empty(), "Vector x is empty which is likely an error!");
 
     // Most rows we ever print
     auto nr = std::max({A.rows(), b.size(), x.size()});
@@ -1436,10 +1436,10 @@ print(std::ostream& strm, const bit::matrix<Block, Alloc>& A, const bit::vector<
       const bit::vector<Block, Alloc>& x, const bit::vector<Block, Alloc>& y, std::string_view delim = "\t")
 {
     // If any are empty there was likely a bug somewhere!
-    bit_debug_assertion(!A.empty(), "Matrix A is empty which is likely an error!");
-    bit_debug_assertion(!b.empty(), "Vector b is empty which is likely an error!");
-    bit_debug_assertion(!x.empty(), "Vector x is empty which is likely an error!");
-    bit_debug_assertion(!y.empty(), "Vector y is empty which is likely an error!");
+    bit_verify(!A.empty(), "Matrix A is empty which is likely an error!");
+    bit_verify(!b.empty(), "Vector b is empty which is likely an error!");
+    bit_verify(!x.empty(), "Vector x is empty which is likely an error!");
+    bit_verify(!y.empty(), "Vector y is empty which is likely an error!");
 
     // Most rows we ever print
     auto nr = std::max({A.rows(), b.size(), x.size(), y.size()});
@@ -1482,8 +1482,8 @@ print(std::ostream& strm, const bit::matrix<Block, Alloc>& A, const bit::matrix<
       std::string_view delim = "\t")
 {
     // If any matrix is empty there was likely a bug somewhere!
-    bit_debug_assertion(!A.empty(), "Matrix A is empty which is likely an error!");
-    bit_debug_assertion(!B.empty(), "Matrix B is empty which is likely an error!");
+    bit_verify(!A.empty(), "Matrix A is empty which is likely an error!");
+    bit_verify(!B.empty(), "Matrix B is empty which is likely an error!");
 
     // Most rows we ever print
     auto nr = std::max(A.rows(), B.rows());
@@ -1528,9 +1528,9 @@ print(std::ostream& strm, const bit::matrix<Block, Alloc>& A, const bit::matrix<
       const bit::matrix<Block, Alloc>& C, std::string_view delim = "\t")
 {
     // If any matrix is empty there was likely a bug somewhere!
-    bit_debug_assertion(!A.empty(), "Matrix A is empty which is likely an error!");
-    bit_debug_assertion(!B.empty(), "Matrix B is empty which is likely an error!");
-    bit_debug_assertion(!C.empty(), "Matrix C is empty which is likely an error!");
+    bit_verify(!A.empty(), "Matrix A is empty which is likely an error!");
+    bit_verify(!B.empty(), "Matrix B is empty which is likely an error!");
+    bit_verify(!C.empty(), "Matrix C is empty which is likely an error!");
 
     // Most rows we ever print
     auto nr = std::max({A.rows(), B.rows(), C.rows()});
