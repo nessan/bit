@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Linear Algebra over GF(2) - The bit::vector Class</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../pages/vector/index.qmd#declaration" rel="next">
+<link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V57HYKPDW8"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Linear Algebra over GF(2) - The bit::vector Class">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
+<meta property="og:site_name" content="Linear Algebra over GF(2)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - The bit::vector Class">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">bit</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/vector/index.html"> 
+<span class="menu-text">Vectors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/matrix/index.html"> 
+<span class="menu-text">Matrices</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/polynomial/index.html"> 
+<span class="menu-text">Polynomials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/notes/index.html"> 
+<span class="menu-text">Tech Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit"><i class="bi bi-github" role="img">
+</i> 
+ <span class="dropdown-text">Project Repo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit/issues"><i class="bi bi-bug" role="img">
+</i> 
+ <span class="dropdown-text">Report a Bug</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+</i> 
+ <span class="dropdown-text">Ask a Question</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+    <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
+    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title">The <code>bit::vector</code> Class</h1>
+        </a>     
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Bit-Vectors</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/vector/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Bit-Matrices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/matrix/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Gaussian Elimination</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/gauss/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">LU Decomposition</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lu/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Bit-Polynomials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/polynomial/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Declaration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Class Constants &amp; Types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instance Methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Non-member Functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Debugging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/verify/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Verifications</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compiler Flags</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design Rationale</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Technical Notes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/notes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/notes/gf2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Working in GF(2)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/notes/design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Library Design</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Danilevsky’s Method</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/notes/reduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Polynomial Reduction</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#declaration" id="toc-declaration" class="nav-link" data-scroll-target="#declaration">Declaration</a>
+  <ul class="collapse">
+  <li><a href="#template-parameters" id="toc-template-parameters" class="nav-link" data-scroll-target="#template-parameters">Template Parameters</a></li>
+  </ul></li>
+  <li><a href="#class-constants-and-types" id="toc-class-constants-and-types" class="nav-link" data-scroll-target="#class-constants-and-types">Class Constants and Types</a></li>
+  <li><a href="#instance-methods" id="toc-instance-methods" class="nav-link" data-scroll-target="#instance-methods">Instance Methods</a>
+  <ul class="collapse">
+  <li><a href="#construction" id="toc-construction" class="nav-link" data-scroll-target="#construction">Construction</a></li>
+  <li><a href="#element-access" id="toc-element-access" class="nav-link" data-scroll-target="#element-access">Element Access</a></li>
+  <li><a href="#iteration" id="toc-iteration" class="nav-link" data-scroll-target="#iteration">Iteration</a></li>
+  <li><a href="#capacity" id="toc-capacity" class="nav-link" data-scroll-target="#capacity">Capacity</a></li>
+  <li><a href="#modifiers" id="toc-modifiers" class="nav-link" data-scroll-target="#modifiers">Modifiers</a></li>
+  <li><a href="#import-and-export" id="toc-import-and-export" class="nav-link" data-scroll-target="#import-and-export">Import and Export</a></li>
+  <li><a href="#string-conversions" id="toc-string-conversions" class="nav-link" data-scroll-target="#string-conversions">String Conversions</a></li>
+  <li><a href="#other-instance-methods" id="toc-other-instance-methods" class="nav-link" data-scroll-target="#other-instance-methods">Other Instance Methods</a></li>
+  <li><a href="#block-access" id="toc-block-access" class="nav-link" data-scroll-target="#block-access">Block Access</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging">Debugging</a></li>
+  </ul></li>
+  <li><a href="#non-member-functions" id="toc-non-member-functions" class="nav-link" data-scroll-target="#non-member-functions">Non-member Functions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">The <code>bit::vector</code> Class</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Shortcuts and links used throughout the documentation -->
+<!-- Some math shortcuts we use frequently in the documentation -->
+<div class="hidden">
+<p><span class="math display">\[
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
+\]</span></p>
+</div>
+<!-- Our verify macro and compiler flag that controls it -->
+<!-- Formatted links to the pages for the bit::vector class -->
+<!-- Formatted links to the pages for the bit::matrix class -->
+<!-- Formatted links to the pages for the bit::gauss class -->
+<!-- Formatted links to the pages for the bit::lu class -->
+<!-- Formatted links to the pages for the bit::polynomial class -->
+<!-- Formatted links to the pages for items in the standard library -->
+<!--Links to other software tools we reference -->
+<!-- Pages and Wikipedia articles referenced in the documentation -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>A <a href="../../pages/vector/index.html"><code>bit::vector</code></a> represents a vector over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\FF\)</span>) the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois Field</a> that has just two elements usually denoted 0 &amp; 1, or as the booleans true &amp; false, or as the bits set &amp; unset. Arithmetic over <span class="math inline">\(\FF\)</span> is mod 2, so addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
+<p>The <code>bit::vector</code> class is a hybrid between a <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a> and a <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, along with extra mathematical features to facilitate linear algebra.</p>
+<p>We often refer to a <code>bit::vector</code> object as a <em>bit-vector</em>.</p>
+<p>One can dynamically size and resize a <code>bit::vector</code> as needs dictate. A <code>std::bitset</code>, on the other hand, has a <em>fixed</em> size determined at compile time. <em>Boost</em> has a <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a> class that allows for runtime resizing, as its name suggests. However, that class does not support algebraic operations.</p>
+<p>It is worth noting that by default, a <code>bit::vector</code> prints in <em>vector-order</em>. For example, a bit-vector of size four will print as <span class="math inline">\(v_0 v_1 v_2 v_3\)</span> with the elements in increasing order with the least significant vector element, <span class="math inline">\(v_0\)</span>, coming <strong>first</strong> on the <em>left</em>. Contrast that to a <code>std::bitset</code>, which always prints in <em>bit-order</em>. The equivalent <code>std::bitset</code> with four elements prints as <span class="math inline">\(b_3 b_2 b_1 b_0\)</span> with the least significant bit <span class="math inline">\(b_0\)</span> printed <strong>last</strong> on the <em>right</em>.</p>
+<p>Of course, for many applications, printing in <em>bit-order</em> makes perfect sense. A size four bit-vector initialized with the hex number <code>0x1</code> will print as <code>1000</code>. A <code>std::bitset</code> prints the same value as <code>0001</code>, which will be more natural in <em>some</em> settings. For this reason, <code>bit::vector</code> also supports conversions to a string in <em>bit-order</em>, though it is not the default.</p>
+<p>It isn’t the default because our main aim here is linear algebra. In particular, bit-order is unnatural for <em>matrices</em> over <span class="math inline">\(\FF\)</span>. It is too confusing to print a matrix in anything but the natural order with the (0,0) element at the top left and proceed from there.</p>
+<p>A <code>bit::vector</code> packs its elements into an array of some unsigned integer type defined by the class template parameter <code>Block</code>. The default <code>Block</code> is an unsigned 64-bit word. Most of the methods defined in the <code>bit::vector</code> class operate on whole blocks simultaneously, so they are very efficient.</p>
+</section>
+<section id="declaration" class="level2">
+<h2 class="anchored" data-anchor-id="declaration">Declaration</h2>
+<p>Like everything in the library, this class is in the <code>bit</code> namespace and is defined in the header <code>&lt;bit/vector.h&gt;</code> as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> bit <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Block <span class="op">=</span> <span class="bu">std::</span>uint64_t<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           Allocator <span class="op">=</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>Block<span class="op">&gt;&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span> vector<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses. For example, your code might have a simple line like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">{</span><span class="dv">32</span><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This code creates a vector with 32 elements set to 0 by default. The bit-vector’s 32 elements are packed into a single 64-bit word, so this example has some spare capacity.</p>
+<section id="template-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="template-parameters">Template Parameters</h3>
+<div class="table-responsive">
+<table class="table-bordered table-hover caption-top table">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Block</code> = <code>std::uint64_t</code></td>
+<td>The elements of a bit-vector are packed into blocks of some <a href="https://en.cppreference.com/w/cpp/concepts/unsigned_integral"><code>std::unsigned_integral</code></a> type. The default size is 64 bits.</td>
+</tr>
+<tr class="even">
+<td><code>Allocator</code> = <code>std::allocator&lt;Block&gt;</code></td>
+<td>The default <code>Allocator</code> should be just fine for most purposes, but you can use your custom type to handle all memory allocation/destruction for blocks.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The default <code>Block</code> is 64-bits, the <em>native</em> size for many modern CPUs.</p>
+<p>Of course, if you need to use many smaller bit-vectors and have concerns about conserving space, you might use a different <code>Block</code>. Perhaps if the bit-vectors all fit in 8 bits, you might have code along the lines:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="dt">uint8_t</span><span class="op">&gt;;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">vector_type</span> v <span class="op">=</span> <span class="op">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Use a single <code>Block</code> type throughout your code!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In theory, there is no reason that one couldn’t intermingle operations between, say, a <code>bit::vector&lt;std::uint32_t&gt;</code> and a <code>bit::vector&lt;std::uint64_t&gt;</code> but doing so efficiently significantly increases code complexity, and the library doesn’t support this.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="class-constants-and-types" class="level2">
+<h2 class="anchored" data-anchor-id="class-constants-and-types">Class Constants and Types</h2>
+<div class="table-responsive">
+<table class="table-bordered table-hover caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>block_type</code></td>
+<td>We use a specific <a href="https://en.cppreference.com/w/cpp/concepts/unsigned_integral"><code>std::unsigned_integral</code></a> type to store the bit-vector elements in blocks. The default is <code>std::uint64_t</code>, where we store 64 elements per block.</td>
+</tr>
+<tr class="even">
+<td><code>allocator_type</code></td>
+<td>The block store vector uses this type of memory manager. The default is a <code>std::allocator&lt;block_type&gt;</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>npos</code></td>
+<td>A class constant of type <code>std::size_t</code> used to indicate search failures, etc.</td>
+</tr>
+<tr class="even">
+<td><code>reference</code></td>
+<td>A proxy <em>sub-class</em> representing an individual vector element (a single bit).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Occasionally, you may need to use more implementation-specific types:</p>
+<div class="table-responsive">
+<table class="table-bordered table-hover caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bits_per_block</code></td>
+<td>The number of bit-vector elements each block can hold. The default is 64.</td>
+</tr>
+<tr class="even">
+<td><code>block_store_type</code></td>
+<td>We store the blocks in a container of this type, a <code>std::vector&lt;block_type&gt;</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>blocks_needed(n)</code></td>
+<td>Class method returning the number of blocks needed to store a bit-vector of size <code>n</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="instance-methods" class="level2">
+<h2 class="anchored" data-anchor-id="instance-methods">Instance Methods</h2>
+<section id="construction" class="level3">
+<h3 class="anchored" data-anchor-id="construction">Construction</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/constructors.html"><code>vector::constructors</code></a></td>
+<td>Construct bit-vectors in various ways.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/random.html"><code>vector::random</code></a></td>
+<td>Factory method constructs a bit-vector with a random fill.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/specials.html"><code>vector::zeros</code></a></td>
+<td>Factory method to construct bit-vectors with all the bits set to 0.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/specials.html"><code>vector::ones</code></a></td>
+<td>Factory method to construct bit-vectors with all the bits set to 1.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/specials.html"><code>vector::unit</code></a></td>
+<td>Factory method to construct a unit bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/specials.html"><code>vector::checker_board</code></a></td>
+<td>Factory method to construct bit-vectors with bits in a checker-board pattern <code>1010101…</code>​ or <code>0101010…</code></td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/from.html"><code>vector::from</code></a></td>
+<td>Factory methods that construct bit-vectors from the bits in an integer or from strings.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="element-access" class="level3">
+<h3 class="anchored" data-anchor-id="element-access">Element Access</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/access.html"><code>vector::element</code></a></td>
+<td>Access an element in a bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/access.html"><code>vector::operator()</code></a></td>
+<td>Access an element in a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/access.html"><code>vector::operator[]</code></a></td>
+<td>Access an element in a bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/access.html"><code>vector::test</code></a></td>
+<td>Check the status of a particular element in a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/access.html"><code>vector::front</code></a></td>
+<td>Access the first element of a bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/access.html"><code>vector::back</code></a></td>
+<td>Access the final element of a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/all.html"><code>vector::all</code></a></td>
+<td>Are all the bits in the bit-vector set to 1?</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/all.html"><code>vector::any</code></a></td>
+<td>Are any bits in the bit-vector set to 1?</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/all.html"><code>vector::none</code></a></td>
+<td>Are none of the bits in the bit-vector set to 1?</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/count.html"><code>vector::count</code></a></td>
+<td>Count the set bits in a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/count.html"><code>vector::count0</code></a></td>
+<td>Count the unset bits in a bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/count.html"><code>vector::count1</code></a></td>
+<td>Count the set bits in a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/count.html"><code>vector::parity</code></a></td>
+<td>Parity is the number of set bits mod 2.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/sub.html"><code>vector::sub</code></a></td>
+<td>Extracts a sub-vector as a <em>distinct</em> copy of some of elements in a bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::blocks</code></a></td>
+<td>Access the underlying block store as a <code>std::vector&lt;Block&gt;</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::allocator</code></a></td>
+<td>Read-only access to the underlying <code>Allocator</code> for the block store.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="iteration" class="level3">
+<h3 class="anchored" data-anchor-id="iteration">Iteration</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/if_set_call.html"><code>vector::if_set_call</code></a></td>
+<td>Calls a function for each set index.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/first_set.html"><code>vector::first_set</code></a></td>
+<td>Returns the index location of the first set bit.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/first_set.html"><code>vector::next_set</code></a></td>
+<td>Returns the index location of the next set bit.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/first_set.html"><code>vector::final_set</code></a></td>
+<td>Returns the index location of the final set bit.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/first_set.html"><code>vector::prev_set</code></a></td>
+<td>Returns the index location of the previous set bit.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/indices.html"><code>vector::set_indices</code></a></td>
+<td>Returns the index locations of the set bits.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/indices.html"><code>vector::unset_indices</code></a></td>
+<td>Returns the index locations of the unset bits.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="capacity" class="level3">
+<h3 class="anchored" data-anchor-id="capacity">Capacity</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/size.html"><code>vector::size</code></a></td>
+<td>Returns the number of elements in the bit-vector</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/size.html"><code>vector::empty</code></a></td>
+<td>Queries whether the bit-vector is empty.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/capacity.html"><code>vector::capacity</code></a></td>
+<td>How many bits can a bit-vector hold before it resizes?</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/capacity.html"><code>vector::unused</code></a></td>
+<td>How many bits can be added before a bit-vector resizes?</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/reserve.html"><code>vector::reserve</code></a></td>
+<td>Reserves storage for a bit-vector without changing its <code>size()</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/reserve.html"><code>vector::shrink_to_fit</code></a></td>
+<td>Tries to reduce memory usage by freeing unused memory.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="modifiers" class="level3">
+<h3 class="anchored" data-anchor-id="modifiers">Modifiers</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/clear.html"><code>vector::clear</code></a></td>
+<td>Clears all the elements from the bit-vector so its <code>size()</code> becomes 0.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/push-pop.html"><code>vector::push</code></a></td>
+<td>Pushes an element onto the end of the bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/push-pop.html"><code>vector::pop</code></a></td>
+<td>Removes the last element from the bit-vector</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/append.html"><code>vector::append</code></a></td>
+<td>Adds elements/bits from various sources to the end of the bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/resize.html"><code>vector::resize</code></a></td>
+<td>Resizes the bit-vector, padding out any added values with zeros.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/swap_elements.html"><code>vector::swap_elements</code></a></td>
+<td>Swaps the values of two elements in the bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/swap.html"><code>vector::swap</code></a></td>
+<td>Swaps the contents of the bit-vector with another.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/replace.html"><code>vector::replace</code></a></td>
+<td>Methods to replace some sub-vectors of the bit-vector with other values.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/set.html"><code>vector::set</code></a></td>
+<td>Set various ranges of elements in the bit-vector to 1.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/set.html"><code>vector::reset</code></a></td>
+<td>Set various ranges of elements in the bit-vector to 0.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/set.html"><code>vector::flip</code></a></td>
+<td>Flip various ranges of elements in the bit-vector from 0 to 1 and vice versa.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/set_if.html"><code>vector::set_if</code></a></td>
+<td>Sets elements in a bit-vector based on the return value from a function of the element index.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/set_if.html"><code>vector::flip_if</code></a></td>
+<td>Flips values in a bit-vector based on the return value from a function of the element index.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator&amp;=</code></a></td>
+<td>Element-by-element logical <code>AND</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator^=</code></a></td>
+<td>Element-by-element logical <code>XOR</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator|=</code></a></td>
+<td>Element-by-element logical <code>OR</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator+=</code></a></td>
+<td>Element-by-element logical <code>XOR</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator-=</code></a></td>
+<td>Element-by-element logical <code>XOR</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator*=</code></a></td>
+<td>Element-by-element logical <code>AND</code> in-place between this bit-vector and another of equal size.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op-eq.html"><code>vector::operator~</code></a></td>
+<td>Flips the values of all elements in this bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/shift.html"><code>vector::operator&lt;&lt;=</code></a></td>
+<td>Left shift the elements of this bit-vector in-place.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/shift.html"><code>vector::operator&gt;&gt;=</code></a></td>
+<td>Right shift the elements of this bit-vector in-place.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/shift.html"><code>vector::operator&lt;&lt;</code></a></td>
+<td>Returns a left-shifted copy of this bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/shift.html"><code>vector::operator&gt;&gt;</code></a></td>
+<td>Returns a right-shifted copy of this bit-vector.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="import-and-export" class="level3">
+<h3 class="anchored" data-anchor-id="import-and-export">Import and Export</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/export_to.html"><code>vector::export_to</code></a></td>
+<td>Use the bits from the bit-vector to fill various destinations without resizing the destination.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/export_to.html"><code>vector::export_all_to</code></a></td>
+<td>Resize and fill a <code>std::vector</code> of some unsigned integers type with <strong>all</strong> the bits from this bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/set_to.html"><code>vector::set_to</code></a></td>
+<td>Overwrite the bit-vector with bits from various sources.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="string-conversions" class="level3">
+<h3 class="anchored" data-anchor-id="string-conversions">String Conversions</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/to_string.html"><code>vector::to_string</code></a></td>
+<td>Returns a binary-string representation using configurable characters for set and unset elements. The elements are in vector order.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/to_string.html"><code>vector::to_pretty_string</code></a></td>
+<td>Returns a formatted representation e.g.&nbsp;<code>[1 1 0 1 0 1]</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/to_string.html"><code>vector::to_bit_order</code></a></td>
+<td>Returns a binary-string representation using configurable characters for set and unset elements. The least significant bit is on the right.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/to_string.html"><code>vector::to_hex</code></a></td>
+<td>Returns a compact hex string representation of the bit-vector.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/to_string.html"><code>vector::polynomial</code></a></td>
+<td>Interprets the elements of a bit-vector as the coefficients of a polynomial over <span class="math inline">\(\FF\)</span> and returns a string representation of that polynomial.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/description.html"><code>vector::description</code></a></td>
+<td>Writes some descriptive data about the bit-vector to a stream.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="other-instance-methods" class="level3">
+<h3 class="anchored" data-anchor-id="other-instance-methods">Other Instance Methods</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/trimmed.html"><code>vector::trimmed_right</code></a></td>
+<td>Returns a copy of a bit-vector with any trailing zeros removed.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/trimmed.html"><code>vector::trimmed_left</code></a></td>
+<td>Returns a copy of a bit-vector with any leading zeros removed.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/trimmed.html"><code>vector::trimmed</code></a></td>
+<td>Returns a copy of a bit-vector with any leading or trailing zeros removed.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/riffled.html"><code>vector::riffled</code></a></td>
+<td>Returns a copy of a bit-vector with any added interleaved zeros.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/dot.html"><code>vector::dot</code></a></td>
+<td>Returns the <em>dot product</em> of this bit-vector with another of equal size.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/unit_floor.html"><code>vector::unit_floor</code></a></td>
+<td>Returns a unit bit-vector with its <code>1</code> at the location of our final set bit.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/unit_floor.html"><code>vector::unit_ceil</code></a></td>
+<td>Returns a unit bit-vector with its <code>1</code> at the location one slot past our final set bit.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="block-access" class="level3">
+<h3 class="anchored" data-anchor-id="block-access">Block Access</h3>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::bits_per_block</code></a></td>
+<td>The number of bit-vector elements that can fit in one storage block.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::block_store_type</code></a></td>
+<td>We store the underlying blocks in this type of container.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::blocks_needed</code></a></td>
+<td>Computes the number of blocks needed to store a particular bit-vector.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::allocator</code></a></td>
+<td>The memory manager for the block store.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::block_count</code></a></td>
+<td>The number of blocks in the block store.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::block</code></a></td>
+<td>Access an individual block.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::block_index_for</code></a></td>
+<td>Returns the index of the block holding a particular bit-vector element.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::bit_index_for</code></a></td>
+<td>Returns the specific bit inside that block where that particular bit-vector element resides.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::blocks</code></a></td>
+<td>Access the underlying block store as a <code>block_store_type</code></td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/blocks.html"><code>vector::clean</code></a></td>
+<td>This sets any extra/junk bits in the last occupied block to 0.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/blocks.html"><code>vector::block_constructor</code></a></td>
+<td>Construct a <code>bit::vector</code> by copying or <em>moving</em> a prefilled <code>block_store_type</code> of blocks.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="debugging" class="level3">
+<h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
+<p>You can set a compile-time flag <a href="../../pages/verify/index.html"><code>BIT_VERIFY</code></a> to enable range checking and other assertions. These checks can have a substantial performance impact so typically are only used during development.</p>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Macro</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/verify/index.html"><code>BIT_VERIFY</code></a></td>
+<td>This compile-time flag enables extra safety checks at the cost of performance.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/verify/index.html"><code>bit_verify</code></a></td>
+<td>These checks are <strong>only</strong> performed if you set the <code>BIT_VERIFY</code> flag at compile time.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="non-member-functions" class="level2">
+<h2 class="anchored" data-anchor-id="non-member-functions">Non-member Functions</h2>
+<div class="table-responsive">
+<table class="table-bordered table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../pages/vector/diff.html"><code>vector::diff</code></a></td>
+<td>Logical <code>DIFF</code> for two equal-sized bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/join.html"><code>vector::join</code></a></td>
+<td>Joins two or three bit-vectors to create a new one.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/dot.html"><code>vector::dot</code></a></td>
+<td>Returns the <em>dot product</em> of two equal sized bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/convolution.html"><code>vector::convolution</code></a></td>
+<td>Returns the convolution of two bit-vectors.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/to_string.html"><code>vector::polynomial</code></a></td>
+<td>Interprets the elements of a bit-vector as the coefficients of a polynomial over <span class="math inline">\(\FF\)</span> and returns a string representation of that polynomial.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator&amp;</code></a></td>
+<td>Element-by-element logical <code>AND</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator^</code></a></td>
+<td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator|</code></a></td>
+<td>Element-by-element logical <code>OR</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator+</code></a></td>
+<td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator-</code></a></td>
+<td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/logical-op.html"><code>vector::operator*</code></a></td>
+<td>Element-by-element logical <code>AND</code> between two equal-sized bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/stream.html"><code>vector::stream&lt;&lt;</code></a></td>
+<td>Stream input for bit-vectors.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/vector/stream.html"><code>vector::stream&gt;&gt;</code></a></td>
+<td>Stream output for bit-vectors.</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/vector/formatter.html"><code>vector::formatter</code></a></td>
+<td>Connect the <code>bit::vector</code> class to <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a> and friends.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/nessan\.github\.io\/bit");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../pages/vector/index.html#declaration" class="pagination-link" aria-label="Declaration">
+        <span class="nav-page-text">Declaration</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Copyright (c) Nessan Fitzmaurice</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Project is under the MIT License</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/nessan/bit">
+      <i class="bi bi-github" role="img" aria-label="GitHub Repo">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/nezzan">
+      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

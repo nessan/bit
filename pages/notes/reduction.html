@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2)</title>
+<title>Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,59 +20,28 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./assets/images/logo.jpg" rel="icon" type="image/jpeg">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../pages/notes/danilevsky.html" rel="prev">
+<link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -140,13 +109,13 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2)">
+<meta property="og:title" content="Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://nessan.github.io/bit/assets/images/logo.jpg">
+<meta property="og:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - Modular Reduction of \(x^N\) in GF(2)">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/assets/images/logo.jpg">
+<meta name="twitter:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -157,10 +126,10 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">bit</span>
     </a>
   </div>
@@ -171,23 +140,23 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/vector/index.html"> 
+    <a class="nav-link" href="../../pages/vector/index.html"> 
 <span class="menu-text">Vectors</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/matrix/index.html"> 
+    <a class="nav-link" href="../../pages/matrix/index.html"> 
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/polynomial/index.html"> 
+    <a class="nav-link" href="../../pages/polynomial/index.html"> 
 <span class="menu-text">Polynomials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/notes/index.html"> 
+    <a class="nav-link" href="../../pages/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -226,7 +195,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">The <code>bit</code>Library</h1>
+          <h1 class="quarto-secondary-nav-title">Modular Reduction of <span class="math inline">\(x^N\)</span> in GF(2)</h1>
         </a>     
     </div>
   </nav>
@@ -239,7 +208,7 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -255,31 +224,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Constants &amp; Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -297,31 +266,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -339,31 +308,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -381,25 +350,25 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
@@ -417,31 +386,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Constants &amp; Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -459,19 +428,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -489,31 +458,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/gf2.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/gf2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Working in GF(2)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/design.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/design.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Library Design</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Danilevsky’s Method</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/reduction.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/reduction.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Polynomial Reduction</span></a>
   </div>
 </li>
@@ -530,23 +499,25 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
-  <li><a href="#why-use-bit" id="toc-why-use-bit" class="nav-link" data-scroll-target="#why-use-bit">Why Use <code>bit</code>?</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a>
+  <li><a href="#power-polynomials-xn" id="toc-power-polynomials-xn" class="nav-link" data-scroll-target="#power-polynomials-xn">Power Polynomials <span class="math inline">\(x^N\)</span></a></li>
+  <li><a href="#an-iterative-technique-for-xn-mod-px" id="toc-an-iterative-technique-for-xn-mod-px" class="nav-link" data-scroll-target="#an-iterative-technique-for-xn-mod-px">An Iterative Technique for <span class="math inline">\(x^N \mod P(x)\)</span></a>
   <ul class="collapse">
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
-  <li><a href="#copyright-and-license" id="toc-copyright-and-license" class="nav-link" data-scroll-target="#copyright-and-license">Copyright and License</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#a-multiply-square-technique-for-xn-mod-px" id="toc-a-multiply-square-technique-for-xn-mod-px" class="nav-link" data-scroll-target="#a-multiply-square-technique-for-xn-mod-px">A Multiply &amp; Square Technique for <span class="math inline">\(x^N \mod P(x)\)</span></a>
+  <ul class="collapse">
+  <li><a href="#the-multiply-step" id="toc-the-multiply-step" class="nav-link" data-scroll-target="#the-multiply-step">The Multiply Step</a></li>
+  <li><a href="#the-square-step" id="toc-the-square-step" class="nav-link" data-scroll-target="#the-square-step">The Square Step</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/reduction.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">The <code>bit</code>Library</h1>
+<h1 class="title d-none d-lg-block">Modular Reduction of <span class="math inline">\(x^N\)</span> in GF(2)</h1>
 </div>
 
 
@@ -563,133 +534,212 @@ window.Quarto = {
 </header>
 
 
-<!-- The real landing page, like all the other pages, is in the pages/ directory -->
-<!-- Shortcuts and links used throughout the documentation -->
-<!-- Some math shortcuts we use frequently in the documentation -->
 <div class="hidden">
 <p><span class="math display">\[
 \newcommand{\FF}{\mathbb{F}_2}
-\newcommand{\R}{\mathbb{R}}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\renewcommand{\mod}{\mid}
 \]</span></p>
 </div>
-<!-- Our verify macro and compiler flag that controls it -->
-<!-- Formatted links to the pages for the bit::vector class -->
-<!-- Formatted links to the pages for the bit::matrix class -->
-<!-- Formatted links to the pages for the bit::gauss class -->
-<!-- Formatted links to the pages for the bit::lu class -->
-<!-- Formatted links to the pages for the bit::polynomial class -->
-<!-- Formatted links to the pages for items in the standard library -->
-<!--Links to other software tools we reference -->
-<!-- Pages and Wikipedia articles referenced in the documentation -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.</p>
-<p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="./pages/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="./pages/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="./pages/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\FF\)</span>.</p>
-<p>These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.</p>
-<p>Because arithmetic operations in <span class="math inline">\(\FF\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
-<p>The <code>bit</code> library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over <span class="math inline">\(\FF\)</span> and to look at the eigen-structure of bit-matrices. The <code>bit::polynomial</code> class has methods to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
+<p>Let <span class="math inline">\(P(x)\)</span> be a nonzero polynomial of degree <span class="math inline">\(n\)</span> over <span class="math inline">\(\FF\)</span>.</p>
+<p>Any polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be decomposed as: <span class="math display">\[
+    h(x) = q(x) P(x) + r(x),
+\]</span> <span class="math inline">\(q(x)\)</span> is the <em>quotient</em> polynomial for <span class="math inline">\(h(x)\)</span>, and the <em>remainder</em> polynomial <span class="math inline">\(r(x)\)</span> has degree less than <span class="math inline">\(n\)</span>.</p>
+<p>We say that <span class="math inline">\(r(x)\)</span> is the <em>modular reduction</em> of <span class="math inline">\(h(x)\)</span> by <span class="math inline">\(P(x)\)</span> <span class="math display">\[
+    r(x) = h(x)\bmod{P(x)}.
+\]</span> As a shorthand, we will also use “<span class="math inline">\(\mod\)</span>” to represent the modulo operation and write: <span class="math display">\[
+    r(x) = h(x) \mod P(x) \equiv h(x)\bmod{P(x)}.
+\]</span></p>
 </section>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>This library is header-only, so there is nothing to compile &amp; link–drop the <code>bit</code> include directory somewhere convenient, and you are good to go.</p>
-<p>Alternatively, if you are using <code>CMake</code>, you can use the standard <code>FetchContent</code> module by adding a few lines to your project’s <code>CMakeLists.txt</code> file:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(bit <span class="ot">URL</span> https://github.com/nessan/bit/releases/download/current/bit.zip)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_MakeAvailable</span>(bit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This command downloads and unpacks an archive of the current version of <code>bit</code> to your project’s build folder. You can then add a dependency on <code>bit::bit</code>, a <code>CMake</code> alias for <code>bit</code>. <code>FetchContent</code> will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.</p>
-<p>Used like this, <code>FetchContent</code> will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="power-polynomials-xn" class="level2">
+<h2 class="anchored" data-anchor-id="power-polynomials-xn">Power Polynomials <span class="math inline">\(x^N\)</span></h2>
+<p>The simplest, single-term, polynomials <span class="math inline">\(h(x) = x^N\)</span> are of particular importance especially for cases where <span class="math inline">\(N \gg 1\)</span>.</p>
+<p>This is because some numerical algorithms have a critical iteration step that can formally be written as: <span class="math display">\[
+    \bold{v} \gets M \cdot \bold{v},
+\]</span> where <span class="math inline">\(\bold{v}\)</span> is a bit-vector bucket of <span class="math inline">\(n\)</span> bits and <span class="math inline">\(M\)</span> is an <span class="math inline">\(n \times n\)</span> bit-matrix.</p>
+<p>For example, many well-known random number generators can be cast into this form where a <em>state vector</em> <span class="math inline">\(\bold{v}\)</span> is advanced at each step before it is reduced to the next random number. We note in passing that the generator is unlikely to be coded as matrix-vector multiply in GF(2) — <span class="math inline">\(M\)</span> is typically rather sparse and special so the iteration can be carried much more efficiently by other means. Nevertheless, the mathematical analysis of the generator will depend on the structure of <span class="math inline">\(M\)</span>.</p>
+<p>Now suppose you want to jump very far ahead in a random number stream. This lets one start a parallel thread of computation using the same set of random numbers but so far ahead that there is no danger of overlaps. To jump <span class="math inline">\(N\)</span> steps ahead where <span class="math inline">\(N \gg 1\)</span> we need to compute <span class="math display">\[
+    M^N \cdot \bold{v}.
+\]</span> Even if <span class="math inline">\(M\)</span> is sparse and special there usually is no easy way to compute <span class="math inline">\(M^N\)</span>.</p>
+<p>But suppose that <span class="math inline">\(P(x)\)</span> is the known degree <span class="math inline">\(n\)</span> characteristic polynomial for <span class="math inline">\(M\)</span> then the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton theorem</a> tells us that: <span class="math display">\[
+    P(M) = 0.
+\]</span> We can use that as follows — first, express <span class="math inline">\(x^N\)</span> as <span class="math display">\[
+    x^N = q(x)P(x) + r(x),
+\]</span> then using Cayley Hamilton we get <span class="math display">\[
+    M^N = q(M)P(M) + r(M) = r(M).
+\]</span> So we can replace <span class="math inline">\(M^N\)</span> by <span class="math inline">\(r(M)\)</span> where the degree of <span class="math inline">\(r\)</span> is less than <span class="math inline">\(n\)</span> and typically <span class="math inline">\(N \gg n\)</span>.</p>
+<p>Thus, once we know <span class="math inline">\(r(x) = x^N \mod P(x)\)</span>, we can jump <span class="math inline">\(N\)</span> steps ahead in the algorithm by computing the inexpensive polynomial sum <span class="math inline">\(r(M)\)</span>.</p>
+<p>For more details see <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf">this paper</a>.</p>
+</section>
+<section id="an-iterative-technique-for-xn-mod-px" class="level2">
+<h2 class="anchored" data-anchor-id="an-iterative-technique-for-xn-mod-px">An Iterative Technique for <span class="math inline">\(x^N \mod P(x)\)</span></h2>
+<p><span class="math inline">\(P(x)\)</span> has degree <span class="math inline">\(n\)</span> so there is a polynomial <span class="math inline">\(p(x)\)</span> of degree less than <span class="math inline">\(n\)</span> such that <span class="math display">\[
+    P(x) = p(x) + x^n = p_0 + p_1 x + \cdots + p_{n-1} x^{n-1} + x^n.
+\]</span> <span class="math inline">\(p(x)\)</span> can be represented as the vector of its coefficients: <span class="math display">\[
+    p(x) \sim \bold{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
+\]</span></p>
+<p>There are three cases to consider as we compute <span class="math inline">\(x^N \mod P(x)\)</span>.</p>
+<section id="case-n-n" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n">Case <span class="math inline">\(N &lt; n\)</span>:</h4>
+<p>If <span class="math inline">\(N &lt; n\)</span> then <span class="math inline">\(P(x)\)</span> does not divide <span class="math inline">\(x^N\)</span> so <span class="math display">\[
+    x^N \mod P(x) = x^N.
+\]</span> Defining <span class="math inline">\(\bold{u}_N\)</span> as the <em>unit</em> bit-vector of size <span class="math inline">\(n\)</span>, which is all zeros except for a one in the <span class="math inline">\(N^{\mathrm{th}}\)</span> slot, we can write: <span class="math display">\[
+    x^N \mod P(x) \sim \bold{u}_N \text{ if } N &lt; n.
+\]</span></p>
+</section>
+<section id="case-n-n-1" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n-1">Case <span class="math inline">\(N = n\)</span>:</h4>
+<p>In this case <span class="math inline">\(P(x) = p(x) + x^N\)</span> so <span class="math inline">\(x^N = P(x) - p(x)\)</span>.</p>
+<p>Therefore <span class="math display">\[
+    x^N \mod P(x) = -p(x).
+\]</span> In <span class="math inline">\(\FF\)</span> we can ignore that minus sign and write <span class="math display">\[
+    x^N \mod P(x) \sim \bold{p}  \text{ if } N = n.
+\]</span></p>
+</section>
+<section id="case-n-n-2" class="level4">
+<h4 class="anchored" data-anchor-id="case-n-n-2">Case <span class="math inline">\(N &gt; n\)</span>:</h4>
+<p>It remains to determine <span class="math inline">\(x^N \mod P(x)\)</span> for <span class="math inline">\(N &gt; n\)</span>.</p>
+<p>Now <em>any</em> polynomial <span class="math inline">\(h(x)\)</span> over <span class="math inline">\(\FF\)</span> can be written as some multiple of <span class="math inline">\(P(x)\)</span> plus a remainder term: <span class="math display">\[
+    h(x) = q(x) P(x) + r(x)
+\]</span> where the <em>quotient</em> <span class="math inline">\(q(x)\)</span> and <em>remainder</em> <span class="math inline">\(r(x)\)</span> are polynomials over <span class="math inline">\(\FF\)</span> and the degree of <span class="math inline">\(r(x)\)</span> is strictly less than <span class="math inline">\(n\)</span>. <span class="math display">\[
+    r(x) \equiv h(x) \mod P(x)
+\]</span></p>
+<p>Suppose we already know the explicit form for <span class="math inline">\(r(x) = h(x) \mod P(x)\)</span> <span class="math display">\[
+    r(x) = r_0 + r_1 x + \cdots + r_{n-2} x^{n-2} + r_{n-1} x^{n-1}.
+\]</span> That is, we know the elements in the bit-vector of coefficients for <span class="math inline">\(r(x)\)</span> <span class="math display">\[
+    r(x) \sim \bold{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
+\]</span></p>
+<p>Now <span class="math display">\[
+    x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mod P(x) = x\,r(x) \mod P(x).
+\]</span> Thus <span class="math display">\[
+    x\,h(x) \mod P(x) = \left(r_0 x + r_1 x^2 + \cdots + r_{n-2} x^{n-1}\right) \mod P(x) + r_{n-1} x^n \mod P(x).
+\]</span> Using our two known cases for <span class="math inline">\(N &lt; n\)</span> and <span class="math inline">\(N = n\)</span> we get <span class="math display">\[
+    x\,h(x) \mod P(x) \sim \lbrack 0 r_0 \ldots r_{n-2} \rbrack + r_{n-1} \bold{p}.
+\]</span> Thus if we know that <span class="math inline">\(h(x) \mod P(x) \sim \bold{r}\)</span> then <span class="math display">\[
+    x\,h(x) \mod P(x) \sim (\bold{r} \gg 1 ) \; \wedge \; r_{n-1} \bold{p}.
+\]</span> Here <span class="math inline">\(\bold{r} \gg 1\)</span> means we shift <span class="math inline">\(\bold{r}\)</span> one place to the right and introduce a zero on the left.</p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>Using the notation <span class="math display">\[
+    x^N \mod P(x) = r^N(x) \sim \bold{r}^N,
+\]</span> where <span class="math inline">\(\bold{r}^N\)</span> is a bit-vector of size <span class="math inline">\(n\)</span>: <span class="math display">\[
+    \bold{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack,
+\]</span> we can compute <span class="math inline">\(\bold{r}^N\)</span> directly for small values of <span class="math inline">\(N\)</span> and iteratively for larger values of <span class="math inline">\(N\)</span>: <span class="math display">\[
+    \bold{r}^N =
+    \begin{cases}
+        \bold{u}_N    &amp; \text{ for } N &lt; n \\
+        \bold{p}      &amp; \text{ for } N = n \\
+        \left(\bold{r}^{N-1} \gg 1 \right) \; \wedge \; r_{n-1}^{N-1} \, \bold{p}   &amp; \text{ for } N &gt; n
+    \end{cases}
+\]</span></p>
+</section>
+</section>
+<section id="a-multiply-square-technique-for-xn-mod-px" class="level2">
+<h2 class="anchored" data-anchor-id="a-multiply-square-technique-for-xn-mod-px">A Multiply &amp; Square Technique for <span class="math inline">\(x^N \mod P(x)\)</span></h2>
+<p>For cases of practical interest where <span class="math inline">\(N \gg 1\)</span>, the iterative scheme outlined above is much too slow.</p>
+<p>We can speed it up considerably by using a “multiply &amp; square” approach — there are variations on the theme but observe that we can always write: <span class="math display">\[
+    x^N =
+    \begin{cases}
+        x \, \left( x^{\frac{N-1}{2}} \right)^2 &amp; N \text{ odd,} \\
+        \left( x^{\frac{N}{2}} \right)^2        &amp; N \text{ even.}
+    \end{cases}
+\]</span> Of course, in our case, we want to compute <span class="math inline">\(x^N \mod P(x)\)</span> as opposed to just computing the value of <span class="math inline">\(x^N\)</span> but we can still borrow one of the fast exponentiation techniques described <a href="https://en.wikipedia.org/wiki/Modular_exponentiation">here</a> or more comprehensively in Knuth’s <em>The Art of Computer Programming, Vol 2</em>.</p>
+<p>To see that, we first note that if <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are polynomials over <span class="math inline">\(\FF\)</span> where <span class="math display">\[
+\begin{align}
+    f(x) \mod P(x) &amp;= r_f(x), \\
+    g(x) \mod P(x) &amp;= r_g(x)
+\end{align}
+\]</span> then it is easily verified that <span class="math display">\[
+    f(x) g(x) \mod P(x) = r_f(x) r_g(x) \mod P(x).
+\]</span> So while the product polynomial <span class="math inline">\(f(x) g(x)\)</span> may have a very high degree, we can always just work with the much simpler product <span class="math inline">\(r_f(x) r_g(x)\)</span> whose degree is at most <span class="math inline">\(2n -2\)</span>.</p>
+<p>In our case, suppose we already know <span class="math inline">\(r(x) = x^k \mod P(x)\)</span> for some power <span class="math inline">\(k\)</span> i.e.&nbsp;we know the coefficients <span class="math inline">\(\bold{r}\)</span> of the polynomial <span class="math inline">\(r(x)\)</span>: <span class="math display">\[
+    r(x) \sim \bold{r} = [r_0 r_1 \ldots r_{n-1}].
+\]</span> To get to <span class="math inline">\(x^N \mod P(x)\)</span> from there, the multiply and square algorithm requires two procedures:</p>
+<div class="table-responsive">
+<table class="table-bordered table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Step</th>
+<th style="text-align: center;">Procedure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>MultiplyStep</code></td>
+<td style="text-align: center;"><span class="math inline">\(\bold{r} \gets x r(x) \mod P(x)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>SquareStep</code></td>
+<td style="text-align: center;"><span class="math inline">\(\bold{r} \gets r(x)^2 \mod P(x)\)</span></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="callout-title-container flex-fill">
-Library versions
+<p>With those in place we can proceed as follows (this is just a sketch):</p>
+<div id="multiply_and_square" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{Modular Reduction of $x^N$} \begin{algorithmic} \Require $\mathbf{p}$, a bit-vector of size $n$, where $P(x) = x^n + p(x)$ and $\mathbf{p} \sim p(x)$. Unchanged on output. \Require $\mathbf{r}$, a destination bit-vector of size $n$. On output $\mathbf{r} \sim r(x) = x^N \mid P(x)$. \Procedure{reduce}{$N$, $\mathbf{p}$} \State $\mathbf{r} \gets \mathbf{0}$ \State $r_1 = 1$ \While{$N &gt; 0$} \If{$N \text{ mod } 2 = 1$} \State \Call{MultiplyStep}{$\mathbf{r}$} \EndIf \State \Call{SquareStep}{$\mathbf{r}$} \State $N \gets N \gg 1$ \EndWhile \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>The shown <code>URL</code> gets the <code>current</code> version of the library—whatever is in the main branch. For a fixed, stable library version (say release <code>2.0.0</code>), use a <code>URL</code> parameter like: <code>https://github.com/nessan/bit/releases/download/2.0.0/bit.zip</code>.</p>
+<p>Of course, the actual code handles the decomposition of <span class="math inline">\(P(x)\)</span> into the <span class="math inline">\(x^n + p(x)\)</span> and manages edge cases such as <span class="math inline">\(P(x) = 1\)</span>. It also handles the trivial cases where <span class="math inline">\(N \le n\)</span>, and for larger values of <span class="math inline">\(N\)</span> uses its binary representation in the main loop. Nevertheless, the sketch shows the importance of the two sub-procedures, <code>MultiplyStep</code> and <code>SquareStep</code> which we discuss next.</p>
+<section id="the-multiply-step" class="level3">
+<h3 class="anchored" data-anchor-id="the-multiply-step">The Multiply Step</h3>
+<p>If <span class="math inline">\(q(x)\)</span> is a polynomial of degree less than <span class="math inline">\(n\)</span> so that <span class="math display">\[
+    q(x) \mod P(x) = q(x),
+\]</span> then the following procedure performs the step <span class="math display">\[
+    q(x) \gets x q(x) \mod P(x),
+\]</span> where <span class="math inline">\(q(x)\)</span> is represented by the bit-vector of its <span class="math inline">\(n\)</span> coefficients <span class="math inline">\(\bold{q} = [q_0, q_1, \ldots, q_{n-1}]\)</span>.</p>
+<div id="MultiplyStep" class="pseudocode-container quarto-float" data-pseudocode-number="2" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{The step: $q(x) \gets x q(x) \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{MultiplyStep}{$\mathbf{q}$} \State $tmp \gets q_{n-1}$ \State $\mathbf{q} \gets \mathbf{q} \gg 1$ \If {$tmp$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{p}$ \EndIf \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
 </div>
 </section>
-<section id="example" class="level2">
-<h2 class="anchored" data-anchor-id="example">Example</h2>
-<p>Here is a simple example of a program that uses <code>bit</code>:</p>
-<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> c <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Bit-matrix M:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> M<span class="op">);</span></span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Characteristic poly c(x) = </span><span class="sc">{}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"c(M) yields:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">(</span>M<span class="op">));</span></span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="4" data-code-annotation="1">Creates a random <span class="math inline">\(6\times6\)</span> bit-matrix <span class="math inline">\(M\)</span> where 0 &amp; 1 are equally likely to occur.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Computes its characteristic polynomial <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="8" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
-</dd>
-</dl>
-<p><span class="bt">Sample Output (varies from run to run):</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bit-matrix</span> M:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 1 0│</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 1 0 0│</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 1 0 1│</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 1 0 1 0│</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 0 0 1 1 1│</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> poly c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^2 + x^3 + x^5 + x^6</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">c</span><span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">yields:</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The special nature of <span class="math inline">\(\FF\)</span>
+<section id="the-square-step" class="level3">
+<h3 class="anchored" data-anchor-id="the-square-step">The Square Step</h3>
+<p>In GF(2) if a polynomial <span class="math inline">\(q(x)\)</span> is represented by the coefficient bit-vector <span class="math inline">\(\bold{q} = [q_0, q_1, q_2, \ldots, q_{n-1}]\)</span>: <span class="math display">\[
+    q(x) = q_0 + q_1 x + q_2 x^2 + \ldots q_{n-1} x^{n-1},
+\]</span> one can easily show that <span class="math display">\[
+    q(x)^2 = q_0 + q_1 x^2 + q_2 x^4 + \cdots + q_{n-1} x^{2n-2},
+\]</span> so <span class="math inline">\(s(x) = q(x)^2\)</span> is represented by <em>riffling</em> the bit-vector <span class="math inline">\(\bold{q}\)</span> <span class="math display">\[
+    s(x) = q(x)^2 \sim \bold{s} = [q_0, 0, q_1, 0, q_2, \ldots, 0, q_{n-1}],
+\]</span> i.e.&nbsp;the bit-vector we get by interspersing the elements of <span class="math inline">\(\bold{q}\)</span> with zeros.</p>
+<p>Riffling can be done very efficiently block by block and the library has a <code>riffled(...)</code> method which takes a bit-vector <span class="math inline">\(\bold{q}\)</span> and fills a destination bit-vector <span class="math inline">\(\bold{s}\)</span> with a <em>riffled</em> version of <span class="math inline">\(\bold{q}\)</span>.</p>
+<p>The library also has a method <code>split(...)</code> that takes a bit-vector <span class="math inline">\(\bold{s}\)</span>, a number <span class="math inline">\(n\)</span>, and then fills two other bit-vectors <span class="math inline">\(\bold{l}\)</span> and <span class="math inline">\(\bold{h}\)</span> where <span class="math inline">\(\bold{l}\)</span> gets the first <span class="math inline">\(n\)</span> elements in <span class="math inline">\(\bold{v}\)</span> and <span class="math inline">\(\bold{h}\)</span> gets the rest. <span class="math display">\[
+\begin{align}
+    \bold{l} &amp;= [s_0, s_1, \ldots, s_{n-1}], \\
+    \bold{h} &amp;= [s_n, s_{n+1}, \dots].
+\end{align}
+\]</span> In polynomial terms this is equivalent to the decomposition: <span class="math display">\[
+    s(x) = l(x) + x^n \, h(x),
+\]</span> where the degree of <span class="math inline">\(l(x)\)</span> is less than <span class="math inline">\(n\)</span>.</p>
+<p>Given that <span class="math inline">\(s(x) = q(x)^2\)</span> we have <span class="math display">\[
+    q(x)^2 \mod P(x) = s(x) \mod P(x) = l(x) \mod P(x) + x^n h(x) \mod P(x),
+\]</span> and because the degree of <span class="math inline">\(l(x)\)</span> is less than <span class="math inline">\(n\)</span> we have <span class="math display">\[
+    q(x)^2 \mod P(x) = l(x) + x^n h(x) \mod P(x).
+\]</span> Writing <span class="math inline">\(h(x)\)</span> as <span class="math display">\[
+h(x) = \sum_{i=0}^{n-1} h_i x^i
+\]</span> it follows that <span class="math display">\[
+    q(x)^2 \mod P(x) =  l(x) + \sum_{i=0}^{n} h_i x^{n + i} \mod P(x).
+\]</span> Define the bit-vectors <span class="math inline">\(\bold{x}^i\)</span> by the equivalence: <span class="math display">\[
+    \bold{x}^i \sim x^{n+i} \mid P(x) \text{ for } i = 0, \ldots, n-1.
+\]</span> Now we know that <span class="math inline">\(x^n \mod P(x) = p(x)\)</span> so <span class="math display">\[
+    \bold{x}^0 = \bold{p}.
+\]</span> With that starting point, we can easily fill in bit vectors <span class="math inline">\(\bold{x}^i\)</span> for <span class="math inline">\(i = 1, \ldots, n-1\)</span> by using <a href="#MultiplyStep" class="quarto-xref">Algorithm 2</a>.</p>
+<p>The squaring step looks like the following:</p>
+<div id="SquareStep" class="pseudocode-container quarto-float" data-pseudocode-number="3" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{The step: $q(x) \gets q(x)^2 \mid P(x)$.} \begin{algorithmic} \Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$. \Require $\mathbf{x}^i$ are known bit-vectors, where $\mathbf{x}^i \sim x^{n+i} \mid P(x)$. \Require $\mathbf{s}, \mathbf{l}$ and $\mathbf{h}$ are available workspace bit-vectors. \Require $\mathbf{q}$ is a bit-vector of size $n &gt; 0$. \Procedure{SquareStep}{$\mathbf{q}$} \State // \textit{Riffle $\mathbf{q}$ into $\mathbf{s}$.} \State \Call{riffle}{$\mathbf{q}$, $\mathbf{s}$} \State // \textit{Fill $\mathbf{l}$ with a copy of the first $n$ elements from $\mathbf{s}$ and $\mathbf{h}$ with the rest.} \State \Call{split}{$\mathbf{s}$, $n$, $\mathbf{l}$, $\mathbf{h}$} \State $\mathbf{q} \gets \mathbf{l}$ \For {$i \gets 0, n-1$} \If{$h_i$} \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{x}^i$ \EndIf \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p><code>bit</code> makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements—​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in <span class="math inline">\(\FF\)</span>.</p>
-</div>
-</div>
-</section>
-<section id="why-use-bit" class="level2">
-<h2 class="anchored" data-anchor-id="why-use-bit">Why Use <code>bit</code>?</h2>
-<p>The standard library already has <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, an efficient <em>bitset</em> class that is familiar and well thought through, so our <code>bit::vector</code> class replicates and extends much of that interface.</p>
-<p>All <code>std::bitset</code> objects have a fixed size determined at compile time. The well-known <em>Boost</em> library does add a dynamic version <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a>, where the bitset size can be set and changed at runtime.</p>
-<p>However, as the two names suggest, those types are aimed at <em>bitsets</em> instead of <em>bit-vectors</em>. So, for example, they print in <em>bit-order</em> with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>.</p>
-<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\FF\)</span>. You can create matrices of integers where all the elements are 0 or 1, but there is no built-in knowledge in those libraries that arithmetic is mod 2.</p>
-<p>For example, you might use <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a> to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for <span class="math inline">\(\FF\)</span>. Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying <code>BitInt</code> type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.</p>
-<p>For linear algebra problems over <span class="math inline">\(\FF\)</span>, this specialized <code>bit</code> library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.</p>
-</section>
-<section id="documentation" class="level2">
-<h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
-<p>The project’s source code repository is <a href="https://github.com/nessan/bit">here</a>.<br>
-You can read the project’s documentation <a href="https://nessan.github.io/bit">here</a>.<br>
-The documentation site was generated using <a href="https://quarto.org">Quarto</a>.</p>
-<section id="contact" class="level3">
-<h3 class="anchored" data-anchor-id="contact">Contact</h3>
-<p>You can contact me by email <a href="mailto:nzznfitz+gh@icloud.com">here</a>.</p>
-</section>
-<section id="copyright-and-license" class="level3">
-<h3 class="anchored" data-anchor-id="copyright-and-license">Copyright and License</h3>
-<p>Copyright (c) 2022-present Nessan Fitzmaurice.<br>
-You can use this software under the <a href="https://opensource.org/license/mit/%5BMIT%20License%5D">MIT license</a>.</p>
+<p>Some efficiencies can easily be implemented in that algorithm’s loop as, for example, at most every second element in <span class="math inline">\(\bold{h}\)</span> is ever set.</p>
 
 
 </section>
@@ -1105,6 +1155,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../pages/notes/danilevsky.html" class="pagination-link" aria-label="Danilevsky's Method">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Danilevsky’s Method</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1113,7 +1172,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/reduction.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
@@ -1132,6 +1191,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize || "1.2em",
+          commentDelimiter: el.dataset.commentDelimiter || "//",
+          lineNumber: el.dataset.lineNumber === "true" ? true : false,
+          lineNumberPunc: el.dataset.lineNumberPunc || ":",
+          noEnd: el.dataset.noEnd === "true" ? true : false,
+          titlePrefix: el.dataset.captionPrefix || "Algorithm"
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

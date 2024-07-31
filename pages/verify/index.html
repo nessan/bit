@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Algebra over GF(2)</title>
+<title>Linear Algebra over GF(2) - Verification Checks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,22 +57,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./assets/images/logo.jpg" rel="icon" type="image/jpeg">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../pages/verify/index.qmd#compiler-flags" rel="next">
+<link href="../../assets/images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -140,13 +141,13 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Algebra over GF(2)">
+<meta property="og:title" content="Linear Algebra over GF(2) - Verification Checks">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://nessan.github.io/bit/assets/images/logo.jpg">
+<meta property="og:image" content="https://nessan.github.io/bit/pages/verify/assets/images/logo.jpg">
 <meta property="og:site_name" content="Linear Algebra over GF(2)">
-<meta name="twitter:title" content="Linear Algebra over GF(2)">
+<meta name="twitter:title" content="Linear Algebra over GF(2) - Verification Checks">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/assets/images/logo.jpg">
+<meta name="twitter:image" content="https://nessan.github.io/bit/pages/verify/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -157,10 +158,10 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/images/logo.jpg" alt="The bit library logo" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">bit</span>
     </a>
   </div>
@@ -171,23 +172,23 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/vector/index.html"> 
+    <a class="nav-link" href="../../pages/vector/index.html"> 
 <span class="menu-text">Vectors</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/matrix/index.html"> 
+    <a class="nav-link" href="../../pages/matrix/index.html"> 
 <span class="menu-text">Matrices</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/polynomial/index.html"> 
+    <a class="nav-link" href="../../pages/polynomial/index.html"> 
 <span class="menu-text">Polynomials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./pages/notes/index.html"> 
+    <a class="nav-link" href="../../pages/notes/index.html"> 
 <span class="menu-text">Tech Notes</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -226,7 +227,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">The <code>bit</code>Library</h1>
+          <h1 class="quarto-secondary-nav-title">Verification Checks</h1>
         </a>     
     </div>
   </nav>
@@ -239,7 +240,7 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -255,31 +256,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Constants &amp; Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/vector/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -297,31 +298,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/matrix/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -339,31 +340,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/gauss/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -381,25 +382,25 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#class-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/lu/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
@@ -417,31 +418,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#declaration" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Declaration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#class-constants-and-types" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Class Constants &amp; Types</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#instance-methods" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Instance Methods</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/polynomial/index.html#non-member-functions" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Non-member Functions</span></a>
   </div>
 </li>
@@ -459,19 +460,19 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Verifications</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html#compiler-flags" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compiler Flags</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/verify/index.html#design-rationale" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Design Rationale</span></a>
   </div>
 </li>
@@ -489,31 +490,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/gf2.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/gf2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Working in GF(2)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/design.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/design.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Library Design</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/danilevsky.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Danilevsky’s Method</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/notes/reduction.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pages/notes/reduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Polynomial Reduction</span></a>
   </div>
 </li>
@@ -530,23 +531,21 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
-  <li><a href="#why-use-bit" id="toc-why-use-bit" class="nav-link" data-scroll-target="#why-use-bit">Why Use <code>bit</code>?</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a>
+  <li><a href="#compiler-flags" id="toc-compiler-flags" class="nav-link" data-scroll-target="#compiler-flags">Compiler Flags</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#design-rationale" id="toc-design-rationale" class="nav-link" data-scroll-target="#design-rationale">Design Rationale</a>
   <ul class="collapse">
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
-  <li><a href="#copyright-and-license" id="toc-copyright-and-license" class="nav-link" data-scroll-target="#copyright-and-license">Copyright and License</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/verify/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">The <code>bit</code>Library</h1>
+<h1 class="title d-none d-lg-block">Verification Checks</h1>
 </div>
 
 
@@ -563,7 +562,6 @@ window.Quarto = {
 </header>
 
 
-<!-- The real landing page, like all the other pages, is in the pages/ directory -->
 <!-- Shortcuts and links used throughout the documentation -->
 <!-- Some math shortcuts we use frequently in the documentation -->
 <div class="hidden">
@@ -583,113 +581,98 @@ window.Quarto = {
 <!-- Pages and Wikipedia articles referenced in the documentation -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.</p>
-<p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="./pages/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="./pages/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="./pages/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\FF\)</span>.</p>
-<p>These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.</p>
-<p>Because arithmetic operations in <span class="math inline">\(\FF\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
-<p>The <code>bit</code> library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over <span class="math inline">\(\FF\)</span> and to look at the eigen-structure of bit-matrices. The <code>bit::polynomial</code> class has methods to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
-</section>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>This library is header-only, so there is nothing to compile &amp; link–drop the <code>bit</code> include directory somewhere convenient, and you are good to go.</p>
-<p>Alternatively, if you are using <code>CMake</code>, you can use the standard <code>FetchContent</code> module by adding a few lines to your project’s <code>CMakeLists.txt</code> file:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(bit <span class="ot">URL</span> https://github.com/nessan/bit/releases/download/current/bit.zip)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_MakeAvailable</span>(bit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This command downloads and unpacks an archive of the current version of <code>bit</code> to your project’s build folder. You can then add a dependency on <code>bit::bit</code>, a <code>CMake</code> alias for <code>bit</code>. <code>FetchContent</code> will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.</p>
-<p>Used like this, <code>FetchContent</code> will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<p>We have a macro that is used to check a condition and, on failures, cause the program to exit with a customizable message.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bit_verify<span class="op">(</span>condition<span class="op">,</span> <span class="op">...)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the <code>BIT_VERIFY</code> flag is set at compile time then <code>condition</code> is checked and if it fails the program exits with a custom message synthesized from the rest of the arguments. If the <code>BIT_VERIFY</code> flag is <em>not</em> set then the macro expands to a no-op.</p>
+<p>Assuming a check is “on”, if <code>condition</code> evaluates to <code>false</code> then <code>bit_verify</code> calls</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit_exit<span class="op">(</span>message<span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>bit_exit(message)</code> macro passes the <code>message</code> and the source code location of the failure to <code>bit::exit(...)</code>. That function prints the source code location of the failure along with the <code>message</code> payload and then <strong>exits</strong> the program.</p>
+<p>The <code>bit::exit</code> function needs source code location parameters (the filename, the line number, and the function name), and the <code>bit_exit</code> macro automatically adds those. You typically use the <code>message</code> argument to print the values of the variables that triggered the failure. The message can be anything that can be formatted using the facilities in <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Library versions
+Microsoft compiler
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The shown <code>URL</code> gets the <code>current</code> version of the library—whatever is in the main branch. For a fixed, stable library version (say release <code>2.0.0</code>), use a <code>URL</code> parameter like: <code>https://github.com/nessan/bit/releases/download/2.0.0/bit.zip</code>.</p>
+<p>Microsoft’s old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine. Add the <code>/Zc:preprocessor</code> flag to use that upgrade at compile time. Our <code>CMake</code> module <code>compiler_init</code> does that automatically for you.</p>
 </div>
 </div>
 </section>
-<section id="example" class="level2">
-<h2 class="anchored" data-anchor-id="example">Example</h2>
-<p>Here is a simple example of a program that uses <code>bit</code>:</p>
-<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> c <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Bit-matrix M:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> M<span class="op">);</span></span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Characteristic poly c(x) = </span><span class="sc">{}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"c(M) yields:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">(</span>M<span class="op">));</span></span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="compiler-flags" class="level2">
+<h2 class="anchored" data-anchor-id="compiler-flags">Compiler Flags</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>BIT_VERIFY</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you set the <code>BIT_VERIFY</code> flag, the library will perform demanding but potentially useful safety assertions on indices, size equality checks, etc. Otherwise, all the <code>bit_verify</code> calls are no-ops</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p><span class="bt">Example — Snippet from the <code>bit::vector&lt;&gt;::set</code> method</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// </span><span class="an">@brief</span><span class="co"> Set the element at index `i` to 1.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>set<span class="op">(</span><span class="bu">std::</span>size_t i<span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    bit_verify<span class="op">(</span>i <span class="op">&lt;</span> <span class="va">m_size</span><span class="op">,</span> <span class="st">"index `i` = "</span> <span class="op">&lt;&lt;</span> i <span class="op">&lt;&lt;</span> <span class="st">" must be &lt; `m_size` which is "</span> <span class="op">&lt;&lt;</span> <span class="va">m_size</span><span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here <code>m_size</code> is holds the size of the vector — so we must have <code>i &lt; m_size</code></p>
+<p>To check every element access, set the <code>BIT_VERIFY</code> flag during compiles. If the assertion fails, the program exits with an error message that gives the offending values.</p>
+<p>The <code>bit_verify</code> line expands to <em>nothing</em> if the <code>BIT_VERIFY</code> flag is not set during compiles.</p>
+<p><span class="bt">Example — Message from an assertion failure</span></p>
+<div class="sourceCode" id="annotated-cell-5"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-1" class="code-annotation-target"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define BIT_VERIFY</span></span>
+<span id="annotated-cell-5-2"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="annotated-cell-5-3"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-5" class="code-annotation-target"><a href="#annotated-cell-5-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t n <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector<span class="op">&lt;&gt;</span> v<span class="op">(</span>n<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-7" class="code-annotation-target"><a href="#annotated-cell-5-7" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set<span class="op">(</span>n<span class="op">);</span></span>
+<span id="annotated-cell-5-8"><a href="#annotated-cell-5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="annotated-cell-5-9"><a href="#annotated-cell-5-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="4" data-code-annotation="1">Creates a random <span class="math inline">\(6\times6\)</span> bit-matrix <span class="math inline">\(M\)</span> where 0 &amp; 1 are equally likely to occur.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="1" data-code-annotation="1">For the sake of the example we added code to make sure the <code>bit_verify</code> is triggered. In normal usage, the flag is passed through the compiler command line.</span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Computes its characteristic polynomial <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="5" data-code-annotation="2">Construct a vector of size 12 and then attempt to set the “last” element.</span>
 </dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="8" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="7" data-code-annotation="3">A deliberate but typical <em>off-by-one</em> index error as the valid indices are from 0 to <code>n-1</code>, which is 11.</span>
 </dd>
 </dl>
-<p><span class="bt">Sample Output (varies from run to run):</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bit-matrix</span> M:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 1 0│</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 1 0 0│</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 1 0 1│</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 1 0 1 0│</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 0 0 1 1 1│</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> poly c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^2 + x^3 + x^5 + x^6</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">c</span><span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">yields:</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="bt">Output</span></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">BIT</span> VERIFY FAILED:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Function</span> <span class="st">'set'</span> <span class="er">(</span><span class="ex">vector.h,</span> line 911<span class="kw">)</span><span class="bu">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Statement</span> <span class="st">'i &lt; m_size'</span> is NOT true: Index i = 12 must be <span class="op">&lt;</span> <span class="kw">`</span><span class="ex">m_size</span><span class="kw">`</span> = 12</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The program will then exit.</p>
+</section>
+<section id="design-rationale" class="level2">
+<h2 class="anchored" data-anchor-id="design-rationale">Design Rationale</h2>
+<p>In the development cycle, it can be helpful to range-check indices and so on. However, those checks are expensive and can slow down numerical code by orders of magnitude. Therefore, we don’t want there to be any chance that those verifications are accidentally left “on” in the production code. Our <code>bit_verify(...)</code> macro covers this type of verification. Turning on the checks requires the programmer to take a specific action — namely, she must set the <code>BIT_VERIFY</code> flag during compile time.</p>
+<p>For example, here is a pre-condition from a hypothetical <code>dot(Vector u, Vector v)</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bit_verify<span class="op">(</span>u<span class="op">.</span>size<span class="op">()</span> <span class="op">==</span> v<span class="op">.</span>size<span class="op">(),</span> <span class="st">"Vector sizes </span><span class="sc">{}</span><span class="st"> and </span><span class="sc">{}</span><span class="st"> DO NOT match!"</span><span class="op">,</span> u<span class="op">.</span>size<span class="op">(),</span> v<span class="op">.</span>size<span class="op">());</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This code checks that the two vector arguments have equal length — a necessary constraint for the dot product operation to make sense. If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.</p>
+<p>The check here is <strong>off</strong> by default, and you need to do something special (i.e., define the <code>BIT_VERIFY</code> flag at compile time) to enable it. The idea is that production code may do many of these dot products, and we do not generally want to pay for the check. However, enabling these sorts of checks may be very useful during development.</p>
+<p>The <code>bit_verify(...)</code> macro expands to nothing <strong>unless</strong> you set the <code>BIT_VERIFY</code> flag at compile time.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-The special nature of <span class="math inline">\(\FF\)</span>
+Macro-land
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>bit</code> makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements—​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in <span class="math inline">\(\FF\)</span>.</p>
+<p>We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither does <code>bit_verify</code>.</p>
 </div>
 </div>
-</section>
-<section id="why-use-bit" class="level2">
-<h2 class="anchored" data-anchor-id="why-use-bit">Why Use <code>bit</code>?</h2>
-<p>The standard library already has <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, an efficient <em>bitset</em> class that is familiar and well thought through, so our <code>bit::vector</code> class replicates and extends much of that interface.</p>
-<p>All <code>std::bitset</code> objects have a fixed size determined at compile time. The well-known <em>Boost</em> library does add a dynamic version <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a>, where the bitset size can be set and changed at runtime.</p>
-<p>However, as the two names suggest, those types are aimed at <em>bitsets</em> instead of <em>bit-vectors</em>. So, for example, they print in <em>bit-order</em> with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>.</p>
-<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\FF\)</span>. You can create matrices of integers where all the elements are 0 or 1, but there is no built-in knowledge in those libraries that arithmetic is mod 2.</p>
-<p>For example, you might use <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a> to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for <span class="math inline">\(\FF\)</span>. Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying <code>BitInt</code> type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.</p>
-<p>For linear algebra problems over <span class="math inline">\(\FF\)</span>, this specialized <code>bit</code> library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.</p>
-</section>
-<section id="documentation" class="level2">
-<h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
-<p>The project’s source code repository is <a href="https://github.com/nessan/bit">here</a>.<br>
-You can read the project’s documentation <a href="https://nessan.github.io/bit">here</a>.<br>
-The documentation site was generated using <a href="https://quarto.org">Quarto</a>.</p>
-<section id="contact" class="level3">
-<h3 class="anchored" data-anchor-id="contact">Contact</h3>
-<p>You can contact me by email <a href="mailto:nzznfitz+gh@icloud.com">here</a>.</p>
-</section>
-<section id="copyright-and-license" class="level3">
-<h3 class="anchored" data-anchor-id="copyright-and-license">Copyright and License</h3>
-<p>Copyright (c) 2022-present Nessan Fitzmaurice.<br>
-You can use this software under the <a href="https://opensource.org/license/mit/%5BMIT%20License%5D">MIT license</a>.</p>
+<section id="see-also" class="level3">
+<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
+<p><a href="https://www.cplusplus.com/reference/cassert/assert/"><code>assert</code></a></p>
 
 
 </section>
@@ -1105,6 +1088,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../pages/verify/index.html#compiler-flags" class="pagination-link" aria-label="Compiler Flags">
+        <span class="nav-page-text">Compiler Flags</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -1113,7 +1105,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/verify/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
