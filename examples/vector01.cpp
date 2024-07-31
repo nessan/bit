@@ -6,7 +6,6 @@
 #ifndef BIT_VERIFY
     #define BIT_VERIFY
 #endif
-
 #include "common.h"
 
 int
@@ -224,32 +223,32 @@ main()
     std::print("Match:     {}\n\n", msg);
 
     // clang-format off
-    std::print("Copying that bit-vector into words of various types:\n");
-    uint8_t  wd8;   bit::copy(v50, wd8);
-    uint16_t wd16;  bit::copy(v50, wd16);
-    uint32_t wd32;  bit::copy(v50, wd32);
-    uint64_t wd64;  bit::copy(v50, wd64);
+    std::print("Exporting that bit-vector to words of various types:\n");
+    uint8_t  wd8;   v50.export_to(wd8);
+    uint16_t wd16;  v50.export_to(wd16);
+    uint32_t wd32;  v50.export_to(wd32);
+    uint64_t wd64;  v50.export_to(wd64);
     std::print("uint8_t:  {}\n", static_cast<int>(wd8));
     std::print("uint16_t: {}\n", wd16);
     std::print("uint32_t: {}\n", wd32);
     std::print("uint64_t: {}\n\n", wd64);
 
-    std::print("Copying that bit-vector into arrays of words of various types:\n");
+    std::print("Exporting that bit-vector into arrays of words of various types:\n");
     constexpr std::size_t N = 4;
-    std::array<uint8_t,  N> a08;  bit::copy(v50, a08);
-    std::array<uint16_t, N> a16;  bit::copy(v50, a16);
-    std::array<uint32_t, N> a32;  bit::copy(v50, a32);
-    std::array<uint64_t, N> a64;  bit::copy(v50, a64);
+    std::array<uint8_t,  N> a08;  v50.export_to(a08);
+    std::array<uint16_t, N> a16;  v50.export_to(a16);
+    std::array<uint32_t, N> a32;  v50.export_to(a32);
+    std::array<uint64_t, N> a64;  v50.export_to(a64);
     std::print("uint8_t:  {}\n", a08);
     std::print("uint16_t: {}\n", a16);
     std::print("uint32_t: {}\n", a32);
     std::print("uint64_t: {}\n\n", a64);
 
-    std::print("Copying ALL of that bit-vector into vectors of words of various types:\n");
-    std::vector<uint8_t>  v08;  bit::copy_all(v50, v08);
-    std::vector<uint16_t> v16;  bit::copy_all(v50, v16);
-    std::vector<uint32_t> v32;  bit::copy_all(v50, v32);
-    std::vector<uint64_t> v64;  bit::copy_all(v50, v64);
+    std::print("Exporting ALL of that bit-vector into vectors of words of various types:\n");
+    std::vector<uint8_t>  v08;  v50.export_all_to(v08);
+    std::vector<uint16_t> v16;  v50.export_all_to(v16);
+    std::vector<uint32_t> v32;  v50.export_all_to(v32);
+    std::vector<uint64_t> v64;  v50.export_all_to(v64);
     std::print("uint8_t:  {}\n", v08);
     std::print("uint16_t: {}\n", v16);
     std::print("uint32_t: {}\n", v32);

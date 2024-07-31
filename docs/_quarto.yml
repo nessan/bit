@@ -57,13 +57,13 @@ website:
             - text: "Home"
               file: index.qmd
             - text: "Vectors"
-              file: content/vector/index.qmd
+              file: pages/vector/index.qmd
             - text: "Matrices"
-              file: content/matrix/index.qmd
+              file: pages/matrix/index.qmd
             - text: "Polynomials"
-              file: content/polynomial/index.qmd
+              file: pages/polynomial/index.qmd
             - text: "Tech Notes"
-              file: content/notes/index.qmd
+              file: pages/notes/index.qmd
             - text: "More"
               menu:
                   - text: "Project Repo"
@@ -95,87 +95,87 @@ website:
             - section: "Bit-Vectors"
               contents:
                   - text: "Introduction"
-                    href: content/vector/index.qmd
+                    href: pages/vector/index.qmd
                   - text: "Declaration"
-                    href: content/vector/index.qmd#declaration
+                    href: pages/vector/index.qmd#declaration
                   - text: "Class Constants & Types"
-                    href: content/vector/index.qmd#class-constants-and-types
+                    href: pages/vector/index.qmd#class-constants-and-types
                   - text: "Instance Methods"
-                    href: content/vector/index.qmd#instance-methods
+                    href: pages/vector/index.qmd#instance-methods
                   - text: "Non-member Functions"
-                    href: content/vector/index.qmd#non-member-functions
+                    href: pages/vector/index.qmd#non-member-functions
             - text: "---"
             - section: "Bit-Matrices"
               contents:
                   - text: "Introduction"
-                    href: content/matrix/index.qmd
+                    href: pages/matrix/index.qmd
                   - text: "Declaration"
-                    href: content/matrix/index.qmd#declaration
+                    href: pages/matrix/index.qmd#declaration
                   - text: "Class Types"
-                    href: content/matrix/index.qmd#class-types
+                    href: pages/matrix/index.qmd#class-types
                   - text: "Instance Methods"
-                    href: content/matrix/index.qmd#instance-methods
+                    href: pages/matrix/index.qmd#instance-methods
                   - text: "Non-member Functions"
-                    href: content/matrix/index.qmd#non-member-functions
+                    href: pages/matrix/index.qmd#non-member-functions
             - text: "---"
             - section: "Gaussian Elimination"
               contents:
                   - text: "Introduction"
-                    href: content/gauss/index.qmd
+                    href: pages/gauss/index.qmd
                   - text: "Declaration"
-                    href: content/gauss/index.qmd#declaration
+                    href: pages/gauss/index.qmd#declaration
                   - text: "Class Types"
-                    href: content/gauss/index.qmd#class-types
+                    href: pages/gauss/index.qmd#class-types
                   - text: "Instance Methods"
-                    href: content/gauss/index.qmd#instance-methods
+                    href: pages/gauss/index.qmd#instance-methods
                   - text: "Non-member Functions"
-                    href: content/gauss/index.qmd#non-member-functions
+                    href: pages/gauss/index.qmd#non-member-functions
             - text: "---"
             - section: "LU Decomposition"
               contents:
                   - text: "Introduction"
-                    href: content/lu/index.qmd
+                    href: pages/lu/index.qmd
                   - text: "Declaration"
-                    href: content/lu/index.qmd#declaration
+                    href: pages/lu/index.qmd#declaration
                   - text: "Class Types"
-                    href: content/lu/index.qmd#class-types
+                    href: pages/lu/index.qmd#class-types
                   - text: "Instance Methods"
-                    href: content/lu/index.qmd#instance-methods
+                    href: pages/lu/index.qmd#instance-methods
             - text: "---"
             - section: "Bit-Polynomials"
               contents:
                   - text: "Introduction"
-                    href: content/polynomial/index.qmd
+                    href: pages/polynomial/index.qmd
                   - text: "Declaration"
-                    href: content/polynomial/index.qmd#declaration
+                    href: pages/polynomial/index.qmd#declaration
                   - text: "Class Constants & Types"
-                    href: content/polynomial/index.qmd#class-constants-and-types
+                    href: pages/polynomial/index.qmd#class-constants-and-types
                   - text: "Instance Methods"
-                    href: content/polynomial/index.qmd#instance-methods
+                    href: pages/polynomial/index.qmd#instance-methods
                   - text: "Non-member Functions"
-                    href: content/polynomial/index.qmd#non-member-functions
+                    href: pages/polynomial/index.qmd#non-member-functions
             - text: "---"
             - section: "Debugging"
               contents:
                   - text: "Verifications"
-                    href: content/verify/index.qmd
+                    href: pages/verify/index.qmd
                   - text: "Compiler Flags"
-                    href: content/verify/index.qmd#compiler-flags
+                    href: pages/verify/index.qmd#compiler-flags
                   - text: "Design Rationale"
-                    href: content/verify/index.qmd#design-rationale
+                    href: pages/verify/index.qmd#design-rationale
             - text: "---"
             - section: "Technical Notes"
               contents:
                   - text: "Introduction"
-                    href: content/notes/index.qmd
+                    href: pages/notes/index.qmd
                   - text: "Working in GF(2)"
-                    href: content/notes/gf2.qmd
+                    href: pages/notes/gf2.qmd
                   - text: "Library Design"
-                    href: content/notes/design.qmd
+                    href: pages/notes/design.qmd
                   - text: "Danilevsky's Method"
-                    href: content/notes/danilevsky.qmd
+                    href: pages/notes/danilevsky.qmd
                   - text: "Polynomial Reduction"
-                    href: content/notes/reduction.qmd
+                    href: pages/notes/reduction.qmd
 editor:
     markdown:
         canonical: true

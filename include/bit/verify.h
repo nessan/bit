@@ -15,7 +15,8 @@
 
 /// @brief The @c bit_verify macro expands to a no-op @b unless the @c BIT_VERIFY flag is set.
 #ifdef BIT_VERIFY
-    #define bit_verify(cond, ...) bit_exit("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
+    #define bit_verify(cond, ...) \
+        if (!(cond)) bit_exit("Statement '{}' is NOT true: {}\n", #cond, std::format(__VA_ARGS__))
 #else
     #define bit_verify(cond, ...) void(0)
 #endif

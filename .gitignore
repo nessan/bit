@@ -33,3 +33,4 @@ node_modules/
 antora/*/.cache/
 antora/*/playbook-remote
 antora/*/build/
+/.luarc.json

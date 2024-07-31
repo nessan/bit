@@ -56,7 +56,7 @@ public:
     }
 
     /// @brief Create a bit-vector by copying all the bits from an iteration of unsigned words.
-    /// @note  The @c value_type associated with the iterator must be unsigned but not necessarily the same as Block.
+    /// @note  The @c value_type associated with the iterator must be unsigned but not necessarily the same as @c Block.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
     explicit constexpr vector(Iter b, Iter e) : vector{}
@@ -292,7 +292,8 @@ public:
         return *this;
     }
 
-    /// @brief We have several @c append(...) methods so add a synonym for the @c push(bool) method for consistency.
+    /// @brief Appends one element to the end of the bit-vector.
+    /// @note  This is a synonym for the @c push(bool) method.
     constexpr vector& append(bool b) { return push(b); }
 
     /// @brief Append another bit-vector to the end of this one
@@ -417,14 +418,6 @@ public:
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief  Add a @c std::vector<Src> of unsigned source words as bits to the end of the bit-vector.
-    /// @tparam Src The type of the words for the source bits which need not be @c Block.
-    template<std::unsigned_integral Src>
-    constexpr vector& append(const std::vector<Src>& src)
-    {
-        return append(std::cbegin(src), std::cend(src));
-    }
-
     /// @brief  Add a @c std::array<Src,N> of @c N unsigned source words as bits to the end of the bit-vector.
     /// @tparam Src The type of the words for the source bits which need not be @c Block.
     /// @tparam N The fixed array size
@@ -434,7 +427,15 @@ public:
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief  Add all the bits from a std::bitset` to the end of this bit-vector.
+    /// @brief  Add a @c std::vector<Src> of unsigned source words as bits to the end of the bit-vector.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
+    template<std::unsigned_integral Src>
+    constexpr vector& append(const std::vector<Src>& src)
+    {
+        return append(std::cbegin(src), std::cend(src));
+    }
+
+    /// @brief  Add all the bits from a @c std::bitset to the end of this bit-vector.
     /// @tparam N The size of the @c std::bitset which should be deduced in any case.
     template<std::size_t N>
     constexpr vector& append(const std::bitset<N>& src)
@@ -442,6 +443,208 @@ public:
         // We do this the dumb way ...
         for (std::size_t i = 0; i < N; ++i) push(src[i]);
         return *this;
+    }
+
+    /// @brief Overwrite this bit-vector with the bits from an unsigned word.
+    /// @note  The @c Src type need not match the @c Block type.
+    template<std::unsigned_integral Src>
+    constexpr vector& set_to(Src src)
+    {
+        clear();
+        return append(src);
+    }
+
+    /// @brief Overwrite this bit-vector with an iterated collection of unsigned words treated as bits.
+    /// @note  The @c value_type of the iterator should be some unsigned integer type but needn’t be @c Block.
+    template<typename Iter>
+        requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
+    constexpr vector& set_to(Iter b, Iter e)
+    {
+        clear();
+        return append(b, e);
+    }
+
+    /// @brief Overwrite this bit-vector with a whole list of unsigned source words treated as bits.
+    /// @note  The @c Src type need not match the @c Block type.
+    template<std::unsigned_integral Src = Block>
+    constexpr vector& set_to(std::initializer_list<Src> src)
+    {
+        clear();
+        return append(std::cbegin(src), std::cend(src));
+    }
+
+    /// @brief Overwrite this bit-vector with a @c std::array<Src,N> of @c N unsigned source words treated as bits.
+    /// @note  The @c Src type need not match the @c Block type.
+    template<std::unsigned_integral Src, std::size_t N>
+    constexpr vector& set_to(const std::array<Src, N>& src)
+    {
+        clear();
+        return append(std::cbegin(src), std::cend(src));
+    }
+
+    /// @brief Overwrite this bit-vector with a @c std::vector<Src> of unsigned source words treated as bits.
+    /// @note  The @c Src type need not match the @c Block type.
+    template<std::unsigned_integral Src>
+    constexpr vector& set_to(const std::vector<Src>& src)
+    {
+        clear();
+        return append(std::cbegin(src), std::cend(src));
+    }
+
+    /// @brief  Overwrite this bit-vector with the bits from a @c std::bitset of size @c N
+    template<std::size_t N>
+    constexpr vector& set_to(const std::bitset<N>& src)
+    {
+        clear();
+        return append(src);
+    }
+
+    /// @brief Export the bit-vector to an unsigned word (at least as much of it as fits in the word)
+    /// @note  The @c Dst type need not match the @c Block type.
+    /// @note  If this bit-vector is empty then @c dst is set to 0.
+    template<std::unsigned_integral Dst>
+    constexpr void export_to(Dst& dst) const
+    {
+        // Initialize the destination word.
+        dst = 0;
+
+        // Edge case?
+        if (empty()) return;
+
+        // How many bits are there in the destination type?
+        constexpr std::size_t bits_per_dst = std::numeric_limits<Dst>::digits;
+
+        if constexpr (bits_per_dst == bits_per_block) {
+            // This is the easiest case -- can just pop the entire first block into the destination and call it day.
+            dst = static_cast<Dst>(m_blocks[0]);
+            return;
+        }
+        else if constexpr (bits_per_dst < bits_per_block) {
+            // In this case, destination can't handle all the bits in our first block so just take as many as possible.
+            constexpr Block mask = std::numeric_limits<Dst>::max();
+            dst = static_cast<Dst>(m_blocks[0] & mask);
+            return;
+        }
+        else {
+            // Destination is a longer word and can take more than one block's worth of bits if they are available.
+            // Note the long words should be an even multiple of the short ones or something very odd has happened!
+            static_assert(bits_per_dst % bits_per_block == 0, "Cannot pack blocks evenly into the destination word!");
+
+            // How many src blocks will it take to fill dst? Of course that many may not be available
+            std::size_t n = std::min(bits_per_dst / bits_per_block, m_blocks.size());
+            std::size_t shift = 0;
+            for (std::size_t i = 0; i < n; ++i, shift += bits_per_block) {
+                auto src_word = static_cast<Dst>(m_blocks[i]);
+                dst |= static_cast<Dst>(src_word << shift);
+            }
+            return;
+        }
+    }
+
+    /// @brief Export the bit-vector to an iteration of unsigned integer words (at least as much of it as fits)
+    /// @param dst The destination iteration is first initialized to all zeros & then filled as much as possible.
+    /// @note  The @c value_type associated with the iterator must be unsigned but not necessarily the same as @c Block.
+    template<typename Iter>
+        requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
+    constexpr void export_to(Iter dst_b, Iter dst_e) const
+    {
+        // Edge case?
+        if (dst_b == dst_e) return;
+
+        // Initialize the entire collection to all zeros
+        for (auto b = dst_b; b != dst_e; ++b) *b = 0;
+
+        // How many bits are there per destination word?
+        using dst_type = typename std::iterator_traits<Iter>::value_type;
+        constexpr std::size_t bits_per_dst = std::numeric_limits<dst_type>::digits;
+
+        if constexpr (bits_per_dst == bits_per_block) {
+            // This is the easiest case -- can just pop the blocks into the destination container with assignment
+            // We stop if we run out of blocks or run out of space in the container
+            for (std::size_t i = 0; i < m_blocks.size() && dst_b != dst_e; ++i, ++dst_b)
+                *dst_b = static_cast<dst_type>(m_blocks[i]);
+            return;
+        }
+        else if constexpr (bits_per_dst < bits_per_block) {
+            // Each block should fit into some integral number of destination words
+            static_assert(bits_per_block % bits_per_dst == 0,
+                          "Source blocks will not divide evenly into an array of destination words!");
+
+            // How many destination words fit in one block?
+            std::size_t dst_per_block = bits_per_block / bits_per_dst;
+
+            // Create a Block word that masks out all but the rightmost bits_per_dst piece0
+            constexpr Block mask = std::numeric_limits<dst_type>::max();
+
+            // Copy each block into the appropriate number of words in the container stopping when needed.
+            for (std::size_t i = 0; i < m_blocks.size() && dst_b != dst_e; ++i) {
+                auto src_word = m_blocks[i];
+                for (std::size_t j = 0; j < dst_per_block && dst_b != dst_e; ++j, ++dst_b, src_word >>= bits_per_dst)
+                    *dst_b = static_cast<dst_type>(src_word & mask);
+            }
+        }
+        else {
+
+            // Pushing the smaller blocks into a number of larger destination words (sizes need to be clean multiples)
+            static_assert(bits_per_dst % bits_per_block == 0, "Container words are not each an even number of blocks!");
+
+            // How many Blocks fit into one destination word? Will be an clean integer number.
+            std::size_t blocks_per_dst = bits_per_dst / bits_per_block;
+
+            // Fill container with our blocks. More than one block will fit in each container word.
+            std::size_t i = 0;
+            for (; dst_b != dst_e && i < m_blocks.size(); ++dst_b) {
+                for (std::size_t j = 0; j < blocks_per_dst && i < m_blocks.size(); ++j, ++i) {
+                    dst_type    src_word = m_blocks[i];
+                    std::size_t shift = j * bits_per_block;
+                    *dst_b |= dst_type(src_word << shift);
+                }
+            }
+        }
+    }
+
+    /// @brief Export the bit-vector to a @c std::array of unsigned integer words (at least as much of it as fits).
+    /// @param dst The destination array is first initialized to all zeros & then filled as much as possible.
+    /// @note  The @c Dst type need not match the @c Block type.
+    template<std::unsigned_integral Dst, std::size_t N>
+    constexpr void export_to(std::array<Dst, N>& dst) const
+    {
+        export_to(std::begin(dst), std::end(dst));
+    }
+
+    /// @brief Export the bit-vector to a @c std::vector of unsigned integer words (at least as much of it as fits).
+    /// @param dst The destination vector is first initialized to all zeros & then filled as much as possible.
+    /// @note  The size of the @c dst vector is @b not changed -- see also the @c export_all_to method.
+    /// @note  The @c Dst type need not match the @c Block type.
+    template<std::unsigned_integral Dst>
+    constexpr void export_to(std::vector<Dst>& dst) const
+    {
+        export_to(std::begin(dst), std::end(dst));
+    }
+
+    /// @brief Export the bit-vector to a @c std::bitset (at least as much of it as fits).
+    /// @param dst The destination bitset is first initialized to all zeros & then filled as much as possible.
+    template<std::size_t N>
+    constexpr void export_to(std::bitset<N>& dst) const
+    {
+        // We do this the slow & simplest way -- no standard methods to access the block store ina std::bitset.
+        dst.reset();
+        std::size_t n = std::min(size(), dst.size());
+        for (std::size_t i = 0; i < n; ++i)
+            if (test(i)) dst.set(i);
+    }
+
+    /// @brief Resize and then fill a @c std::vector<Dst> using the bits from this bit-vector.
+    /// @param dst The destination vector is first resized to accommodate the full bit-vector then filled.
+    /// @note  The @c Dst type need not match the @c Block type.
+    template<std::unsigned_integral Dst>
+    constexpr void export_all_to(std::vector<Dst>& dst) const
+    {
+        // Correctly size the output vector (might be to 0) to hold ALL the source bits.
+        std::size_t bits_per_dst = std::numeric_limits<Dst>::digits;
+        std::size_t dst_words = (bits_per_dst + size() - 1) / bits_per_dst;
+        dst.resize(dst_words);
+        export_to(std::begin(dst), std::end(dst));
     }
 
     /// @brief  Create a "riffled" version of this bit-vector (i.e. one with our bits interleaved with zeros).
@@ -1606,7 +1809,6 @@ private:
         return retval.resize(retval.size() - padding_bits);
     }
 
-public:
     /// @brief  Riffle a block into two output blocks containing the bits from the src interleaved with zeros.
     /// @return With 8-bit blocks and src = `abcdefgh`, on return `lo = a0b0c0d0` and 'hi = e0f0g0h0`.
     static constexpr void riffle(Block src, Block& lo, Block& hi)
@@ -1637,250 +1839,6 @@ public:
 // --------------------------------------------------------------------------------------------------------------------
 // NON-MEMBER FUNCTIONS ...
 // --------------------------------------------------------------------------------------------------------------------
-
-/// @brief  Overwrite a bit-vector with the bits from an unsigned source word.
-/// @tparam Src The type of the word for the source bits (could e.g. be unsigned or unsigned char etc.)
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the src.
-/// @note   The @c Block type of the bit-vector need not match the @c Src type.
-template<std::unsigned_integral Src, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(Src src, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src);
-}
-
-/// @brief  Overwrite a bit-vector with the bits from an iterated collection of unsigned source words.
-/// @tparam Iter The @c value_type of this const iterator should be some unsigned integer type.
-/// @param  src_b E.g. might be @c std::cbegin(collection).
-/// @param  src_e E.g. might be @c std::cend(collection).
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the collection.
-/// @note   The @c Block type of the bit-vector need not match the @c value_type of the iterator.
-template<typename Iter, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(Iter src_b, Iter src_e, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src_b, src_e);
-}
-
-/// @brief  Overwrite a bit-vector with the bits from an initializer list of source words.
-/// @tparam Src The type of the words for the source bits (could e.g. be unsigned or unsigned char etc.)
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the initializer list.
-/// @note   The @c Block type of the bit-vector need not match the @c Src type.
-template<std::unsigned_integral Src, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(std::initializer_list<Src> src, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src);
-}
-
-/// @brief  Overwrite a bit-vector with the bits from a @c std::vector of source words.
-/// @tparam Src The type of the words for the source bits (could e.g. be unsigned or unsigned char etc.)
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the std::vector<Src>.
-/// @note   The @c Block type of the bit-vector need not match the @c Src type.
-template<std::unsigned_integral Src, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(const std::vector<Src>& src, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src);
-}
-
-/// @brief  Overwrite a bit-vector with the bits from a @c std::array of source words.
-/// @tparam Src The type of the words for the source bits (could e.g. be unsigned or unsigned char etc.)
-/// @tparam N The fixed size of the source array.
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the std::vector<Src>.
-/// @note   The @c Block type of the bit-vector need not match the @c Src type.
-template<std::unsigned_integral Src, std::size_t N, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(const std::array<Src, N>& src, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src);
-}
-
-/// @brief  Overwrite a bit-vector with the bits from a @c std::bitset.
-/// @tparam N The size of the `std::bitset` which should be deduced in any case.
-/// @param  dst This is the destination bit-vector which is cleared and then filled from the @c std::bitset<N>.
-template<std::size_t N, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(const std::bitset<N>& src, vector<Block, Allocator>& dst)
-{
-    dst.clear();
-    dst.append(src);
-}
-
-/// @brief  Overwrite a single unsigned integer word from a bit-vector (at least as much of it as fits in the word)
-/// @tparam Dst The (deduced) unsigned destination word-type.
-/// @param  src The src bit-vector. Empty src bit-vectors fill the destination with Dst(0).
-/// @param  dst E.g. if `dst` is a `uint32_t` it gets filled as far as is possible from the start of the src bit-vector.
-/// @note   The @c Dst type need not match the @c Block type.
-template<std::unsigned_integral Block, typename Allocator, std::unsigned_integral Dst>
-constexpr void
-copy(const vector<Block, Allocator>& src, Dst& dst)
-{
-    // Initialize the destination words (we also return 0 if the src bit-vector is empty).
-    dst = 0;
-    if (src.empty()) return;
-
-    // How many bits are there per src block and destination types?
-    constexpr std::size_t bits_per_block = std::numeric_limits<Block>::digits;
-    constexpr std::size_t bits_per_dst = std::numeric_limits<Dst>::digits;
-
-    // Grab a read-only reference to the src blocks
-    auto blocks = src.blocks();
-
-    if constexpr (bits_per_dst == bits_per_block) {
-        // This is the easiest case -- can just pop the entire first block into the destination and call it day.
-        dst = static_cast<Dst>(blocks[0]);
-        return;
-    }
-    else if constexpr (bits_per_dst < bits_per_block) {
-        // In this case, destination can't handle all the bits in our first block so just take as many as possible.
-        constexpr Block mask = std::numeric_limits<Dst>::max();
-        dst = static_cast<Dst>(blocks[0] & mask);
-        return;
-    }
-    else {
-        // Destination is a longer word and can take more than one block's worth of bits if they are available.
-        // Note the long words should be an even multiple of the short ones or something very odd has happened!
-        static_assert(bits_per_dst % bits_per_block == 0, "Cannot pack blocks evenly into the destination word!");
-
-        // How many src blocks will it take to fill dst? Of course that many may not be available
-        std::size_t n = std::min(bits_per_dst / bits_per_block, blocks.size());
-        std::size_t shift = 0;
-        for (std::size_t i = 0; i < n; ++i, shift += bits_per_block) {
-            auto src_word = static_cast<Dst>(blocks[i]);
-            dst |= static_cast<Dst>(src_word << shift);
-        }
-        return;
-    }
-}
-
-/// @brief  Overwrite an iteration of unsigned integer words from a bit-vector (at least as much of it as fits)
-/// @tparam Iter The @c value_type associated with the non-const iterator should be some unsigned integer type.
-/// @param  src The src bit-vector. Empty src bit-vectors fill the destination with Dst(0)'s.
-/// @param  dst_b E.g. might be std::begin(collection).
-/// @param  dst_e E.g. might be std::end(collection).
-/// @note   The iterator's @c value_type need not match the @c Block type.
-template<std::unsigned_integral Block, typename Allocator, typename Iter>
-constexpr void
-copy(const vector<Block, Allocator>& src, Iter dst_b, Iter dst_e)
-{
-    // Edge case?
-    if (dst_b == dst_e) return;
-
-    // Initialize the entire collection to all zeros
-    for (auto b = dst_b; b != dst_e; ++b) *b = 0;
-
-    // How many bits are there per src block and destination types?
-    using dst_type = typename std::iterator_traits<Iter>::value_type;
-    constexpr std::size_t bits_per_block = std::numeric_limits<Block>::digits;
-    constexpr std::size_t bits_per_dst = std::numeric_limits<dst_type>::digits;
-
-    // Grab a read-only reference to the src blocks
-    auto blocks = src.blocks();
-
-    if constexpr (bits_per_dst == bits_per_block) {
-        // This is the easiest case -- can just pop the blocks into the destination container with assignment
-        // We stop if we run out of blocks or run out of space in the container
-        for (std::size_t i = 0; i < blocks.size() && dst_b != dst_e; ++i, ++dst_b)
-            *dst_b = static_cast<dst_type>(blocks[i]);
-        return;
-    }
-    else if constexpr (bits_per_dst < bits_per_block) {
-        // Each block should fit into some integral number of destination words
-        static_assert(bits_per_block % bits_per_dst == 0,
-                      "Source blocks will not divide evenly into an array of destination words!");
-
-        // How many destination words fit in one block?
-        std::size_t dst_per_block = bits_per_block / bits_per_dst;
-
-        // Create a Block word that masks out all but the rightmost bits_per_dst piece0
-        constexpr Block mask = std::numeric_limits<dst_type>::max();
-
-        // Copy each block into the appropriate number of words in the container stopping when needed.
-        for (std::size_t i = 0; i < blocks.size() && dst_b != dst_e; ++i) {
-            auto src_word = blocks[i];
-            for (std::size_t j = 0; j < dst_per_block && dst_b != dst_e; ++j, ++dst_b, src_word >>= bits_per_dst)
-                *dst_b = static_cast<dst_type>(src_word & mask);
-        }
-    }
-    else {
-
-        // Pushing the smaller blocks into a number of larger destination words (sizes need to be clean multiples)
-        static_assert(bits_per_dst % bits_per_block == 0, "Container words are not each an even number of blocks!");
-
-        // How many Blocks fit into one destination word? Will be an clean integer number.
-        std::size_t blocks_per_dst = bits_per_dst / bits_per_block;
-
-        // Fill container with our blocks. More than one block will fit in each container word.
-        std::size_t i = 0;
-        for (; dst_b != dst_e && i < blocks.size(); ++dst_b) {
-            for (std::size_t j = 0; j < blocks_per_dst && i < blocks.size(); ++j, ++i) {
-                dst_type    src_word = blocks[i];
-                std::size_t shift = j * bits_per_block;
-                *dst_b |= dst_type(src_word << shift);
-            }
-        }
-    }
-}
-
-/// @brief  Overwrite a @c std::array of unsigned integer words from a bit-vector (at least as much of it as fits)
-/// @tparam Dst The array holds words of this unsigned type.
-/// @tparam N The array is this fixed size
-/// @param  src The src bit-vector. Empty src bit-vectors fill the destination with @c Dst(0)'s.
-/// @param  dst The destination array is first initialized to all zero then filled as far as possible from src.
-/// @note   The @c Dst type need not match the @c Block type.
-template<std::unsigned_integral Block, typename Allocator, std::unsigned_integral Dst, std::size_t N>
-constexpr void
-copy(const vector<Block, Allocator>& src, std::array<Dst, N>& dst)
-{
-    copy(src, std::begin(dst), std::end(dst));
-}
-
-/// @brief  Overwrite a `std::vector<Dst>`using the bits from a bit-vector  (at least as much of it as fits).
-/// @tparam Dst The vector holds words of this unsigned type.
-/// @param  src The src bit-vector. Empty src bit-vectors fill the destination with @c Dst(0)'s.
-/// @param  dst The destination vector is first initialized to all zero then filled as far as possible from src.
-/// @note   The @c Dst type need not match the@c Block type.
-template<std::unsigned_integral Block, typename Allocator, std::unsigned_integral Dst>
-constexpr void
-copy(const vector<Block, Allocator>& src, std::vector<Dst>& dst)
-{
-    copy(src, std::begin(dst), std::end(dst));
-}
-
-/// @brief  Overwrite a @c std::bitset with bits from a bit-vector  (at least as much of it as fits).
-/// @tparam N The size of the @c std::bitset which should be deduced in any case.
-/// @param  dst This is the destination @c std::bitset. first set to all zeros and then filled from the bit-vector.
-template<std::size_t N, std::unsigned_integral Block, typename Allocator>
-constexpr void
-copy(const vector<Block, Allocator>& src, std::bitset<N>& dst)
-{
-    dst.reset();
-    std::size_t n = std::min(src.size(), dst.size());
-    for (std::size_t i = 0; i < n; ++i) dst[i] = src[i];
-}
-
-/// @brief  Resize and then fill a @c std::vector<Dst> using the bits from a bit-vector.
-/// @tparam Dst The vector holds words of this unsigned type.
-/// @param  src The src bit-vector. Empty src bit-vectors give back an empty @c std::vector<Dst>
-/// @param  dst The destination vector is first resized to accommodate all the bit-vector then filled.
-/// @note   The @c Dst type need not match the @c Block type.
-template<std::unsigned_integral Block, typename Allocator, std::unsigned_integral Dst>
-constexpr void
-copy_all(const vector<Block, Allocator>& src, std::vector<Dst>& dst)
-{
-    // Correctly size the output vector (might be to 0) to hold ALL the source bits.
-    std::size_t src_bits = src.size();
-    std::size_t bits_per_dst = std::numeric_limits<Dst>::digits;
-    std::size_t dst_words = (bits_per_dst + src_bits - 1) / bits_per_dst;
-    dst.resize(dst_words);
-    copy(src, std::begin(dst), std::end(dst));
-}
 
 /// @brief Element by element AND of two equal sized bit-vectors.
 template<std::unsigned_integral Block, typename Allocator>

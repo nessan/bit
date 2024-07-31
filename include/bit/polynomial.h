@@ -487,17 +487,16 @@ public:
         // The algorithm works on the coefficient bit-vectors which we conflate in the comments with their polynomial.
         auto p = m_coeffs.sub(0, n);
 
-        // Return value r(x) := x^e mod P(x) has degree < n: r(x) = r_0 + r_1 x + ... + r_{n-1} x^{n-1}
-        vector_type r{n};
-
         // lambda: If degree[q] < n, this performs: q(x) <- x*q(x) mod P(x).
+        // The lambda works on the coefficients of q(x) passed as a bit-vector q.
         auto times_x_step = [&](auto& q) {
             bool add_p = q[n - 1];
             q >>= 1;
             if (add_p) q ^= p;
         };
 
-        // We precompute x^{n + i} mod P(x) for i = 0, ..., n-1 starting from x^n mod P(x) = p.
+        // We precompute x^{n + i} mod P(x) for i = 0, ..., n-1 starting from x^n mod P(x) = p
+        // We store each x^{n + i} mod P(x) as a bit-vector of its coefficients and put the lot into a std::vector.
         std::vector<vector_type> power_mod(n, vector_type{n});
         power_mod[0] = p;
         for (std::size_t i = 1; i < n; ++i) {
@@ -509,6 +508,7 @@ public:
         vector_type s{2 * n}, h{n};
 
         // lambda: If degree[q] < n, this performs: q(x) <- q(x)^2 mod P(x).
+        // The lambda works on the coefficients of q(x) passed as a bit-vector q.
         auto square_step = [&](auto& q) {
             // Square q(x) storing the result in workspace `s`.
             q.riffled(s);
@@ -526,6 +526,9 @@ public:
                     if (h[i]) q ^= power_mod[i];
             }
         };
+
+        // Our return value r(x) := x^e mod P(x) has degree < n: r(x) = r_0 + r_1 x + ... + r_{n-1} x^{n-1}.
+        vector_type r{n};
 
         // Case e = 2^N: Do N square_step calls to to compute x^(2^N) mod P(x) == (x^2)^N mod P(x).
         if (N_is_exponent) {
