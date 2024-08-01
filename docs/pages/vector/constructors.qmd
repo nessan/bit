@@ -15,13 +15,19 @@ template<typename Iter>
     requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
 explicit constexpr bit::vector(Iter b, Iter e);                    // <3>
 
+template<std::unsigned_integral Src, std::size_t N>
+explicit constexpr vector(const std::array<Src, N>& src);           // <4>
+
+template<std::unsigned_integral Src>
+explicit constexpr vector(const std::vector<Src>& src);             // <5>
+
 template<std::size_t N>
-explicit constexpr bit::vector(const std::bitset<N> &bs);           // <4>
+explicit constexpr bit::vector(const std::bitset<N> &bs);           // <6>
 
 explicit constexpr
-bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <5>
+bit::vector(std::size_t n, std::invocable<std::size_t> auto f);     // <7>
 
-explicit bit::vector(std::string_view str, bool bit_order = false); // <6>
+explicit bit::vector(std::string_view str, bool bit_order = false); // <8>
 
 ```
 1. Constructs a bit-vector with `n` elements all set to 0.                  \
@@ -29,19 +35,21 @@ explicit bit::vector(std::string_view str, bool bit_order = false); // <6>
 2. Create a bit-vector of size `n` by repeatedly copying the bits of a constant block value.
 3. Construct a bit-vector from any iteration of unsigned integers.          \
    The bits from each get appended to the vector.
-4. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
-5. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
+4. Construct a bit-vector by copying all the bits from a `std::array<Src, N>` of `N` unsigned words.
+5. Construct a bit-vector by copying all the bits from a `std::vector<Src>` of unsigned words.
+6. Construct a bit-vector of size `N` from a `std:::bitset<N>`.
+7. Construct a bit-vector with `n` elements using a function that takes a `std::size_t` argument. \
    Element `i` in the vector is set to 1 if `f(i) != 0`; otherwise it is 0.
-6. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
+8. Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.\
    See below.
 
 ### Template Parameters
 
-Parameter   | Description
----------   | -----------
-`Iter`      | An iterator---might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` must be some unsigned integer type but not necessarily the same as `Block`.
+Parameter        | Description
+---------------- | -----------
+`Iter`           | An iterator --- might be the type returned by any `std::cbegin(collection)` etc. `Iter::value_type` must be some unsigned integer type but not necessarily the same as `Block`.
+`Src`            | The type of words we take bits from --- must be some unsigned integer type but not necessarily the same as `Block`.
 `std::invocable` | [`std::invocable`] is the signature for a function over an index.
-
 : {.bordered .hover .responsive tbl-colwidths="[25,75]"}
 
 ### Method Arguments
@@ -65,12 +73,12 @@ Here are some examples of constructing a `bit::vector` from non-string data.
 int main()
 {
     bit::vector           v1;                                           // <1>
-    bit::vector           v2(32);                                       // <2>
+    bit::vector           v2{32};                                       // <2>
     std::vector<uint16_t> vec{65535, 0};
-    bit::vector           v3(vec.cbegin(), vec.cend());                 // <3>
-    bit::vector           v4(32, [](size_t k) { return (k + 1) % 2; }); // <4>
-    std::bitset<32>       bs(65535);
-    bit::vector           v5(bs);                                       // <5>
+    bit::vector           v3{vec};                                      // <3>
+    bit::vector           v4{32, [](size_t k) { return (k + 1) % 2; }}; // <4>
+    std::bitset<32>       bs{65535};
+    bit::vector           v5{bs};                                       // <5>
     std::cout << "v1 = " << v1.to_string()    << '\n';
     std::cout << "v2 = " << v2.to_string()    << '\n';
     std::cout << "v3 = " << v3.to_string()    << '\n';
@@ -82,7 +90,7 @@ int main()
 ```
 1. Default constructor makes an empty bit-vector.
 2. `bit::vector` of size 32 whose elements default to 0.
-3. `bit::vector` constructed from an iteration over a `std::vector` containing two 16-bit integers.
+3. `bit::vector` constructed from a `std::vector` containing two 16-bit integers.
 4. `bit::vector` constructed using a lambda that returns true if the element index is even.
 5. `bit::vector` constructed from a `std::bitset`.
 

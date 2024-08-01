@@ -64,6 +64,23 @@ public:
         append(b, e);
     }
 
+    /// @brief  Create a bit-vector by copying all the bits from a @c std::array<Src,N> of @c N unsigned words.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
+    /// @tparam N The fixed array size
+    template<std::unsigned_integral Src, std::size_t N>
+    explicit constexpr vector(const std::array<Src, N>& src) : vector{}
+    {
+        append(std::cbegin(src), std::cend(src));
+    }
+
+    /// @brief  Create a bit-vector by copying all the bits from a @c std::vector<Src> of unsigned words.
+    /// @tparam Src The type of the words for the source bits which need not be @c Block.
+    template<std::unsigned_integral Src>
+    explicit constexpr vector(const std::vector<Src>& src) : vector{}
+    {
+        append(std::cbegin(src), std::cend(src));
+    }
+
     /// @brief Create a bit-vector by copying the bits from a @c std::bitset.
     template<std::size_t N>
     explicit constexpr vector(const std::bitset<N>& bs) : vector{}
@@ -460,9 +477,9 @@ public:
     /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
-    constexpr vector& import_bits(Iter b, Iter e,bool add = false)
+    constexpr vector& import_bits(Iter b, Iter e, bool add = false)
     {
-        if(!add) clear();
+        if (!add) clear();
         return append(b, e);
     }
 
@@ -472,7 +489,7 @@ public:
     template<std::unsigned_integral Src = Block>
     constexpr vector& import_bits(std::initializer_list<Src> src, bool add = false)
     {
-        if(!add) clear();
+        if (!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
@@ -482,7 +499,7 @@ public:
     template<std::unsigned_integral Src, std::size_t N>
     constexpr vector& import_bits(const std::array<Src, N>& src, bool add = false)
     {
-        if(!add) clear();
+        if (!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
@@ -492,7 +509,7 @@ public:
     template<std::unsigned_integral Src>
     constexpr vector& import_bits(const std::vector<Src>& src, bool add = false)
     {
-        if(!add) clear();
+        if (!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
@@ -501,7 +518,7 @@ public:
     template<std::size_t N>
     constexpr vector& import_bits(const std::bitset<N>& src, bool add = false)
     {
-        if(!add) clear();
+        if (!add) clear();
         return append(src);
     }
 
