@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working in GF(2) - bit::vector — Overwrites</title>
+<title>Working in GF(2) - bit::vector — Importing Bits</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -140,11 +140,11 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Working in GF(2) - bit::vector — Overwrites">
+<meta property="og:title" content="Working in GF(2) - bit::vector — Importing Bits">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
 <meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="Working in GF(2) - bit::vector — Overwrites">
+<meta name="twitter:title" content="Working in GF(2) - bit::vector — Importing Bits">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -226,7 +226,7 @@ window.Quarto = {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Overwrites</h1>
+          <h1 class="quarto-secondary-nav-title"><code>bit::vector</code> — Importing Bits</h1>
         </a>     
     </div>
   </nav>
@@ -529,19 +529,19 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#template-parameters" id="toc-template-parameters" class="nav-link active" data-scroll-target="#template-parameters">Template Parameters</a>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a>
   <ul class="collapse">
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/set_to.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/import_bits.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Overwrites</h1>
+<h1 class="title d-none d-lg-block"><code>bit::vector</code> — Importing Bits</h1>
 </div>
 
 
@@ -575,48 +575,48 @@ window.Quarto = {
 <!-- Formatted links to the pages for items in the standard library -->
 <!--Links to other software tools we reference -->
 <!-- Pages and Wikipedia articles referenced in the documentation -->
-<p>A bit-vector can be overwritten with bits sourced from an unsigned word, a collection of unsigned words, or a <code>std::bitset</code>:</p>
+<p>A bit-vector can be import bits sourced from an unsigned word, a collection of unsigned words, or a <code>std::bitset</code>. By default the imported bits completely overwrite the bit-vector but you can set the <code>add</code> parameter to true to have the bits appended to the end of the bit-vector instead.</p>
 <div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">=&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span>Src src<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span>Src src<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span>
 <span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-1-4"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> Iter<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-5" class="code-annotation-target"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span>Iter b<span class="op">,</span> Iter e<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-5" class="code-annotation-target"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span>Iter b<span class="op">,</span> Iter e<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span>
 <span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-1-7"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span><span class="bu">std::</span>initializer_list<span class="op">&lt;</span>Src<span class="op">&gt;</span> src<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span><span class="bu">std::</span>initializer_list<span class="op">&lt;</span>Src<span class="op">&gt;</span> src<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span>
 <span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-1-10"><a href="#annotated-cell-1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-11" class="code-annotation-target"><a href="#annotated-cell-1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Src<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-11" class="code-annotation-target"><a href="#annotated-cell-1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Src<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span>
 <span id="annotated-cell-1-12"><a href="#annotated-cell-1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-1-13"><a href="#annotated-cell-1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">,</span> <span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-14" class="code-annotation-target"><a href="#annotated-cell-1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>array<span class="op">&lt;</span>Src<span class="op">,</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-14" class="code-annotation-target"><a href="#annotated-cell-1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>array<span class="op">&lt;</span>Src<span class="op">,</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span>
 <span id="annotated-cell-1-15"><a href="#annotated-cell-1-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-1-16"><a href="#annotated-cell-1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-1-17" class="code-annotation-target"><a href="#annotated-cell-1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> set_to<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>bitset<span class="op">&lt;</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-1-17" class="code-annotation-target"><a href="#annotated-cell-1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> vector<span class="op">&amp;</span> import_bits<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>bitset<span class="op">&lt;</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>src<span class="op">,</span> <span class="dt">bool</span> add <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1">Overwrites the bit-vector with the bits from a single word <code>src</code>, which is some unsigned integer type.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1">Imports the bits from a single word <code>src</code>, which is some unsigned integer type.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="2">Overwrites the bit-vector with the bits from an iteration where the <code>value_type</code> of the iterator is some unsigned integer type.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="2">Imports the bits from an iteration where the <code>value_type</code> of the iterator is some unsigned integer type.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="8" data-code-annotation="3">Overwrites the bit-vector with the bits from an initializer-style list of unsigned integers.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="8" data-code-annotation="3">Imports the bits from an initializer-style list of unsigned integers.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="11" data-code-annotation="4">Overwrites the bit-vector with the bits from a vector of unsigned integers.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="11" data-code-annotation="4">Imports the bits from a vector of unsigned integers.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="14" data-code-annotation="5">Overwrites the bit-vector with the bits from a fixed array of unsigned integers.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="14" data-code-annotation="5">Imports the bits from a fixed array of unsigned integers.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="6">6</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="17" data-code-annotation="6">Overwrites the bit-vector with the bits from a <code>std::bitset</code>.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="17" data-code-annotation="6">Imports the bits from a <code>std::bitset</code>.</span>
 </dd>
 </dl>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -632,13 +632,13 @@ These resize the destination
 <p>These functions all resize the destination bit-vector to make it absorb all the source bits.</p>
 </div>
 </div>
-<section id="template-parameters" class="level2">
-<h2 class="anchored" data-anchor-id="template-parameters">Template Parameters</h2>
+<section id="parameters" class="level2">
+<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="table-responsive">
 <table class="table-bordered table-hover caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 90%">
+<col style="width: 20%">
+<col style="width: 80%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -655,6 +655,10 @@ These resize the destination
 <td><code>Iter</code></td>
 <td>An iterator — might be the type returned by <code>std::cbegin(collection)</code> and <code>std::cend(collection)</code>. The <code>Iter::value_type</code> should be some unsigned integer type, but it need not match the <code>Block</code> type.</td>
 </tr>
+<tr class="odd">
+<td><code>add</code></td>
+<td>If <code>true</code> then we append the imported bits to the end of the bit-vector. The default value of the parameter is <code>false</code> and we first call the <a href="../../pages/vector/clear.html"><code>vector::clear</code></a> method before importing the bits.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -664,17 +668,17 @@ These resize the destination
 <span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector v<span class="op">;</span></span>
 <span id="annotated-cell-2-5"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-6" class="code-annotation-target"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set_to<span class="op">(</span><span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-6" class="code-annotation-target"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>import_bits<span class="op">(</span><span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
 <span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set_to<span class="op">({</span><span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">255</span><span class="op">),</span> <span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">0</span><span class="op">)});</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>import_bits<span class="op">({</span><span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">255</span><span class="op">),</span> <span class="bu">std::</span>uint8_t<span class="op">(</span><span class="dv">0</span><span class="op">)});</span></span>
 <span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-10" class="code-annotation-target"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>uint8_t<span class="op">&gt;</span> vec<span class="op">{</span><span class="dv">255</span><span class="op">,</span> <span class="dv">0</span><span class="op">};</span></span>
-<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set_to<span class="op">(</span>vec<span class="op">);</span></span>
+<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>import_bits<span class="op">(</span>vec<span class="op">);</span></span>
 <span id="annotated-cell-2-12"><a href="#annotated-cell-2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-13" class="code-annotation-target"><a href="#annotated-cell-2-13" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set_to<span class="op">(</span>vec<span class="op">.</span>cbegin<span class="op">(),</span> vec<span class="op">.</span>cend<span class="op">());</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-13" class="code-annotation-target"><a href="#annotated-cell-2-13" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>import_bits<span class="op">(</span>vec<span class="op">.</span>cbegin<span class="op">(),</span> vec<span class="op">.</span>cend<span class="op">());</span></span>
 <span id="annotated-cell-2-14"><a href="#annotated-cell-2-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-2-15" class="code-annotation-target"><a href="#annotated-cell-2-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>bitset<span class="op">&lt;</span><span class="dv">8</span><span class="op">&gt;</span> bs<span class="op">(</span><span class="dv">255</span><span class="op">);</span></span>
-<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>set_to<span class="op">(</span>bs<span class="op">);</span></span>
+<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16" aria-hidden="true" tabindex="-1"></a>    v<span class="op">.</span>import_bits<span class="op">(</span>bs<span class="op">);</span></span>
 <span id="annotated-cell-2-17"><a href="#annotated-cell-2-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v: "</span> <span class="op">&lt;&lt;</span> v <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="annotated-cell-2-18"><a href="#annotated-cell-2-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
@@ -713,8 +717,8 @@ These resize the destination
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
 <p><a href="../../pages/vector/append.html"><code>vector::append</code></a><br>
-<a href="../../pages/vector/export_to.html"><code>vector::export_to</code></a><br>
-<a href="../../pages/vector/export_to.html"><code>vector::export_all_to</code></a></p>
+<a href="../../pages/vector/export_bits.html"><code>vector::export_bits</code></a><br>
+<a href="../../pages/vector/export_bits.html"><code>vector::export_all_bits</code></a></p>
 
 
 </section>
@@ -1138,7 +1142,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/set_to.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/import_bits.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
