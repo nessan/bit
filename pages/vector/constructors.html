@@ -589,13 +589,19 @@ window.Quarto = {
 <span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">requires</span> <span class="bu">std::</span>is_unsigned_v<span class="op">&lt;</span><span class="kw">typename</span> <span class="bu">std::</span>iterator_traits<span class="op">&lt;</span>Iter<span class="op">&gt;::</span><span class="dt">value_type</span><span class="op">&gt;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> bit<span class="op">::</span>vector<span class="op">(</span>Iter b<span class="op">,</span> Iter e<span class="op">);</span></span>
 <span id="annotated-cell-1-8"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-10" class="code-annotation-target"><a href="#annotated-cell-1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> bit<span class="op">::</span>vector<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>bitset<span class="op">&lt;</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>bs<span class="op">);</span></span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">,</span> <span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-1-10" class="code-annotation-target"><a href="#annotated-cell-1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> vector<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>array<span class="op">&lt;</span>Src<span class="op">,</span> N<span class="op">&gt;&amp;</span> src<span class="op">);</span></span>
 <span id="annotated-cell-1-11"><a href="#annotated-cell-1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-13" class="code-annotation-target"><a href="#annotated-cell-1-13" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector<span class="op">(</span><span class="bu">std::</span>size_t n<span class="op">,</span> <span class="bu">std::</span>invocable<span class="op">&lt;</span><span class="bu">std::</span>size_t<span class="op">&gt;</span> <span class="kw">auto</span> f<span class="op">);</span></span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Src<span class="op">&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-1-13" class="code-annotation-target"><a href="#annotated-cell-1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> vector<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Src<span class="op">&gt;&amp;</span> src<span class="op">);</span></span>
 <span id="annotated-cell-1-14"><a href="#annotated-cell-1-14" aria-hidden="true" tabindex="-1"></a></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-1-15" class="code-annotation-target"><a href="#annotated-cell-1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> bit<span class="op">::</span>vector<span class="op">(</span><span class="bu">std::</span>string_view str<span class="op">,</span> <span class="dt">bool</span> bit_order <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>size_t N<span class="op">&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-1-16" class="code-annotation-target"><a href="#annotated-cell-1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span> bit<span class="op">::</span>vector<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>bitset<span class="op">&lt;</span>N<span class="op">&gt;</span> <span class="op">&amp;</span>bs<span class="op">);</span></span>
+<span id="annotated-cell-1-17"><a href="#annotated-cell-1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> <span class="kw">constexpr</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="7" onclick="event.preventDefault();">7</a><span id="annotated-cell-1-19" class="code-annotation-target"><a href="#annotated-cell-1-19" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector<span class="op">(</span><span class="bu">std::</span>size_t n<span class="op">,</span> <span class="bu">std::</span>invocable<span class="op">&lt;</span><span class="bu">std::</span>size_t<span class="op">&gt;</span> <span class="kw">auto</span> f<span class="op">);</span></span>
+<span id="annotated-cell-1-20"><a href="#annotated-cell-1-20" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="8" onclick="event.preventDefault();">8</a><span id="annotated-cell-1-21" class="code-annotation-target"><a href="#annotated-cell-1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">explicit</span> bit<span class="op">::</span>vector<span class="op">(</span><span class="bu">std::</span>string_view str<span class="op">,</span> <span class="dt">bool</span> bit_order <span class="op">=</span> <span class="kw">false</span><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
 <dd>
@@ -613,16 +619,24 @@ The bits from each get appended to the vector.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="10" data-code-annotation="4">Construct a bit-vector of size <code>N</code> from a <code>std:::bitset&lt;N&gt;</code>.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="10" data-code-annotation="4">Construct a bit-vector by copying all the bits from a <code>std::array&lt;Src, N&gt;</code> of <code>N</code> unsigned words.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="13" data-code-annotation="5">Construct a bit-vector with <code>n</code> elements using a function that takes a <code>std::size_t</code> argument.<br>
-Element <code>i</code> in the vector is set to 1 if <code>f(i) != 0</code>; otherwise it is 0.</span>
+<span data-code-cell="annotated-cell-1" data-code-lines="13" data-code-annotation="5">Construct a bit-vector by copying all the bits from a <code>std::vector&lt;Src&gt;</code> of unsigned words.</span>
 </dd>
 <dt data-target-cell="annotated-cell-1" data-target-annotation="6">6</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="15" data-code-annotation="6">Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.<br>
+<span data-code-cell="annotated-cell-1" data-code-lines="16" data-code-annotation="6">Construct a bit-vector of size <code>N</code> from a <code>std:::bitset&lt;N&gt;</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="7">7</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="19" data-code-annotation="7">Construct a bit-vector with <code>n</code> elements using a function that takes a <code>std::size_t</code> argument.<br>
+Element <code>i</code> in the vector is set to 1 if <code>f(i) != 0</code>; otherwise it is 0.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="8">8</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="21" data-code-annotation="8">Construct a bit-vector from a string that typically will be all 0’s and 1’s or all hex characters.<br>
 See below.</span>
 </dd>
 </dl>
@@ -643,9 +657,13 @@ See below.</span>
 <tbody>
 <tr class="odd">
 <td><code>Iter</code></td>
-<td>An iterator—might be the type returned by any <code>std::cbegin(collection)</code> etc. <code>Iter::value_type</code> must be some unsigned integer type but not necessarily the same as <code>Block</code>.</td>
+<td>An iterator — might be the type returned by any <code>std::cbegin(collection)</code> etc. <code>Iter::value_type</code> must be some unsigned integer type but not necessarily the same as <code>Block</code>.</td>
 </tr>
 <tr class="even">
+<td><code>Src</code></td>
+<td>The type of words we take bits from — must be some unsigned integer type but not necessarily the same as <code>Block</code>.</td>
+</tr>
+<tr class="odd">
 <td><code>std::invocable</code></td>
 <td><a href="https://en.cppreference.com/w/cpp/concepts/invocable"><code>std::invocable</code></a> is the signature for a function over an index.</td>
 </tr>
@@ -696,12 +714,12 @@ See below.</span>
 <span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
 <span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v1<span class="op">;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v2<span class="op">(</span><span class="dv">32</span><span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v2<span class="op">{</span><span class="dv">32</span><span class="op">};</span></span>
 <span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">uint16_t</span><span class="op">&gt;</span> vec<span class="op">{</span><span class="dv">65535</span><span class="op">,</span> <span class="dv">0</span><span class="op">};</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v3<span class="op">(</span>vec<span class="op">.</span>cbegin<span class="op">(),</span> vec<span class="op">.</span>cend<span class="op">());</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v4<span class="op">(</span><span class="dv">32</span><span class="op">,</span> <span class="op">[](</span><span class="dt">size_t</span> k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>k <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">2</span><span class="op">;</span> <span class="op">});</span></span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>bitset<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;</span>       bs<span class="op">(</span><span class="dv">65535</span><span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-10" class="code-annotation-target"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v5<span class="op">(</span>bs<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v3<span class="op">{</span>vec<span class="op">};</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v4<span class="op">{</span><span class="dv">32</span><span class="op">,</span> <span class="op">[](</span><span class="dt">size_t</span> k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>k <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">2</span><span class="op">;</span> <span class="op">}};</span></span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>bitset<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;</span>       bs<span class="op">{</span><span class="dv">65535</span><span class="op">};</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-10" class="code-annotation-target"><a href="#annotated-cell-2-10" aria-hidden="true" tabindex="-1"></a>    bit<span class="op">::</span>vector           v5<span class="op">{</span>bs<span class="op">};</span></span>
 <span id="annotated-cell-2-11"><a href="#annotated-cell-2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v1 = "</span> <span class="op">&lt;&lt;</span> v1<span class="op">.</span>to_string<span class="op">()</span>    <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="annotated-cell-2-12"><a href="#annotated-cell-2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v2 = "</span> <span class="op">&lt;&lt;</span> v2<span class="op">.</span>to_string<span class="op">()</span>    <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="annotated-cell-2-13"><a href="#annotated-cell-2-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"v3 = "</span> <span class="op">&lt;&lt;</span> v3<span class="op">.</span>to_string<span class="op">()</span>    <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
@@ -721,7 +739,7 @@ See below.</span>
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="7" data-code-annotation="3"><code>bit::vector</code> constructed from an iteration over a <code>std::vector</code> containing two 16-bit integers.</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="7" data-code-annotation="3"><code>bit::vector</code> constructed from a <code>std::vector</code> containing two 16-bit integers.</span>
 </dd>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="4">4</dt>
 <dd>
