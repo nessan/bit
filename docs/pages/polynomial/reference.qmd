@@ -19,7 +19,7 @@ Method | Description
 `operator=`     | Assigns a `bool` to the referenced coefficient.
 `to_bool`       | Return the value of the referenced coefficient as a boolean.
 `operator bool` | Casts the referenced coefficient to a boolean value.
-`set_to(val)`   | Sets the value of the referenced polynomial coefficient to the passed argument.
+`import_bits(val)`   | Sets the value of the referenced polynomial coefficient to the passed argument.
 `set`           | Sets the referenced polynomial coefficient to 1.
 `reset`         | Sets the referenced polynomial coefficient to 0.
 `flip`          | Flips the referenced referenced polynomial coefficient from 1 to 0 and vice versa.

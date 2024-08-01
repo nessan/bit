@@ -1,28 +1,18 @@
-#include "common.h"
-#include "reduce.h"
-
-int
-main()
+#include <bit/bit.h>
+int main()
 {
-    utilities::pretty_print_thousands();
-
-    std::size_t N = 447'124'345;
-    auto        p = bit::vector<>::from(1234019u);
-    std::print("Computing x^{:L} mod p(x) = {}\n", N, bit::polynomial(p));
-
-    utilities::stopwatch sw;
-
-    std::print("Method bit::polynomial_mod  ... ");
-    sw.click();
-    auto r = bit::polynomial_mod(N, p);
-    sw.click();
-    std::print("returned {} in {:.6f} seconds.\n", bit::polynomial(r), sw.lap());
-
-    std::print("Method polynomial_mod2      ... ");
-    sw.click();
-    r = jsn::polynomial_mod(N, p, false);
-    sw.click();
-    std::print("returned {} in {:.6f} seconds.\n", bit::polynomial(r), sw.lap());
-
-    return 0;
+    bit::vector v;                                          // <1>
+    std::cout << "v: " << v << '\n';
+    v.import_bits(std::uint8_t(0));                         // <2>
+    std::cout << "v: " << v << '\n';
+    v.import_bits({std::uint8_t(255), std::uint8_t(0)});    // <3>
+    std::cout << "v: " << v << '\n';
+    std::vector<std::uint8_t> vec{255, 0};                  // <4>
+    v.import_bits(vec);
+    std::cout << "v: " << v << '\n';
+    v.import_bits(vec.cbegin(), vec.cend());                // <5>
+    std::cout << "v: " << v << '\n';
+    std::bitset<8> bs(255);                                 // <6>
+    v.import_bits(bs);
+    std::cout << "v: " << v << '\n';
 }

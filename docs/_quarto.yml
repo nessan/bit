@@ -18,7 +18,7 @@ format:
             - cosmo
             - assets/css/theme.scss
 website:
-    title: "Linear Algebra over GF(2)"
+    title: "Working in GF(2)"
     image: "assets/images/logo.jpg"
     favicon: "assets/images/logo.jpg"
     open-graph: true

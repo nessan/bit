@@ -186,10 +186,10 @@ Method | Description
 ### Import and Export
 Method | Description
 ------ | -----------
-[`vector::export_to`]       | Use the bits from the bit-vector to fill various destinations without resizing the destination.
-[`vector::export_all_to`]   | Resize and fill a `std::vector` of some unsigned integers type with **all** the bits from this bit-vector.
-[`vector::set_to`]          | Overwrite the bit-vector with bits from various sources.
-: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+[`vector::export_bits`]     | Use the bits from the bit-vector to fill various destinations without resizing the destination.
+[`vector::export_all_bits`] | Resize and fill a `std::vector` of some unsigned integer type with **all** the bits from this bit-vector.
+[`vector::import_bits`]     | Import bits from various sources into this bit-vector. By default these methods completely overwrite the bit-vector with the imported data but can instead append to the existing elements if that is desired.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
 
 ### String Conversions
 Method | Description

@@ -176,21 +176,21 @@ public:
         constexpr operator bool() const { return to_bool(); }
 
         // Set the underlying polynomial coefficient to a specific boolean value.
-        constexpr reference& set_to(bool rhs)
+        constexpr reference& import_bits(bool rhs)
         {
             m_poly.set(m_index, rhs);
             return *this;
         }
 
         // Have some custom operator='s
-        constexpr reference& operator=(const reference& rhs) { return set_to(rhs.to_bool()); }
-        constexpr reference& operator=(reference&& rhs) { return set_to(rhs.to_bool()); }
-        constexpr reference& operator=(bool rhs) { return set_to(rhs); }
+        constexpr reference& operator=(const reference& rhs) { return import_bits(rhs.to_bool()); }
+        constexpr reference& operator=(reference&& rhs) { return import_bits(rhs.to_bool()); }
+        constexpr reference& operator=(bool rhs) { return import_bits(rhs); }
 
         // A few bit operations such as p[i].set() etc.
-        constexpr reference& set() { return set_to(true); }
-        constexpr reference& reset() { return set_to(false); }
-        constexpr reference& flip() { return set_to(!to_bool()); }
+        constexpr reference& set() { return import_bits(true); }
+        constexpr reference& reset() { return import_bits(false); }
+        constexpr reference& flip() { return import_bits(!to_bool()); }
 
     private:
         polynomial& m_poly;  // The polynomial of interest.

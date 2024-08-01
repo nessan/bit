@@ -42,8 +42,8 @@ $$
 [`vector::dot`]:                        /pages/vector/dot.qmd
 [`vector::element`]:                    /pages/vector/access.qmd
 [`vector::empty`]:                      /pages/vector/size.qmd
-[`vector::export_all_to`]:              /pages/vector/export_to.qmd
-[`vector::export_to`]:                  /pages/vector/export_to.qmd
+[`vector::export_all_bits`]:            /pages/vector/export_bits.qmd
+[`vector::export_bits`]:                /pages/vector/export_bits.qmd
 [`vector::empty`]:                      /pages/vector/size.qmd
 [`vector::final_set`]:                  /pages/vector/first_set.qmd
 [`vector::first_set`]:                  /pages/vector/first_set.qmd
@@ -53,6 +53,7 @@ $$
 [`vector::from`]:                       /pages/vector/from.qmd
 [`vector::front`]:                      /pages/vector/access.qmd
 [`vector::if_set_call`]:                /pages/vector/if_set_call.qmd
+[`vector::import_bits`]:                /pages/vector/import_bits.qmd
 [`vector::join`]:                       /pages/vector/join.qmd
 [`vector::next_set`]:                   /pages/vector/first_set.qmd
 [`vector::none`]:                       /pages/vector/all.qmd
@@ -91,7 +92,6 @@ $$
 [`vector::set_if`]:                     /pages/vector/set_if.qmd
 [`vector::set_indices`]:                /pages/vector/indices.qmd
 [`vector::set`]:                        /pages/vector/set.qmd
-[`vector::set_to`]:                     /pages/vector/set_to.qmd
 [`vector::shrink_to_fit`]:              /pages/vector/reserve.qmd
 [`vector::size`]:                       /pages/vector/size.qmd
 [`vector::stream<<`]:                   /pages/vector/stream.qmd

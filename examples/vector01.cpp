@@ -224,10 +224,10 @@ main()
 
     // clang-format off
     std::print("Exporting that bit-vector to words of various types:\n");
-    uint8_t  wd8;   v50.export_to(wd8);
-    uint16_t wd16;  v50.export_to(wd16);
-    uint32_t wd32;  v50.export_to(wd32);
-    uint64_t wd64;  v50.export_to(wd64);
+    uint8_t  wd8;   v50.export_bits(wd8);
+    uint16_t wd16;  v50.export_bits(wd16);
+    uint32_t wd32;  v50.export_bits(wd32);
+    uint64_t wd64;  v50.export_bits(wd64);
     std::print("uint8_t:  {}\n", static_cast<int>(wd8));
     std::print("uint16_t: {}\n", wd16);
     std::print("uint32_t: {}\n", wd32);
@@ -235,20 +235,20 @@ main()
 
     std::print("Exporting that bit-vector into arrays of words of various types:\n");
     constexpr std::size_t N = 4;
-    std::array<uint8_t,  N> a08;  v50.export_to(a08);
-    std::array<uint16_t, N> a16;  v50.export_to(a16);
-    std::array<uint32_t, N> a32;  v50.export_to(a32);
-    std::array<uint64_t, N> a64;  v50.export_to(a64);
+    std::array<uint8_t,  N> a08;  v50.export_bits(a08);
+    std::array<uint16_t, N> a16;  v50.export_bits(a16);
+    std::array<uint32_t, N> a32;  v50.export_bits(a32);
+    std::array<uint64_t, N> a64;  v50.export_bits(a64);
     std::print("uint8_t:  {}\n", a08);
     std::print("uint16_t: {}\n", a16);
     std::print("uint32_t: {}\n", a32);
     std::print("uint64_t: {}\n\n", a64);
 
     std::print("Exporting ALL of that bit-vector into vectors of words of various types:\n");
-    std::vector<uint8_t>  v08;  v50.export_all_to(v08);
-    std::vector<uint16_t> v16;  v50.export_all_to(v16);
-    std::vector<uint32_t> v32;  v50.export_all_to(v32);
-    std::vector<uint64_t> v64;  v50.export_all_to(v64);
+    std::vector<uint8_t>  v08;  v50.export_all_bits(v08);
+    std::vector<uint16_t> v16;  v50.export_all_bits(v16);
+    std::vector<uint32_t> v32;  v50.export_all_bits(v32);
+    std::vector<uint64_t> v64;  v50.export_all_bits(v64);
     std::print("uint8_t:  {}\n", v08);
     std::print("uint16_t: {}\n", v16);
     std::print("uint32_t: {}\n", v32);

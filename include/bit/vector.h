@@ -445,57 +445,63 @@ public:
         return *this;
     }
 
-    /// @brief Overwrite this bit-vector with the bits from an unsigned word.
-    /// @note  The @c Src type need not match the @c Block type.
+    /// @brief Import bits from an unsigned word into this bit-vector.
+    /// @param src The @c Src type need not match the @c Block type.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<std::unsigned_integral Src>
-    constexpr vector& set_to(Src src)
+    constexpr vector& import_bits(Src src, bool add = false)
     {
-        clear();
+        if (!add) clear();
         return append(src);
     }
 
-    /// @brief Overwrite this bit-vector with an iterated collection of unsigned words treated as bits.
-    /// @note  The @c value_type of the iterator should be some unsigned integer type but needn’t be @c Block.
+    /// @brief Import bits from an iteration of unsigned words into this bit-vector.
+    /// @param b,e The @c value_type of the iterator should be some unsigned integer type but needn’t be @c Block.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
-    constexpr vector& set_to(Iter b, Iter e)
+    constexpr vector& import_bits(Iter b, Iter e,bool add = false)
     {
-        clear();
+        if(!add) clear();
         return append(b, e);
     }
 
-    /// @brief Overwrite this bit-vector with a whole list of unsigned source words treated as bits.
-    /// @note  The @c Src type need not match the @c Block type.
+    /// @brief Import bits from an initializer list of unsigned words into this bit-vector.
+    /// @param src The @c Src type need not match the @c Block type.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<std::unsigned_integral Src = Block>
-    constexpr vector& set_to(std::initializer_list<Src> src)
+    constexpr vector& import_bits(std::initializer_list<Src> src, bool add = false)
     {
-        clear();
+        if(!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief Overwrite this bit-vector with a @c std::array<Src,N> of @c N unsigned source words treated as bits.
-    /// @note  The @c Src type need not match the @c Block type.
+    /// @brief Import bits from a @c std::array<Src,N> of @c N unsigned words into this bit-vector.
+    /// @param src The @c Src type need not match the @c Block type.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<std::unsigned_integral Src, std::size_t N>
-    constexpr vector& set_to(const std::array<Src, N>& src)
+    constexpr vector& import_bits(const std::array<Src, N>& src, bool add = false)
     {
-        clear();
+        if(!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief Overwrite this bit-vector with a @c std::vector<Src> of unsigned source words treated as bits.
-    /// @note  The @c Src type need not match the @c Block type.
+    /// @brief Import bits from a @c std::vector<Src> of unsigned words into this bit-vector.
+    /// @param src The @c Src type need not match the @c Block type.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<std::unsigned_integral Src>
-    constexpr vector& set_to(const std::vector<Src>& src)
+    constexpr vector& import_bits(const std::vector<Src>& src, bool add = false)
     {
-        clear();
+        if(!add) clear();
         return append(std::cbegin(src), std::cend(src));
     }
 
-    /// @brief  Overwrite this bit-vector with the bits from a @c std::bitset of size @c N
+    /// @brief Import bits from a @c std::bitset<N> into this bit-vector.
+    /// @param add If true the imported bits are appended -- by default they overwrite the bit-vector.
     template<std::size_t N>
-    constexpr vector& set_to(const std::bitset<N>& src)
+    constexpr vector& import_bits(const std::bitset<N>& src, bool add = false)
     {
-        clear();
+        if(!add) clear();
         return append(src);
     }
 
@@ -503,7 +509,7 @@ public:
     /// @note  The @c Dst type need not match the @c Block type.
     /// @note  If this bit-vector is empty then @c dst is set to 0.
     template<std::unsigned_integral Dst>
-    constexpr void export_to(Dst& dst) const
+    constexpr void export_bits(Dst& dst) const
     {
         // Initialize the destination word.
         dst = 0;
@@ -546,7 +552,7 @@ public:
     /// @note  The @c value_type associated with the iterator must be unsigned but not necessarily the same as @c Block.
     template<typename Iter>
         requires std::is_unsigned_v<typename std::iterator_traits<Iter>::value_type>
-    constexpr void export_to(Iter dst_b, Iter dst_e) const
+    constexpr void export_bits(Iter dst_b, Iter dst_e) const
     {
         // Edge case?
         if (dst_b == dst_e) return;
@@ -607,25 +613,25 @@ public:
     /// @param dst The destination array is first initialized to all zeros & then filled as much as possible.
     /// @note  The @c Dst type need not match the @c Block type.
     template<std::unsigned_integral Dst, std::size_t N>
-    constexpr void export_to(std::array<Dst, N>& dst) const
+    constexpr void export_bits(std::array<Dst, N>& dst) const
     {
-        export_to(std::begin(dst), std::end(dst));
+        export_bits(std::begin(dst), std::end(dst));
     }
 
     /// @brief Export the bit-vector to a @c std::vector of unsigned integer words (at least as much of it as fits).
     /// @param dst The destination vector is first initialized to all zeros & then filled as much as possible.
-    /// @note  The size of the @c dst vector is @b not changed -- see also the @c export_all_to method.
+    /// @note  The size of the @c dst vector is @b not changed -- see also the @c export_all_bits method.
     /// @note  The @c Dst type need not match the @c Block type.
     template<std::unsigned_integral Dst>
-    constexpr void export_to(std::vector<Dst>& dst) const
+    constexpr void export_bits(std::vector<Dst>& dst) const
     {
-        export_to(std::begin(dst), std::end(dst));
+        export_bits(std::begin(dst), std::end(dst));
     }
 
     /// @brief Export the bit-vector to a @c std::bitset (at least as much of it as fits).
     /// @param dst The destination bitset is first initialized to all zeros & then filled as much as possible.
     template<std::size_t N>
-    constexpr void export_to(std::bitset<N>& dst) const
+    constexpr void export_bits(std::bitset<N>& dst) const
     {
         // We do this the slow & simplest way -- no standard methods to access the block store ina std::bitset.
         dst.reset();
@@ -638,13 +644,13 @@ public:
     /// @param dst The destination vector is first resized to accommodate the full bit-vector then filled.
     /// @note  The @c Dst type need not match the @c Block type.
     template<std::unsigned_integral Dst>
-    constexpr void export_all_to(std::vector<Dst>& dst) const
+    constexpr void export_all_bits(std::vector<Dst>& dst) const
     {
         // Correctly size the output vector (might be to 0) to hold ALL the source bits.
         std::size_t bits_per_dst = std::numeric_limits<Dst>::digits;
         std::size_t dst_words = (bits_per_dst + size() - 1) / bits_per_dst;
         dst.resize(dst_words);
-        export_to(std::begin(dst), std::end(dst));
+        export_bits(std::begin(dst), std::end(dst));
     }
 
     /// @brief  Create a "riffled" version of this bit-vector (i.e. one with our bits interleaved with zeros).
@@ -698,7 +704,7 @@ public:
         bit_verify(begin < m_size, "begin = {}, m_size = {}", begin, m_size);
         bit_verify(begin + len < m_size, "begin = {}, len = {}, m_size = {}", begin, len, m_size);
 
-        // Create the right sized rub-vector all initialized to 0's
+        // Create the right sized sub-vector all initialized to 0's
         vector retval{len};
 
         // Where does the begin bit of the sub-vector lie in our block store?
@@ -834,20 +840,20 @@ public:
         // Have some custom operator='s
         constexpr reference& operator=(const reference& rhs)
         {
-            set_to(rhs.to_bool());
+            import_bits(rhs.to_bool());
             return *this;
         }
         constexpr reference& operator=(reference&& rhs) noexcept
         {
-            set_to(rhs.to_bool());
+            import_bits(rhs.to_bool());
             return *this;
         }
         constexpr reference& operator=(bool rhs)
         {
-            set_to(rhs);
+            import_bits(rhs);
             return *this;
         }
-        constexpr reference& set_to(bool rhs)
+        constexpr reference& import_bits(bool rhs)
         {
             rhs ? set() : reset();
             return *this;
