@@ -66,16 +66,45 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V57HYKPDW8"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G40Q4SR3K4"></script>
 
 <script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
+gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Working in GF(2) - FAQ">
 <meta property="og:description" content="">
@@ -486,6 +515,23 @@ gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
 </header>
 
 
+<!-- Links and shortcuts used throughout the documentation -->
+<!-- Math shortcuts we use frequently in the documentation -->
+<div class="hidden">
+<p><span class="math display">\[
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
+\]</span></p>
+</div>
+<!-- bit_verify -->
+<!-- bit::vector -->
+<!-- bit::matrix -->
+<!-- bit::gauss -->
+<!-- bit::lu -->
+<!-- bit::polynomial -->
+<!-- The standard library -->
+<!-- Other software etc. -->
+<!-- Articles and Wikipedia pages -->
 <p>This eventually will be a list of FAQ’s</p>
 
 

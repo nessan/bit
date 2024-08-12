@@ -100,14 +100,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V57HYKPDW8"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G40Q4SR3K4"></script>
 
 <script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
+gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -555,6 +555,23 @@ window.Quarto = {
 </header>
 
 
+<!-- Links and shortcuts used throughout the documentation -->
+<!-- Math shortcuts we use frequently in the documentation -->
+<div class="hidden">
+<p><span class="math display">\[
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
+\]</span></p>
+</div>
+<!-- bit_verify -->
+<!-- bit::vector -->
+<!-- bit::matrix -->
+<!-- bit::gauss -->
+<!-- bit::lu -->
+<!-- bit::polynomial -->
+<!-- The standard library -->
+<!-- Other software etc. -->
+<!-- Articles and Wikipedia pages -->
 <p>We supply a standalone non-member function that attempts to solve the system of linear equations <span class="math inline">\(A \cdot x = b\)</span> over <span class="math inline">\(\FF\)</span>.</p>
 <div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>optional<span class="op">&lt;</span>bit<span class="op">::</span>vector<span class="op">&gt;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>solve<span class="op">(</span><span class="at">const</span> bit<span class="op">::</span>matrix <span class="op">&amp;</span>A<span class="op">,</span> <span class="at">const</span> bit<span class="op">::</span>vector <span class="op">&amp;</span>b<span class="op">)</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -564,8 +581,8 @@ window.Quarto = {
 <span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1"><code>A</code> must be square, and <code>b</code> must be the same size as the number of rows in <code>A</code>.</span>
 </dd>
 </dl>
-<p>If everything goes well, the [<code>std::optional</code>] return value can be safely dereferenced as a bit-vector. That bit-vector will be a solution <span class="math inline">\(x\)</span> to the system <span class="math inline">\(A \cdot x = b\)</span>. The solution may or may not be unique.</p>
-<p>If there is a problem, the return value will be a [<code>std::nullopt</code>]. This happens if the system of equations has no solution. It will also be the case if <code>A</code> is not square or if the size of <code>b</code> is not the same as the number of rows in <code>A</code>.</p>
+<p>If everything goes well, the <a href="https://en.cppreference.com/w/cpp/utility/optiona"><code>std::optional</code></a> return value can be safely dereferenced as a bit-vector. That bit-vector will be a solution <span class="math inline">\(x\)</span> to the system <span class="math inline">\(A \cdot x = b\)</span>. The solution may or may not be unique.</p>
+<p>If there is a problem, the return value will be a <a href="https://en.cppreference.com/w/cpp/utility/optional/nullopt"><code>std::nullopt</code></a>. This happens if the system of equations has no solution. It will also be the case if <code>A</code> is not square or if the size of <code>b</code> is not the same as the number of rows in <code>A</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -576,7 +593,7 @@ The concept
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The idea here is to get <em>one</em> solution for a system of equations with the least possible fuss. + Over <span class="math inline">\(\FF\)</span>, any free variable can take on one of the two values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The [<code>gauss::operator(i)</code>] method iterates through potentially non-unique solutions if that is required.</p>
+<p>The idea here is to get <em>one</em> solution for a system of equations with the least possible fuss. + Over <span class="math inline">\(\FF\)</span>, any free variable can take on one of the two values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The <a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a> method iterates through potentially non-unique solutions if that is required.</p>
 </div>
 </div>
 <p><span class="bt">Example</span></p>
@@ -633,8 +650,8 @@ The concept
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">000000110000</span>    0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
-<p>[<code>gauss::operator()</code>]<br>
-[<code>gauss::operator(i)</code>]</p>
+<p><a href="../../pages/gauss/functor.html"><code>gauss::operator()</code></a><br>
+<a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a></p>
 
 
 </section>

@@ -101,14 +101,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V57HYKPDW8"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G40Q4SR3K4"></script>
 
 <script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-V57HYKPDW8', { 'anonymize_ip': true});
+gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -575,23 +575,23 @@ window.Quarto = {
 </header>
 
 
-<!-- Shortcuts and links used throughout the documentation -->
-<!-- Some math shortcuts we use frequently in the documentation -->
+<!-- Links and shortcuts used throughout the documentation -->
+<!-- Math shortcuts we use frequently in the documentation -->
 <div class="hidden">
 <p><span class="math display">\[
 \newcommand{\FF}{\mathbb{F}_2}
 \newcommand{\R}{\mathbb{R}}
 \]</span></p>
 </div>
-<!-- Our verify macro and compiler flag that controls it -->
-<!-- Formatted links to the pages for the bit::vector class -->
-<!-- Formatted links to the pages for the bit::matrix class -->
-<!-- Formatted links to the pages for the bit::gauss class -->
-<!-- Formatted links to the pages for the bit::lu class -->
-<!-- Formatted links to the pages for the bit::polynomial class -->
-<!-- Formatted links to the pages for items in the standard library -->
-<!--Links to other software tools we reference -->
-<!-- Pages and Wikipedia articles referenced in the documentation -->
+<!-- bit_verify -->
+<!-- bit::vector -->
+<!-- bit::matrix -->
+<!-- bit::gauss -->
+<!-- bit::lu -->
+<!-- bit::polynomial -->
+<!-- The standard library -->
+<!-- Other software etc. -->
+<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>A <a href="../../pages/vector/index.html"><code>bit::vector</code></a> represents a vector over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\FF\)</span>) the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois Field</a> that has just two elements usually denoted 0 &amp; 1, or as the booleans true &amp; false, or as the bits set &amp; unset. Arithmetic over <span class="math inline">\(\FF\)</span> is mod 2, so addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
@@ -605,7 +605,7 @@ window.Quarto = {
 </section>
 <section id="declaration" class="level2">
 <h2 class="anchored" data-anchor-id="declaration">Declaration</h2>
-<p>Like everything in the library, this class is in the <code>bit</code> namespace and is defined in the header <code>&lt;bit/vector.h&gt;</code> as follows:</p>
+<p>Like most things in the library, this class is in the <code>bit</code> namespace and is defined in the header <code>&lt;bit/vector.h&gt;</code> as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> bit <span class="op">{</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="bu">std::</span>unsigned_integral Block <span class="op">=</span> <span class="bu">std::</span>uint64_t<span class="op">,</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           Allocator <span class="op">=</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>Block<span class="op">&gt;&gt;</span></span>
@@ -1251,7 +1251,7 @@ Use a single <code>Block</code> type throughout your code!
 </colgroup>
 <thead>
 <tr class="header">
-<th>Macro</th>
+<th>Method</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -1279,7 +1279,7 @@ Use a single <code>Block</code> type throughout your code!
 </colgroup>
 <thead>
 <tr class="header">
-<th>Function</th>
+<th>Method</th>
 <th>Description</th>
 </tr>
 </thead>
