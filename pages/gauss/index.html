@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working in GF(2) - The bit::gauss Class</title>
+<title>The bit::gauss Class – Working in GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -111,7 +111,7 @@ gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -141,11 +141,11 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Working in GF(2) - The bit::gauss Class">
+<meta property="og:title" content="The bit::gauss Class – Working in GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/gauss/assets/images/logo.jpg">
 <meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="Working in GF(2) - The bit::gauss Class">
+<meta name="twitter:title" content="The bit::gauss Class – Working in GF(2)">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://nessan.github.io/bit/pages/gauss/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -166,7 +166,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -192,7 +192,7 @@ window.Quarto = {
 <span class="menu-text">Tech Notes</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">More</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
@@ -215,7 +215,7 @@ window.Quarto = {
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
     <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
 </div>
@@ -223,10 +223,10 @@ window.Quarto = {
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
           <h1 class="quarto-secondary-nav-title">The <code>bit::gauss</code> Class</h1>
         </a>     
     </div>
@@ -247,9 +247,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Vectors</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -289,9 +289,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Matrices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -331,9 +331,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Gaussian Elimination</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -373,9 +373,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">LU Decomposition</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -409,9 +409,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Polynomials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -451,9 +451,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Debugging</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -481,9 +481,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -586,10 +586,10 @@ window.Quarto = {
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>We use a <code>bit::gauss</code> object to find solutions for the system of linear equations <span class="math inline">\(A \cdot x = b\)</span> over <span class="math inline">\(\FF\)</span>.</p>
-<p>Here, <span class="math inline">\(A\)</span> is a known bit-matrix, <span class="math inline">\(b\)</span> is a known right-hand side bit-vector, and <span class="math inline">\(x\)</span> is the unknown solution to the system. <span class="math inline">\(A\)</span> should be square and the size of the <span class="math inline">\(b\)</span> should match the number of rows in <span class="math inline">\(A\)</span>.</p>
+<p>Here, <span class="math inline">\(A\)</span> is a known bit-matrix, <span class="math inline">\(b\)</span> is a known right-hand side bit-vector, and <span class="math inline">\(x\)</span> is the unknown solution to the system. <span class="math inline">\(A\)</span> should be square, and the size of the <span class="math inline">\(b\)</span> should match the number of rows in <span class="math inline">\(A\)</span>.</p>
 <p>As the name suggests, the solution method is <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>, specifically Gauss-Jordan elimination.</p>
 <p>On construction, the <code>bit::gauss</code> object captures copies of <span class="math inline">\(A\)</span> and <span class="math inline">\(b\)</span>. Then, it uses <a href="https://en.wikipedia.org/wiki/Elementary_matrix#Operations">elementary row operations</a> to transform the left-hand side matrix to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row-echelon form</a> while simultaneously performing identical operations to the right-hand side vector. With those in place, the solver can quickly produce solutions <span class="math inline">\(x\)</span> by simple back-substitution.</p>
-<p>As well as getting solutions for the system <span class="math inline">\(A \cdot x = b\)</span>, the <code>bit::gauss</code> object can be queried for other helpful information such as the <a href="https://en.wikipedia.org/wiki/Rank_(linear_algebra)">rank</a> of <span class="math inline">\(A\)</span>, whether the system is consistent (i.e., whether any solutions at all exist), and so on. See the complete list below.</p>
+<p>As well as getting solutions for the system <span class="math inline">\(A \cdot x = b\)</span>, the <code>bit::gauss</code> object can be queried for other helpful information, such as the <a href="https://en.wikipedia.org/wiki/Rank_(linear_algebra)">rank</a> of <span class="math inline">\(A\)</span>, whether the system is consistent (i.e., whether any solutions exist), and so on. See the complete list below.</p>
 <p>Recognizing that often one wants to find a solution to <span class="math inline">\(A \cdot x = b\)</span> with a minimum of palaver, there is a non-member function to do just that. It can be invoked as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> x <span class="op">=</span> bit<span class="op">::</span>solve<span class="op">(</span>A<span class="op">,</span>b<span class="op">);</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
@@ -599,11 +599,11 @@ window.Quarto = {
 </section>
 <section id="multiple-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-solutions">Multiple Solutions</h2>
-<p>A system of linear equations over <span class="math inline">\(\R\)</span> has either no solutions, one solution, or an infinite number of solutions. The latter situation arises if the system is under-determined so that there is one or more free variables.</p>
-<p>Generally, if you have <span class="math inline">\(m\)</span> independent and consistent equations for <span class="math inline">\(n\)</span> unknowns and <span class="math inline">\(n&gt;m\)</span>, there are <span class="math inline">\(f=n-m\)</span> free variables. Reducing the matrix to echelon form lets you determine how many independent equations exist and quickly check that the system is consistent. Over <span class="math inline">\(\R\)</span>, a free variable can take on any value; hence, there are an infinite number of possible solutions to the system.</p>
+<p>A system of linear equations over <span class="math inline">\(\R\)</span> has either no solutions, one solution, or infinite solutions. The latter situation arises if the system is under-determined so that there is one or more free variables.</p>
+<p>Generally, if you have <span class="math inline">\(m\)</span> independent and consistent equations for <span class="math inline">\(n\)</span> unknowns and <span class="math inline">\(n&gt;m\)</span>, there are <span class="math inline">\(f=n-m\)</span> free variables. Reducing the matrix to echelon form lets you determine how many independent equations exist and quickly check that the system is consistent. Over <span class="math inline">\(\R\)</span>, a free variable can take on any value; hence, there are infinite possible solutions to the system.</p>
 <p>Over <span class="math inline">\(\FF\)</span>, the situation is different because a free variable can only take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, if no free variables exist, a consistent system will have one unique solution.</p>
 <p>That <code>x</code> in the above example will be one of those <span class="math inline">\(2^f\)</span> possible solutions randomly picked. We also provide a way to iterate through many possible solutions (not necessarily all of them because if <span class="math inline">\(f\)</span> is large, the number of potential solutions will explode).</p>
-<p>If <code>solver</code> is a <code>bit::gauss</code> for the consistent system <span class="math inline">\(A \cdot x = b\)</span> with <span class="math inline">\(f\)</span> free variables, then the call <code>solver()</code> will return one of the possible <span class="math inline">\(2^f\)</span> solutions picked entirely at random (calling <code>solver()</code> again may well return a different but equally valid solution). On the other hand, a call to <code>solver(n)</code>, where <code>n</code> is a <code>std::size_t</code> and <span class="math inline">\(n &lt; 2^f\)</span>, will produce a specific solution. There are many ways to produce an ordering amongst the possible solutions, but in any case, calling to <code>solver(n)</code> will always return the same solution.</p>
+<p>If <code>solver</code> is a <code>bit::gauss</code> for the consistent system <span class="math inline">\(A \cdot x = b\)</span> with <span class="math inline">\(f\)</span> free variables, then the call <code>solver()</code> will return one of the possible <span class="math inline">\(2^f\)</span> solutions picked entirely randomly (calling solver() again may return a different but equally valid solution). On the other hand, a call to <code>solver(n)</code>, where <code>n</code> is a <code>std::size_t</code> and <span class="math inline">\(n &lt; 2^f\)</span>, will produce a specific solution. There are many ways to produce an ordering amongst the possible solutions, but in any case, calling the <code>solver(n)</code> will always return the same solution.</p>
 </section>
 <section id="declaration" class="level2">
 <h2 class="anchored" data-anchor-id="declaration">Declaration</h2>
@@ -810,18 +810,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -853,7 +842,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/nessan\.github\.io\/bit");
@@ -861,7 +872,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

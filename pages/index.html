@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working in GF(2) - The bitLibrary</title>
+<title>The bitLibrary – Working in GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -110,7 +110,7 @@ gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -140,11 +140,11 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Working in GF(2) - The bitLibrary">
+<meta property="og:title" content="The bitLibrary – Working in GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/assets/images/logo.jpg">
 <meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="Working in GF(2) - The bitLibrary">
+<meta name="twitter:title" content="The bitLibrary – Working in GF(2)">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://nessan.github.io/bit/pages/assets/images/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -165,7 +165,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -191,7 +191,7 @@ window.Quarto = {
 <span class="menu-text">Tech Notes</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">More</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
@@ -214,7 +214,7 @@ window.Quarto = {
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
     <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
 </div>
@@ -222,10 +222,10 @@ window.Quarto = {
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <a class="flex-grow-1 no-decor" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
           <h1 class="quarto-secondary-nav-title">The <code>bit</code>Library</h1>
         </a>     
     </div>
@@ -246,9 +246,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Vectors</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -288,9 +288,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Matrices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -330,9 +330,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Gaussian Elimination</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -372,9 +372,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">LU Decomposition</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -408,9 +408,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Bit-Polynomials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -450,9 +450,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Debugging</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -480,9 +480,9 @@ window.Quarto = {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Technical Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -582,7 +582,7 @@ window.Quarto = {
 <!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2 so what starts in bit-space stays in bit-space.</p>
+<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.</p>
 <p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="../pages/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="../pages/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="../pages/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\FF\)</span>.</p>
 <p>These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.</p>
 <p>Because arithmetic operations in <span class="math inline">\(\FF\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
@@ -590,7 +590,7 @@ window.Quarto = {
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>This library is header-only, so there is nothing to compile &amp; link — drop the <code>bit</code> include directory somewhere convenient, and you are good to go.</p>
+<p>This library is header-only, so there is nothing to compile and link. Drop the <code>bit</code> include directory somewhere convenient, and you are good to go.</p>
 <p>Alternatively, if you are using <code>CMake</code>, you can use the standard <code>FetchContent</code> module by adding a few lines to your project’s <code>CMakeLists.txt</code> file:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(bit <span class="ot">URL</span> https://github.com/nessan/bit/releases/download/current/bit.zip)</span>
@@ -607,7 +607,7 @@ Library versions
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The shown <code>URL</code> gets the <code>current</code> version of the library—whatever is in the main branch. For a fixed, stable library version (say release <code>2.0.0</code>), use a <code>URL</code> parameter like: <code>https://github.com/nessan/bit/releases/download/2.0.0/bit.zip</code>.</p>
+<p>The shown <code>URL</code> gets the <code>current</code> version of the library—whatever is in the main branch. For a fixed, stable library version (say release <code>2.0.0</code>), use a <code>URL</code> parameter like <code>https://github.com/nessan/bit/releases/download/2.0.0/bit.zip</code>.</p>
 </div>
 </div>
 </section>
@@ -672,7 +672,7 @@ The special nature of <span class="math inline">\(\FF\)</span>
 <p>The standard library already has <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, an efficient <em>bitset</em> class that is familiar and well thought through, so our <code>bit::vector</code> class replicates and extends much of that interface.</p>
 <p>All <code>std::bitset</code> objects have a fixed size determined at compile time. The well-known <em>Boost</em> library does add a dynamic version <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a>, where the bitset size can be set and changed at runtime.</p>
 <p>However, as the two names suggest, those types are aimed at <em>bitsets</em> instead of <em>bit-vectors</em>. So, for example, they print in <em>bit-order</em> with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>.</p>
-<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\FF\)</span>. You can create matrices of integers where all the elements are 0 or 1, but there is no built-in knowledge in those libraries that arithmetic is mod 2.</p>
+<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\FF\)</span>. You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.</p>
 <p>For example, you might use <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a> to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for <span class="math inline">\(\FF\)</span>. Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying <code>BitInt</code> type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.</p>
 <p>For linear algebra problems over <span class="math inline">\(\FF\)</span>, this specialized <code>bit</code> library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.</p>
 </section>
@@ -730,18 +730,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -773,7 +762,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/nessan\.github\.io\/bit");
@@ -781,7 +792,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
