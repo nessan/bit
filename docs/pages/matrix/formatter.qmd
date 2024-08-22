@@ -1,0 +1,68 @@
+---
+title: "`bit::matrix` --- Custom Formatting"
+---
+
+We specialize the {std.formatter} class to connect any `bit::matrix` to {std.format} and friends.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+struct std::formatter<bit::matrix<Block, Allocator>> {
+    ...
+};
+```
+
+As shown in the example below, if $M$ is a bit-matrix this `std::formatter` supports the four different format specifiers:
+```cpp
+std::format("{}",   M)          // <1>
+std::format("{:p}", M)          // <2>
+std::format("{:x}", M)          // <3>
+```
+1. Outputs `M` row-by-row as bit-vectors in their default format.
+2. Outputs `M` in a "pretty" format.
+3. Outputs `M` row-by-row as bit-vectors in the hex format.`
+::: {.callout-note}
+# Specifier Errors
+Any unrecognized specifier will result in the bit-matrix string showing an error message.
+The sample program below has an example.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::random(4);
+    std::cout << std::format("Matrix default specifier:\n{}\n", m);
+    std::cout << std::format("Matrix pretty specifier:\n{:p}\n", m);
+    std::cout << std::format("Matrix hex specifier:\n{:x}\n", m);
+    std::cout << std::format("Matrix invalid specifier:\n{:X}\n", m);
+}
+```
+
+[Output]{.bt}
+```bash
+Matrix default specifier:
+1010
+0010
+0101
+1011
+Matrix pretty specifier:
+│1 0 1 0│
+│0 0 1 0│
+│0 1 0 1│
+│1 0 1 1│
+Matrix hex specifier:
+0x5
+0x4
+0xA
+0xD
+Matrix invalid specifier:
+'UNRECOGNIZED FORMAT SPECIFIER FOR BIT-MATRIX'
+```
+
+### See Also
+{mat.to_string}             \
+{mat.to_pretty_string}      \
+{mat.to_hex}                \
+{vec.to_string}             \
+{mat.stream<<}

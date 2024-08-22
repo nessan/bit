@@ -1,0 +1,87 @@
+---
+title: "`bit::matrix` --- Alter Elements"
+---
+
+We have methods to set elements in a bit-matrix to 1, reset them to 0, or flip them from 0 to 1 and vice versa.
+These methods can work on the entire bit-matrix, individual elements, or diagonal elements.
+
+.The entire bit-matrix
+```cpp
+constexpr bit::matrix &set();                                   // <1>
+constexpr bit::matrix &reset();
+constexpr bit::matrix &flip();
+
+constexpr bit::matrix &set(std::size_t i, std::size_t j);       // <2>
+constexpr bit::matrix &reset(std::size_t i, std::size_t j);
+constexpr bit::matrix &flip(std::size_t i, std::size_t j);
+
+constexpr bit::matrix &set_diagonal(int d = 0);                 // <3>
+constexpr bit::matrix &reset_diagonal(int d = 0);
+constexpr bit::matrix &flip_diagonal(int d = 0);
+```
+1. Sets, resets, or flips the elements in the bit-matrix.
+2. Sets, resets, or flips the element at the index pair `(i, j)`.
+3. Sets, resets, or flips the elements on a diagonal. \
+By default, the elements are on the main diagonal. \
+If `d > 0`, they're on a super-diagonal, while if `d < 0`, they're on a sub-diagonal.
+
+All these methods return a reference to `*this` so they can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4);
+    std::cout << "Original:\n"            << m                    << '\n';
+    std::cout << "set:\n"                 << m.set()              << '\n';
+    std::cout << "reset:\n"               << m.reset()            << '\n';
+    std::cout << "flip:\n"                << m.flip()             << '\n';
+    std::cout << "reset_diagonal():\n"    << m.reset_diagonal()   << '\n';
+    std::cout << "reset_diagonal(1):\n"   << m.reset_diagonal(1)  << '\n';
+    std::cout << "flip_diagonal(-1):\n"   << m.flip_diagonal(-1)  << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Original:
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+set:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+reset:
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+flip:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+reset_diagonal():
+│0 1 1 1│
+│1 0 1 1│
+│1 1 0 1│
+│1 1 1 0│
+reset_diagonal(1):
+│0 0 1 1│
+│1 0 0 1│
+│1 1 0 0│
+│1 1 1 0│
+flip_diagonal(-1):
+│0 0 1 1│
+│0 0 0 1│
+│1 0 0 0│
+│1 1 0 0│
+```
+
+### See Also
+{mat.set_if} \
+{mat.flip_if}

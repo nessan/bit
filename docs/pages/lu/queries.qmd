@@ -1,0 +1,83 @@
+---
+title: "`bit::lu` --- Queries"
+---
+
+We provide access to the information that a `lu` object can provide for the underlying bit-matrix $A$.
+
+```cpp
+constexpr bool        singular()      const;     // <1>
+constexpr bool        non_singular()  const;     // <2>
+constexpr bool        determinant()   const;     // <3>
+constexpr std::size_t rank()          const;     // <4>
+```
+1. Return `true` if the bit-matrix `A` is singular.
+2. Return `true` if the bit-matrix `A` is not singular.
+3. Return the determinant of the bit-matrix `A`.
+4. Returns the rank of the bit-matrix `A`.
+
+The {LU-decomposition} will work for any square bit-matrix and can be used to extract the rank of the bit-matrix.
+Some other methods in `lu`  will fail for singular bit-matrices (no inversions possible, etc.)
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto lu = bit::lu(A);
+    auto L = lu.L();
+    auto U = lu.U();
+    std::cout << "bit::matrix A, L, and U:\n";
+    bit::print(A, L, U);
+    std::cout << "A is singular? " << (lu.singular() ? "YES" : "NO") << "\n";
+
+    // Check that P.A = L.U
+    auto PA = A;
+    lu.permute(PA);
+    auto LU = bit::dot(L,U);
+    std::cout << "P.A and L.U:\n";
+    bit::print(PA, LU);
+    std::cout << "P.A == L.U? " << (PA == LU ? "YES" : "NO") << "\n";
+}
+```
+
+[Output (depends on the values of the random inputs)]{.bt}
+```bash
+bit::matrix A, L, and U:
+001111101100    100000000000    111001010000
+111001010000    110000000000    011001100000
+111000011010    001000000000    001111101100
+000111100101    000100000000    000111100101
+100000110000    101010000000    000010111010
+110110101110    100001000000    000001001010
+110100000110    101000100000    000000010010
+011100110101    011100010000    000000010100
+101101101111    111010001000    000000001001
+010101110011    011011001100    000000000110
+010001111101    010110001010    000000000011
+001001000011    001101000001    000000000000
+A is singular? YES
+P.A and L.U:
+111001010000    111001010000
+100000110000    100000110000
+001111101100    001111101100
+000111100101    000111100101
+110100000110    110100000110
+111000011010    111000011010
+110110101110    110110101110
+010001111101    010001111101
+101101101111    101101101111
+010101110011    010101110011
+011100110101    011100110101
+001001000011    001001000011
+P.A == L.U? YES
+```
+
+### See Also
+{lu.L}             \
+{lu.U}             \
+{lu.LU}            \
+{lu.row_swaps}     \
+{lu.permutation_vector}

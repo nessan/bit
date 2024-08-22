@@ -1,0 +1,56 @@
+---
+title: "`bit::matrix` --- Check on Set Bits"
+---
+
+Checks whether all, any, or none of the elements in a bit-matrix are _set_ (i.e. 1).
+
+```cpp
+constexpr bool all() const;     // <1>
+constexpr bool any() const;     // <2>
+constexpr bool none() const;    // <3>
+```
+1. Return `true` if all the elements in the bit-matrix are 1; otherwise, `false`.
+2. Return `true` if any elements in the bit-matrix are 1; otherwise, `false`.
+3. Return `true` if none of the elements in the bit-matrix are 1; otherwise, `false`.
+
+::: {.callout-caution}
+# Empty bit-matrices
+Calling these methods for an empty bit-matrix is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
+If the `BIT_VERIFY` flag is not set, `all()` and `none()` _both_ return `true` while `any()` will return `false`.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m1("000 000 000");
+    bit::matrix<> m2("010 101 010");
+    bit::matrix<> m3("111 111 111");
+
+    std::cout
+        << "matrix\t\t" << "all\t" << "any\t" << "none\n"
+        << m1 << "\t\t" << m1.all() << '\t' << m1.any() << '\t' << m1.none() << "\n\n"
+        << m2 << "\t\t" << m2.all() << '\t' << m2.any() << '\t' << m2.none() << "\n\n"
+        << m3 << "\t\t" << m3.all() << '\t' << m3.any() << '\t' << m3.none() << "\n";
+}
+```
+
+[Output]{.bt}
+```bash
+matrix          all     any     none
+│0 0 0│
+│0 0 0│
+│0 0 0│         0       0       1
+
+│0 1 0│
+│1 0 1│
+│0 1 0│         0       1       0
+
+│1 1 1│
+│1 1 1│
+│1 1 1│         1       1       0
+```
+
+### See Also
+{mat.count}

@@ -1,0 +1,89 @@
+---
+title: "`bit::vector` --- Importing Bits"
+---
+
+A bit-vector can import bits sourced from an unsigned word, a collection of unsigned words, or a `std::bitset`.
+By default, the imported bits completely overwrite the bit-vector but you can set the `add` parameter to true to have the bits appended to the end of the bit-vector instead.
+
+```cpp
+template<std::unsigned_integral Src=>
+constexpr vector& import_bits(Src src, bool add = false);                          // <1>
+
+template<typename Iter>
+constexpr vector& import_bits(Iter b, Iter e, bool add = false);                   // <2>
+
+template<std::unsigned_integral Src>
+constexpr vector& import_bits(std::initializer_list<Src> src, bool add = false);   // <3>
+
+template<std::unsigned_integral Src>
+constexpr vector& import_bits(const std::vector<Src> &src, bool add = false);      // <4>
+
+template<std::unsigned_integral Src, std::size_t N>
+constexpr vector& import_bits(const std::array<Src,N> &src, bool add = false);     // <5>
+
+template<std::size_t N>
+constexpr vector& import_bits(const std::bitset<N> &src, bool add = false);        // <6>
+```
+1. Imports the bits from a single word `src`, which is some unsigned integer type.
+2. Imports the bits from an iteration where the `value_type` of the iterator is some unsigned integer type.
+3. Imports the bits from an initializer-style list of unsigned integers.
+4. Imports the bits from a vector of unsigned integers.
+5. Imports the bits from a fixed array of unsigned integers.
+6. Imports the bits from a `std::bitset`.
+
+::: {.callout-note}
+# These resize the destination
+These functions all resize the destination bit-vector to make it absorb all the source bits.
+:::
+
+## Parameters
+
+Parameter   | Description
+---------   | ------------------------------------------------------------------
+`Src`       | The type of unsigned integers whose bits will fill the destination bit-vector. There is _no_ requirement that `Src` and `Block` are the same. For example, we can add the bits from a list of 32-bit unsigned integers while the storage scheme for the bit-vector remains the default 64-bit type.
+`Iter`      | An iterator --- might be the type returned by `std::cbegin(collection)` and `std::cend(collection)`. The `Iter::value_type` should be some unsigned integer type, but it need not match the `Block` type.
+`add`       | If `true`, we append the imported bits to the end of the bit-vector. The default value of the parameter is `false` and we first call the {vec.clear} method before importing the bits.
+: {.bordered .hover .responsive tbl-colwidths="[20,80]"}|
+
+[Example --- Overwriting a bit-vector with the bits from unsigned words]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector v;                                          // <1>
+    std::cout << "v: " << v << '\n';
+    v.import_bits(std::uint8_t(0));                         // <2>
+    std::cout << "v: " << v << '\n';
+    v.import_bits({std::uint8_t(255), std::uint8_t(0)});    // <3>
+    std::cout << "v: " << v << '\n';
+    std::vector<std::uint8_t> vec{255, 0};                  // <4>
+    v.import_bits(vec);
+    std::cout << "v: " << v << '\n';
+    v.import_bits(vec.cbegin(), vec.cend());                // <5>
+    std::cout << "v: " << v << '\n';
+    std::bitset<8> bs(255);                                 // <6>
+    v.import_bits(bs);
+    std::cout << "v: " << v << '\n';
+}
+```
+1. The default constructor makes an empty vector.
+2. Fills with eight 0-bits.
+3. Fill with a list of eight 1-bits and eight 0-bits.
+4. Fills with a `std::vector` with eight 1-bits and eight 0-bits.
+5. Fills with a `std::vector` with eight 1-bits and eight 0-bits using the usual iterators.
+6. Fills with a `std::bitset` with eight 1-bits.
+
+[Output]{.bt}
+```bash
+v: []
+v: [0 0 0 0 0 0 0 0]
+v: [1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0]
+v: [1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0]
+v: [1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0]
+v: [1 1 1 1 1 1 1 1]
+```
+
+### See Also
+{vec.append}          \
+{vec.export_bits}     \
+{vec.export_all_bits}

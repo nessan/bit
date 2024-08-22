@@ -1,0 +1,96 @@
+---
+title: "`bit::matrix` --- In-place Logical Operators"
+---
+
+Methods to perform element-by-element binary `AND`, `XOR`, `OR`, +, -, * with another equal-sized bit-matrix.
+
+```cpp
+constexpr bit::matrix &operator&=(const bit::matrix &other);    // <1>
+constexpr bit::matrix &operator^=(const bit::matrix &other);    // <2>
+constexpr bit::matrix &operator|=(const bit::matrix &other);    // <3>
+constexpr bit::matrix &operator+=(const bit::matrix &other);    // <4>
+constexpr bit::matrix &operator-=(const bit::matrix &other);    // <5>
+constexpr bit::matrix &operator*=(const bit::matrix &other);    // <6>
+```
+1. In-place binary `AND` between the elements of `*this` and `other`.
+2. In-place binary `XOR` between the elements of `*this` and `other`.
+3. In-place binary `OR` between the elements of `*this` and `other`.
+4. In-place binary `XOR` the elements of `*this` and `other`. \
+   In {f2}, addition corresponds to `XOR`.
+5. In-place binary `XOR` between the elements of `*this` and `other`. \
+   In {f2}, subtraction corresponds to `XOR`.
+6. In-place binary `AND` between the elements of `*this` and `other`. \
+   In {f2}, multiplication corresponds to `AND`.
+
+These methods all return a reference to `*this` so they can be chained with other calls.
+
+::: {.callout-warning}
+# Dimensions must match
+The two bit-matrices in question must have the same dimensions.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+There is one other bit-twiddling method:
+```cpp
+constexpr bit::matrix operator~() const;    // <7>
+```
+7. Returns a copy of the bit-matrix with all the bits flipped
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m1(4,[](std::size_t i, std::size_t j) { return (i + j) % 2; });
+    auto m2 = bit::matrix<>::ones(4);
+
+    std::cout << "m1:\n" << m1  << '\n';
+    std::cout << "m2:\n" << m2  << '\n';
+    std::cout << "m1 &= m2:\n"  << (m1 &= m2)   << '\n';
+    std::cout << "m1 |= m2:\n"  << (m1 |= m2)   << '\n';
+    std::cout << "m1 ^= m2:\n"  << (m1 ^= m2)   << '\n';
+    std::cout << "~m1:\n"       << (~m1)        << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+m1:
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+m2:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m1 &= m2:
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│
+m1 |= m2:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m1 ^= m2:
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+~m1:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+```
+
+### See Also
+{mat.operator&}       \
+{mat.operator|}   \
+{mat.operator^}       \
+{mat.operator+}       \
+{mat.operator-}       \
+{mat.operator*}

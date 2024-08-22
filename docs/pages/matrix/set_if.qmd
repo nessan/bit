@@ -1,0 +1,59 @@
+---
+title: "`bit::matrix` --- Conditional Set/Flip"
+---
+
+We have methods to set or flip the element values in a bit-matrix based on the return value from a function call.
+
+```cpp
+constexpr bit::matrix&
+set_if(std::invocable<std::size_t, std::size_t> auto f);    // <1>
+
+constexpr bit::matrix&
+flip_if(std::invocable<std::size_t, std::size_t> auto f);   // <2>
+```
+1. Sets element at `(i, j)` to 1 if `f(i,j) != 0`, otherwise sets it to 0.
+2. Flips the value of element `(i, j)` if `f(i,j) != 0`, otherwise leaves it unchanged.
+
+`f` is a function we expect to call as `f(i,j)` for each index pair.
+
+Both methods return a reference to `*this` so they can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4,8);
+    std::cout << "m:\n" << m << '\n';
+    m.set_if([](std::size_t i, std::size_t j) { return (i + j) % 2; });
+    std::cout << "m:\n" << m << '\n';
+    m.flip_if([](std::size_t i, std::size_t j) { return (i + j) % 2; });
+    std::cout << "m:\n" << m << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+m:
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+m:
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+m:
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0│
+```
+
+### See Also
+{mat.set}               \
+{mat.reset}             \
+{mat.set_diagonal}      \
+{mat.reset_diagonal}    \
+{mat.flip}

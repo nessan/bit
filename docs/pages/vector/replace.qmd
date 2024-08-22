@@ -1,0 +1,47 @@
+---
+title: "`bit::vector` --- Replace Elements"
+---
+
+Defines methods that replace some of this bit-vector's values with those of another.
+
+```cpp
+constexpr bit::vector &replace(std::size_t i0, const bit::vector &with);  // <1>
+constexpr bit::vector &replace(const bit::vector &with);                  // <2>
+```
+1. Starting at element `i0`, replace the bit-vector values with those from the bit-vector `with`.
+2. Starting at element 0, replace the bit-vector values with those from the bit-vector `with`.
+
+::: {.callout-warning}
+# Sizes must be compatible
+The sub-vector `with` we are copying from must fit inside the existing bit-vector! \
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+Both methods return a reference to `*this` so can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto u = bit::vector<>::zeros(3);
+    auto v = bit::vector<>::ones(10);
+    std::cout << "v: " << v << '\n';
+    v.replace(7,u);                     // <1>
+    std::cout << "v: " << v << '\n';
+    v.replace(u);                       // <2>
+    std::cout << "v: " << v << '\n';
+}
+```
+1. Replace the final three elements of `v` with those from `u`.
+2. Replace the first three elements of `v` with those from `u`.
+
+[Output]{.bt}
+```bash
+v: [1 1 1 1 1 1 1 1 1 1]
+v: [1 1 1 1 1 1 1 0 0 0]
+v: [0 0 0 1 1 1 1 0 0 0]
+```
+
+### See Also
+{vec.sub}

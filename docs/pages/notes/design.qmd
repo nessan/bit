@@ -1,0 +1,212 @@
+---
+title: "Library Design Notes"
+---
+
+## Motivation
+
+We want `bit` to be an _efficient_ linear algebra library for {GF2}, also known as {f2}, which is the set with just two elements 0 & 1.
+In {f2}, all arithmetic operations are mod 2 to keep everything closed in the set $\{0,1\}$.
+
+Because arithmetic is always mod 2, addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
+A primary goal of the `bit` library is to use those equivalences to perform most interactions on and between bit-vectors and bit-matrices very efficiently by working on whole blocks of elements at a time.
+
+Of course, there are already several very well-known linear algebra libraries in {{< var cpp >}} such as {Eigen}.
+Those packages efficiently handle the standard _numeric_ types (floats, doubles, integers, etc.), but none handle {f2} all that well.
+They will allow you to create vectors and matrices of integers where all the elements are 0 or 1, but there is no built-in knowledge in those libraries that arithmetic in {f2}  is mod 2.
+
+For example, you might use {Eigen} to create an integer matrix of all 0's and 1's and then use a built-in function from that library to extract the characteristic polynomial.
+Modding the coefficients of that polynomial with 2 gets the appropriate version for {f2}.
+Technically, this works, but you will run into overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns.
+You could use an underlying `BitInt` type that never overflows, but calculations will become dog slow for larger bit-matrices, which doesn't help much.
+
+For linear algebra problems over {f2}, this specialized `bit` library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.
+
+## The Bit-Vector Class
+
+The standard library already has {std.bitset}, an efficient _bitset_ class.
+That class is familiar and well thought through, sp our {bit.vector} replicates and extends much of that primary interface.
+
+However, all {std.bitset} objects have a fixed size determined at compile time, which is too restrictive for our use case.
+The well-known _Boost_ library adds a dynamic version [`boost::dynamic_bitset`] where the bitset size can be set and changed at runtime.
+
+::: {.callout-note}
+# Dynamic sizing
+Our {bit.vector} class is also dynamically sized at runtime.
+:::
+
+The types defined in the standard library and _Boost_ are for _bitsets_ instead of _bit-vectors_.
+For example, they print in _bit-order_ with the least significant element/bit on the right.
+
+More importantly, those classes don't have any methods for linear algebra.
+Neither does the standard library's vector class {std.vector}.
+
+### Storage
+
+Each element in a bit-vector is either 0 or 1, so optimally, it should use a single _bit_ of storage.
+In a {bit.vector}, we pack the individual bits into _blocks_ where a block is some unsigned integer type that the user can choose.
+
+The default is a 64-bit unsigned integer---the standard word size underlying many computer architectures.
+However, it might be that you are allocating a huge number of small bit-vectors, so the class lets you choose a smaller unsigned type for the storage blocks and even interpose a custom memory allocator so you might have code like:
+```cpp
+using vector_type = bit::vector<std::uint8_t>;
+```
+or even
+```cpp
+using vector_type = bit::vector<std::uint8_t, my_allocator>;
+```
+
+In any case, there are just two data members in the {bit.vector} class:
+```cpp
+std::size_t m_size = 0;                     // <1>
+std::vector<Block, Allocator> m_block;      // <2>
+```
+1. The number of elements in this bit-vector.
+2. The elements are packed into a `std::vector` of blocks.
+
+The number of blocks allocated depends on the size of the bit-vector.
+
+The `std::vector<Block>` data member handles any memory allocations and de-allocations.
+These days, it is often the case in {{< var cpp >}} that one can completely omit the need to manually manage memory using the `new` and `delete` operators and instead use one of the containers in the standard library.
+
+::: {.callout-note}
+In a `bit::vector`, if there are $d$ binary digits in a block where by default $d = 64$, then bit-vector element $v_i$ is located at bit `i%d` of the block indexed `i/d`.
+:::
+
+[Redundant storage]{.bt}
+It is worth pointing out that even though this is indeed a compact storage scheme for bit-vectors, some redundant bits are likely in our container of blocks.
+
+For example, if $\mathbf{v}$ has, say, $75$ elements, it will inevitably consume multiple words of storage.
+If we are using the defaults, then $\mathbf{v}$ will take up two 64-bit blocks, and hence there will be  $2*64 - 75 = 53$ bits of surplus storage.
+
+Most of the time, the space wasted in those extra bits is not material.
+If you create vast numbers, particularly of smaller bit-vectors, you can choose a different block type to minimize the wastage.
+
+::: {.callout-important}
+# Redundant bits need to be zeroed out
+No matter which block type is employed, for efficiency's sake, redundant bits must all be set to the value 0 initially and kept at 0 as the bit-vector is operated on.
+:::
+
+### Efficiency
+
+The primary efficiency in `bit` comes from the fact that most methods work block-by-block instead of element-by-element --- a simple form of parallel processing.
+If you are using the default 64-bit blocks, then essentially, 64 elements in the bit-vector are operated on in a single instruction.
+
+For example, the instance method to count the number of set bits in a `bit::vector` will look something like:
+```cpp
+constexpr std::size_t count() const
+{
+    std::size_t sum = 0;
+    for (auto b : m_block) sum += std::popcount(b);
+    return sum;
+}
+```
+This code iterates through the _blocks_ and uses a standard function to count the set bits in each one.
+It is much faster than iterating through all the individual elements/bits.
+
+Methods like this one only work because we carefully ensure that any _redundant_ bits in the block representation of the bit-vector are all zeros.
+The class's `clean()` instance method quickly sets the extra bits in the highest order block to zeros.
+
+### A More Complex Example
+
+Consider a bit-vector $\mathbf{v}$ with $n$ elements:
+$$
+    \mathbf{v} = \lbrack v_0, v_1, \ldots, v_{n-2}, v_{n-1} \rbrack.
+$$
+The $n$ elements are packed into $m \lt n$ blocks where each block has $d$ binary digits.
+The layout has the form:
+$$
+    \newcommand {\bar}  {\;\bigg\rvert\;}
+    \mathbf{v} \sim \bar 0 \ldots 0 b_{n-1} \ldots \bar \ldots \bar b_{2d-1} b_{2d-2} \ldots b_{d+1} b_d \bar b_{d-1} b_{d-2} \ldots b_1 b_0.
+$$
+Here, we denote the word boundaries by vertical bars and the individual bits by $b_{n-1} b_{n-2} \ldots b_1 b_0$ where element $v_i \rightarrow b_i$.
+We also show that the highest-order block may be left padded with zeros.
+
+Now consider a block-by-block algorithm for _shifting_ a bit-vector by some places to the right.
+
+[The single block of storage case:]{.bt}
+Start with the straightforward example of a three element bit-vector $\mathbf{v} = [v_0, v_1, v_2]$ which we shift right one place $\mathbf{v}$ to get:
+$$
+    \mathbf{v} \gg 1 = [0, v_0, v_1],
+$$
+i.e., we push the last element $v_2$ out of the bit-vector on the right and push in a zero on the left.
+
+If we are using 8-bit blocks, then $\mathbf{v}$ fits in a single block with 5 bits to spare $\mathbf{v} \sim 0 0 0 0 0 b_2 b_1 b_0$.
+Similarly, $\mathbf{v} \gg 1 \sim 0 0 0 0 0 0 b_1 b_0 0$.
+
+So _right_ shifting $\mathbf{v}$ is equivalent to _left_ shifting the block representation of $\mathbf{v}$ to get $0 0 0 0 0 b_2 b_1 b_0 0$ followed by a cleanup operation that zeros out that redundant bit at slot index 3.
+
+[What happens if $\mathbf{v}$ needs multiple blocks of storage?]{.bt}
+Suppose that $n = 10$ so $\mathbf{v} = [v_0, v_1, \ldots, v_8, v_9]$ then the storage layout is
+$$
+    \mathbf{v} \sim 0 0 0 0 0 0 b_9 b_8 \bar b_7 b_6 \ldots b_1 b_0.
+$$
+Right shifting by one place pushes the elements of $\mathbf{v}$ one spot to the right.
+So $v_9$ is pushed out, and an extra 0 is pushed in to yield $\mathbf{v} \gg 1 = [0, v_0, v_1, \ldots, v_8]$ with the storage layout
+$$
+    \mathbf{v} \gg 1 \sim 0 0 0 0 0 0 b_8 b_7 \bar b_6 b_5 \ldots b_0 0.
+$$
+In the block representation, we _left_ shift each block by 1.
+There is an added complication: for each higher-order block, we need to set its least significant bit to the value of the most significant bit in the block one slot down.
+And, of course, we have to do the usual cleanup operation on the highest-order block to zero out the redundant bits.
+
+Next, suppose we are right-shifting by two places:
+$$
+    \mathbf{v} \gg 2 =  [0, 0, v_0, v_1, \ldots, v_7] \sim 0 0 0 0 0 0 b_7 b_6 \bar b_5 b_4 \ldots b_0 0 0.
+$$
+So _right_ shifting $\mathbf{v}$ by two slots is equivalent to _left_ shifting each block by two places.
+There is an added step where the two least significant bits in each higher-order block are set to the two most significant bits in the next lower block.
+And, of course, we also need to zero out the redundant bits in the highest-order block.
+
+[Shifting by an arbitrary number of places:]{.bt}
+Each block has $d$ binary digits.
+Shifting $\mathbf{v}$ by an arbitrary number of places, $p$, to the right, can be split into two stages.
+
+If $p$ is large enough, we can start by first left-shifting whole blocks at once by $\pi = p/d$ slots.
+So for each block $B_k$ we set $B_k \leftarrow B_{k-\pi}$.
+That efficiently handles a large part of the shift for larger values of $p$.
+
+We then can finish by using the earlier ideas to shift $\mathbf{v}$ by less than a whole block $p \% d$ places.
+
+::: {.callout-tip}
+# The order matters
+We need to be careful to do things in the correct order.
+In particular, for right shifts of bit-vectors, we are left shifting the bits we need to work through the block representation from the highest order index down.
+:::
+
+## The Bit-Matrix Class
+
+There is just one data member in a `bit::matrix`
+```cpp
+std::vector<vector_type> m_row;
+```
+Here `vector_type` is just a shortcut for `bit::vector<Block, Allocator>`.
+
+So a `bit::matrix` is stored in *row-major* mode where each row is a single {bit.vector}.
+Therefore, arranging computations to work row by row instead of column by column is typically much more efficient.
+The library's many instance methods and free functions involving bit-matrices take this into account.
+
+Remember that our primary aim is doing linear algebra over {f2}.
+If, instead, the aim was to minimize storage, one would store the bit-matrix as a single long bit-vector with appropriate index operations.
+However, in that case, matrix operations would often need to be done element-by-element, which is much slower than doing things block-by-block as we do in `bit`.
+
+Like bit-vectors, bit-matrices are sized dynamically at runtime, and the row elements are packed into blocks of some unsigned integral type.
+That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type if your use case involves the creation of many small matrices).
+
+::: {.callout-note}
+# Some methods only work on square matrices
+Arbitrary $m \times n$ bit-matrices are supported, but some methods only make sense for square matrices where $n = m$.
+:::
+
+### Alternative Ideas
+
+Apart from using column-major versus row-major mode, the other potentially sensible idea would be to base the whole library on bit-matrices where bit-vectors are either $n \times 1$ or $1 \times n$ bit-matrices.
+
+## Bounds checking
+
+In the development cycle, it can be helpful to confirm that indices are in bounds and perform other range checks.
+However, those checks are expensive and can slow down numerical code by orders of magnitude.
+We don't want those verifications accidentally left "on" in our production code.
+
+For this reason, we include the {bit.verify} macro.
+The macro expands to nothing *unless* the programmer sets the `BIT_VERIFY` flag at compile time.
+That is typically done automatically *only* for debug software builds and is *never* done for release/optimized builds.

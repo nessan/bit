@@ -1,0 +1,55 @@
+---
+title: "`bit::matrix` --- Bit Counts"
+---
+
+Count the number of set/unset elements in a bit-matrix.
+
+```cpp
+constexpr std::size_t count() const;              // <1>
+constexpr std::size_t count_diagonal() const;     // <2>
+constexpr bool trace() const;                     // <3>
+```
+1. Return the number of set elements in the bit-matrix.
+2. Return the number of set elements on the bit-matrix diagonal.
+3. Return `count_diagonal() % 2`--the "sum" of the diagonal elements.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m1("0000 0000 0000 0000");
+    bit::matrix<> m2("0101 1010 0101 1010");
+    bit::matrix<> m3("1111 1111 1111 1111");
+
+    std::cout
+        << "matrix\t\t" << "count\t" << "diag\t" << "trace\n"
+        << m1 << '\t' << m1.count() << '\t' << m1.count_diagonal() << '\t' << m1.trace() << "\n\n"
+        << m2 << '\t' << m2.count() << '\t' << m2.count_diagonal() << '\t' << m2.trace() << "\n\n"
+        << m3 << '\t' << m3.count() << '\t' << m3.count_diagonal() << '\t' << m3.trace() << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+matrix          count   diag    trace
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│       0       0       0
+
+│0 1 0 1│
+│1 0 1 0│
+│0 1 0 1│
+│1 0 1 0│       8       0       0
+
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│       16      4       0
+```
+
+### See Also
+{mat.rows} \
+{mat.cols} \
+{mat.size}

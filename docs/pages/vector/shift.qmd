@@ -1,0 +1,90 @@
+---
+title: "`bit::vector` --- Binary Shift Operators"
+---
+
+We have methods to perform binary left and right shifts for the elements in a bit-vector --- shifting in zeros as needed.
+
+```cpp
+constexpr bit::vector &operator<<=(std::size_t p);     // <1>
+constexpr bit::vector &operator>>=(std::size_t p);     // <2>
+
+constexpr bit::vector operator<<(std::size_t p) const; // <3>
+constexpr bit::vector operator>>(std::size_t p) const; // <4>
+```
+1. Left-shift the elements of this bit-vector `p` places.
+2. Right-shift the elements of this bit-vector `p` places.
+3. Returns a bit-vector that is this one left shifted by `p` places
+4. Returns a bit-vector that is this one right shifted by `p` places
+
+The first two methods are destructive (i.e., operate in-place) and return a reference to `*this`, so can be chained with other calls.
+
+Like most things in the `bit` library, the methods operate on the elements of the bit-vector in _vector-order_.
+So if $v$ is our bit-vector
+$$
+v = \left[v_0, v_1, \ldots, v_{n-2}, v_{n-1} \right],
+$$
+then left shifting pushes out the element $v_0$ and pushes in a new zero element on the right:
+$$
+v \ll 1 = \left[v_1, \ldots, v_{n-2}, v_{n-1}, 0 \right].
+$$
+Similarly, right shifting pushes out the element $v_{n-1}$ and pushes in a new zero element on the left:
+$$
+v \gg 1 = \left[0, v_0, v_1, \ldots, v_{n-2}, \right].
+$$
+
+::: {.callout-warning}
+# Vector-order vs. bit-order
+Thus, right shifts are equivalent to left shifts, considering the elements in _bit-order_.
+Similarly, the left shifts are equivalent to right shifts, considering the elements in _bit-order_.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::ones(12);
+
+    std::cout << "Left shift:\n";
+    std::cout << "v:        " << v         << '\n';
+    std::cout << "v << 1:   " << (v << 1)  << '\n';
+    std::cout << "v << 4:   " << (v << 4)  << '\n';
+    std::cout << "v << 9:   " << (v << 9)  << '\n';
+    std::cout << "v << 13:  " << (v << 13) << '\n';
+    std::cout << '\n';
+
+    std::cout << "Right shift:\n";
+    std::cout << "v:        " << v         << '\n';
+    std::cout << "v >> 1:   " << (v >> 1)  << '\n';
+    std::cout << "v >> 4:   " << (v >> 4)  << '\n';
+    std::cout << "v >> 9:   " << (v >> 9)  << '\n';
+    std::cout << "v >> 13:  " << (v >> 13) << '\n';
+    std::cout << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Left shift:
+v:        [1 1 1 1 1 1 1 1 1 1 1 1]
+v << 1:   [1 1 1 1 1 1 1 1 1 1 1 0]
+v << 4:   [1 1 1 1 1 1 1 1 0 0 0 0]
+v << 9:   [1 1 1 0 0 0 0 0 0 0 0 0]
+v << 13:  [0 0 0 0 0 0 0 0 0 0 0 0]
+
+Right shift:
+v:        [1 1 1 1 1 1 1 1 1 1 1 1]
+v >> 1:   [0 1 1 1 1 1 1 1 1 1 1 1]
+v >> 4:   [0 0 0 0 1 1 1 1 1 1 1 1]
+v >> 9:   [0 0 0 0 0 0 0 0 0 1 1 1]
+v >> 13:  [0 0 0 0 0 0 0 0 0 0 0 0]
+```
+
+### See Also
+{vec.operator&=}      \
+{vec.operator^=}      \
+{vec.operator=|}      \
+{vec.operator+=}      \
+{vec.operator-=}      \
+{vec.operator*=}      \
+{vec.operator~}

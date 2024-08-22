@@ -1,0 +1,112 @@
+{{< include /pages/_latex-macros.qmd >}}
+---
+title: "The `bit::gauss` Class"
+---
+
+## Introduction
+
+We use a `bit::gauss` object to find solutions for the system of linear equations $A \cdot x = b$ over {f2}.
+
+Here, $A$ is a known bit-matrix, $b$ is a known right-hand side bit-vector, and $x$ is the unknown solution to the system.
+$A$ should be square, and the size of the $b$ should match the number of rows in $A$.
+
+As the name suggests, the solution method is {Gaussian-elimination}, specifically Gauss-Jordan elimination.
+
+On construction, the `bit::gauss` object captures copies of $A$ and $b$.
+Then, it uses {elementary-row-ops} to transform the left-hand side matrix to {reduced-row-echelon-form} while simultaneously performing identical operations to the right-hand side vector.
+With those in place, the solver can quickly produce solutions $x$ by simple back-substitution.
+
+As well as getting solutions for the system $A \cdot x = b$, the `bit::gauss` object can be queried for other helpful information, such as the {rank} of $A$, whether the system is consistent (i.e., whether any solutions exist), and so on.
+See the complete list below.
+
+Recognizing that often one wants to find a solution to $A \cdot x = b$ with a minimum of palaver, there is a non-member function to do just that.
+It can be invoked as follows:
+```cpp
+auto x = bit::solve(A,b);
+if(x) {
+    ...
+}
+```
+The `x` here is a bit-vector wrapped in a {std.optional}.
+If no solution exists, `x` will be a {std.nullopt}; otherwise, it can be dereferenced as a {bit.vector}.
+
+## Multiple Solutions
+
+A system of linear equations over $\R$ has either no solutions, one solution, or infinite solutions.
+The latter situation arises if the system is under-determined so that there is one or more free variables.
+
+Generally, if you have $m$ independent and consistent equations for $n$ unknowns and $n>m$, there are $f=n-m$ free variables.
+Reducing the matrix to echelon form lets you determine how many independent equations exist and quickly check that the system is consistent.
+Over $\R$, a free variable can take on any value; hence, there are infinite possible solutions to the system.
+
+Over {f2}, the situation is different because a free variable can only take on one of the values 0 and 1.
+Hence, if the system is consistent and has $f$ free variables, it will have $2^f$ possible solutions.
+So, if no free variables exist, a consistent system will have one unique solution.
+
+That `x` in the above example will be one of those $2^f$ possible solutions randomly picked.
+We also provide a way to iterate through many possible solutions (not necessarily all of them because if $f$ is large, the number of potential solutions will explode).
+
+If `solver` is a `bit::gauss` for the consistent system $A \cdot x = b$ with $f$ free variables, then the call `solver()` will return one of the possible $2^f$ solutions picked entirely randomly (calling solver() again may return a different but equally valid solution).
+On the other hand, a call to `solver(n)`, where `n` is a `std::size_t` and $n < 2^f$, will produce a specific solution.
+There are many ways to produce an ordering amongst the possible solutions, but in any case, calling the `solver(n)` will always return the same solution.
+
+## Declaration
+
+Like everything in the library, this class is in the `bit` namespace. \
+It is defined in the header `<bit/gauss.h>` as follows:
+
+```cpp
+namespace bit {
+    template<
+        std::unsigned_integral Block = uint64_t,
+        Allocator = std::allocator<Block>
+    > class gauss;
+}
+```
+See the documentation for {bit.vector} and {bit.matrix} for more information on the two template parameters.
+
+## Class Types
+
+Item            | Description
+--------------- | ------------------------------------
+`vector_type`   | An alias for {bit.vector}
+`matrix_type`   | An alias for {bit.matrix}
+`location_type` | `std::vector<std::size_t>` --- index locations of the free variables
+: {.bordered .hover .responsive tbl-colwidths="[30,70]"}
+
+## Instance Methods
+
+### Construction
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{gauss.constructors}     | Construct a `gauss` for a system $A \cdot x = b$.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Queries
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{gauss.equation_count}   | Return the number of equations in the system --- the number of rows in the bit-matrix $A$.
+{gauss.is_consistent}    | Return `true` if the system of equations is _consistent_ and solvable.
+{gauss.free_count}       | Return the number of free variables in the system.
+{gauss.solution_count}   | Return the number of solutions to the system we can directly address.
+{gauss.rank}             | Return the rank of the bit-matrix $A$.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Access to the Echelon Form
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{gauss.lhs}              | Read access to the reduced row echelon form for $A$.
+{gauss.rhs}              | Read access to the equivalently manipulated version of $b$.
+{gauss.operator()}       | Return a random solution amongst all the possible solutions for the system $A \cdot x = b$.
+{gauss.operator(i)}      | Return a specific solution (solution number `i` if you like) for the system $A \cdot x = b$.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+## Non-member Functions
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{bit.solve}              | Function that implicitly creates a `gauss` object and then uses it to try and return a single solution for the system $A \cdot x = b$. The `gauss` object does not live on after the call.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}

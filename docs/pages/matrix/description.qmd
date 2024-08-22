@@ -1,0 +1,54 @@
+---
+title: "`bit::matrix` --- Descriptive Material"
+---
+
+Dump some descriptive data about a bit-matrix to a stream.
+
+```cpp
+constexpr void description(std::ostream &s, +
+                           const std::string &head = "", +
+                           const std::string &foot = "\n") const;   // <1>
+
+constexpr void description(const std::string &head = "", +
+                           const std::string &foot = "\n") const;   // <2>
+```
+1. Prints data to an arbitrary stream.
+2. Prints the same data to `std::cout`.
+
+You can send along some arbitrary text that gets prepended or appended to the description of the bit-matrix.
+See the example below.
+
+::: {.callout-caution}
+# The output format may change
+The primary use for these methods is debugging. \
+The format of the descriptive data may change from time to time.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::random(6);
+    m.description("Random fill using a fair coin");
+}
+```
+
+[Output]{.bt}
+```bash
+Random fill using a fair coin: # <1>
+bit-matrix dimension:   6 x 6
+bit-matrix capacity:    6 x 64
+number of set elements: 16
+    100000  =  0x10_4
+    111101  =  0xF2_4
+    101001  =  0x52_4
+    101010  =  0x51_4
+    100000  =  0x10_4
+    100101  =  0x92_4
+```
+1. The optional user-supplied header line.
+
+### See Also
+{mat.stream<<} \
+{mat.print}

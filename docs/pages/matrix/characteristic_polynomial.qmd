@@ -1,0 +1,85 @@
+---
+title: "`bit::matrix` --- Characteristic Polynomial"
+---
+
+Finds the {characteristic-polynomial} of a _square_ bit-matrix.
+
+```cpp
+bit::vector<Block, Allocator>
+characteristic_polynomial(const matrix<Block, Allocator>& A);
+```
+Returns a bit-vector `p` where the {characteristic-polynomial} for the bit-matrix $A$ is given by
+$$
+p(\lambda) = p_0  + p_1 \lambda + p_2 \lambda^2 + \cdots
+$$
+The bit-matrix must be non-empty and square; otherwise, the method throws a `std::invalid_argument` exception.
+
+{Danilevsky} is used to compute the characteristic polynomial.
+We [coded the algorithm](/pages/notes/danilevsky.qmd) considering the nature of arithmetic over {f2}, which means that the characteristic polynomial of _large_ bit-matrices can be efficiently computed --- even for those with millions of entries that would choke more naive implementations.
+
+[Example --- identity matrices]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    for(std::size_t i = 1; i < 8; ++i) {            // <1>
+        auto M = bit::matrix<>::identity(i);
+        auto p = bit::characteristic_polynomial(M);
+        std::cout << "Char-poly for the "
+                  << i << " x " << i << " identity: " << bit::polynomial(p) << '\n';
+    }
+}
+```
+1. We generate identity matrices from 1 x 1 to 7 x 7 and get the characteristic polynomial in each case.
+
+[Output]{.bt}
+```bash
+Char-poly for the 1 x 1 identity: 1 + x^1
+Char-poly for the 2 x 2 identity: 1 + x^2
+Char-poly for the 3 x 3 identity: 1 + x^1 + x^2 + x^3
+Char-poly for the 4 x 4 identity: 1 + x^4
+Char-poly for the 5 x 5 identity: 1 + x^1 + x^4 + x^5
+Char-poly for the 6 x 6 identity: 1 + x^2 + x^4 + x^6
+Char-poly for the 7 x 7 identity: 1 + x^1 + x^2 + x^3 + x^4 + x^5 + x^6 + x^7
+```
+
+We can easily verify these.
+
+For example, if we consider the 7 x 7 identity matrix, it is clear that the characteristic polynomial is given by
+$$
+p(\lambda) = (\lambda - 1)^7 = \lambda ^7-7 \lambda ^6+21 \lambda ^5-35 \lambda ^4+35 \lambda ^3-21 \lambda ^2+7 \lambda -1
+$$
+In {f2}, even coefficients are zero, and odd ones, whether positive or negative, are one, so $p(\lambda)$ becomes
+$$
+p(\lambda) = \lambda ^7 + \lambda ^6 + \lambda ^5 + \lambda ^4 + \lambda ^3 + \lambda ^2 + \lambda + 1
+$$
+Therefore, we expect to get the {f2} coefficients as `11111111`, which agrees with the output above.
+
+[Example]{.bt} Bit-matrices should satisfy their characteristic polynomial
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    // For this example - turn off BIT_VERIFY and enable optimization here!
+    auto M = bit::matrix<>::random(512);        // <1>
+    auto p = bit::characteristic_polynomial(M);
+    std::cout << "Characteristic polynomial:\n" << p << "\n\n";
+    auto C = p(M);                              // <2>
+    std::cout << "Does the bit-matrix satisfy its characteristic polynomial? "
+              << (C.none() ? "YES" : "NO") << '\n';
+}
+```
+1. Pay attention to the comment!
+We can handle much larger matrices, but you must enable compiler optimizations.
+2. All matrices should satisfy their characteristic polynomial so $p(M)$ should return the zero bit-matrix.
+
+[Output]{.bt}
+```bash
+Characteristic polynomial:
+x^1 + x^3 + x^4 + x^5 + x^6 + x^8 + x^11 + x^12 + x^15 + x^18 + x^20 + x^22 + x^24 + x^27 + x^29 + x^30 + x^31 + x^33 + x^34 + x^35 + x^37 + x^38 + x^39 + x^40 + x^41 + x^42 + x^43 + x^45 + x^46 + x^49 + x^50 + x^51 + x^52 + x^53 + x^54 + x^56 + x^57 + x^63 + x^64 + x^65 + x^66 + x^67 + x^70 + x^74 + x^75 + x^76 + x^77 + x^79 + x^81 + x^87 + x^90 + x^91 + x^93 + x^96 + x^97 + x^98 + x^101 + x^104 + x^105 + x^106 + x^111 + x^112 + x^115 + x^119 + x^120 + x^121 + x^122 + x^127 + x^128 + x^129 + x^130 + x^133 + x^135 + x^140 + x^142 + x^144 + x^145 + x^147 + x^148 + x^151 + x^153 + x^154 + x^157 + x^158 + x^159 + x^162 + x^163 + x^164 + x^165 + x^166 + x^171 + x^172 + x^176 + x^177 + x^178 + x^179 + x^180 + x^181 + x^182 + x^186 + x^188 + x^189 + x^191 + x^193 + x^194 + x^196 + x^197 + x^198 + x^201 + x^203 + x^206 + x^210 + x^211 + x^220 + x^221 + x^222 + x^226 + x^227 + x^228 + x^229 + x^230 + x^233 + x^235 + x^236 + x^238 + x^239 + x^240 + x^242 + x^247 + x^250 + x^251 + x^256 + x^257 + x^258 + x^260 + x^261 + x^262 + x^264 + x^265 + x^268 + x^269 + x^270 + x^273 + x^274 + x^278 + x^279 + x^280 + x^282 + x^283 + x^284 + x^285 + x^286 + x^289 + x^292 + x^293 + x^295 + x^296 + x^297 + x^298 + x^306 + x^307 + x^309 + x^314 + x^316 + x^320 + x^324 + x^326 + x^328 + x^330 + x^331 + x^334 + x^335 + x^336 + x^337 + x^341 + x^342 + x^343 + x^345 + x^347 + x^350 + x^351 + x^352 + x^357 + x^360 + x^365 + x^366 + x^369 + x^372 + x^373 + x^376 + x^377 + x^378 + x^379 + x^380 + x^381 + x^382 + x^383 + x^385 + x^386 + x^387 + x^388 + x^389 + x^393 + x^397 + x^400 + x^401 + x^402 + x^405 + x^406 + x^408 + x^409 + x^410 + x^412 + x^413 + x^414 + x^415 + x^417 + x^418 + x^429 + x^431 + x^434 + x^435 + x^436 + x^438 + x^439 + x^441 + x^443 + x^444 + x^445 + x^447 + x^450 + x^451 + x^452 + x^453 + x^455 + x^457 + x^458 + x^459 + x^460 + x^461 + x^463 + x^464 + x^465 + x^468 + x^470 + x^471 + x^472 + x^473 + x^475 + x^480 + x^481 + x^482 + x^483 + x^487 + x^488 + x^490 + x^492 + x^493 + x^498 + x^499 + x^501 + x^502 + x^503 + x^506 + x^509 + x^512
+
+Does the bit-matrix satisfy its characteristic polynomial? YES
+```
+
+### See Also
+{poly.operator()}

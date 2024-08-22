@@ -1,0 +1,357 @@
+---
+title: "Modular Reduction of $x^N$ in GF(2)"
+filters:
+    - pseudocode
+---
+
+::: {.hidden}
+$$
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\renewcommand{\mod}{\mid}
+$$
+:::
+
+## Introduction
+
+Let $P(x)$ be a nonzero polynomial of degree $n$ over {f2}.
+
+Any polynomial $h(x)$ over {f2} can be decomposed as:
+$$
+    h(x) = q(x) P(x) + r(x),
+$$
+$q(x)$ is the *quotient* polynomial for $h(x)$, and the *remainder* polynomial $r(x)$ has degree less than $n$.
+
+We say that $r(x)$ is the *modular reduction* of $h(x)$ by $P(x)$
+$$
+    r(x) = h(x)\bmod{P(x)}.
+$$
+As a shorthand, we will also use "$\mod$" to represent the modulo operation and write:
+$$
+    r(x) = h(x) \mod P(x) \equiv h(x)\bmod{P(x)}.
+$$
+
+## Power Polynomials $x^N$
+
+The simplest, single-term, polynomials $h(x) = x^N$ are of particular importance especially for cases where $N \gg 1$.
+
+This is because some numerical algorithms have a critical iteration step that can formally be written as:
+$$
+    \bold{v} \gets M \cdot \bold{v},
+$$
+where $\bold{v}$ is a bit-vector bucket of $n$ bits and $M$ is an $n \times n$ bit-matrix.
+
+For example, many well-known random number generators can be cast into this form where a *state vector* $\bold{v}$ is advanced at each step before it is reduced to the next random number.
+We note in passing that the generator is unlikely to be coded as matrix-vector multiply in GF(2) --- $M$ is typically rather sparse and special so the iteration can be carried much more efficiently by other means.
+Nevertheless, the mathematical analysis of the generator will depend on the structure of $M$.
+
+Now suppose you want to jump very far ahead in a random number stream.
+This lets one start a parallel thread of computation using the same set of random numbers but so far ahead that there is no danger of overlaps.
+To jump $N$ steps ahead where $N \gg 1$ we need to compute
+$$
+    M^N \cdot \bold{v}.
+$$
+Even if $M$ is sparse and special there usually is no easy way to compute $M^N$.
+
+But suppose that $P(x)$ is the known degree $n$ characteristic polynomial for $M$ then the [Cayley Hamilton theorem](https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem) tells us that:
+$$
+    P(M) = 0.
+$$
+We can use that as follows --- first, express $x^N$ as
+$$
+    x^N = q(x)P(x) + r(x),
+$$
+then using Cayley Hamilton we get
+$$
+    M^N = q(M)P(M) + r(M) = r(M).
+$$
+So we can replace $M^N$ by $r(M)$ where the degree of $r$ is less than $n$ and typically $N \gg n$.
+
+Thus, once we know $r(x) = x^N \mod P(x)$, we can jump $N$ steps ahead in the algorithm by computing the inexpensive polynomial sum $r(M)$.
+
+For more details see [this paper](https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf).
+
+## An Iterative Technique for $x^N \mod P(x)$
+
+$P(x)$  has degree $n$ so there is a polynomial $p(x)$ of degree less than $n$ such that
+$$
+    P(x) = p(x) + x^n = p_0 + p_1 x + \cdots + p_{n-1} x^{n-1} + x^n.
+$$
+$p(x)$ can be represented as the vector of its coefficients:
+$$
+    p(x) \sim \bold{p} = \lbrack p_0 p_1 \ldots p_{n-1} \rbrack .
+$$
+
+There are three cases to consider as we compute $x^N \mod P(x)$.
+
+#### Case $N < n$:
+
+If $N < n$ then $P(x)$ does not divide $x^N$ so
+$$
+    x^N \mod P(x) = x^N.
+$$
+Defining $\bold{u}_N$ as the *unit* bit-vector of size $n$, which is all zeros except for a one in the $N^{\mathrm{th}}$ slot, we can write:
+$$
+    x^N \mod P(x) \sim \bold{u}_N \text{ if } N < n.
+$$
+
+#### Case $N = n$:
+In this case $P(x) = p(x) + x^N$ so $x^N = P(x) - p(x)$.
+
+Therefore
+$$
+    x^N \mod P(x) = -p(x).
+$$
+In {f2} we can ignore that minus sign and write
+$$
+    x^N \mod P(x) \sim \bold{p}  \text{ if } N = n.
+$$
+
+#### Case $N > n$:
+It remains to determine $x^N \mod P(x)$ for $N > n$.
+
+Now _any_ polynomial $h(x)$ over {f2} can be written as some multiple of $P(x)$ plus a remainder term:
+$$
+    h(x) = q(x) P(x) + r(x)
+$$
+where the _quotient_ $q(x)$ and _remainder_ $r(x)$ are polynomials over {f2} and the degree of $r(x)$ is strictly less than $n$.
+$$
+    r(x) \equiv h(x) \mod P(x)
+$$
+
+Suppose we already know the explicit form for $r(x) = h(x) \mod P(x)$
+$$
+    r(x) = r_0 + r_1 x + \cdots + r_{n-2} x^{n-2} + r_{n-1} x^{n-1}.
+$$
+That is, we know the elements in the bit-vector of coefficients for $r(x)$
+$$
+    r(x) \sim \bold{r} = \lbrack r_0 r_1 \ldots r_{n-1} \rbrack.
+$$
+
+Now
+$$
+    x\,h(x) = x\,q(x) P(x) + x\,r(x) \implies x\,h(x) \mod P(x) = x\,r(x) \mod P(x).
+$$
+Thus
+$$
+    x\,h(x) \mod P(x) = \left(r_0 x + r_1 x^2 + \cdots + r_{n-2} x^{n-1}\right) \mod P(x) + r_{n-1} x^n \mod P(x).
+$$
+Using our two known cases for $N < n$ and $N = n$ we get
+$$
+    x\,h(x) \mod P(x) \sim \lbrack 0 r_0 \ldots r_{n-2} \rbrack + r_{n-1} \bold{p}.
+$$
+Thus if we know that $h(x) \mod P(x) \sim \bold{r}$ then
+$$
+    x\,h(x) \mod P(x) \sim (\bold{r} \gg 1 ) \; \wedge \; r_{n-1} \bold{p}.
+$$
+Here $\bold{r} \gg 1$ means we shift $\bold{r}$ one place to the right and introduce a zero on the left.
+
+### Summary
+
+Using the notation
+$$
+    x^N \mod P(x) = r^N(x) \sim \bold{r}^N,
+$$
+where $\bold{r}^N$ is a bit-vector of size $n$:
+$$
+    \bold{r}^N = \lbrack r^N_0 r^N_1 \ldots r^N_{n-1} \rbrack,
+$$
+we can compute $\bold{r}^N$ directly for small values of $N$ and iteratively for larger values of $N$:
+$$
+    \bold{r}^N =
+    \begin{cases}
+        \bold{u}_N    & \text{ for } N < n \\
+        \bold{p}      & \text{ for } N = n \\
+        \left(\bold{r}^{N-1} \gg 1 \right) \; \wedge \; r_{n-1}^{N-1} \, \bold{p}   & \text{ for } N > n
+    \end{cases}
+$$
+
+## A Multiply & Square Technique for $x^N \mod P(x)$
+
+For cases of practical interest where $N \gg 1$, the iterative scheme outlined above is much too slow.
+
+We can speed it up considerably by using a "multiply & square" approach --- there are variations on the theme but observe that we can always write:
+$$
+    x^N =
+    \begin{cases}
+        x \, \left( x^{\frac{N-1}{2}} \right)^2 & N \text{ odd,} \\
+        \left( x^{\frac{N}{2}} \right)^2        & N \text{ even.}
+    \end{cases}
+$$
+Of course, in our case, we want to compute $x^N \mod P(x)$ as opposed to just computing the value of $x^N$ but we can still borrow one of the fast exponentiation techniques described [here](https://en.wikipedia.org/wiki/Modular_exponentiation) or more comprehensively in Knuth's *The Art of Computer Programming, Vol 2*.
+
+To see that, we first note that if $f$ and $g$ are polynomials over {f2} where
+$$
+\begin{align}
+    f(x) \mod P(x) &= r_f(x), \\
+    g(x) \mod P(x) &= r_g(x)
+\end{align}
+$$
+then it is easily verified that
+$$
+    f(x) g(x) \mod P(x) = r_f(x) r_g(x) \mod P(x).
+$$
+So while the product polynomial $f(x) g(x)$ may have a very high degree, we can always just work with the much simpler product $r_f(x) r_g(x)$ whose degree is at most $2n -2$.
+
+In our case, suppose we already know $r(x) = x^k \mod P(x)$ for some power $k$ i.e. we know the coefficients $\bold{r}$ of the polynomial $r(x)$:
+$$
+    r(x) \sim \bold{r} = [r_0 r_1 \ldots r_{n-1}].
+$$
+To get to $x^N \mod P(x)$ from there, the multiply and square algorithm requires two procedures:
+
+Step            | Procedure
+:-------------: | :------------------------------------------:
+`MultiplyStep`  | $\bold{r} \gets x r(x) \mod P(x)$
+`SquareStep`    | $\bold{r} \gets r(x)^2 \mod P(x)$
+: {.bordered .hover .responsive tbl-colwidths="[30,70]"}
+
+With those in place we can proceed as follows (this is just a sketch):
+
+```pseudocode
+#| label: multiply_and_square
+
+\begin{algorithm}
+\caption{Modular Reduction of $x^N$}
+\begin{algorithmic}
+\Require $\mathbf{p}$, a bit-vector of size $n$, where $P(x) = x^n + p(x)$ and  $\mathbf{p} \sim p(x)$. Unchanged on output.
+\Require $\mathbf{r}$, a destination bit-vector of size $n$. On output $\mathbf{r} \sim r(x) = x^N \mid P(x)$.
+\Procedure{reduce}{$N$, $\mathbf{p}$}
+
+    \State $\mathbf{r} \gets \mathbf{0}$
+    \State $r_1 = 1$
+    \While{$N > 0$}
+        \If{$N \text{ mod } 2 = 1$}
+            \State \Call{MultiplyStep}{$\mathbf{r}$}
+        \EndIf
+        \State \Call{SquareStep}{$\mathbf{r}$}
+        \State $N \gets N \gg 1$
+    \EndWhile
+
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+Of course, the actual code handles the decomposition of $P(x)$ into the  $x^n + p(x)$ and manages edge cases such as $P(x) = 1$.
+It also handles the trivial cases where $N \le n$, and for larger values of $N$ uses its binary representation in the main loop.
+Nevertheless, the sketch shows the importance of the two sub-procedures, `MultiplyStep` and `SquareStep` which we discuss next.
+
+### The Multiply Step
+
+If $q(x)$ is a polynomial of degree less than $n$ so that
+$$
+    q(x) \mod P(x) = q(x),
+$$
+then the following procedure performs the step
+$$
+    q(x) \gets x q(x) \mod P(x),
+$$
+where $q(x)$ is represented by the bit-vector of its $n$ coefficients $\bold{q} = [q_0, q_1, \ldots, q_{n-1}]$.
+
+```pseudocode
+#| label: MultiplyStep
+
+\begin{algorithm}
+\caption{The step: $q(x) \gets x q(x) \mid P(x)$.}
+\begin{algorithmic}
+\Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$.
+\Require $\mathbf{q}$ is a bit-vector of size $n > 0$.
+\Procedure{MultiplyStep}{$\mathbf{q}$}
+    \State $tmp \gets q_{n-1}$
+    \State $\mathbf{q} \gets \mathbf{q} \gg 1$
+    \If {$tmp$}
+        \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{p}$
+    \EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+### The Square Step
+
+In GF(2) if a polynomial $q(x)$ is represented by the coefficient bit-vector $\bold{q} = [q_0, q_1, q_2, \ldots, q_{n-1}]$:
+$$
+    q(x) = q_0 + q_1 x + q_2 x^2 + \ldots q_{n-1} x^{n-1},
+$$
+one can easily show that
+$$
+    q(x)^2 = q_0 + q_1 x^2 + q_2 x^4 + \cdots + q_{n-1} x^{2n-2},
+$$
+so $s(x) = q(x)^2$ is represented by *riffling* the bit-vector $\bold{q}$
+$$
+    s(x) = q(x)^2 \sim \bold{s} = [q_0, 0, q_1, 0, q_2, \ldots, 0, q_{n-1}],
+$$
+i.e. the bit-vector we get by interspersing the elements of $\bold{q}$ with zeros.
+
+Riffling can be done very efficiently block by block and the library has a `riffled(...)` method which takes a bit-vector $\bold{q}$ and fills a destination bit-vector $\bold{s}$ with a *riffled* version of $\bold{q}$.
+
+The library also has a method `split(...)` that takes a bit-vector $\bold{s}$, a number $n$, and then fills two other bit-vectors $\bold{l}$ and $\bold{h}$ where  $\bold{l}$ gets the first $n$ elements in $\bold{v}$ and  $\bold{h}$ gets the rest.
+$$
+\begin{align}
+    \bold{l} &= [s_0, s_1, \ldots, s_{n-1}], \\
+    \bold{h} &= [s_n, s_{n+1}, \dots].
+\end{align}
+$$
+In polynomial terms this is equivalent to the decomposition:
+$$
+    s(x) = l(x) + x^n \, h(x),
+$$
+where the degree of $l(x)$ is less than $n$.
+
+Given that $s(x) = q(x)^2$ we have
+$$
+    q(x)^2 \mod P(x) = s(x) \mod P(x) = l(x) \mod P(x) + x^n h(x) \mod P(x),
+$$
+and because the degree of $l(x)$ is less than $n$ we have
+$$
+    q(x)^2 \mod P(x) = l(x) + x^n h(x) \mod P(x).
+$$
+Writing $h(x)$ as
+$$
+h(x) = \sum_{i=0}^{n-1} h_i x^i
+$$
+it follows that
+$$
+    q(x)^2 \mod P(x) =  l(x) + \sum_{i=0}^{n} h_i x^{n + i} \mod P(x).
+$$
+Define the bit-vectors $\bold{x}^i$ by the equivalence:
+$$
+    \bold{x}^i \sim x^{n+i} \mid P(x) \text{ for } i = 0, \ldots, n-1.
+$$
+Now we know that $x^n \mod P(x) = p(x)$ so
+$$
+    \bold{x}^0 = \bold{p}.
+$$
+With that starting point, we can easily fill in bit vectors $\bold{x}^i$ for $i = 1, \ldots, n-1$ by using @MultiplyStep.
+
+The squaring step looks like the following:
+
+```pseudocode
+#| label: SquareStep
+
+\begin{algorithm}
+\caption{The step: $q(x) \gets q(x)^2 \mid P(x)$.}
+\begin{algorithmic}
+\Require $\mathbf{p} \sim p(x)$ is a known bit-vector of size $n$, where $P(x) = x^n + p(x)$.
+\Require $\mathbf{x}^i$ are known bit-vectors, where $\mathbf{x}^i \sim x^{n+i} \mid P(x)$.
+\Require $\mathbf{s}, \mathbf{l}$ and $\mathbf{h}$ are available workspace bit-vectors.
+\Require $\mathbf{q}$ is a bit-vector of size $n > 0$.
+\Procedure{SquareStep}{$\mathbf{q}$}
+
+    \State // \textit{Riffle $\mathbf{q}$ into $\mathbf{s}$.}
+    \State \Call{riffle}{$\mathbf{q}$, $\mathbf{s}$}
+
+    \State // \textit{Fill $\mathbf{l}$ with a copy of the first $n$ elements from $\mathbf{s}$ and $\mathbf{h}$ with the rest.}
+    \State \Call{split}{$\mathbf{s}$, $n$, $\mathbf{l}$, $\mathbf{h}$}
+
+    \State $\mathbf{q} \gets \mathbf{l}$
+    \For {$i \gets 0, n-1$}
+        \If{$h_i$}
+            \State $\mathbf{q} \gets \mathbf{q} \wedge \mathbf{x}^i$
+        \EndIf
+    \EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+Some efficiencies can easily be implemented in that algorithm's loop as, for example, at most every second element in $\bold{h}$ is ever set.

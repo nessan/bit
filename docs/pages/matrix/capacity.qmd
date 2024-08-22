@@ -1,0 +1,41 @@
+---
+title: "`bit::matrix` --- Capacity Queries"
+---
+
+How many rows or columns can the bit-matrix accommodate with any more memory allocations?
+
+```cpp
+constexpr std::size_t row_capacity() const;   // <1>
+constexpr std::size_t col_capacity() const;   // <2>
+```
+1. How many rows can be added without a memory allocation?
+2. How many columns can be added without a memory allocation?
+
+::: {.callout-warning}
+# Each row is not checked.
+The rows may not all have the same capacity --- the `col_capacity()` method reports the capacity of the _first_ row.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(3, 4);
+    std::cout << "m.rows():         " << m.rows()           << '\n';
+    std::cout << "m.cols():         " << m.cols()           << '\n';
+    std::cout << "m.row_capacity(): " << m.row_capacity()   << '\n';
+    std::cout << "m.col_capacity(): " << m.col_capacity()   << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+m.rows():         3
+m.cols():         4
+m.row_capacity(): 3
+m.col_capacity(): 64
+```
+
+### See Also
+{vec.capacity}

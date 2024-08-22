@@ -1,0 +1,129 @@
+---
+title: "`bit::vector` --- Change All Elements"
+---
+
+We have methods to set elements in a bit-vector to 1, reset them to 0, or flip them from 0 to 1 and vice versa.
+These methods can work on the entire bit-vector, on individual elements, or on blocks of contiguous elements.
+
+```cpp
+constexpr bit::vector &set(std::size_t i);                          // <1>
+constexpr bit::vector &reset(std::size_t i);
+constexpr bit::vector &flip(std::size_t i);
+
+constexpr bit::vector &set(std::size_t first,   std::size_t len);   // <2>
+constexpr bit::vector &reset(std::size_t first, std::size_t len);
+constexpr bit::vector &flip(std::size_t first,   std::size_t len);
+
+constexpr bit::vector &set();                                       // <3>
+constexpr bit::vector &reset();
+constexpr bit::vector &flip();
+```
+1.  Sets, resets, or flips the value of the single element at index `i`.
+2.  Sets, resets, or flips the value of `len` elements starting at index `first`.
+3.  Sets, resets, or flips the elements' values.
+
+
+::: {.callout-warning}
+# Sizes must be compatible
+ The `len` elements starting at `first` must fit in the valid range for the bit-vector. \
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+These methods return a reference to `*this`, so they can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 4;
+    std::size_t i = 0;
+
+    bit::vector<> v(n);
+
+    std::cout << "Setting ranges of elements to 1:\n";
+    v.reset();
+    std::cout << "Starting with vector of size " << v.size() << ": " << v << '\n';
+    for (i = 0; i < v.size(); ++i) {
+        std::size_t len, maxLen = v.size() - i + 1;
+        for (len = 1; len < maxLen; ++len) {
+            v.reset();
+            std::cout << "Setting " << len << " element(s) starting at position: " << i << ": " << v.set(i, len) << '\n';
+        }
+    }
+    std::cout << '\n';
+
+    std::cout << "Setting ranges of elements to 0:\n";
+    v.set();
+    std::cout << "Starting with a vector of size " << v.size() << ": " << v << '\n';
+    for (i = 0; i < v.size(); ++i) {
+        std::size_t len, maxLen = v.size() - i + 1;
+        for (len = 1; len < maxLen; ++len) {
+            v.set();
+            std::cout << "Resetting " << len << " element(s) starting at position: " << i << ": " << v.reset(i, len) << '\n';
+        }
+    }
+    std::cout << '\n';
+
+    std::cout << "Flipping ranges of elements from 1 to 0:\n";
+    v.set();
+    std::cout << "Starting with vector of size " << v.size() << ": " << v << '\n';
+    for (i = 0; i < v.size(); ++i) {
+        // v.set();
+        std::size_t len, maxLen = v.size() - i + 1;
+        for (len = 1; len < maxLen; ++len) {
+            v.set();
+            std::cout << "Flipping " << len << " element(s) starting at position: " << i << ": " << v.flip(i, len) << '\n';
+        }
+    }
+    std::cout << '\n';
+
+    return 0;
+}
+```
+
+[Output]{.bt}
+```bash
+Setting ranges of elements to 1:
+Starting with a vector of size 4: [0 0 0 0]
+Setting 1 element(s) starting at position: 0: [1 0 0 0]
+Setting 2 element(s) starting at position: 0: [1 1 0 0]
+Setting 3 element(s) starting at position: 0: [1 1 1 0]
+Setting 4 element(s) starting at position: 0: [1 1 1 1]
+Setting 1 element(s) starting at position: 1: [0 1 0 0]
+Setting 2 element(s) starting at position: 1: [0 1 1 0]
+Setting 3 element(s) starting at position: 1: [0 1 1 1]
+Setting 1 element(s) starting at position: 2: [0 0 1 0]
+Setting 2 element(s) starting at position: 2: [0 0 1 1]
+Setting 1 element(s) starting at position: 3: [0 0 0 1]
+
+Setting ranges of elements to 0:
+Starting with a vector of size 4: [1 1 1 1]
+Resetting 1 element(s) starting at position: 0: [0 1 1 1]
+Resetting 2 element(s) starting at position: 0: [0 0 1 1]
+Resetting 3 element(s) starting at position: 0: [0 0 0 1]
+Resetting 4 element(s) starting at position: 0: [0 0 0 0]
+Resetting 1 element(s) starting at position: 1: [1 0 1 1]
+Resetting 2 element(s) starting at position: 1: [1 0 0 1]
+Resetting 3 element(s) starting at position: 1: [1 0 0 0]
+Resetting 1 element(s) starting at position: 2: [1 1 0 1]
+Resetting 2 element(s) starting at position: 2: [1 1 0 0]
+Resetting 1 element(s) starting at position: 3: [1 1 1 0]
+
+Flipping ranges of elements from 1 to 0:
+Starting with a vector of size 4: [1 1 1 1]
+Flipping 1 element(s) starting at position: 0: [0 1 1 1]
+Flipping 2 element(s) starting at position: 0: [0 0 1 1]
+Flipping 3 element(s) starting at position: 0: [0 0 0 1]
+Flipping 4 element(s) starting at position: 0: [0 0 0 0]
+Flipping 1 element(s) starting at position: 1: [1 0 1 1]
+Flipping 2 element(s) starting at position: 1: [1 0 0 1]
+Flipping 3 element(s) starting at position: 1: [1 0 0 0]
+Flipping 1 element(s) starting at position: 2: [1 1 0 1]
+Flipping 2 element(s) starting at position: 2: [1 1 0 0]
+Flipping 1 element(s) starting at position: 3: [1 1 1 0]
+```
+
+### See Also
+{vec.set_if}    \
+{vec.flip_if}

@@ -1,0 +1,92 @@
+---
+title: "`bit::matrix` --- Replace Some Content"
+---
+
+We have methods that replace some of the values in a bit-matrix with those of another.
+
+```cpp
+constexpr bit::matrix&
+replace(std::size_t i0, std::size_t j0, const bit::matrix &with);   // <1>
+
+constexpr bit::matrix&
+replace(std::size_t i0, const bit::matrix &with);                   // <2>
+
+constexpr bit::matrix&
+replace(const bit::matrix &with);                                   // <3>
+```
+1. Starting at index pair `(i0,j0)`, replace the bit-matrix values with those from the bit-matrix `with`.
+2. Starting at index pair `(i0,i0)`, replace the bit-matrix values with those from the bit-matrix `with`.
+3. Starting at index pair `(0,0)`, replace the bit-matrix values with those from the bit-matrix `with`.
+
+::: {.callout-warning}
+# Sizes must be compatible
+The sub-matrix `with` we are copying from must fit inside the existing bit-matrix!
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+These methods return a reference to `*this` so they can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::ones(8);    // <1>
+    bit::matrix<> w(3);                 // <2>
+    std::cout << "m:\n" << m << '\n';
+    m.replace(w);                       // <3>
+    std::cout << "m:\n" << m << '\n';
+    m.replace(5,w);                     // <4>
+    std::cout << "m:\n" << m << '\n';
+    m.replace(5,0,w);                   // <5>
+    std::cout << "m:\n" << m << '\n';
+}
+```
+1. Start with an 8 x 8 bit-matrix `m` that is all ones.
+2. The replacement values will always be that 3 x 3 bit-matrix `w` that is all zeros.
+3. Replaces 3 x 3 values in `m` starting at the upper left element `(0,0)`.
+4. Replaces 3 x 3 values in `m` starting at the element `(5,5)`.
+5. Replaces 3 x 3 values in `m` starting at the element `(5,0)`.
+
+[Output]{.bt}
+```bash
+m:
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+m:
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+m:
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 0 0 0│
+│1 1 1 1 1 0 0 0│
+│1 1 1 1 1 0 0 0│
+m:
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│0 0 0 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│0 0 0 1 1 0 0 0│
+│0 0 0 1 1 0 0 0│
+│0 0 0 1 1 0 0 0│
+```
+
+### See Also
+{mat.sub}

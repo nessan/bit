@@ -1,0 +1,44 @@
+---
+title: "`bit::vector` --- Bit Counts"
+---
+
+These methods count the number of set/unset elements in a bit-vector.
+
+```cpp
+constexpr std::size_t count()  const;     // <1>
+constexpr std::size_t count1() const;     // <2>
+constexpr std::size_t count0() const;     // <3>
+constexpr bool parity() const;            // <4>
+```
+1. Returns the number of elements in the bit-vector set to 1.
+2. Returns the number of elements in the bit-vector set to 1 (synonym for `count()`)
+3. Returns the number of elements in the bit-vector set to 0.
+4. Returns `count() % 2`--- the number of set elements mod 2.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v1 = bit::vector<>::zeros(5);
+    auto v2 = bit::vector<>::checker_board(5);
+    auto v3 = bit::vector<>::ones(5);
+
+    std::cout
+        << "vector\t\t" << "count1\t" << "count0\t" << "parity\n"
+        << v1 << '\t' << v1.count1() << '\t' << v1.count0() << '\t' << v1.parity() << '\n'
+        << v2 << '\t' << v2.count1() << '\t' << v2.count0() << '\t' << v2.parity() << '\n'
+        << v3 << '\t' << v3.count1() << '\t' << v3.count0() << '\t' << v3.parity() << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+vector          count1  count0  parity
+[0 0 0 0 0]     0       5       0
+[0 1 0 1 0]     2       3       0
+[1 1 1 1 1]     5       0       1
+```
+
+### See Also
+{vec.size}

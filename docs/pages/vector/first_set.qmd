@@ -1,0 +1,50 @@
+---
+title: "`bit::vector` --- Iteration Over Set Bits"
+---
+
+We provide methods to iterate over the _set_ elements/bits in a bit-vector.
+
+```cpp
+constexpr std::size_t first_set() const;                // <1>
+constexpr std::size_t final_set() const;                // <2>
+constexpr std::size_t next_set(std::size_t pos) const;  // <3>
+constexpr std::size_t prev_set(std::size_t pos) const;  // <4>
+```
+1. Returns the index of the first set element or `npos` if none are set.
+2. Returns the index of the final set element or `npos` if none are set.
+3. Returns the index of the next set element **after** the argument or `npos` if there are no more set elements.
+4. Returns the index of the previous set element **before** the argument or `npos` if there are no more set elements.
+
+In these methods, `pos` is the index from which to start a search.
+It doesn't have to be the index of a set element.
+
+A return value of `bit::vector::npos` indicates that the search failed.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> v(11, [&](size_t k) { return (k + 1) % 2; }); // <1>
+    std::cout << "The set indices in " << v << " are ";
+    auto pos = v.first_set();                                   // <2>
+    while (pos != bit::vector<>::npos) {                        // <3>
+        std::cout << pos << ' ';
+        pos = v.next_set(pos);                                  // <4>
+    }
+    std::cout << '\n';
+}
+```
+1. Creates a vector of size 11 by calling a lambda that sets all the even indices.
+2. Find the index of the first set element (should be 0).
+3. Keep going until the search fails.
+4. Find the index of a set bit _after_ the current `pos`.
+
+[Output]{.bt}
+```bash
+The set indices in [1 0 1 0 1 0 1 0 1 0 1] are 0 2 4 6 8 10
+```
+
+
+### See Also
+{vec.if_set_call}

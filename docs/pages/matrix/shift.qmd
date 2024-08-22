@@ -1,0 +1,104 @@
+---
+title: "`bit::matrix` --- Logical Shift Operators"
+---
+
+Methods to perform binary left and right shifts on the _rows_ in a bit-matrix.
+
+```cpp
+constexpr bit::matrix &operator<<=(std::size_t p);     // <1>
+constexpr bit::matrix &operator>>=(std::size_t p);     // <2>
+
+constexpr bit::matrix operator<<(std::size_t p) const; // <3>
+constexpr bit::matrix operator>>(std::size_t p) const; // <4>
+```
+1. Left-shift the rows in this bit-matrix `p` places with zeros shifted in as needed.
+2. Right-shift the rows in this bit-matrix `p` places with zeros shifted in as needed.
+3. Returns a bit-matrix that is this one with its rows left shifted by `p` places
+4. Returns a bit-matrix that is this one with its rows right shifted by `p` places
+
+The first two methods are destructive (i.e., operate in-place) and return a reference to `*this` so they can be chained with other calls.
+
+::: {.callout-note}
+# Bit-order vs. vector-order
+ Shifts in the `bit` library work in _vector-order_ so if a row is `[e0, e1, e2, e3]` then a left shift turns that into `[e1, e2, e3, 0]` and a right shift turns it into `[0, e0, e1, e2]`.
+Vector-order shifts are the opposite of bit-order shifts!
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    auto m = bit::matrix<>::ones(4,4);
+    std::cout << "Left shift:\n";
+    std::cout << "m:     \n" << m          << '\n';
+    std::cout << "m << 1:\n" << ((m << 1)) << '\n';
+    std::cout << "m << 3:\n" << ((m << 3)) << '\n';
+    std::cout << "m << 5:\n" << ((m << 5)) << '\n';
+
+    std::cout << "Right shift:\n";
+    std::cout << "m:     \n" << m          << '\n';
+    std::cout << "m >> 1:\n" << ((m >> 1)) << '\n';
+    std::cout << "m >> 3:\n" << ((m >> 3)) << '\n';
+    std::cout << "m >> 5:\n" << ((m >> 5)) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Left shift:
+m:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m << 1:
+│1 1 1 0│
+│1 1 1 0│
+│1 1 1 0│
+│1 1 1 0│
+m << 3:
+│1 0 0 0│
+│1 0 0 0│
+│1 0 0 0│
+│1 0 0 0│
+m << 5:
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+
+Right shift:
+m:
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+│1 1 1 1│
+m >> 1:
+│0 1 1 1│
+│0 1 1 1│
+│0 1 1 1│
+│0 1 1 1│
+m >> 3:
+│0 0 0 1│
+│0 0 0 1│
+│0 0 0 1│
+│0 0 0 1│
+m >> 5:
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+│0 0 0 0│
+```
+
+### See Also
+{mat.operator&=}  \
+{mat.operator|=}   \
+{mat.operator^=}   \
+{mat.operator+=}   \
+{mat.operator-=}   \
+{mat.operator*=}   \
+{mat.operator~}    \
+{vec.operator<<=}  \
+{vec.operator>>=}  \

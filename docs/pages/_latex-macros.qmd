@@ -1,0 +1,10 @@
+
+<!-- Math shortcuts we sometimes use in the documentation -->
+::: {.hidden}
+$$
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\newcommand{\mod}[2]{ {#1 \, \mathrm{mod} \, #2}}
+$$
+:::

@@ -1,0 +1,77 @@
+---
+title: "`bit::matrix` --- Powers of a Bit-Matrix"
+---
+
+We have methods that raise a square bit-matrix to a power $n$ or $2^n$.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+constexpr matrix<Block, Allocator>
+pow(const matrix<Block, Allocator> &M, std::size_t n);     // <1>
+
+template<std::unsigned_integral Block, typename Allocator>
+constexpr matrix<Block, Allocator>
+pow2(const matrix<Block, Allocator> &M, std::size_t n);    // <2>
+```
+1. Returns $M^n$.
+2. Returns $M^{2^n}$.
+
+For example, we can raise $M$ to the power $2^{128}$, which is not representable as a typical `std::size_t`.
+
+We use repeated squaring to compute the powers efficiently.
+It is also worth noting that all arithmetic in {f2} is mod 2, so there are no overflow issues even for large $n$.
+
+::: {.callout-warning}
+# The bit-matrix argument must be square
+The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto M = bit::matrix<>::random(4);
+    std::cout << "M:\n"             << M            << '\n';
+    std::cout << "M^2:\n"           << pow(M,2)     << '\n';    // <1>
+    std::cout << "M^{256}:\n"       << pow(M,256)   << '\n';    // <2>
+    std::cout << "M^{2^8}:\n"       << pow2(M,8)    << '\n';    // <3>
+    std::cout << "M^{2^{100}}:\n"   << pow2(M,100)  << '\n';    // <4>
+}
+```
+1. Simple square of a small random bit-matrix.
+2. Raise to the power $256$ using `pow`.
+3. Raise to the power $2^8 = 256$ using `pow2`.
+4. Raise to the power $2^{100} = 1,267,650,600,228,229,401,496,703,205,376$.
+
+[Output]{.bt}
+```bash
+M:
+│1 0 1 1│
+│1 1 0 1│
+│0 0 0 1│
+│1 1 1 1│
+M^2:
+│0 1 0 1│
+│1 0 0 1│
+│1 1 1 1│
+│1 0 0 0│
+M^{256}:
+│0 0 0 1│
+│1 1 0 1│
+│1 0 1 1│
+│0 1 0 1│
+M^{2^8}:
+│0 0 0 1│
+│1 1 0 1│
+│1 0 1 1│
+│0 1 0 1│
+M^{2^{100}}:
+│0 0 0 1│
+│1 1 0 1│
+│1 0 1 1│
+│0 1 0 1│
+```
+
+### See Also
+{poly.operator()}

@@ -1,0 +1,38 @@
+---
+title: "`bit::vector` --- Random Fills"
+---
+
+Factory method to construct a bit-vector whose elements come from independent random draws from a {Bernoulli-distribution}
+
+```cpp
+static bit::vector random(std::size_t n, double prob_one = 0.5);
+```
+
+Returns a bit-vector of size `n`.
+
+The probability that an element in the bit-vector is 1 is `prob_one`.
+The default probability value is `0.5`, so element values are determined by tossing a fair coin a total of `n` times.
+
+At the extremes, if this parameter is `1.0`, the elements will all be 1; if it is `0.0`, the elements will all be 0.
+
+::: {.callout-warning}
+# The probability value needs to be valid
+This method throws a {std.invalid_argument} exception if the `prob_one` argument is not in the valid range $[0, 1]$.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::random(16);
+    std::cout << v << std::endl;
+}
+```
+[Output (will vary from run to run)]{.bt}
+```bash
+[1 0 1 1 0 1 1 1 0 0 1 1 1 0 1 0]
+```
+
+### See Also
+{vec.constructors}

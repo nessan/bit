@@ -1,0 +1,47 @@
+---
+title: "`bit::vector` --- Index Locations"
+---
+
+Find the indices of the set or unset bits in a bit-vector.
+
+```cpp
+std::vector<std::size_t> set_indices() const;           // <1>
+std::vector<std::size_t> unset_indices() const;         // <2>
+```
+1. Returns the index locations of the set bits in order.
+2. Returns the index locations of the unset bits in order.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+#include <iterator>
+int main()
+{
+    auto v = bit::vector<>::checker_board(19);                  // <1>
+    auto set_indices   = v.set_indices();
+    auto unset_indices = v.unset_indices();
+
+    std::ostream_iterator<std::size_t> iter(std::cout," ");     // <2>
+
+    std::cout << "Bit-vector " << v.to_string() << " has set indices at locations:\n";
+    std::copy (set_indices.begin(), set_indices.end(), iter);
+    std::cout << '\n';
+
+    std::cout << "Bit-vector " << v.to_string() << " has unset indices at locations:\n";
+    std::copy (unset_indices.begin(), unset_indices.end(), iter);
+    std::cout << '\n';
+}
+```
+1. Creates a checker-board patterned bit-vector of size 19 and then extracts the set & unset index locations.
+2. Use a stream iterator to print those indices.
+
+[Output]{.bt}
+```bash
+Bit-vector 0101010101010101010 has set indices at locations:
+1 3 5 7 9 11 13 15 17
+Bit-vector 0101010101010101010 has unset indices at locations:
+0 2 4 6 8 10 12 14 16 18
+```
+
+### See Also
+{vec.if_set_call}

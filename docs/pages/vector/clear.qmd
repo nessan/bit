@@ -1,0 +1,31 @@
+---
+title: "`bit::vector` --- Clear"
+---
+
+Clears out the contents of a bit-vector:
+```cpp
+constexpr bit::vector &clear();
+```
+The bit-vector's `size()` becomes 0, but its capacity is _not_ changed.
+This method returns a reference to `*this` so it can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::ones(8);
+    std::cout << "v: " << v << '\n';
+    v.clear();
+    std::cout << "v: " << v << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+v: [1 1 1 1 1 1 1 1]
+v: []
+```
+
+### See Also
+{vec.pop}

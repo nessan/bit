@@ -1,0 +1,50 @@
+---
+title: "`bit::vector` --- Extract a Sub-Vector"
+---
+
+We have methods to extract a sub-vector as a stand-alone, distinct copy of elements from this bit-vector.
+
+```cpp
+constexpr bit::vector sub(std::size_t begin, std::size_t len) const;    // <1>
+constexpr bit::vector sub(int len) const;                               // <2>
+```
+1. Returns a bit-vector of size `len`, a copy of the elements starting at `begin`.
+2. Returns a copy of the first `len` elements if `len > 0` or the final `abs(len)` elements if `len < 0`.
+
+::: {.callout-warning}
+# Range checking
+`begin` has to be a valid index, and `abs(len)` elements must be available for copying.
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::random(12);                     // <1>
+    std::cout << "v:           " << v           << "\n";
+    std::cout << "v.sub(0, 4): " << v.sub(0, 4) << "\n";    // <2>
+    std::cout << "v.sub(4):    " << v.sub(4)    << "\n";    // <3>
+    std::cout << "v.sub(-4):   " << v.sub(-4)   << "\n";    // <4>
+    std::cout << "v.sub(8, 4): " << v.sub(8, 4) << "\n";    // <5>
+}
+```
+1. Construct a vector of size 12 with a random fill.
+2. Extract four elements starting at index 0.
+3. Do the same thing using a shorthand notation.
+4. Extract the final four elements using the shorthand notation.
+5. Do the same thing by copying four elements starting at index 8.
+
+[Output]{.bt}
+```bash
+v:           [0 1 0 0 1 0 1 0 0 1 1 0]
+v.sub(0, 4): [0 1 0 0]
+v.sub(4):    [0 1 0 0]
+v.sub(-4):   [0 1 1 0]
+v.sub(8, 4): [0 1 1 0]
+```
+
+### See Also
+{vec.replace}

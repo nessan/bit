@@ -1,0 +1,76 @@
+---
+title: "`bit::vector` --- Some Special Bit-Vectors"
+---
+
+Class methods to construct some special bit-vectors:
+
+```cpp
+static constexpr bit::vector zeros(std::size_t n);                          // <1>
+static constexpr bit::vector ones(std::size_t n);                           // <2>
+static constexpr bit::vector unit(std::size_t n, std::size_t i);            // <3>
+static constexpr bit::vector checker_board(std::size_t n, int first = 1);   // <4>
+```
+1. Returns a bit-vector of size `n` where all the elements are set to 0.
+2. Returns a bit-vector of size `n` where all the elements are set to §.
+3. Returns the `i`'th unit bit-vector of size `n`.
+4. Returns a bit-vector of size `n` with a pattern that `1010101...` or `0101010...`
+
+The $i^\mathrm{th}$ unit bit-vector of size $n$ is all zeros apart from the i'th element, which is 1.
+
+::: {.callout-warning}
+# Bounds checking
+The method `unit(n, i)` requires $i < n$.
+This condition is always checked *unless* the `NDEBUG` flag is set, as it generally is for release builds.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 16;
+
+    auto v0 = bit::vector<>::zeros(n);
+    auto v1 = bit::vector<>::ones(n);
+    auto v2 = bit::vector<>::checker_board(n, 1);
+    auto v3 = bit::vector<>::checker_board(n, 0);
+    std::cout << "All zeros:              " << v0 << "\n";
+    std::cout << "All ones:               " << v1 << "\n";
+    std::cout << "Checker-board from 1:\t" << v2 << "\n";
+    std::cout << "Checker-board from 0:\t" << v3 << "\n";
+    // The unit vectors
+    for(std::size_t i = 0; i < n; ++i)
+    {
+        auto u = bit::vector<>::unit(n, i);
+        std::cout << "Unit bit-vector " << i << ":\t" << u << "\n";
+    }
+}
+```
+
+[Output]{.bt}
+```bash
+All zeros:              [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+All ones:               [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+Checker-board from 1:   [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0]
+Checker-board from 0:   [0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1]
+Unit bit-vector 0:      [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 1:      [0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 2:      [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 3:      [0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 4:      [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 5:      [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 6:      [0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0]
+Unit bit-vector 7:      [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0]
+Unit bit-vector 8:      [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0]
+Unit bit-vector 9:      [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+Unit bit-vector 10:     [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0]
+Unit bit-vector 11:     [0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0]
+Unit bit-vector 12:     [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0]
+Unit bit-vector 13:     [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0]
+Unit bit-vector 14:     [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0]
+Unit bit-vector 15:     [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1]
+```
+
+### See Also
+{vec.random} \
+{vec.from}

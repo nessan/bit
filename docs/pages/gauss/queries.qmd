@@ -1,0 +1,85 @@
+{{< include /pages/_latex-macros.qmd >}}
+---
+title: "`bit::gauss` --- System Queries"
+---
+
+We supply methods to access the information that a `gauss` object can provide for the system $A \cdot x = b$.
+
+```cpp
+constexpr std::size_t equation_count() const;     // <1>
+constexpr bool        is_consistent()  const;     // <2>
+constexpr std::size_t free_count()     const;     // <3>
+constexpr std::size_t solution_count() const;     // <4>
+constexpr std::size_t rank()           const;     // <5>
+```
+1. Returns the number of equations in the system (the number of rows in $A$).
+2.  Returns `true` if the system of equations is _consistent_.
+If the system is not consistent, then there are no solutions.
+1. Returns the number of free variables in the system.
+2. Returns the number of solutions to the system we can directly address.
+3. Returns the rank of the bit-matrix $A$.
+
+Generally, if the system is consistent (so it has at least one solution) with $m$ independent equations for $n$ unknowns and $n>m$, then it has $f = n-m$ free variables.
+
+A `gauss` object transforms (a copy of) $A$ into reduced row echelon form, which allows it to check whether or not the system is consistent quickly and to compute just how many independent equations there are in the system and hence compute $f$.
+
+The {rank} of $A$ is $n - f$.
+
+Over $\R$, a free variable can take on any value. Hence, there are an infinite number of possible solutions to the system.
+Over {f2}, the situation is different because a free variable can only take on one of the values 0 and 1.
+Hence, if the system is consistent and has $f$ free variables, it will have $2^f$ possible solutions.
+So, if no free variables exist,  a consistent system will have one unique solution.
+
+If $f$ is large, the number of possible solutions is explosively large!
+We supply a method [`gauss::op(i)`]to address quite a lot of those in an indexed manner.
+The `solution_count()` method gives you the number of solutions we can access that way --- it will return 0 for an inconsistent system, 1 for a full-rank system, and $\min(2^f, 2^{63})$ for the general case where there are some free variables (the $2^{63}$ number assumes that `std::size_t` is a 64-bit integer).
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto b = bit::vector<>::random(m);
+    std::cout << "Solving the system A.x = b for the following A & b:\n";
+    print(A, b);
+
+    // Create a solver object for the system
+    bit::gauss<> solver(A, b);
+
+    // Print some general information
+    std::cout << "Number of equations in the system: " << solver.equation_count() << '\n';
+    std::cout << "Rank of the matrix A:              " << solver.rank()           << '\n';
+    std::cout << "Number of free variables:          " << solver.free_count()     << '\n';
+    std::cout << "Number of solutions to A.x = b:    " << solver.solution_count() << '\n';
+}
+```
+
+[Output (depends on the values of the random inputs)]{.bt}
+```bash
+Solving the system A.x = b for the following A & b:
+101100101100    1
+111100010101    0
+100101011000    0
+111100101000    0
+011011111000    0
+110001110100    1
+110011011001    1
+110100010011    1
+000110101001    1
+110001011000    0
+110111010010    0
+100000010011    1
+Number of equations in the system: 12
+Rank of the matrix A:              10
+Number of free variables:          2
+Number of solutions to A.x = b:    4
+```
+
+### See Also
+{gauss.operator()}   \
+{gauss.operator(i)}  \
+{bit.solve}

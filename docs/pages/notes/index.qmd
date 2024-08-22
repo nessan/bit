@@ -1,0 +1,16 @@
+---
+title: Technical Notes
+---
+
+## Introduction
+
+There isn't a lot of material on the web devoted to computational work in {GF2}. \
+We add some here:
+
+Paper                                              | Topic
+-------------------------------------------------- | -------------------------------------------------------------
+[Working in GF(2)](/pages/notes/gf2.qmd)           | Some notes about the vagaries of working in {f2}.
+[Library Design Notes](/pages/notes/design.qmd)    | Notes about the overall design of the `bit` library.
+[Danilevsky's Method](/pages/notes/danilevsky.qmd) | An algorithm to compute the characteristic polynomial of a square matrix --- the algorithm isn't well known, so we review it here.
+[Polynomial Reduction](/pages/notes/reduction.qmd) | An algorithm to compute $x^N$ mod $P(x)$ where $P(x)$ is a polynomial over {f2} and $N$ is potentially a huge integer.
+: {.bordered .hover .responsive tbl-colwidths="[25,75]"}

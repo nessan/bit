@@ -1,0 +1,70 @@
+---
+title: "The `bit::lu` Class"
+---
+
+## Introduction
+
+A `bit::lu` object computes the {LU-decomposition} for a square $n \times n$ bit-matrix $A$.
+Formally, we write:
+$$
+P \cdot A = L \cdot U,
+$$
+where $P$ is the permutation matrix, $U$ is an upper-triangular bit-matrix, and $L$ is a unit-lower-triangular bit-matrix.
+
+In practice, $L$ and $U$ are packed compactly into an $n \times n$ bit-matrix, and the permutation "matrix" is stored as a vector.
+
+## Declaration
+
+Like everything in the library, this class is in the `bit` namespace. \
+We define it in the header `<bit/lu.h>` as follows:
+
+```cpp
+namespace bit {
+    template<
+        std::unsigned_integral Block = uint64_t,
+        Allocator = std::allocator<Block>
+    > class lu;
+}
+```
+See the documentation for {bit.vector} and {bit.matrix} for more information on the two template parameters.
+
+## Class Types
+
+Item            | Description
+--------------- | -------------------------------------------
+`vector_type`   | An alias for {bit.vector}
+`matrix_type`   | An alias for {bit.matrix}
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+## Instance Methods
+
+### Construction
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{lu.constructors}        | Create a `lu` object for a bit-matrix $A$.
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### Queries
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{lu.singular}            | Is the underlying bit-matrix singular?
+{lu.non_singular}        | Is the underlying bit-matrix non-singular?
+{lu.determinant}         | What is the determinant of the underlying bit-matrix?
+{lu.rank}                | What is the rank of the underlying bit-matrix?
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}
+
+### The Decomposition
+
+Method                   | Description
+------------------------ | ----------------------------------------------
+{lu.L}                   | Returns $L$ where $P \cdot A = L \cdot U$.
+{lu.U}                   | Returns $L$ where $P \cdot A = L \cdot U$.
+{lu.LU}                  | Returns $L$ & $U$ packed into a compact form.
+{lu.permutation_vector}  | Returns a vector that is a compact representation of the permutation matrix $P$.
+{lu.row_swaps}           | Returns an alternative, more generally applicable, representation of that permutation vector.
+{lu.permute}             | Apply the row permutations from the {LU-decomposition} to another bit-vector or bit-matrix
+{lu.operator()}          | Use the decomposition to quickly solve a system $A \cdot x = b$ or multiple systems $A \cdot x = B$ for each column of $B$.
+{lu.invert}              | Use the decomposition to invert the matrix $A$
+: {.bordered .hover .responsive tbl-colwidths="[35,65]"}

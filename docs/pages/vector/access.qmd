@@ -1,0 +1,84 @@
+---
+title: "`bit::vector` --- Element Access"
+---
+
+```cpp
+constexpr bool      element(std::size_t i) const;       // <1>
+constexpr reference element(std::size_t i);             // <2>
+
+constexpr bool      operator[](std::size_t i) const;    // <3>
+constexpr reference operator[](std::size_t i);
+
+constexpr bool      operator()(std::size_t i) const;    // <4>
+constexpr reference operator()(std::size_t i);
+
+constexpr bool      test(std::size_t i) const;          // <5>
+
+constexpr bool      front() const;                      // <6>
+constexpr reference front()
+
+constexpr bool      back() const;                       // <7>
+constexpr reference back()
+```
+1. Accesses the value for bit-vector element `i`.
+2. Returns a {vec.reference} object --- allows modification of the value at index `i`.
+3. The `operator[]` methods are synonyms for the `element` methods.
+4. The `operator()` methods are also synonyms for the `element` methods.
+5. Another way to access the value for element `i`.
+6. Access the element at index `0`.
+7. Access the element at index `size() - 1`.
+
+::: {.callout-warning}
+# Bounds checking
+Generally, these methods do *not* check whether the index `i` is in bounds.
+The behaviour is undefined if it is out of bounds, but it will surely not be good!
+Set the `BIT_VERIFY` flag at compile time to check this condition. If it is violated, the program will abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 11;
+    bit::vector<> v(n);
+    std::cout << "Setting successive bits:\n";
+    std::cout << v << '\n';
+    for (std::size_t i = 0; i < n; ++i) {
+        v[i] = true;
+        std::cout << v << '\n';
+    }
+    std::cout << "Resetting the front and back elements of v ...\n";
+    v.front() = 0;
+    v.back()  = 0;
+    std::cout << v << '\n';
+    std::cout << "v.front(): " << v.front() << '\n';
+    std::cout << "v.back():  " << v.back()  << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Setting successive bits:
+[0 0 0 0 0 0 0 0 0 0 0]
+[1 0 0 0 0 0 0 0 0 0 0]
+[1 1 0 0 0 0 0 0 0 0 0]
+[1 1 1 0 0 0 0 0 0 0 0]
+[1 1 1 1 0 0 0 0 0 0 0]
+[1 1 1 1 1 0 0 0 0 0 0]
+[1 1 1 1 1 1 0 0 0 0 0]
+[1 1 1 1 1 1 1 0 0 0 0]
+[1 1 1 1 1 1 1 1 0 0 0]
+[1 1 1 1 1 1 1 1 1 0 0]
+[1 1 1 1 1 1 1 1 1 1 0]
+[1 1 1 1 1 1 1 1 1 1 1]
+Resetting the front and back elements of v ...
+[0 1 1 1 1 1 1 1 1 1 0]
+v.front(): 0
+v.back():  0
+```
+
+### See Also
+{vec.reference} \
+{vec.size} \
+{bit.verify}

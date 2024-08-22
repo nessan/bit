@@ -1,0 +1,130 @@
+---
+title: "`bit::vector` --- Access the Block Store"
+---
+
+The methods referenced on this page allow you to access the implementation details of the `bit::vector` class.
+As such, they should be considered *advanced* and a last resource!
+
+The primary use case is to implement functionality that should eventually make it into the core `bit::vector` interface.
+
+::: {.callout-caution}
+# Use these methods at your own risk
+Writing directly into the block store can leave the `bit::vector` in an illegitimate state.
+:::
+
+```cpp
+using block_store_type = std::vector<Block, Allocator>;         // <1>
+```
+1. As mentioned, the bit-vector elements are packed into unsigned integer blocks. In turn, we collect those blocks in a _store_ of this {std.vector} type.
+
+```cpp
+static constexpr std::size_t bits_per_block;                    // <1>
+static constexpr std::size_t blocks_needed(std::size_t n);      // <2>
+```
+1. The number of bit-vector elements we can store in a single block.
+2. Returns the number of blocks needed to a bit-vector of size `n`.
+
+```cpp
+static constexpr std::size_t block_index_for(std::size_t i);    // <1>
+static constexpr std::size_t bit_index_for(std::size_t i);      // <2>
+```
+1. Returns the block index containing element `i` of the bit-vector.
+2. Returns the specific bit position in that block where element `i` resides.
+
+```cpp
+constexpr const block_store_type& blocks() const;               // <1>
+constexpr block_store_type& blocks();                           // <2>
+constexpr Allocator allocator() const                           // <3>
+```
+1. Read-only access to the underlying block store.
+2. Read-write access to the underlying block store.
+3. Read-only access to the memory allocator the underlying block store uses.
+
+```cpp
+constexpr std::size_t block_count() const;                      // <1>
+constexpr Block  block(std::size_t i) const;                    // <2>
+constexpr Block& block(std::size_t i) ;                         // <3>
+```
+1. Returns the number of blocks that exist in the block store.
+2. Read-only access to block `i` in the store (the index is never range-checked).
+3. Read-write access to block `i` in the store (the index is never range-checked).
+
+```cpp
+constexpr vector& clean();                                      // <1>
+```
+1. This sets any extra/junk bits in the _last_ occupied block to 0. It might be helpful if you have written directly into the block store.
+
+## Construction from a prefilled store
+
+Sometimes, none of the standard construction methods we provide in {vec.constructors} work for your application.
+For those cases, we provide a method to take a block store of bits you have prefilled in some manner and then use those bits directly to construct a `bit::vector`.
+
+```cpp
+template<typename T>
+    requires std::same_as<std::remove_cvref_t<T>, block_store_type>
+explicit constexpr bit::vector(std::size_t n, T&& blocks, bool is_clean = false);   // <1>
+```
+1. Create a bit-vector by *copying* or *moving* a pre-filled container of blocks.
+
+::: {.callout-important}
+Your block store must match the `block_store_type` of the `bit::vector` you wish to construct.
+It must also have precisely the correct size --- if you are constructing a bit-vector of size `n`, the store size must equal the value returned from `blocks_needed(n)`.
+:::
+
+Suppose `my_store` is a prefilled store of bits you wish to use to construct a bit-vector of size `n`.
+If you invoke the constructor as:
+```cpp
+bit::vector v(n, std::move(my_store));
+```
+Then `my_store` is *moved* directly into place as the bit-vector's elements.
+This construction makes no copies of the blocks and will be very efficient.
+However, if you use this route, `my_store` will no longer be valid after the call.
+
+On the other hand, if you invoke the constructor as:
+```cpp
+bit::vector v(n, my_store);
+```
+Then `my_store` is *copied* into the bit-vector and remains valid after the call, though unconnected from the bit-vector.
+
+::: {.callout-tip}
+The constructor takes an optional third `is_clean` argument.
+If `false` (the default), the constructor cleans out any _junk_ bits in the final block of the store arguments.
+You can preempt that cleaning call if you are sure those bits are all zero.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    using vector_type = bit::vector<std::uint8_t>;
+    using block_store_type = vector_type::block_store_type;
+
+    std::size_t n = 22;                         // <1>
+    block_store_type blocks(vector_type::blocks_needed(n));
+    std::fill(blocks.begin(), blocks.end(), std::numeric_limits<vector_type::block_type>::max());
+
+    vector_type u{n, blocks};                   // <2>
+    std::cout << "bit::vector(" << n << ", blocks)            = " << u    << '\n';
+    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
+
+    vector_type v{22, std::move(blocks)};       // <3>
+    std::cout << "bit::vector(" << n << ", std::move(blocks)) = " << u    << '\n';
+    std::cout << "post-construction blocks size      = " << blocks.size() << '\n';
+}
+```
+1. Fill three 8-bit blocks with ones.
+2. Copy 22 of those bits to a bit-vector and automatically clean out the two junk ones at the end.
+3. Move all the blocks into a bit-vector and automatically clean out the two junk ones at the end. \
+   Now, after the move, the original `blocks` store is empty!
+
+[Output]{.bt}
+```bash
+bit::vector(22, blocks)            = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+post-construction blocks size      = 3
+bit::vector(22, std::move(blocks)) = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+post-construction blocks size      = 0
+```
+
+### See Also
+{vec.constructors}

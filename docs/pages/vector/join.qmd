@@ -1,0 +1,39 @@
+---
+title: "`bit::vector` --- Join Bit-Vectors"
+---
+
+Joins two or three arbitrary-sized bit-vectors to get one longer one.
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc>
+constexpr bit::vector<Block, Alloc>
+join(const bit::vector<Block, Alloc> &u,
+     const bit::vector<Block, Alloc> &v);
+
+template<std::unsigned_integral Block, typename Alloc>
+constexpr bit::vector<Block, Alloc>
+join(const bit::vector<Block, Alloc> &u,
+     const bit::vector<Block, Alloc> &v,
+     const bit::vector<Block, Alloc> &w);
+```
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto u = bit::vector<>::ones(8);
+    auto v = bit::vector<>::zeros(4);
+    std::cout << u << " joined with " << v << " yields " << join(u, v) << '\n';
+    std::cout << v << " joined with " << u << " yields " << join(v, u) << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+[1 1 1 1 1 1 1 1] joined with [0 0 0 0] yields [1 1 1 1 1 1 1 1 0 0 0 0]
+[0 0 0 0] joined with [1 1 1 1 1 1 1 1] yields [0 0 0 0 1 1 1 1 1 1 1 1]
+```
+
+### See Also
+{vec.append}

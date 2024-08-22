@@ -1,0 +1,104 @@
+---
+title: "`bit::polynomial` --- Polynomial Evaluation"
+---
+
+We have methods to evaluate a polynomial for scalar and bit-matrix arguments.
+```cpp
+constexpr bool operator()(bool x) const;                        // <1>
+
+constexpr matrix_type operator()(const matrix_type& M) const;   // <2>
+```
+1. This evaluates the polynomial at the scalar value `x` in GF(2) so `x` is either 0 or 1.
+2. This evaluates the polynomial for a *square* bit-matrix argument `M`.
+
+## Scalar Arguments
+Let
+$$
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1}.
+$$
+
+In GF(2), arithmetic is mod 2, which means that for any scalar argument $x$
+$$
+p(x) = p_0 + p_1 x + p_2 x + \cdots + p_{n-1} x.
+$$
+If $x = 0$, this is just `p[0]`, while if $x = 1$, it is the count of ones (mod 2) in the polynomial coefficients.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial p{16, [](size_t k) { return (k + 1) % 2; }};
+    std::cout << std::format("p(x) = {}\np(0) = {:d}, p(1) = {:d}\n", p, p(0), p(1));
+
+    bit::polynomial q{17, [](size_t k) { return (k + 1) % 2; }};
+    std::cout << std::format("q(x) = {}\nq(0) = {:d}, q(1) = {:d}\n", q, q(0), q(1));
+}
+```
+
+[Output]{.bt}
+```bash
+p(x) = 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14
+p(0) = 1, p(1) = 0
+q(x) = 1 + x^2 + x^4 + x^6 + x^8 + x^10 + x^12 + x^14 + x^16
+q(0) = 1, q(1) = 1
+```
+
+## Matrix Arguments
+
+If `M` is a *square* bit-matrix then we can evaluate the sum:
+$$
+p(M) = p_0 I + p_1 M + p_2 M^2 + \cdots + p_{n-1} M^{n-1}.
+$$
+`I` is the identity matrix with identical dimensions to `M`.
+The sum uses [Horner's method](https://en.wikipedia.org/wiki/Horner%27s_method).
+
+::: {.callout-warning}
+# The bit-matrix argument must be square
+The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto M = bit::matrix<>::identity(6);
+    std::cout << std::format("Bit-matrix M:\n{}\n", M);
+
+    bit::polynomial p{16, [](size_t k) { return (k + 1) % 2; }};
+    std::cout << std::format("p(M): {:M}\n{}\n", p, p(M));
+
+    bit::polynomial q{17, [](size_t k) { return (k + 1) % 2; }};
+    std::cout << std::format("q(M): {:M}\n{}\n", q, q(M));
+}
+```
+
+[Output]{.bt}
+```bash
+Bit-matrix M:
+100000
+010000
+001000
+000100
+000010
+000001
+p(M): 1 + M^2 + M^4 + M^6 + M^8 + M^10 + M^12 + M^14
+000000
+000000
+000000
+000000
+000000
+000000
+q(M): 1 + M^2 + M^4 + M^6 + M^8 + M^10 + M^12 + M^14 + M^16
+100000
+010000
+001000
+000100
+000010
+000001
+```
+
+### See Also
+{mat.pow} \
+{mat.pow2}

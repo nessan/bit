@@ -1,0 +1,126 @@
+---
+title: "`bit::gauss` --- Solution Access"
+---
+
+We have methods that find solutions for the system $A \cdot x = b$.
+
+```cpp
+bit::vector operator()() const;                 // <1>
+bit::vector operator()(std::size_t i) const;    // <2>
+```
+1. Return a random solution amongst all the possible solutions for the system $A \cdot x = b$.
+2. Return a specific solution (solution number `i` if you like) for the system $A \cdot x = b$.
+
+::: {.callout-warning}
+# Beware of systems with no solutions
+Both these methods throw an exception if the system has no solutions.
+You can avoid that by first calling the {gauss.solution_count}method.
+:::
+
+If the system is consistent (so at least one solution) with $m$ independent equations for $n$ unknowns and $n > m$, then it has $f = n-m$ free variables.
+
+A `gauss` object transforms (a copy of) $A$ into reduced row echelon form, which allows it to check whether or not the system is consistent quickly and to compute just how many independent equations there are in the system and, hence compute $f$.
+
+Over {f2}, a free variable can take on one of the two values 0 and 1.
+Hence, if the system is consistent and has $f$ free variables, it will have $2^f$ possible solutions.
+So, if no free variables exist, a consistent system will have one unique solution.
+
+If $f$ is large, the number of possible solutions is explosively large!
+The first call above will always get you one of those randomly picked solutions.
+Successive calls may return different solutions.
+
+The second call above allows you to address (a large number of) the possible solutions in an indexed manner.
+The `solution_count()` method gives you the number of solutions we can access this way.
+It will return 0 for an inconsistent system, 1 for a full-rank system, and $\min(2^f, 2^{63})$ for the general case where there are some free variables (the $2^{63}$ number assumes that `std::size_t` is a 64-bit integer).
+
+If the solver is our Gauss object, then the call solver(n) will return the solution  "number" n, where `n` is one of those addressable solutions.
+
+::: {.callout-warning}
+# Range checking
+The `n` must be less than {gauss.solution_count}, or an exception is thrown.
+:::
+
+[Example]{.bt}
+
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    std::size_t m = 12;
+
+    auto A = bit::matrix<>::random(m);
+    auto b = bit::vector<>::random(m);
+    std::cout << "Solving the system A.x = b for the following A & b:\n";
+    print(A, b);
+
+    // Create a solver object for the system
+    bit::gauss<> solver(A, b);
+
+    // Print some general information
+    std::size_t num_solutions = solver.solution_count();
+    std::cout << "Number of equations in system:   " << solver.equation_count() << '\n';
+    std::cout << "Rank of the matrix A:            " << solver.rank()           << '\n';
+    std::cout << "Number of free variables:        " << solver.free_count()     << '\n';
+    std::cout << "Number of solutions to A.x = b:  " << num_solutions           << '\n';
+
+    // Iterate through all the solutions we can address & check each one is an actual solution
+    for (std::size_t ns = 0; ns < num_solutions; ++ns) {
+        auto x = solver(ns);
+        auto Ax = bit::dot(A, x);
+        std::cout << "Solution: " << x << " has A.x = " <<  Ax << " ";
+        std::cout << (b == Ax ? "matches rhs b." : "DOES NOT match rhs b!!!") << "\n";
+    }
+
+    // Maybe there were no solutions?
+    if (num_solutions == 0) std::cout << "This system is inconsistent and has NO solutions!\n";
+}
+```
+
+[Output for a consistent system (details depends on the values of the random inputs)]{.bt}
+```bash
+Solving the system A.x = b for the following A & b:
+101010000100    1
+110100000110    1
+110001101001    0
+000100111010    1
+101100110000    1
+101000010110    1
+011000100110    0
+101011110000    0
+001001111111    1
+001100101111    1
+111101001000    1
+111111101101    1
+Number of equations in system:   12
+Rank of the matrix A:            11
+Number of free variables:        1
+Number of solutions to A.x = b:  2
+Solution: [0 0 0 0 1 0 1 0 1 0 1 0] has A.x = [1 1 0 1 1 1 0 0 1 1 1 1] matches rhs b.
+Solution: [1 0 1 1 1 1 0 0 1 0 1 1] has A.x = [1 1 0 1 1 1 0 0 1 1 1 1] matches rhs b.
+```
+
+[Output for an inconsistent system (details depends on the values of the random inputs)]{.bt}
+```bash
+Solving the system A.x = b for the following A & b:
+111011010010    1
+001110000011    1
+011110000001    1
+001001011111    1
+110001101011    1
+100111110011    0
+001101100010    1
+010000010101    1
+110011001100    1
+110011100100    1
+001011111111    0
+010010111001    1
+Number of equations in system:   12
+Rank of the matrix A:            10
+Number of free variables:        2
+Number of solutions to A.x = b:  0
+This system is inconsistent and has NO solutions!
+```
+
+### See Also
+{bit.solve}

@@ -1,0 +1,110 @@
+---
+title: Verification Checks
+---
+
+## Introduction
+
+We have a macro that is used to check a condition and, on failures, cause the program to exit with a customizable message.
+```cpp
+bit_verify(condition, ...)
+```
+If the `BIT_VERIFY` flag is set at compile time, the condition is checked, and if it fails, the program exits with a custom message synthesized from the rest of the arguments.
+If the `BIT_VERIFY` flag is *not* set, the macro expands to a no-op.
+
+Assuming a check is "on", if the `condition` evaluates to `false,` then `bit_verify` calls
+```cpp
+bit_exit(message)
+```
+The `bit_exit(message)` macro passes the `message` and the source code location of the failure to `bit::exit(...)`.
+That function prints the failure's source code location along with the `message` payload and then **exits** the program.
+
+The `bit::exit` function needs source code location parameters (the filename, the line number, and the function name), and the `bit_exit` macro automatically adds those.
+You typically use the `message` argument to print the values of the variables that triggered the failure.
+The message can be anything that can be formatted using the facilities in {std.format}.
+
+::: {.callout-tip}
+# Microsoft compiler
+Microsoft's old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine.
+Add the `/Zc:preprocessor` flag to use that upgrade at compile time.
+Our `CMake` module `compiler_init` does that automatically for you.
+:::
+
+## Compiler Flags
+
+```cpp
+BIT_VERIFY
+```
+ If you set the `BIT_VERIFY` flag, the library will perform demanding but potentially useful safety assertions on indices, size equality checks, etc.
+ Otherwise, all the `bit_verify` calls are no-ops
+
+## Examples
+
+[Example --- Snippet from the `bit::vector<>::set` method]{.bt}
+```cpp
+/// @brief Set the element at index `i` to 1.
+constexpr bit::vector &set(std::size_t i)
+{
+    bit_verify(i < m_size, "index `i` = " << i << " must be < `m_size` which is " << m_size);
+    ...
+}
+```
+Here, `m_size` is holds the size of the vector --- so we must have `i < m_size`
+
+To check every element access, set the `BIT_VERIFY` flag during compiles.
+If the assertion fails, the program exits with an error message that gives the offending values.
+
+The `bit_verify` line expands to *nothing* if the `BIT_VERIFY` flag is not set during compiles.
+
+[Example --- Message from an assertion failure]{.bt}
+```cpp
+#define BIT_VERIFY              // <1>
+#include <bit/bit.h>
+int main()
+{
+    std::size_t n = 12;         // <2>
+    bit::vector<> v(n);
+    v.set(n);                   // <3>
+    std::cout << v << "\n";
+}
+```
+1. For the sake of the example we added code to make sure the `bit_verify` is triggered. In normal usage, the flag is passed through the compiler command line.
+2. Construct a vector of size 12 and then attempt to set the "last" element.
+3. A deliberate but typical *off-by-one* index error as the valid indices are from 0 to `n-1`, which is 11.
+
+[Output]{.bt}
+```sh
+BIT VERIFY FAILED:
+Function 'set' (vector.h, line 911):
+Statement 'i < m_size' is NOT true: Index i = 12 must be < `m_size` = 12
+```
+The program will then exit.
+
+## Design Rationale
+
+In the development cycle, it can be helpful to range-check indices and so on.
+However, those checks are expensive and can slow down numerical code by orders of magnitude.
+Therefore, we don't want there to be any chance that those verifications are accidentally left "on" in the production code.
+Our `bit_verify(...)` macro covers this type of verification.
+Turning on the checks requires the programmer to take a specific action: she must set the `BIT_VERIFY` flag during compile time.
+
+For example, here is a pre-condition from a hypothetical `dot(Vector u, Vector v)` function:
+```cpp
+bit_verify(u.size() == v.size(), "Vector sizes {} and {} DO NOT match!", u.size(), v.size());
+```
+This code checks that the two vector arguments have equal length --- a necessary constraint for the dot product operation to make sense.
+If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.
+
+The check here is **off** by default, and you need to do something special (i.e., define the `BIT_VERIFY` flag at compile time) to enable it.
+Production code may do many of these dot products; we do not generally want to pay for the check.
+However, enabling these sorts of checks may be very useful during development.
+
+The `bit_verify(...)` macro expands to nothing **unless** you set the `BIT_VERIFY` flag at compile time.
+
+::: {.callout-note}
+# Macro-land
+We are in macro land here, so there are no namespaces.
+Typically, macros have names in caps, but the standard `assert` does not follow that custom, so neither does `bit_verify`.
+:::
+
+### See Also
+{std.assert}

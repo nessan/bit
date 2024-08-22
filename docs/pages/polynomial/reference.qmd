@@ -1,0 +1,30 @@
+---
+title: "`bit::polynomial::reference` --- Proxy Class"
+---
+
+`bit::polynomial::reference` is a publicly accessible nested _proxy class_ that lets users interact with individual polynomial coefficients naturally.
+
+The primary use of this class is to provide an _l-value_ that can be returned from `operator[]` in the `bit::polynomial` class.
+
+It is needed because the `bit::polynomial` class stores a cached degree variable that may need to get updated if you write to an individual coefficient.
+
+Profiling shows that precomputing the polynomial degree can significantly improve the class's efficiency for at least some exacting use cases.
+
+## Member Functions
+Method          | Description
+--------------- | ------------------------------------------------------------------
+`constructor`   | The bit-polynomial `operator[]` method automatically constructs a `bit::polynomial::reference` as needed.
+`operator=`     | Assigns a `bool` to the referenced coefficient.
+`to_bool`       | Return the value of the referenced coefficient as a boolean.
+`operator bool` | Casts the referenced coefficient to a boolean value.
+`import_bits`   | Sets the value of the referenced polynomial coefficient to the passed argument.
+`set`           | Sets the referenced polynomial coefficient to 1.
+`reset`         | Sets the referenced polynomial coefficient to 0.
+`flip`          | Flips the referenced referenced polynomial coefficient from 1 to 0 and vice versa.
+: {.bordered .striped .hover .responsive tbl-colwidths="[20,80]"}
+
+### See Also
+{poly.operator[]}  \
+{poly.get}         \
+{poly.set}         \
+{poly.reset}

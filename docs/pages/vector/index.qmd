@@ -1,0 +1,268 @@
+---
+title:  "The `bit::vector` Class"
+---
+
+## Introduction
+
+A {bit.vector} represents a vector over {GF2} (also known as {f2}) the simplest {Galois-Field} with just two elements usually denoted 0 & 1, as the booleans true & false, or as the bits set & unset.
+Arithmetic over {f2} is mod 2, so addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
+
+The `bit::vector` class is a hybrid between a {std.vector} and a {std.bitset}, along with extra mathematical features to facilitate linear algebra.
+
+We often refer to a `bit::vector` object as a *bit-vector*.
+
+One can dynamically size and resize a `bit::vector` as needs dictate.
+A `std::bitset`, on the other hand, has a _fixed_ size determined at compile time.
+_Boost_ has a [`boost::dynamic_bitset`] class that allows for runtime resizing, as its name suggests.
+However, that class does not support algebraic operations.
+
+It is worth noting that by default, a `bit::vector` prints in *vector-order*.
+For example, a bit-vector of size four will print as $v_0 v_1 v_2 v_3$ with the elements in increasing order with the least significant vector element, $v_0$, coming **first** on the *left*.
+Contrast that to a `std::bitset`, which always prints in *bit-order*.
+The equivalent `std::bitset` with four elements prints as $b_3 b_2 b_1 b_0$ with the least significant bit $b_0$ printed **last** on the *right*.
+
+Of course, for many applications, printing in *bit-order* makes perfect sense.
+A size four bit-vector initialized with the hex number `0x1` will print as `1000`.
+A `std::bitset` prints the same value as `0001`, which will be more natural in _some_ settings.
+For this reason, `bit::vector` also supports conversions to a string in *bit-order*, though it is not the default.
+
+It isn't the default because our main aim here is linear algebra.
+In particular, bit-order is unnatural for *matrices* over {f2}.
+It is too confusing to print a matrix in anything but the natural order with the (0,0) element at the top left and proceed from there.
+
+A `bit::vector` packs its elements into an array of some unsigned integer type defined by the class template parameter `Block`.
+The default `Block` is an unsigned 64-bit word.
+Most of the methods defined in the `bit::vector` class operate on whole blocks simultaneously, so they are very efficient.
+
+## Declaration
+
+Like most things in the library, this class is in the `bit` namespace and is defined in the header `<bit/vector.h>` as follows:
+``` cpp
+namespace bit {
+  template<std::unsigned_integral Block = std::uint64_t,
+           Allocator = std::allocator<Block>>
+  class vector;
+}
+```
+The two template parameters add some visual clutter, but they both have reasonable defaults and disappear entirely in most uses.
+For example, your code might have a simple line like:
+``` cpp
+bit::vector v{32};
+```
+This code creates a vector with 32 elements set to 0 by default.
+The bit-vector's 32 elements are packed into a single 64-bit word, so this example has some spare capacity.
+
+### Template Parameters
+
+Parameter                              | Description
+-------------------------------------- | -----------------------------------------------------------------------------
+`Block` = `std::uint64_t`              | The elements of a bit-vector are packed into blocks of some {std.unsigned_integral} type. The default size is 64 bits.
+`Allocator` = `std::allocator<Block>`  | The default `Allocator` should be just fine for most purposes, but you can use your custom type to handle all memory allocation/destruction for blocks.
+: {.bordered .hover .responsive}
+
+The default `Block` is 64-bits, the *native* size for many modern CPUs.
+
+If you need to use many smaller bit-vectors and have concerns about conserving space, you might use a different `Block`.
+Perhaps if the bit-vectors all fit in 8 bits, you might have code along the lines:
+
+``` cpp
+using vector_type = bit::vector<uint8_t>;
+vector_type v = ...
+```
+
+::: callout-warning
+# Use a single `Block` type throughout your code!
+In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::vector<std::uint32_t>` and a `bit::vector<std::uint64_t>`,  but doing so efficiently significantly increases code complexity, and the library doesn't support this.
+:::
+
+## Class Constants and Types
+
+Item               | Description
+------------------ | -------------------------------
+`block_type`       | We use a specific {std.unsigned_integral} type to store the bit-vector elements in blocks. The default is `std::uint64_t`, where we store 64 elements per block.
+`allocator_type`   | The block store vector uses this type of memory manager. The default is a `std::allocator<block_type>`.
+ `npos`            | A class constant of type `std::size_t` used to indicate search failures, etc.
+ `reference`       | A proxy *sub-class* representing an individual vector element (a single bit).
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+Occasionally, you may need to use more implementation-specific types:
+
+Item               | Description
+------------------ | -----------------------------------
+`bits_per_block`   | The number of bit-vector elements each block can hold. The default is 64.
+`block_store_type` | We store the blocks in a container of this type, a `std::vector<block_type>`.
+`blocks_needed(n)` | Class method returning the number of blocks needed to store a bit-vector of size `n`.
+: {.bordered .hover .responsive tbl-colwidths="[10,90]"}
+
+## Instance Methods
+
+### Construction
+
+Method              | Description
+------------------- | ---------------------------------------
+{vec.constructors}  | Construct bit-vectors in various ways.
+{vec.random}        | Factory method constructs a bit-vector with a random fill.
+{vec.zeros}         | Factory method to construct bit-vectors with all the bits set to 0.
+{vec.ones}          | Factory method to construct bit-vectors with all the bits set to 1.
+{vec.unit}          | Factory method to construct a unit bit-vector.
+{vec.checker_board} | Factory method to construct bit-vectors with bits in a checker-board pattern `1010101…`​ or `0101010…`
+{vec.from}          | Factory methods that construct bit-vectors from the bits in an integer or from strings.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Element Access
+
+Method              | Description
+------------------- | ---------------------------------------
+{vec.element}       | Access an element in a bit-vector.
+{vec.operator()}    | Access an element in a bit-vector.
+{vec.operator[]}    | Access an element in a bit-vector.
+{vec.test}          | Check the status of a particular element in a bit-vector.
+{vec.front}         | Access the first element of a bit-vector.
+{vec.back}          | Access the final element of a bit-vector.
+{vec.all}           | Are all the bits in the bit-vector set to 1?
+{vec.any}           | Are any bits in the bit-vector set to 1?
+{vec.none}          | Are none of the bits in the bit-vector set to 1?
+{vec.count}         | Count the set bits in a bit-vector.
+{vec.count0}        | Count the unset bits in a bit-vector.
+{vec.count1}        | Count the set bits in a bit-vector.
+{vec.parity}        | Parity is the number of set bits mod 2.
+{vec.sub}           | Extracts a sub-vector as a _distinct_ copy of some of elements in a bit-vector.
+{vec.blocks}        | Access the underlying block store as a `std::vector<Block>`.
+{vec.allocator}     | Read-only access to the underlying `Allocator` for the block store.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Iteration
+
+Method              | Description
+------------------- | ---------------------------------------
+{vec.if_set_call}   | Calls a function for each set index.
+{vec.first_set}     | Returns the index location of the first set bit.
+{vec.next_set}      | Returns the index location of the next set bit.
+{vec.final_set}     | Returns the index location of the final set bit.
+{vec.prev_set}      | Returns the index location of the previous set bit.
+{vec.set_indices}   | Returns the index locations of the set bits.
+{vec.unset_indices} | Returns the index locations of the unset bits.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Capacity
+
+Method              | Description
+------------------- | ---------------------------------------
+{vec.size}          | Returns the number of elements in the bit-vector
+{vec.empty}         | Queries whether the bit-vector is empty.
+{vec.capacity}      | How many bits can a bit-vector hold before it resizes?
+{vec.unused}        | How many bits can be added before a bit-vector resizes?
+{vec.reserve}       | Reserves storage for a bit-vector without changing its `size()`.
+{vec.shrink_to_fit} | Tries to reduce memory usage by freeing unused memory.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Modifiers
+
+Method                | Description
+--------------------- | ---------------------------------------
+{vec.clear}           | Clears all the elements from the bit-vector so its `size()` becomes 0.
+{vec.push}            | Pushes an element onto the end of the bit-vector.
+{vec.pop}             | Removes the last element from the bit-vector
+{vec.append}          | Adds elements/bits from various sources to the end of the bit-vector.
+{vec.resize}          | Resizes the bit-vector, padding out any added values with zeros.
+{vec.swap_elements}   | Swaps the values of two elements in the bit-vector.
+{vec.swap}            | Swaps the contents of the bit-vector with another.
+{vec.replace}         | Methods to replace some sub-vectors of the bit-vector with other values.
+{vec.set}             | Set various ranges of elements in the bit-vector to 1.
+{vec.reset}           | Set various ranges of elements in the bit-vector to 0.
+{vec.flip}            | Flip various ranges of elements in the bit-vector from 0 to 1 and vice versa.
+{vec.set_if}          | Sets elements in a bit-vector based on the return value from a function of the element index.
+{vec.flip_if}         | Flips values in a bit-vector based on the return value from a function of the element index.
+{vec.operator&=}      | Element-by-element logical `AND` in-place between this bit-vector and another of equal size.
+{vec.operator^=}      | Element-by-element logical `XOR` in-place between this bit-vector and another of equal size.
+{vec.operator\|=}     | Element-by-element logical `OR` in-place between this bit-vector and another of equal size.
+{vec.operator+=}      | Element-by-element logical `XOR` in-place between this bit-vector and another of equal size.
+{vec.operator-=}      | Element-by-element logical `XOR` in-place between this bit-vector and another of equal size.
+{vec.operator*=}      | Element-by-element logical `AND` in-place between this bit-vector and another of equal size.
+{vec.operator~}       | Flips the values of all elements in this bit-vector.
+{vec.operator<<=}     | Left shift the elements of this bit-vector in-place.
+{vec.operator>>=}     | Right shift the elements of this bit-vector in-place.
+{vec.operator<<}      | Returns a left-shifted copy of this bit-vector.
+{vec.operator>>}      | Returns a right-shifted copy of this bit-vector.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+### Import and Export
+
+Method                | Description
+--------------------- | ---------------------------------------
+{vec.export_bits}     | Use the bits from the bit-vector to fill various destinations without resizing the destination.
+{vec.export_all_bits} | Resize and fill a `std::vector` of some unsigned integer type with **all** the bits from this bit-vector.
+{vec.import_bits}     | Import bits from various sources into this bit-vector. By default these methods completely overwrite the bit-vector with the imported data but can instead append to the existing elements if that is desired.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### String Conversions
+
+Method                  | Description
+----------------------- | ---------------------------------------
+{vec.to_string}         | Returns a binary-string representation using configurable characters for set and unset elements. The elements are in vector order.
+{vec.to_pretty_string}  | Returns a formatted representation e.g. `[1 1 0 1 0 1]`.
+{vec.to_bit_order}      | Returns a binary-string representation using configurable characters for set and unset elements. The least significant bit is on the right.
+{vec.to_hex}            | Returns a compact hex string representation of the bit-vector.
+{vec.description}       | Writes some descriptive data about the bit-vector to a stream.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Other Instance Methods
+
+Method                | Description
+--------------------- | ---------------------------------------
+{vec.trimmed_right}   | Returns a copy of a bit-vector with any trailing zeros removed.
+{vec.trimmed_left}    | Returns a copy of a bit-vector with any leading zeros removed.
+{vec.trimmed}         | Returns a copy of a bit-vector with any leading or trailing zeros removed.
+{vec.riffled}         | Returns a copy of a bit-vector with any added interleaved zeros.
+{vec.dot}             | Returns the _dot product_ of this bit-vector with another of equal size.
+{vec.unit_floor}      | Returns a unit bit-vector with its `1` at the location of our final set bit.
+{vec.unit_ceil}       | Returns a unit bit-vector with its `1` at the location one slot past our final set bit.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+
+### Block Access
+
+Method                    | Description
+------------------------- | ---------------------------------------
+{vec.bits_per_block}      | The number of bit-vector elements that can fit in one storage block.
+{vec.block_store_type}    | We store the underlying blocks in this type of container.
+{vec.blocks_needed}       | Computes the number of blocks needed to store a particular bit-vector.
+{vec.allocator}           | The memory manager for the block store.
+{vec.block_count}         | The number of blocks in the block store.
+{vec.block}               | Access an individual block.
+{vec.block_index_for}     | Returns the index of the block holding a particular bit-vector element.
+{vec.bit_index_for}       | Returns the specific bit inside that block where that particular bit-vector element resides.
+{vec.blocks}              | Access the underlying block store as a `block_store_type`
+{vec.clean}               | This sets any extra/junk bits in the last occupied block to 0.
+{vec.block_constructor}   | Construct a `bit::vector` by copying or _moving_ a prefilled `block_store_type` of blocks.
+: {.bordered .striped .hover .responsive tbl-colwidths="[35,65]"}
+
+### Debugging
+
+You can set a compile-time flag {bit.VERIFY} to enable range checking and other assertions.
+These checks can have a substantial performance impact so typically are only used during development.
+
+Method                    | Description
+------------------------- | ---------------------------------------
+{bit.VERIFY}              | This compile-time flag enables extra safety checks at the cost of performance.
+{bit.verify}              | These checks are **only** performed if you set the `BIT_VERIFY` flag at compile time.
+: {.bordered .striped .hover .responsive tbl-colwidths="[30,70]"}
+
+## Non-member Functions
+
+Method                | Description
+--------------------- | ---------------------------------------
+{vec.diff}            | Logical `DIFF` for two equal-sized bit-vectors.
+{vec.join}            | Joins two or three bit-vectors to create a new one.
+{vec.dot}             | Returns the _dot product_ of two equal sized bit-vectors.
+{vec.convolution}     | Returns the convolution of two bit-vectors.
+{vec.operator&}       | Element-by-element logical `AND` between two equal-sized bit-vectors.
+{vec.operator^}       | Element-by-element logical `XOR` between two equal-sized bit-vectors.
+{vec.operator\|}       | Element-by-element logical `OR`  between two equal-sized bit-vectors.
+{vec.operator+}       | Element-by-element logical `XOR` between two equal-sized bit-vectors.
+{vec.operator-}       | Element-by-element logical `XOR` between two equal-sized bit-vectors.
+{vec.operator*}       | Element-by-element logical `AND` between two equal-sized bit-vectors.
+{vec.stream<<}        | Stream input for bit-vectors.
+{vec.stream>>}        | Stream output for bit-vectors.
+{vec.formatter}       | Connect the `bit::vector` class to {std.format} and friends.
+: {.bordered .striped .hover .responsive tbl-colwidths="[32,68]"}

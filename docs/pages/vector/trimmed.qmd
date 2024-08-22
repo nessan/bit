@@ -1,0 +1,48 @@
+---
+title: "`bit::vector` --- Trim Trailing/Leading Zeros"
+---
+
+We have methods that return a copy of the bit-vector with either the trailing zeros removed, the leading zeros removed, or both the trailing and leading zeros removed.
+
+```cpp
+constexpr bit::vector trimmed_right() const;    // <1>
+constexpr bit::vector trimmed_left() const;     // <2>
+constexpr bit::vector trimmed() const;          // <3>
+```
+1. Return a copy of this bit-vector with any trailing zeros removed.
+2. Return a copy of this bit-vector with any leading zeros removed.
+3. Return a copy of this bit-vector with any trailing and leading zeros removed.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v0 = bit::vector<>::zeros(6);  // <1>
+    auto v1 = bit::vector<>::ones(12);  // <2>
+    auto v3 = bit::join(v0, v1, v0);    // <3>
+    auto vr = v3.trimmed_right();
+    auto vl = v3.trimmed_left();
+    auto vt = v3.trimmed();
+
+    std::cout << "bit-vector:    size " << v3.size() << " " << v3 << '\n';
+    std::cout << "trimmed right: size " << vr.size() << " " << vr << '\n';
+    std::cout << "trimmed left:  size " << vl.size() << " " << vl << '\n';
+    std::cout << "trimmed:       size " << vt.size() << " " << vt << '\n';
+}
+
+```
+1. Construct a bit-vector of size six that is all zeros.
+2. Construct a bit-vector of size twelve that is all ones.
+3. Joins those to create a bit-vector with six zeros, twelve ones, and then six more zeros.
+
+[Output]{.bt}
+```bash
+bit-vector:    size 24 [0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0]
+trimmed right: size 18 [0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1]
+trimmed left:  size 18 [1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0]
+trimmed:       size 12 [1 1 1 1 1 1 1 1 1 1 1 1]
+```
+
+### See Also
+{vec.replace}

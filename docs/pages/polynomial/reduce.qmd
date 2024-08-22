@@ -1,0 +1,63 @@
+---
+title: "`bit::polynomial` --- Reduction"
+---
+
+We have a method that computes $x^N \textrm{ mod } p(x)$ where `N` is potentially a very large number.
+```cpp
+polynomial reduce(std::size_t N, bool N_is_exponent = false) const; // <1>
+```
+1. If the second argument is `true` then we compute $x^{2^N} \textrm{ mod } p(x)$. This allows for huge powers like $2^{100}$ that overflow standard integer types.
+
+::: {.callout-warning}
+# Nonzero polynomials only
+This method only makes sense for nonzero polynomials.
+Calling it for a zero polynomial will cause a {std.invalid_argument} exception to be thrown.
+:::
+
+Let $p(x)$ be a polynomial of degree $n$ over {f2}
+$$
+p(x) = p_0 + p_1 x + \cdots + p_n x^n,
+$$
+where $p_n = 1$.
+
+Then for any power $N$, we can write
+$$
+x^N= q(x) p(x) + r(x),
+$$
+where $q(x)$ is some _quotient_ polynomial and the degree of the _remainder_ polynomial $r(x)$ is strictly less than the degree of $p(x)$.
+
+In standard notation, we write
+$$
+r(x) = x^N \textrm{ mod } p(x).
+$$
+Our method computes $r(x)$.
+
+::: {.callout-note}
+# Efficiency
+The method works by repeated squaring and multiplication and is efficient for large values of $N$.
+:::
+
+::: {.callout-note}
+# Why would we ever need this?
+Computing $x^N \textrm{ mod } p(x)$ for very large $N$ can be used to jump far ahead in the random number streams produced by many
+pseudorandom generators --- see [this paper](https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf).
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    std::size_t N = 123'456'789;
+    std::size_t n = 7;
+    auto        p = bit::polynomial<>::random(n);
+    auto        r = p.reduce(N);
+    std::cout << std::format("x^({}) mod ({}) = {}\n", N, p, r);
+    return 0;
+}
+```
+
+[Output]{.bt}
+```bash
+x^(123456789) mod (1 + x^1 + x^2 + x^4 + x^5 + x^6 + x^7) = 1 + x^1 + x^2 + x^3 + x^4
+```

@@ -1,0 +1,131 @@
+---
+title: "`bit::matrix` --- Encode as a String"
+---
+
+We have methods to encode a bit-matrix as a string in a binary or hex format.
+
+```cpp
+std::string
+to_string(const std::string& delim = "\n",
+          char off = '0', char on = '1') const;         // <1>
+
+std::string
+to_pretty_string(char off = '0', char on = '1') const;  // <2>
+
+std::string
+to_hex(const std::string& delim = "\n") const;          // <3>
+```
+1. Get a binary-string representation for the bit-matrix using the given characters for set and unset elements.
+2. Get a nicely formatted string representation of the bit-matrix.
+3. Get a hex-string representation for the bit-matrix.
+
+These methods print the _rows_ of the bit-matrix as documented in the {vec.to_string} page.
+The rows are separated by whatever the `delim` string is --- it defaults to newlines.
+
+[Example --- Binary encodings]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4, 8, [](std::size_t i, std::size_t j) { return (i + j)%2; });
+    std::cout << "In matrix form ...       \n";
+    std::cout << m.to_string()         << '\n';
+    std::cout << "Pretty version ...       \n";
+    std::cout << m.to_pretty_string()  << '\n';
+    std::cout << "On a single line ...     \n";
+    std::cout << m.to_string("; ")     << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+In matrix form ...
+01010101
+10101010
+01010101
+10101010
+Pretty version ...
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+│0 1 0 1 0 1 0 1│
+│1 0 1 0 1 0 1 0│
+On a single line ...
+01010101; 10101010; 01010101; 10101010
+```
+
+[Example --- Hex encodings]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m3 = bit::matrix<>::ones(3);
+    auto m4 = bit::matrix<>::ones(4);
+    auto m5 = bit::matrix<>::ones(5);
+    auto m6 = bit::matrix<>::ones(6);
+    std::cout << "m3.to_hex(\"; \"): " << m3.to_hex("; ")  << '\n';
+    std::cout << "m4.to_hex(\"; \"): " << m4.to_hex("; ")  << '\n';
+    std::cout << "m5.to_hex(\"; \"): " << m5.to_hex("; ")  << '\n';
+    std::cout << "m6.to_hex(\"; \"): " << m6.to_hex("; ")  << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+m3.to_hex("; "): 0x7_8;  0x7_8;  0x7_8
+m4.to_hex("; "): 0xF;    0xF;    0xF;    0xF
+m5.to_hex("; "): 0xF1_2; 0xF1_2; 0xF1_2; 0xF1_2; 0xF1_2
+m6.to_hex("; "): 0xF3_4; 0xF3_4; 0xF3_4; 0xF3_4; 0xF3_4; 0xF3_4
+```
+
+[Example --- Reconstituting bit-matrices from hex encodings]{.bt}
+```cpp
+#include <bit/bit.h>
+
+int main()
+{
+    auto m3 = bit::matrix<>::random(3);     // <1>
+    auto m4 = bit::matrix<>::random(4);
+    auto m5 = bit::matrix<>::random(5);
+    auto m6 = bit::matrix<>::random(6);
+
+    auto s3 = m3.to_hex("; ");              // <2>
+    auto s4 = m4.to_hex("; ");
+    auto s5 = m5.to_hex("; ");
+    auto s6 = m6.to_hex("; ");
+
+    bit::matrix<> c3(s3);                   // <3>
+    bit::matrix<> c4(s4);
+    bit::matrix<> c5(s5);
+    bit::matrix<> c6(s6);
+
+    // <4>
+    std::cout << "m3: " << s3 << '\n' << "c3: " << c3.to_hex("; ")
+              << (c3 == m3 ? " MATCH!" : "FAIL") << '\n';
+    std::cout << "m4: " << s4 << '\n' << "c4: " << c4.to_hex("; ")
+              << (c4 == m4 ? " MATCH!" : "FAIL") << '\n';
+    std::cout << "m5: " << s5 << '\n'  << "c5: " << c5.to_hex("; ")
+              << (c5 == m5 ? " MATCH!" : "FAIL") << '\n';
+    std::cout << "m6: " << s6 << '\n' << "c6: " << c6.to_hex("; ")
+              << (c6 == m6 ? " MATCH!" : "FAIL") << '\n';
+}
+```
+1. Set up some bit-matrices of various sizes with random 50-50 fills.
+2. Convert the bit-matrices to hex-strings.
+3. Use the strings to construct bit-matrices.
+4. Check that the two sets of vectors match.
+
+[Output]{.bt}
+```bash
+m3: 0x3_8; 0x4_8; 0x7_8
+c3: 0x3_8; 0x4_8; 0x7_8 MATCH!
+m4: 0xB; 0xB; 0x0; 0xE
+c4: 0xB; 0xB; 0x0; 0xE MATCH!
+m5: 0x40_2; 0x11_2; 0x40_2; 0x30_2; 0xA0_2
+c5: 0x40_2; 0x11_2; 0x40_2; 0x30_2; 0xA0_2 MATCH!
+m6: 0x11_4; 0xC2_4; 0x00_4; 0x32_4; 0xD2_4; 0x70_4
+c6: 0x11_4; 0xC2_4; 0x00_4; 0x32_4; 0xD2_4; 0x70_4 MATCH!
+```
+
+### See Also
+{vec.to_string} \
+{mat.stream<<}

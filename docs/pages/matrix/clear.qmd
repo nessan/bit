@@ -1,0 +1,50 @@
+---
+title: "`bit::matrix` --- Clear out a Bit-Matrix"
+---
+
+We provide a method to remove all elements from a bit-matrix.
+
+```cpp
+constexpr bit::matrix &clear();
+```
+
+The bit-matrix's `rows()`, `cols()`, and `size()` all become 0, but the capacity is _not_ changed.
+This method returns a reference to `*this` so it can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::random(8ul, 16ul);
+    std::cout << "Pre-clear:\n"  << m         << '\n';
+    std::cout << "Post-clear:\n" << m.clear() << '\n';
+    std::cout << "m.rows(): "    << m.rows()  << '\n';
+    std::cout << "m.cols(): "    << m.cols()  << '\n';
+    std::cout << "m.size(): "    << m.size()  << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+Pre-clear:
+│0 1 0 1 0 0 1 0 0 1 0 0 0 1 1 1│
+│0 0 1 1 0 0 0 0 1 1 1 0 1 1 1 0│
+│0 1 0 1 0 0 0 0 0 0 1 1 0 1 1 0│
+│1 0 0 0 1 1 1 0 0 0 1 1 1 1 1 1│
+│0 0 0 0 1 0 0 1 0 1 0 1 1 1 1 0│
+│1 0 1 1 1 1 0 0 1 0 0 1 1 1 1 1│
+│1 1 0 0 0 1 0 0 1 1 1 1 0 1 1 0│
+│1 1 0 0 0 0 1 0 1 0 1 1 0 1 1 1│
+Post-clear:
+[]
+m.rows(): 0
+m.cols(): 0
+m.size(): 0
+```
+
+### See Also
+{mat.add_row} \
+{mat.add_col} \
+{mat.pop_row} \
+{mat.pop_col}

@@ -1,0 +1,192 @@
+# Metadata for this documentation project.
+# See https://quarto.orgcontent/reference/projects/websites.html
+project:
+    type: website
+    output-dir: _site
+
+# Extensions:
+# simple-vars: Lets us reference variables as `{name}`  instead of the wordier `{{< var name >}}`
+filters:
+    - simple-vars
+
+format:
+    html:
+        toc: true
+        toc-expand: true
+        code-copy: true
+        code-overflow: scroll
+        grid:
+            sidebar-width: 250px
+            body-width: 950px
+            margin-width: 200px
+            gutter-width: 1.5em
+        theme:
+            light:
+                - cosmo
+                - assets/css/theme.scss
+                - assets/css/extras.scss
+            dark:
+                - cosmo
+                - assets/css/theme.scss
+                - assets/css/dark.scss
+                - assets/css/extras.scss
+
+website:
+    title: "Bit Space/GF(2)"
+    image: "assets/images/logo.jpg"
+    favicon: "assets/images/logo.jpg"
+    open-graph: true
+    google-analytics: G-G40Q4SR3K4
+    site-url: "https://nessan.github.io/bit"
+    repo-url: "https://github.com/nessan/bit"
+    repo-subdir: docs
+    issue-url: "https://github.com/nessan/bit/issues/new/choose"
+    repo-actions: [edit, issue]
+    page-navigation: true
+    bread-crumbs: false
+    back-to-top-navigation: true
+    page-footer:
+        left: |
+            &#169; 2022 Nessan &#8729; Made with [Quarto](https://quarto.org)
+        center:
+            - icon: github
+              href: "https://github.com/nessan/bit"
+              aria-label: GitHub Repo
+            - icon: envelope
+              href: "mailto:nzznfitz+gh@icloud.com"
+              aria-label: EMail address
+        right: |
+            [MIT Licensed](https://opensource.org/license/mit)
+
+    navbar:
+        background: dark
+        logo: "assets/images/logo.jpg"
+        logo-alt: "The bit library logo"
+        title: bit
+        search: true
+        pinned: true
+        collapse-below: lg
+        left:
+            - text: "Home"
+              file: index.qmd
+            - text: "Vectors"
+              file: pages/vector/index.qmd
+            - text: "Matrices"
+              file: pages/matrix/index.qmd
+            - text: "Polynomials"
+              file: pages/polynomial/index.qmd
+            - text: "Tech Notes"
+              file: pages/notes/index.qmd
+            - text: "More"
+              menu:
+                  - text: "Project Repo"
+                    icon: "github"
+                    href: "https://github.com/nessan/bit"
+                  - text: "Report a Bug"
+                    icon: "bug"
+                    href: "https://github.com/nessan/bit/issues"
+                  - text: "Ask a Question"
+                    icon: "chat-right-text"
+                    href: "mailto:nzznfitz+gh@icloud.com"
+        tools:
+            - icon: github
+              href: "https://github.com/nessan/bit"
+              text: GitHub repo
+
+    sidebar:
+        style: floating
+        type: light
+        background: light
+        align: left
+        collapse-level: 2
+        contents:
+            - text: Overview
+              href: index.qmd
+            - text: "---"
+            - section: "Bit-Vectors"
+              contents:
+                  - text: "Introduction"
+                    href: pages/vector/index.qmd
+                  - text: "Declaration"
+                    href: pages/vector/index.qmd#declaration
+                  - text: "Class Constants & Types"
+                    href: pages/vector/index.qmd#class-constants-and-types
+                  - text: "Instance Methods"
+                    href: pages/vector/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: pages/vector/index.qmd#non-member-functions
+            - text: "---"
+            - section: "Bit-Matrices"
+              contents:
+                  - text: "Introduction"
+                    href: pages/matrix/index.qmd
+                  - text: "Declaration"
+                    href: pages/matrix/index.qmd#declaration
+                  - text: "Class Types"
+                    href: pages/matrix/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: pages/matrix/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: pages/matrix/index.qmd#non-member-functions
+            - text: "---"
+            - section: "Gaussian Elimination"
+              contents:
+                  - text: "Introduction"
+                    href: pages/gauss/index.qmd
+                  - text: "Declaration"
+                    href: pages/gauss/index.qmd#declaration
+                  - text: "Class Types"
+                    href: pages/gauss/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: pages/gauss/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: pages/gauss/index.qmd#non-member-functions
+            - text: "---"
+            - section: "LU Decomposition"
+              contents:
+                  - text: "Introduction"
+                    href: pages/lu/index.qmd
+                  - text: "Declaration"
+                    href: pages/lu/index.qmd#declaration
+                  - text: "Class Types"
+                    href: pages/lu/index.qmd#class-types
+                  - text: "Instance Methods"
+                    href: pages/lu/index.qmd#instance-methods
+            - text: "---"
+            - section: "Bit-Polynomials"
+              contents:
+                  - text: "Introduction"
+                    href: pages/polynomial/index.qmd
+                  - text: "Declaration"
+                    href: pages/polynomial/index.qmd#declaration
+                  - text: "Class Constants & Types"
+                    href: pages/polynomial/index.qmd#class-constants-and-types
+                  - text: "Instance Methods"
+                    href: pages/polynomial/index.qmd#instance-methods
+                  - text: "Non-member Functions"
+                    href: pages/polynomial/index.qmd#non-member-functions
+            - text: "---"
+            - section: "Debugging"
+              contents:
+                  - text: "Verifications"
+                    href: pages/verify/index.qmd
+                  - text: "Compiler Flags"
+                    href: pages/verify/index.qmd#compiler-flags
+                  - text: "Design Rationale"
+                    href: pages/verify/index.qmd#design-rationale
+            - text: "---"
+            - section: "Technical Notes"
+              contents:
+                  - text: "Introduction"
+                    href: pages/notes/index.qmd
+                  - text: "Working in GF(2)"
+                    href: pages/notes/gf2.qmd
+                  - text: "Library Design"
+                    href: pages/notes/design.qmd
+                  - text: "Danilevsky's Method"
+                    href: pages/notes/danilevsky.qmd
+                  - text: "Polynomial Reduction"
+                    href: pages/notes/reduction.qmd
+editor:
+    markdown:
+        canonical: true

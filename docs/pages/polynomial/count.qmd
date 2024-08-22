@@ -1,0 +1,16 @@
+---
+title: "`bit::polynomial` --- Coefficient Counts"
+---
+
+We have methods to count the number of ones and zeros in the vector of polynomial coefficients.
+```cpp
+constexpr std::size_t count0() const;     // <1>
+constexpr std::size_t count1() const;     // <2>
+```
+1. Returns the number of zero coefficients in the polynomial.
+2. Returns the number of one coefficients in the polynomial.
+
+### See Also
+{poly.size}        \
+{poly.empty}       \
+{vec.count}

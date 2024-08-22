@@ -1,0 +1,78 @@
+---
+title: "`bit::matrix` --- Echelon Forms"
+---
+
+Converts a matrix to {row-echelon-form} or {reduced-row-echelon-form}:
+
+```cpp
+bit::matrix& to_echelon_form(bit::vector *p = 0);          // <1>
+bit::matrix& to_reduced_echelon_form(bit::vector *p = 0);  // <2>
+
+bit::matrix bit::echelon_form(const bit::matrix &A, bit::vector *p = 0);          // <3>
+bit::matrix bit::reduced_echelon_form(const bit::matrix &A, bit::vector *p = 0);  // <4>
+```
+1. Converts this matrix in place to row-echelon form.
+2. Converts this matrix in place to reduced-row-echelon form.
+3. Returns the row-echelon form of `A`. Leaves `A` unchanged.
+4. Returns the reduced-row-echelon form of `A`. Leaves `A` unchanged.
+
+## Pivots & free variables
+
+The methods both take an optional pointer to another bit-vector `p`.
+If `p` is present, hat bit-vector will be resized appropriately and filled with the "pivots". \
+In particular, if `p->element(j)` is one, column `j` now contains a _pivot_ for the bit-matrix.
+The rank of the bit-matrix will be `p->count()`, and the number of free variables will be `rows() - p->count()`.
+`p->flip()` indicates the indices of the free variables. \
+See the example below.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int
+main()
+{
+    // Create a matrix and get its echelon & reduced echelon forms
+    auto          A = bit::matrix<>::random(12);
+    bit::vector<> pivots;
+    std::cout << "Original, Row-Echelon, Reduced-Row-Echelon versions of a bit::matrix:\n";
+    bit::print(A, echelon_form(A), reduced_echelon_form(A, &pivots));
+
+    // Analyze the rank of the matrix, etc.
+    auto n = A.rows();
+    auto r = pivots.count();
+    auto f = n - r;
+    std::cout << "matrix size:               " << n << " x " << n << '\n';
+    std::cout << "matrix rank:               " << r << '\n';
+    std::cout << "Number of free variables:  " << f << "\n";
+    if (f > 0) {
+        std::cout << "Indices of free variables: ";
+        pivots.flip().if_set_call([](std::size_t k) { std::cout << k << ' '; });
+    }
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+[Output (specific values will depend on the random fill)]{.bt}
+```bash
+Original, Row-Echelon, Reduced-Row-Echelon versions of a bit::matrix:
+010000000111    111001001001    100000000001
+001001000000    010000000111    010000000000
+111001001001    001001000000    001001000000
+001100111111    000101111111    000101000001
+001010110000    000011110000    000011000001
+000011100000    000000100110    000000100001
+110011100110    000000011111    000000010000
+000011110010    000000001111    000000001000
+101111011001    000000000111    000000000101
+100101010111    000000000010    000000000010
+001100111101    000000000000    000000000000
+110101001010    000000000000    000000000000
+matrix size:               12 x 12
+matrix rank:               10
+Number of free variables:  2
+Indices of free variables: 5 11
+```
+
+### See Also
+{mat.invert}

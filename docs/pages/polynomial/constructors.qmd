@@ -1,0 +1,70 @@
+---
+title: "`bit::polynomial` --- Construction"
+---
+
+Constructors for a bit-polynomial.
+
+```cpp
+explicit constexpr bit::polynomial(std::size_t n = 0);                  // <1>
+
+explicit constexpr bit::polynomial(const vector_type& coeffs);          // <2>
+
+explicit constexpr bit::polynomial(const vector_type&& coeffs);         // <3>
+
+explicit constexpr
+bit::polynomial(std::size_t n, std::invocable<std::size_t> auto f);     // <4>
+```
+1. Constructs a zero bit-polynomial with `n` coefficients all set to 0.
+   The _default_ constructor creates the empty polynomial, also treated as the zero polynomial.
+2. Create a bit-polynomial by *copying* a prefilled bit-vector of coefficients.
+3. Create a bit-polynomial by *moving* a prefilled bit-vector of coefficients.
+4. Construct a bit-polynomial with `n` elements using a function that takes a `std::size_t` argument.
+   Coefficient `i` in the polynomial is set to 1 if `f(i) != 0`; otherwise it is 0.
+
+The first method above creates the zero polynomial with $n$ coefficients all set to 0.
+Presumably, some of those coefficients will get set to 1 later.
+The default value $n = 0$ results in the empty polynomial whose coefficient vector takes up almost no memory.
+The class treats the empty polynomial as another form of the zero polynomial $p(x) = 0$.
+
+We also have methods to construct a polynomial from a prefilled bit-vector of coefficients.
+By default, we will copy those coefficients into the polynomial's store, but if the coefficients are no longer needed after polynomial construction, then we can save some copying and instead *move* the coefficients directly into place with code like `bit::polynomial p{std::move(coeff)};`
+
+The last method above is a convenience constructor used in various test codes.
+
+[Example]{.bt}
+
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::polynomial p0;                                                 // <1>
+    std::cout << std::format("p0(x) = {} has size {} and coefficients {:p}\n", p0, p0.size(), p0.coefficients());
+
+    bit::polynomial p1{11};                                             // <2>
+    std::cout << std::format("p1(x) = {} has size {} and coefficients {:p}\n", p1, p1.size(), p1.coefficients());
+
+    auto p2 = bit::polynomial<>::random(7);                             // <3>
+    std::cout << std::format("p2(x) = {} has size {} and coefficients {:p}\n", p2, p2.size(), p2.coefficients());
+
+    bit::polynomial p3{8, [](size_t k) { return (k + 1) % 2; }};        // <4>
+    std::cout << std::format("p3(x) = {} has size {} and coefficients {:p}\n", p3, p3.size(), p3.coefficients());
+}
+
+```
+1. Default constructor makes an empty polynomial which is treated as a form of the zero polynomial.
+2. Another zero-polynomial---this one has 11 zero coefficients.
+3. A random polynomial of *degree* 7 with eight coefficients and the final one is always 1.
+4. A polynomial with every second one set to 0.
+
+[Output]{.bt}
+```bash
+p0(x) = 0 has size 0 and coefficients []
+p1(x) = 0 has size 11 and coefficients [0 0 0 0 0 0 0 0 0 0 0]
+p2(x) = 1 + x^2 + x^3 + x^4 + x^7 has size 8 and coefficients [1 0 1 1 1 0 0 1]
+p3(x) = 1 + x^2 + x^4 + x^6 has size 8 and coefficients [1 0 1 0 1 0 1 0]
+```
+
+### See Also
+{poly.random}    \
+{poly.power}     \
+{vec.constructors}

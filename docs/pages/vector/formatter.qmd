@@ -1,0 +1,63 @@
+---
+title: "`bit::vector` --- Custom Formatting"
+---
+
+We specialize the {std.formatter} class to connect any `bit::vector` to {std.format} and friends.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+struct std::formatter<bit::vector<Block, Allocator>> {
+    ...
+};
+```
+
+As shown in the example below, if $\mathbf{v}$ is a bit-vector of size $n$, this `std::formatter` supports the four different format specifiers:
+```cpp
+std::format("{}", v)            // <1>
+std::format("{:b}", v)          // <2>
+std::format("{:p}", v)          // <3>
+std::format("{:x}", v)          // <4>
+```
+1. Outputs $\mathbf{v}$ as a string in the default format $v_0 v_1 v_2 \ldots v_{n-1}$.
+2. Outputs $\mathbf{v}$ as a string in a bit-order format $v_{n-1} v_{n-2} v_{n-3} \ldots v_0$.
+3. Outputs $\mathbf{v}$ as a string in a "pretty" format $\lbrack v_0 \; v_1 \; v_2 \; \ldots \; v_{n-1} \rbrack$.
+4. Outputs $\mathbf{v}$ as a compact hex string.
+
+::: {.callout-note}
+# Specifier Errors
+Any unrecognized specifier will result in the bit-vector string showing an error message.
+The sample program below has an example.
+:::
+
+## String Encodings
+
+{{< include _encoding.qmd >}}
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto v = bit::vector<>::random(18);
+    std::cout << std::format("Vector default specifier:   {}\n", v);
+    std::cout << std::format("Vector bit-order specifier: {:b}\n", v);
+    std::cout << std::format("Vector pretty specifier:    {:p}\n", v);
+    std::cout << std::format("Vector hex specifier:       {:x}\n", v);
+    std::cout << std::format("Vector invalid specifier:   {:X}\n", v);
+}
+```
+
+[Output]{.bt}
+```bash
+Vector default specifier:   011100000001100010
+Vector bit-order specifier: 010001100000001110
+Vector pretty specifier:    [0 1 1 1 0 0 0 0 0 0 0 1 1 0 0 0 1 0]
+Vector hex specifier:       0xE0811_4
+Vector invalid specifier:   'UNRECOGNIZED FORMAT SPECIFIER FOR BIT-VECTOR'
+```
+
+### See Also
+{vec.to_string}           \
+{vec.to_pretty_string}    \
+{vec.to_bit_order}        \
+{vec.to_hex}

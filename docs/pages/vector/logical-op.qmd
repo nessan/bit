@@ -1,0 +1,67 @@
+---
+title: "`bit::vector` --- Logical Op Operators"
+---
+
+These are non-member functions to perform element-by-element binary `AND`, `XOR`, `OR`, `DIFF` between two equal-sized bit-vectors.
+
+```cpp
+template<std::unsigned_integral Block, typename Alloc>
+constexpr bit::vector<Block, Alloc>
+operator&(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <1>
+operator^(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <2>
+operator|(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <3>
+operator+(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <4>
+operator-(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <5>
+operator*(const bit::vector<Block, Alloc> &lhs,
+          const bit::vector<Block, Alloc> &rhs);    // <6>
+```
+1. Returns a bit-vector whose bits result from binary `AND` between the corresponding pairs of bits of `rhs` and `lhs`.
+2. Returns a bit-vector whose bits result from binary `XOR` between the corresponding pairs of bits of `rhs` and `lhs`.
+3. Returns a bit-vector whose bits result from binary `OR`  between the corresponding pairs of bits of `rhs` and `lhs`.
+4. Returns a bit-vector whose bits result from binary `XOR` between the corresponding pairs of bits of `rhs` and `lhs`. \
+In GF(2), addition corresponds to the logical `XOR` operation.
+1. Returns a bit-vector whose bits result from binary `XOR` between the corresponding pairs of bits of `rhs` and `lhs`. \
+In GF(2), subtraction corresponds to the logical `XOR` operation.
+1. Returns a bit-vector whose bits result from binary `AND` between the corresponding pairs of bits of `rhs` and `lhs`. \
+In GF(2), multiplication corresponds to the logical `AND` operation.
+
+::: {.callout-warning}
+# Size checking
+The two vectors in question must be of the same size. \
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::vector<> u(11, [&](size_t k) { return k % 2; });       // <1>
+    bit::vector<> v(11, [&](size_t k) { return (k + 1) % 2; }); // <2>
+    std::cout << u << " & " << v << " = " << (u & v) << '\n';
+    std::cout << u << " ^ " << v << " = " << (u ^ v) << '\n';
+    std::cout << u << " | " << v << " = " << (u | v) << '\n';
+}
+```
+1. Creates a vector of size 11 by calling a lambda that sets all the even indices.
+2. Creates a vector of size 11 by calling a lambda that sets all the odd indices.
+
+[Output]{.bt}
+```bash
+[0 1 0 1 0 1 0 1 0 1 0] & [1 0 1 0 1 0 1 0 1 0 1] = [0 0 0 0 0 0 0 0 0 0 0]
+[0 1 0 1 0 1 0 1 0 1 0] ^ [1 0 1 0 1 0 1 0 1 0 1] = [1 1 1 1 1 1 1 1 1 1 1]
+[0 1 0 1 0 1 0 1 0 1 0] | [1 0 1 0 1 0 1 0 1 0 1] = [1 1 1 1 1 1 1 1 1 1 1]
+```
+
+### See Also
+{vec.operator&=}   \
+{vec.operator=|}   \
+{vec.operator^=}   \
+{vec.operator+=}   \
+{vec.operator-=}   \
+{vec.operator*=}

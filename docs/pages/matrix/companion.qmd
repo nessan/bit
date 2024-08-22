@@ -1,0 +1,77 @@
+---
+title: "`bit::matrix` - Companion/Frobenius Matrices"
+---
+
+## Companion Matrices
+Our version of a {companion-matrix} is upper {Hessenberg} with an arbitrary top-row, ones on the sub-diagonal, and zeros everywhere else.
+These can be compactly stored in top-row-only form and constructed as follows:
+
+```cpp
+static constexpr bit::matrix
+companion(const bit::vector_type &top_row)  // <1>
+```
+1. Factory method that creates a {companion-matrix},  i.e., a square bit-matrix with the given top row and ones on the sub-diagonal.
+
+Companion matrices are essential because one can readily read off the coefficients of their characteristic polynomials.
+The following non-class function does just that, returning the coefficients of the characteristic polynomial in a `bit::vector`:
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+bit::vector<Block, Allocator>
+companion_matrix_characteristic_polynomial(const bit::vector<Block, Allocator> &top_row)     // <1>
+```
+1. This returns the coefficients for the companion matrix {characteristic-polynomial} as bit-vector `p` where the polynomial is:
+$$
+p(\lambda) = p_0  + p_1 \lambda + p_2 \lambda^2 + \cdots
+$$
+
+## Frobenius Matrices
+
+A square matrix is in {Frobenius-form} if it is block-diagonal and each of the square diagonal blocks is a companion matrix.
+One can readily compute the characteristic polynomial of a Frobenius matrix by multiplying together the characteristic polynomials of all the companion matrices.
+
+A similarity transformation can transform any square matrix to {Frobenius-form}.
+You can see how we achieve this [here](/pages/notes/danilevsky.qmd).
+
+This method is the key to our implementation of the non-member function {mat.characteristic_polynomial}, which takes an arbitrary square bit-matrix as input and returns its characteristic polynomial.
+
+We supply a non-member function which returns the {Frobenius-form} of the input square bit-matrix:
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+std::vector<vector<Block, Allocator>>
+compact_frobenius_form(const bit::matrix<Block, Allocator> &A)  // <1>
+```
+1. Each element in the return vector is a companion matrix stored in compact top-row-only form.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto top_row = bit::vector<>::ones(12);
+    auto M = bit::matrix<>::companion(top_row);
+    std::cout << "Top row: " << top_row << '\n';
+    std::cout << "Corresponding companion matrix:\n";
+    std::cout << M << '\n';
+}
+```
+[Output]{.bt}
+```bash
+Top row: [1 1 1 1 1 1 1 1 1 1 1 1]
+Corresponding companion matrix:
+│1 1 1 1 1 1 1 1 1 1 1 1│
+│1 0 0 0 0 0 0 0 0 0 0 0│
+│0 1 0 0 0 0 0 0 0 0 0 0│
+│0 0 1 0 0 0 0 0 0 0 0 0│
+│0 0 0 1 0 0 0 0 0 0 0 0│
+│0 0 0 0 1 0 0 0 0 0 0 0│
+│0 0 0 0 0 1 0 0 0 0 0 0│
+│0 0 0 0 0 0 1 0 0 0 0 0│
+│0 0 0 0 0 0 0 1 0 0 0 0│
+│0 0 0 0 0 0 0 0 1 0 0 0│
+│0 0 0 0 0 0 0 0 0 1 0 0│
+```
+
+### See Also
+{mat.characteristic_polynomial}

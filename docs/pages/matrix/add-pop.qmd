@@ -1,0 +1,76 @@
+---
+title: "`bit::matrix` --- Add & Remove Rows/Columns"
+---
+
+We have methods to add and remove rows & columns from the end of the bit-matrix.
+
+```cpp
+constexpr bit::matrix &add_row();    // <1>
+constexpr bit::matrix &add_col();    // <2>
+constexpr bit::matrix &pop_row();    // <3>
+constexpr bit::matrix &pop_col();    // <4>
+```
+1. Add a new row of zeros to the end of the bit-matrix.
+2. Add a new column of zeros to the end of the bit-matrix.
+3. Remove the last row from the bit-matrix.
+4. Remove the last columns from the bit-matrix.
+
+These methods all return a reference to `*this` so they can be chained with other calls.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto m = bit::matrix<>::ones(2,8);
+    std::cout << "m:\n" << m << '\n';
+    m.add_row();
+    std::cout << "m:\n" << m << '\n';
+    m.add_col();
+    std::cout << "m:\n" << m << '\n';
+    m.pop_row();
+    std::cout << "m:\n" << m << '\n';
+    m.pop_col();
+    std::cout << "m:\n" << m << '\n';
+    m.clear();                          // <1>
+    std::cout << "m:\n" << m << '\n';
+    m.add_row();                        // <2>
+    std::cout << "m:\n" << m << '\n';
+    m.pop_col();                        // <3>
+    std::cout << "m:\n" << m << '\n';
+}
+```
+1. Clears the bit-matrix.
+2. Adding a row or a column to an empty bit-matrix does nothing.
+3. Popping a row or a column from an empty bit-matrix does nothing.
+
+[Output]{.bt}
+```bash
+m:
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+m:
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+│0 0 0 0 0 0 0 0│
+m:
+│1 1 1 1 1 1 1 1 0│
+│1 1 1 1 1 1 1 1 0│
+│0 0 0 0 0 0 0 0 0│
+m:
+│1 1 1 1 1 1 1 1 0│
+│1 1 1 1 1 1 1 1 0│
+m:
+│1 1 1 1 1 1 1 1│
+│1 1 1 1 1 1 1 1│
+m:
+[]
+m:
+[]
+m:
+[]
+```
+
+### See Also
+{mat.resize} \
+{mat.clear}

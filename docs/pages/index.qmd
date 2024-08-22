@@ -1,0 +1,120 @@
+---
+title: The `bit`Library
+---
+
+## Introduction
+
+`bit` is a header-only {{< var cpp >}} library for numerical work in *bit-space* which mathematicians call {GF2} or {f2}, the simplest [Galois field] with just two elements 0 & 1.
+All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.
+
+The library provides vector and matrix classes for performing linear algebra in bit-space.
+The {bit.vector} class represents *bit_vectors*, and the {bit.matrix} class represents *bit-matrices*.
+The library also has a {bit.polynomial} class to represent *bit-polynomials* over {f2}.
+
+These classes are efficient and pack the individual bit elements into natural word blocks.
+You can size/resize the classes at run-time.
+
+Because arithmetic operations in {f2} are mod 2, addition/subtraction becomes the `XOR` operation, and multiplication/division becomes the `AND` operation.
+The `bit` library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.
+
+The `bit` library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways.
+Amongst other things, the interface includes methods to solve systems of linear equations over {f2} and to look at the eigen-structure of bit-matrices.
+The `bit::polynomial` class has methods to compute $x^N\bmod{P(x)}$ where $P(x)$ is a polynomial over {f2} and $N$ is a potentially huge integer.
+
+## Installation
+
+This library is header-only, so there is nothing to compile and link. Drop the `bit` include directory somewhere convenient, and you are good to go.
+
+Alternatively, if you are using `CMake`, you can use the standard `FetchContent` module by adding a few lines to your project's `CMakeLists.txt` file:
+```cmake
+include(FetchContent)
+FetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/current/bit.zip)
+FetchContent_MakeAvailable(bit)
+```
+This command downloads and unpacks an archive of the current version of `bit` to your project's build folder. You can then add a dependency on `bit::bit`, a `CMake` alias for `bit`. `FetchContent` will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.
+
+Used like this, `FetchContent` will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.
+
+::: {.callout-note}
+# Library versions
+The shown `URL` gets the `current` version of the library---whatever is in the main branch.
+For a fixed, stable library version (say release `2.0.0`), use a `URL` parameter like `https://github.com/nessan/bit/releases/download/2.0.0/bit.zip`.
+:::
+
+## Example
+
+Here is a simple example of a program that uses `bit`:
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto M = bit::matrix<>::random(6, 6);                           // <1>
+    auto c = bit::characteristic_polynomial(M);                     // <2>
+    std::cout << std::format("Bit-matrix M:\n{:p}\n", M);
+    std::cout << std::format("Characteristic poly c(x) = {}\n", c);
+    std::cout << std::format("c(M) yields:\n{:p}\n", c(M));         // <3>
+}
+```
+1. Creates a random $6\times6$ bit-matrix $M$ where 0 & 1 are equally likely to occur.
+2. Computes its characteristic polynomial $c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6$.
+3. Verifies that $M$ satisfies its own characteristic equation $c(M) = 0$, as expected from the {Cayley-Hamilton} theorem.
+
+[Sample Output (varies from run to run):]{.bt}
+```bash
+Bit-matrix M:
+│1 1 0 1 1 0│
+│0 0 0 0 0 1│
+│0 1 1 1 0 0│
+│0 0 0 1 0 1│
+│1 1 1 0 1 0│
+│1 0 0 1 1 1│
+Characteristic poly c(x) = x^1 + x^2 + x^3 + x^5 + x^6
+c(M) yields:
+│0 0 0 0 0 0│
+│0 0 0 0 0 0│
+│0 0 0 0 0 0│
+│0 0 0 0 0 0│
+│0 0 0 0 0 0│
+│0 0 0 0 0 0│
+```
+::: {.callout-note}
+# The special nature of {f2}
+`bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements---​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in {f2}.
+:::
+
+## Why Use `bit`?
+
+The standard library already has {std.bitset}, an efficient *bitset* class that is familiar and well thought through, so our `bit::vector` class replicates and extends much of that interface.
+
+All `std::bitset` objects have a fixed size determined at compile time.
+The well-known *Boost* library does add a dynamic version [`boost::dynamic_bitset`], where the bitset size can be set and changed at runtime.
+
+However, as the two names suggest, those types are aimed at *bitsets* instead of *bit-vectors*.
+So, for example, they print in *bit-order* with the least significant element/bit on the right.
+More importantly, those classes don't have any particular methods aimed at linear algebra.
+Neither does the standard library's vector class {std.vector}.
+
+On the other hand, several well-known linear algebra libraries, such as {Eigen}, exist.
+Those packages efficiently manage all the standard *numeric* types (floats, doubles, integers, etc.) but do not correctly handle {f2}.
+You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.
+
+For example, you might use {Eigen} to create an integer matrix of all 0's and 1's and then use a built-in function from that library to extract the characteristic polynomial.
+Modding the coefficients of that polynomial with 2 gets the appropriate version for {f2}.
+Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns.
+Of course, you might use an underlying `BitInt` type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn't help much.
+
+For linear algebra problems over {f2}, this specialized `bit` library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.
+
+## Documentation
+
+Here is a link to the project's source code {repo}. \
+This {docs} site was constructed using the static website generator {quarto}.
+
+### Contact
+
+You can contact me by {email}
+
+### Copyright and License
+
+Copyright (c) 2022-present Nessan Fitzmaurice. \
+You can use this software under the {mit-license}

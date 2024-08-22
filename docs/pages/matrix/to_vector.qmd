@@ -1,0 +1,57 @@
+---
+title: "`bit::matrix` --- Convert to a Bit-Vector"
+---
+
+We have a method that packs the bit-matrix into a bit-vector.
+
+```cpp
+constexpr bit::vector<Block, Allocator>
+to_vector(bool by_rows = true) const;
+```
+By default, this returns a bit-vector with all the elements of the bit-matrix stored row by row.
+If the argument `by_rows` is set to `false` the return bit-vector will have the elements of the bit-matrix stored column by column.
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    bit::matrix<> m(4, [](std::size_t i, std::size_t) { return (i)%2; });   // <1>
+    auto vrow = m.to_vector();                                              // <2>
+    auto vcol = m.to_vector(false);                                         // <3>
+    std::cout << "Original:\n" << m    << '\n';
+    std::cout << "By row: "    << vrow << '\n';
+    std::cout << "By col: "    << vcol << '\n';
+    std::cout << "From row:\n" << bit::matrix(vrow, 4) << '\n';             // <4>
+    std::cout << "From col:\n" << bit::matrix(vcol, 4, false) << '\n';      // <5>
+}
+```
+1. Construct a bit-matrix with rows that alternate between all zeros and all ones.
+2. Pack the bit-matrix in a bit-vector row by row.
+3. Pack the bit-matrix in a bit-vector column by column.
+4. Reconstitute a bit-matrix from the row-by-row bit-vector.
+5. Reconstitute a bit-matrix from the column-by-column bit-vector.
+
+[Output]{.bt}
+```bash
+Original:
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+By row: [0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1]
+By col: [0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1]
+From row:
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+From col:
+│0 0 0 0│
+│1 1 1 1│
+│0 0 0 0│
+│1 1 1 1│
+```
+
+### See Also
+{mat.constructors} for a constructor that reshapes a bit-vector into a bit-matrix.

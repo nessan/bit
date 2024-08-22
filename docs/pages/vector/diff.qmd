@@ -1,0 +1,39 @@
+---
+title: "`bit::vector` --- Logical Differences"
+---
+
+Compute the logical `DIFF` of two equal-sized bit-vectors.
+
+```cpp
+template<std::unsigned_integral Block, typename Allocator>
+constexpr bit::vector<Block, Allocator>
+diff(const bit::vector<Block, Allocator> &u,
+     const bit::vector<Block, Allocator> &v); // <1>
+```
+1. Returns a bit-vector `w` where `w[i] = 1` if `u[i] != v[i]` and 0 otherwise.
+
+::: {.callout-warning}
+# Size checking
+The two vectors in question must be of the same size. \
+Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
+:::
+
+[Example]{.bt}
+```cpp
+#include <bit/bit.h>
+int main()
+{
+    auto u = bit::vector<>::ones(6);
+    auto v = bit::vector<>::checker_board(6);
+    std::cout << "diff(" << u.to_string() << ", "<< v.to_string() << ") yields "
+              << bit::diff(u, v).to_string() << '\n';
+}
+```
+
+[Output]{.bt}
+```bash
+diff(111111, 010101) yields 101010
+```
+
+### See Also
+{vec.append}
