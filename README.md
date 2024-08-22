@@ -1,6 +1,6 @@
 # README
 
-`bit` is a header-only C++ library for numerical work in _bit-space_, which mathematicians call {gf2}[], the simplest Galois field with just two elements 0 & 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.
+`bit` is a header-only C++ library for numerical work in _bit-space_, which mathematicians call [GF2][]. This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.
 
 The library provides vector and matrix classes for performing linear algebra in bit-space. The [`bit::vector`][] class represents _bit_vectors_, and the [`bit::matrix`][] class represents _bit-matrices_. The library also has a [`bit::polynomial`][] class to represent _bit-polynomials_ over GF(2).
 
@@ -67,7 +67,7 @@ The polynomial sum c(M) gives:
 │0 0 0 0 0 0│
 ```
 
-**NOTE:** `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements. This problem chokes a naive implementation that does not consider the unique nature of arithmetic in GF(2).
+**NOTE:** `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements. This problem chokes a naive implementation that needs to consider the unique nature of arithmetic in GF(2).
 
 ## Why Use `bit`?
 
@@ -81,7 +81,7 @@ On the other hand, several well-known linear algebra libraries, such as [Eigen][
 
 For example, you might use `Eigen` to create an integer matrix of all 0's and 1's and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for GF(2). Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying `BitInt` type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn't help much.
 
-This specialized `bit` library is better for linear algebra problems over GF(2). Consider it if, for example, your interest is in cryptography or random number generation.
+This specialised `bit` library is better for linear algebra problems over GF(2). Consider it if, for example, your interest is in cryptography or random number generation.
 
 ## Documentation
 
@@ -99,7 +99,7 @@ You can use this software under the [MIT license](https://opensource.org/license
 
 <!-- Reference Links -->
 
-{gf2}: https://en.wikipedia.org/wiki/Finite_field
+[GF2]: https://en.wikipedia.org/wiki/Finite_field
 [Eigen]: https://eigen.tuxfamily.org/overview.php?title=Main_Page
 [`bit::vector`]: https://nessan.github.io/bit/pages/vector/
 [`bit::matrix`]: https://nessan.github.io/bit/pages/matrix/
