@@ -22,7 +22,7 @@ The `make_monic()` method does nothing to a zero polynomial.
 
 ## Degree versus Size
 
-The *size* of a polynomial, as returned by the [polynomial::size] method, is the number of its coefficients.
+The *size* of a polynomial, as returned by the {poly.size} method, is the number of its coefficients.
 The *degree* of a polynomial is the index of its highest non-trivial power term.
 For example,
 $$
