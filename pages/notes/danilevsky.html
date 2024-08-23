@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Danilevsky’s Algorithm – Working in GF(2)</title>
+<title>Danilevsky’s Algorithm – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -37,10 +37,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
 <link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -110,14 +112,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Danilevsky’s Algorithm – Working in GF(2)">
+<meta property="og:title" content="Danilevsky’s Algorithm – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="Danilevsky’s Algorithm – Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -176,7 +174,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -186,7 +184,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -538,28 +536,20 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
+<!-- Math shortcuts we sometimes use in the documentation -->
 <div class="hidden">
 <p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\newcommand{\mod}[2]{ {#1 \, \mathrm{mod} \, #2}}
 \]</span></p>
 </div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
 <p><a href="http://web.tecnico.ulisboa.pt/~mcasquilho/compute/com/,eigen/FaddeevaDanil.pdf">Danilevsky’s algorithm</a> is a method to compute the coefficients of the <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial">characteristic polynomial</a> for a square matrix.</p>
 <p>It isn’t well known, so we review how it works for real-valued matrices.</p>
-<p>We then go on to explain how it applies explicitly to bit-matrices, i.e., matrices over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1 where addition/subtraction and multiplication/division operations are all done mod two which keeps everything closed in the set <span class="math inline">\(\{0,1\}\)</span>.</p>
+<p>We then go on to explain how it applies explicitly to bit-matrices, i.e., matrices over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, the simplest [Galois field] with just two elements 0 &amp; 1 where addition/subtraction and multiplication/division operations are all done mod two which keeps everything closed in the set <span class="math inline">\(\{0,1\}\)</span>.</p>
 </section>
 <section id="characteristic-polynomials" class="level2">
 <h2 class="anchored" data-anchor-id="characteristic-polynomials">Characteristic Polynomials</h2>
@@ -653,13 +643,13 @@ Note
 <p>You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row. That is the version seen in some expositions.</p>
 </div>
 </div>
-<p><span class="math inline">\(C\)</span> is a “companion” for the polynomial <span class="math inline">\(c(\lambda)\)</span> and is known as a <a href="https://en.wikipedia.org/wiki/Companion_matrix">companion matrix</a>.</p>
+<p><span class="math inline">\(C\)</span> is a “companion” for the polynomial <span class="math inline">\(c(\lambda)\)</span> and is known as a {companion-matrix.</p>
 <section id="frobenius-form" class="level3">
 <h3 class="anchored" data-anchor-id="frobenius-form">Frobenius Form</h3>
 <p>First, note that you can create many others once you have a matrix (like the <span class="math inline">\(C\)</span> above) with the desired characteristic polynomial. The reason is that <a href="https://en.wikipedia.org/wiki/Matrix_similarity">similar matrices</a> all have the same characteristic polynomial. So if <span class="math inline">\(M\)</span> is any invertible <span class="math inline">\(n \times n\)</span> matrix, then <span class="math inline">\(M^{-1} \cdot C \cdot M\)</span> will have the same characteristic polynomial as <span class="math inline">\(C\)</span>.</p>
 <p>Now let <span class="math inline">\(A\)</span> be an arbitrary <span class="math inline">\(n \times n\)</span> matrix.</p>
 <p>A natural question then is whether you can find some invertible <span class="math inline">\(M\)</span> such that <span class="math inline">\(C = M^{-1} \cdot A \cdot M\)</span> is in <a href="https://en.wikipedia.org/wiki/Companion_matrix">companion matrix</a> form. If so, you can read the characteristic polynomial coefficients for <span class="math inline">\(A\)</span> off the top row of <span class="math inline">\(C\)</span>.</p>
-<p>Generally, this isn’t quite possible, but instead, you can always get to <a href="https://encyclopediaofmath.org/wiki/Frobenius_matrix">Frobenius form</a>. A Frobenius form matrix is block-diagonal, where each block is a <a href="https://en.wikipedia.org/wiki/Companion_matrix">companion matrix</a>.</p>
+<p>Generally, this isn’t quite possible, but instead, you can always get to <a href="https://encyclopediaofmath.org/wiki/Frobenius_matrix">Frobenius form</a>. A Frobenius form matrix is block-diagonal, where each block is a {companion-matrix.</p>
 <p>So there is always some <span class="math inline">\(M\)</span> such that <span class="math display">\[
 A = M^{-1} \cdot F \cdot M.
 \]</span> And the matrix <span class="math inline">\(F\)</span> has the block-diagonal form <span class="math display">\[
@@ -670,7 +660,7 @@ C_0 &amp; 0   &amp; 0 &amp; \ldots &amp; 0 &amp; 0 \\
     &amp;     &amp;   &amp; \ldots         \\
 0   &amp; 0   &amp; 0 &amp; \ldots &amp; 0 &amp; C_{k-1}
 \end{bmatrix}
-\]</span> and each of the <span class="math inline">\(k\)</span> diagonal blocks is a <a href="https://en.wikipedia.org/wiki/Companion_matrix">companion matrix</a>.</p>
+\]</span> and each of the <span class="math inline">\(k\)</span> diagonal blocks is a {companion-matrix.</p>
 <p>You can read off the coefficients of each block to get a set of characteristic polynomials <span class="math inline">\(c_i(\lambda)\)</span> for <span class="math inline">\(i = 0, \ldots, k-1\)</span>. Then the characteristic polynomial of <span class="math inline">\(F\)</span> and hence by similarity, <span class="math inline">\(A\)</span> is just: <span class="math display">\[
 c(\lambda) = \prod_{i = 0}^{k-1} c_i(\lambda).
 \]</span></p>
@@ -832,7 +822,7 @@ c_{A_3}(x) = 1 + a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-There are no badly conditioned matrices in <span class="math inline">\(\FF\)</span>
+There are no badly conditioned matrices in <span class="math inline">\(\mathbb{F}_2\)</span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -843,7 +833,7 @@ There are no badly conditioned matrices in <span class="math inline">\(\FF\)</sp
 </section>
 <section id="danilevsky-for-bit-matrices" class="level2">
 <h2 class="anchored" data-anchor-id="danilevsky-for-bit-matrices">Danilevsky for Bit-Matrices</h2>
-<p>In the case of bit-matrices, or in more formal math-speak, matrices with elements in <span class="math inline">\(\FF\)</span>, the input matrix <span class="math inline">\(A\)</span> is all zeros or ones. Moreover, the usual addition and multiplication operators are performed modulo 2 so everything remains in the limited set <span class="math inline">\(\{0,1\}\)</span>. In <span class="math inline">\(\mathbb{F_2}\)</span> we can replace addition with the logical XOR operator and multiplication with the logical AND operator.</p>
+<p>In the case of bit-matrices, or in more formal math-speak, matrices with elements in <span class="math inline">\(\mathbb{F}_2\)</span>, the input matrix <span class="math inline">\(A\)</span> is all zeros or ones. Moreover, the usual addition and multiplication operators are performed modulo 2 so everything remains in the limited set <span class="math inline">\(\{0,1\}\)</span>. In <span class="math inline">\(\mathbb{F_2}\)</span> we can replace addition with the logical XOR operator and multiplication with the logical AND operator.</p>
 <p>Note that in <span class="math inline">\(\mathbb{F_2}\)</span> we have <span class="math inline">\(1+1 = 2 \rightarrow 0\)</span> so the additive inverse of 1 is 1. And of course as usual, the additive inverse of 0 is 0. This means that in <span class="math inline">\(\mathbb{F_2}\)</span> negation is a no-op and any term like <span class="math inline">\(-b\)</span> can just be replaced with <span class="math inline">\(b\)</span>.</p>
 <p>We always have <span class="math inline">\(1 * 1 = 1\)</span> so the multiplicative inverse of <span class="math inline">\(1\)</span> is just <span class="math inline">\(1\)</span>. Also just like <span class="math inline">\(\mathbb{R}\)</span>, the element <span class="math inline">\(0\)</span> has no multiplicative inverse in <span class="math inline">\(\mathbb{F_2}\)</span> either — you still cannot divide by zero. This means that if <span class="math inline">\(a, b \in \mathbb{F_2}\)</span> then a term like <span class="math inline">\(a/b\)</span> makes no sense if <span class="math inline">\(b=0\)</span> but otherwise <span class="math inline">\(a/b = a\)</span>.</p>
 <p>Let’s reconsider that very first step we took above to move our matrix <span class="math inline">\(A\)</span> closer to Frobenius form. That involved finding a matrix <span class="math inline">\(M\)</span> such that <span class="math inline">\(B = A \cdot M\)</span> had its final row in the required format.</p>
@@ -918,7 +908,7 @@ Recursion is to be expected here
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In <span class="math inline">\(\FF\)</span> any matrix element can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. Therefore, all things being equal, you’d expect to have to perform the recursive fourth step half the time.</p>
+<p>In <span class="math inline">\(\mathbb{F}_2\)</span> any matrix element can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. Therefore, all things being equal, you’d expect to have to perform the recursive fourth step half the time.</p>
 </div>
 </div>
 
@@ -947,6 +937,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1363,12 +1497,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/danilevsky.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1377,13 +1508,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/danilevsky.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
     <script type="text/javascript">

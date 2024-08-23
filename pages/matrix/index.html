@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The bit::matrix Class – Working in GF(2)</title>
+<title>The bit::matrix Class – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,10 +70,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -141,14 +143,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="The bit::matrix Class – Working in GF(2)">
+<meta property="og:title" content="The bit::matrix Class – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/matrix/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="The bit::matrix Class – Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/matrix/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -207,7 +205,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -217,7 +215,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -576,30 +574,13 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
-<div class="hidden">
-<p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
-\newcommand{\R}{\mathbb{R}}
-\]</span></p>
-</div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>A <code>bit::matrix</code> represents a matrix over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\FF\)</span>) the simplest <em>Galois</em> field that has just two elements usually denoted 0 &amp; 1, or as booleans–true &amp; false, or as bits–set &amp; unset.</p>
-<p>Arithmetic in <span class="math inline">\(\FF\)</span> is mod 2, which means that addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
+<p>A <code>bit::matrix</code> represents a matrix over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\mathbb{F}_2\)</span>) the simplest <em>Galois</em> field that has just two elements usually denoted 0 &amp; 1, or as booleans–true &amp; false, or as bits–set &amp; unset.</p>
+<p>Arithmetic in <span class="math inline">\(\mathbb{F}_2\)</span> is mod 2, which means that addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
 <p>We often refer to an object of the type <code>bit::matrix</code> as a <em>bit-matrix</em>. It is a matrix where all the elements are 0 or 1, and arithmetic is mod 2.</p>
 <p>A <code>bit::matrix</code> is stored in <em>row-major mode</em> where each row is a single <a href="../../pages/vector/index.html"><code>bit::vector</code></a>. Thus, arranging computations to work row by row instead of column by column is typically much more efficient. Primarily, you will be using higher-level methods and functions that consider this.</p>
-<p>The aim is to facilitate efficient linear algebra over <span class="math inline">\(\FF\)</span> where the bit-vector class is <a href="../../pages/vector/index.html"><code>bit::vector</code></a>.</p>
+<p>The aim is to facilitate efficient linear algebra over <span class="math inline">\(\mathbb{F}_2\)</span> where the bit-vector class is <a href="../../pages/vector/index.html"><code>bit::vector</code></a>.</p>
 <p>This bit-matrix class is a <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a> of rows where each row is a single bit-vector. If, instead, the primary aim was to minimize storage, one would store the bit-matrix as a single long bit-vector with appropriate index operations. However, in that case, matrix operations would often need to be done element-by-element, which is much slower than doing things block-by-block, as we do here.</p>
 <p>Like bit-vectors, bit-matrices are sized dynamically at runtime, with the row elements packed into blocks of some unsigned integral type. That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type in some scenarios).</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -845,7 +826,7 @@ Use a single <code>Block</code> type throughout your code!
 <td>Check if any bit-matrix elements are set.</td>
 </tr>
 <tr class="even">
-<td><a href="../../pages/matrix/all.html"><code>matrix::all</code></a></td>
+<td><a href="../../pages/matrix/all.html"><code>matrix::none</code></a></td>
 <td>Check that none of the bit-matrix elements are set.</td>
 </tr>
 <tr class="odd">
@@ -869,12 +850,20 @@ Use a single <code>Block</code> type throughout your code!
 <td>Returns a bit-matrix that is a copy of the lower triangular part of this bit-matrix.</td>
 </tr>
 <tr class="even">
+<td><a href="../../pages/matrix/triangle.html"><code>matrix::strictly_lower</code></a></td>
+<td>Returns a bit-matrix that is a copy of the strictly lower triangular part of this bit-matrix.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../pages/matrix/triangle.html"><code>matrix::unit_lower</code></a></td>
+<td>Returns a bit-matrix that is a copy of the lower triangular part of this bit-matrix but with ones on the diagonal.</td>
+</tr>
+<tr class="even">
 <td><a href="../../pages/matrix/triangle.html"><code>matrix::upper</code></a></td>
 <td>Returns a bit-matrix that is a copy of the upper triangular part of this bit-matrix.</td>
 </tr>
 <tr class="odd">
-<td><a href="../../pages/matrix/triangle.html"><code>matrix::strictly_lower</code></a></td>
-<td>Returns a bit-matrix that is a copy of the strictly lower triangular part of this bit-matrix.</td>
+<td><a href="../../pages/matrix/triangle.html"><code>matrix::unit_upper</code></a></td>
+<td>Returns a bit-matrix that is a copy of the upper triangular part of this bit-matrix but with ones on the diagonal.</td>
 </tr>
 <tr class="even">
 <td><a href="../../pages/matrix/triangle.html"><code>matrix::strictly_upper</code></a></td>
@@ -983,7 +972,7 @@ Use a single <code>Block</code> type throughout your code!
 <td>Swap two columns.</td>
 </tr>
 <tr class="even">
-<td><a href="../../pages/matrix/transpose.html"><code>matrix::transpose</code></a></td>
+<td><a href="../../pages/matrix/transpose.html"><code>matrix::to_transpose</code></a></td>
 <td>Transpose a <em>square</em> bit-matrix in-place.</td>
 </tr>
 <tr class="odd">
@@ -1003,76 +992,80 @@ Use a single <code>Block</code> type throughout your code!
 <td>Flips the 1 values to 0 and vice versa.</td>
 </tr>
 <tr class="odd">
+<td><a href="../../pages/matrix/set.html"><code>matrix::flip_diagonal</code></a></td>
+<td>Flips the <em>diagonal</em> 1 values to 0 and vice versa.</td>
+</tr>
+<tr class="even">
 <td><a href="../../pages/matrix/set.html"><code>matrix::set_diagonal</code></a></td>
 <td>Sets all the diagonal elements to 1.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/set.html"><code>matrix::reset_diagonal</code></a></td>
 <td>Sets all the diagonal elements to 0.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/set_if.html"><code>matrix::set_if</code></a></td>
 <td>Sets the values in a bit-matrix based on the return value from a function of each element index-pair.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/set_if.html"><code>matrix::flip_if</code></a></td>
 <td>Flips the values in a bit-matrix based on the return value from a function of each element index-pair.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator&amp;=</code></a></td>
 <td>In-place element-by-element logical <code>AND</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator^=</code></a></td>
 <td>In-place element-by-element logical <code>XOR</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator|=</code></a></td>
 <td>In-place element-by-element logical <code>OR</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator-=</code></a></td>
 <td>In-place element-by-element logical <code>DIFF</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator~</code></a></td>
 <td>Flip all the elements in this bit-matrix.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator+=</code></a></td>
 <td>In-place element-by-element logical <code>XOR</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator-=</code></a></td>
 <td>In-place element-by-element logical <code>XOR</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/logical-op-eq.html"><code>matrix::operator*=</code></a></td>
 <td>In-place element-by-element logical <code>AND</code> between this bit-matrix and another of equal dimensions.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/shift.html"><code>matrix::operator&lt;&lt;=</code></a></td>
 <td>In-place left shift of the <em>rows</em> in this bit-matrix.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/shift.html"><code>matrix::operator&gt;&gt;=</code></a></td>
 <td>In-place right shift of the <em>rows</em> in this bit-matrix.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/shift.html"><code>matrix::operator&lt;&lt;</code></a></td>
 <td>Returns a copy of this bit-matrix where the <em>rows</em> are all left shifted.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/shift.html"><code>matrix::operator&gt;&gt;</code></a></td>
 <td>Returns a copy of this bit-matrix where the <em>rows</em> are all right shifted.</td>
 </tr>
-<tr class="odd">
-<td><a href="../../pages/matrix/echelon.html"><code>matrix::to_echelon_form</code></a></td>
-<td>Changes this bit-matrix in place to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">row-echelon form</a>.</td>
-</tr>
 <tr class="even">
+<td><a href="../../pages/matrix/echelon.html"><code>matrix::to_echelon_form</code></a></td>
+<td>Changes this bit-matrix in place to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">row echelon form</a>.</td>
+</tr>
+<tr class="odd">
 <td><a href="../../pages/matrix/echelon.html"><code>matrix::to_reduced_echelon_form</code></a></td>
-<td>Changes this bit-matrix in place to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row-echelon form</a>.</td>
+<td>Changes this bit-matrix in place to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row echelon form</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -1154,13 +1147,13 @@ Use a single <code>Block</code> type throughout your code!
 </colgroup>
 <thead>
 <tr class="header">
-<th>Macro</th>
+<th>Method</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="../../pages/verify/index.html"><code>BIT_VERIFY</code></a></td>
+<td><a href="../../pages/verify/index.html"><code>bit_verify</code></a></td>
 <td>This compile-time flag enables extra safety checks.</td>
 </tr>
 <tr class="even">
@@ -1221,51 +1214,59 @@ Use a single <code>Block</code> type throughout your code!
 </tr>
 <tr class="odd">
 <td><a href="../../pages/matrix/append.html"><code>matrix::append</code></a></td>
-<td>Returns an augmented bit-matrix by copying one input and then appending columns from a bit-vector or another bit-matrix on the right of that.</td>
+<td>Appends this bit-matrix by adding columns from a bit-vector or another bit-matrix on the right.</td>
 </tr>
 <tr class="even">
+<td><a href="../../pages/matrix/append.html"><code>matrix::join</code></a></td>
+<td>Returns an augmented bit-matrix by copying one input and then appending columns from a bit-vector or another bit-matrix on the right of that.</td>
+</tr>
+<tr class="odd">
 <td><a href="../../pages/matrix/transpose.html"><code>matrix::transpose</code></a></td>
 <td>Returns the transpose of an arbitrary rectangular bit-matrix as a new bit-matrix.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/pow.html"><code>matrix::pow</code></a></td>
 <td>Raises a square bit-matrix to a power <span class="math inline">\(n\)</span>.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/pow.html"><code>matrix::pow2</code></a></td>
 <td>Raises a square bit-matrix to a power <span class="math inline">\(2^n\)</span>.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/invert.html"><code>matrix::invert</code></a></td>
 <td>Attempts to return the inverse of a square bit-matrix.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/echelon.html"><code>matrix::echelon_form</code></a></td>
 <td>Returns the {row-echelon} form of an arbitrary bit-matrix.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/echelon.html"><code>matrix::reduced_echelon_form</code></a></td>
 <td>Returns the <em>reduced</em> {row-echelon} form of an arbitrary bit-matrix.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/characteristic_polynomial.html"><code>matrix::characteristic_polynomial</code></a></td>
 <td>Returns the coefficients of the characteristic polynomial of a square bit-matrix.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/companion.html"><code>matrix::compact_frobenius_form</code></a></td>
 <td>Returns the companion matrices that are the diagonal blocks in the <a href="https://encyclopediaofmath.org/wiki/Frobenius_matrix">Frobenius form</a> of a square bit-matrix.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/print.html"><code>matrix::print</code></a></td>
 <td>Prints multiple bit-matrices or a bit-matrix with potentially multiple bit-vectors side by side to a stream.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/matrix/stream.html"><code>matrix::stream&lt;&lt;</code></a></td>
 <td>Stream input for bit-matrices</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/matrix/stream.html"><code>matrix::stream&gt;&gt;</code></a></td>
 <td>Stream output for bit-matrices</td>
+</tr>
+<tr class="even">
+<td><a href="../../pages/matrix/formatter.html"><code>matrix::formatter</code></a></td>
+<td>Connect the <code>bit::matrix</code> class to <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a> and friends.</td>
 </tr>
 </tbody>
 </table>
@@ -1301,6 +1302,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1714,12 +1859,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/matrix/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1728,13 +1870,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/matrix/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
 

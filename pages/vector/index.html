@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The bit::vector Class – Working in GF(2)</title>
+<title>The bit::vector Class – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,10 +70,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -141,14 +143,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="The bit::vector Class – Working in GF(2)">
+<meta property="og:title" content="The bit::vector Class – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="The bit::vector Class – Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/vector/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -207,7 +205,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -217,7 +215,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -575,32 +573,15 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
-<div class="hidden">
-<p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
-\newcommand{\R}{\mathbb{R}}
-\]</span></p>
-</div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>A <a href="../../pages/vector/index.html"><code>bit::vector</code></a> represents a vector over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\FF\)</span>) the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois Field</a> with just two elements usually denoted 0 &amp; 1, as the booleans true &amp; false, or as the bits set &amp; unset. Arithmetic over <span class="math inline">\(\FF\)</span> is mod 2, so addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
+<p>A <a href="../../pages/vector/index.html"><code>bit::vector</code></a> represents a vector over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> (also known as <span class="math inline">\(\mathbb{F}_2\)</span>) the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois Field</a> with just two elements usually denoted 0 &amp; 1, as the booleans true &amp; false, or as the bits set &amp; unset. Arithmetic over <span class="math inline">\(\mathbb{F}_2\)</span> is mod 2, so addition/subtraction becomes the <code>XOR</code> operation while multiplication/division becomes <code>AND</code>.</p>
 <p>The <code>bit::vector</code> class is a hybrid between a <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a> and a <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, along with extra mathematical features to facilitate linear algebra.</p>
 <p>We often refer to a <code>bit::vector</code> object as a <em>bit-vector</em>.</p>
-<p>One can dynamically size and resize a <code>bit::vector</code> as needs dictate. A <code>std::bitset</code>, on the other hand, has a <em>fixed</em> size determined at compile time. <em>Boost</em> has a <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a> class that allows for runtime resizing, as its name suggests. However, that class does not support algebraic operations.</p>
+<p>One can dynamically size and resize a <code>bit::vector</code> as needs dictate. A <code>std::bitset</code>, on the other hand, has a <em>fixed</em> size determined at compile time. <em>Boost</em> has a [<code>boost::dynamic_bitset</code>] class that allows for runtime resizing, as its name suggests. However, that class does not support algebraic operations.</p>
 <p>It is worth noting that by default, a <code>bit::vector</code> prints in <em>vector-order</em>. For example, a bit-vector of size four will print as <span class="math inline">\(v_0 v_1 v_2 v_3\)</span> with the elements in increasing order with the least significant vector element, <span class="math inline">\(v_0\)</span>, coming <strong>first</strong> on the <em>left</em>. Contrast that to a <code>std::bitset</code>, which always prints in <em>bit-order</em>. The equivalent <code>std::bitset</code> with four elements prints as <span class="math inline">\(b_3 b_2 b_1 b_0\)</span> with the least significant bit <span class="math inline">\(b_0\)</span> printed <strong>last</strong> on the <em>right</em>.</p>
 <p>Of course, for many applications, printing in <em>bit-order</em> makes perfect sense. A size four bit-vector initialized with the hex number <code>0x1</code> will print as <code>1000</code>. A <code>std::bitset</code> prints the same value as <code>0001</code>, which will be more natural in <em>some</em> settings. For this reason, <code>bit::vector</code> also supports conversions to a string in <em>bit-order</em>, though it is not the default.</p>
-<p>It isn’t the default because our main aim here is linear algebra. In particular, bit-order is unnatural for <em>matrices</em> over <span class="math inline">\(\FF\)</span>. It is too confusing to print a matrix in anything but the natural order with the (0,0) element at the top left and proceed from there.</p>
+<p>It isn’t the default because our main aim here is linear algebra. In particular, bit-order is unnatural for <em>matrices</em> over <span class="math inline">\(\mathbb{F}_2\)</span>. It is too confusing to print a matrix in anything but the natural order with the (0,0) element at the top left and proceed from there.</p>
 <p>A <code>bit::vector</code> packs its elements into an array of some unsigned integer type defined by the class template parameter <code>Block</code>. The default <code>Block</code> is an unsigned 64-bit word. Most of the methods defined in the <code>bit::vector</code> class operate on whole blocks simultaneously, so they are very efficient.</p>
 </section>
 <section id="declaration" class="level2">
@@ -1119,10 +1100,6 @@ Use a single <code>Block</code> type throughout your code!
 <td>Returns a compact hex string representation of the bit-vector.</td>
 </tr>
 <tr class="odd">
-<td><a href="../../pages/vector/to_string.html"><code>vector::polynomial</code></a></td>
-<td>Interprets the elements of a bit-vector as the coefficients of a polynomial over <span class="math inline">\(\FF\)</span> and returns a string representation of that polynomial.</td>
-</tr>
-<tr class="even">
 <td><a href="../../pages/vector/description.html"><code>vector::description</code></a></td>
 <td>Writes some descriptive data about the bit-vector to a stream.</td>
 </tr>
@@ -1242,7 +1219,7 @@ Use a single <code>Block</code> type throughout your code!
 </section>
 <section id="debugging" class="level3">
 <h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
-<p>You can set a compile-time flag <a href="../../pages/verify/index.html"><code>BIT_VERIFY</code></a> to enable range checking and other assertions. These checks can have a substantial performance impact so typically are only used during development.</p>
+<p>You can set a compile-time flag <a href="../../pages/verify/index.html"><code>bit_verify</code></a> to enable range checking and other assertions. These checks can have a substantial performance impact so typically are only used during development.</p>
 <div class="table-responsive">
 <table class="table-bordered table-striped table-hover caption-top table">
 <colgroup>
@@ -1257,7 +1234,7 @@ Use a single <code>Block</code> type throughout your code!
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="../../pages/verify/index.html"><code>BIT_VERIFY</code></a></td>
+<td><a href="../../pages/verify/index.html"><code>bit_verify</code></a></td>
 <td>This compile-time flag enables extra safety checks at the cost of performance.</td>
 </tr>
 <tr class="even">
@@ -1301,42 +1278,38 @@ Use a single <code>Block</code> type throughout your code!
 <td>Returns the convolution of two bit-vectors.</td>
 </tr>
 <tr class="odd">
-<td><a href="../../pages/vector/to_string.html"><code>vector::polynomial</code></a></td>
-<td>Interprets the elements of a bit-vector as the coefficients of a polynomial over <span class="math inline">\(\FF\)</span> and returns a string representation of that polynomial.</td>
-</tr>
-<tr class="even">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator&amp;</code></a></td>
 <td>Element-by-element logical <code>AND</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator^</code></a></td>
 <td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator|</code></a></td>
 <td>Element-by-element logical <code>OR</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator+</code></a></td>
 <td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator-</code></a></td>
 <td>Element-by-element logical <code>XOR</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/vector/logical-op.html"><code>vector::operator*</code></a></td>
 <td>Element-by-element logical <code>AND</code> between two equal-sized bit-vectors.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/vector/stream.html"><code>vector::stream&lt;&lt;</code></a></td>
 <td>Stream input for bit-vectors.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../../pages/vector/stream.html"><code>vector::stream&gt;&gt;</code></a></td>
 <td>Stream output for bit-vectors.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../../pages/vector/formatter.html"><code>vector::formatter</code></a></td>
 <td>Connect the <code>bit::vector</code> class to <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a> and friends.</td>
 </tr>
@@ -1368,6 +1341,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1781,12 +1898,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1795,13 +1909,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/vector/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working in GF(2)</title>
+<title>Working in GF(2) – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -37,10 +37,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
 <link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -110,14 +112,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Working in GF(2)">
+<meta property="og:title" content="Working in GF(2) – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/notes/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -176,7 +174,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -186,7 +184,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -502,7 +500,7 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#some-things-are-different" id="toc-some-things-are-different" class="nav-link" data-scroll-target="#some-things-are-different">Some things are different!</a></li>
   <li><a href="#some-things-are-simpler" id="toc-some-things-are-simpler" class="nav-link" data-scroll-target="#some-things-are-simpler">Some things are simpler</a></li>
-  <li><a href="#gaussian-elimination-in-ff" id="toc-gaussian-elimination-in-ff" class="nav-link" data-scroll-target="#gaussian-elimination-in-ff">Gaussian Elimination in <span class="math inline">\(\FF\)</span></a></li>
+  <li><a href="#gaussian-elimination-in-f2" id="toc-gaussian-elimination-in-f2" class="nav-link" data-scroll-target="#gaussian-elimination-in-f2">Gaussian Elimination in <span class="math inline">\(\mathbb{F}_2\)</span></a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/gf2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -528,27 +526,19 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
+<!-- Math shortcuts we sometimes use in the documentation -->
 <div class="hidden">
 <p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\newcommand{\mod}[2]{ {#1 \, \mathrm{mod} \, #2}}
 \]</span></p>
 </div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p><code>bit</code> is a header-only C++ library that provides classes for bit-vectors and bit-matrices.</p>
-<p>In the jargon of professional mathematics, the classes make it possible to perform linear algebra over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. In <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, also commonly known as <span class="math inline">\(\FF\)</span>, addition/subtraction and multiplication/division operations are all done mod two, which keeps everything closed in the set {0,1}.</p>
+<p>In the jargon of professional mathematics, the classes make it possible to perform linear algebra over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, the simplest [Galois field] with just two elements 0 &amp; 1. In <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>, also commonly known as <span class="math inline">\(\mathbb{F}_2\)</span>, addition/subtraction and multiplication/division operations are all done mod two, which keeps everything closed in the set {0,1}.</p>
 <p>This document contains some technical notes on the joys and travails of mathematics using vectors and matrices where the elements are all just zeros and ones and where all arithmetic is mod 2.</p>
 </section>
 <section id="some-things-are-different" class="level2">
@@ -557,11 +547,11 @@ window.Quarto = {
 If <span class="math inline">\(\mathbf{x}\)</span> is a vector over <span class="math inline">\(\R\)</span> then <span class="math display">\[
 \mathbf{x} \cdot \mathbf{x} = 0 \iff \mathbf{x} = \mathbf{0},
 \]</span> Put another way, the only vector of size 0 over <span class="math inline">\(\R\)</span> is the zero vector.</p>
-<p>That is <em>not</em> true for vectors over <span class="math inline">\(\FF\)</span>.</p>
-<p>For example, if <span class="math inline">\(\mathbf{v} = \{1, 1\}\)</span> is thought of as a vector over <span class="math inline">\(\FF\)</span> then <span class="math display">\[
+<p>That is <em>not</em> true for vectors over <span class="math inline">\(\mathbb{F}_2\)</span>.</p>
+<p>For example, if <span class="math inline">\(\mathbf{v} = \{1, 1\}\)</span> is thought of as a vector over <span class="math inline">\(\mathbb{F}_2\)</span> then <span class="math display">\[
 \mathbf{v} \cdot \mathbf{v} = \{1, 1\} \cdot \{1, 1\} = 1 + 1 = 2 \rightarrow 0 \text{ mod 2}.
 \]</span> So <span class="math inline">\(\mathbf{v}\)</span> is non-zero but self-orthogonal.</p>
-<p>Let <span class="math inline">\(\mathbf{v}\)</span> be a general <span class="math inline">\(n\)</span>-dimensional vector over <span class="math inline">\(\FF\)</span> then <span class="math display">\[
+<p>Let <span class="math inline">\(\mathbf{v}\)</span> be a general <span class="math inline">\(n\)</span>-dimensional vector over <span class="math inline">\(\mathbb{F}_2\)</span> then <span class="math display">\[
 \mathbf{v} \cdot \mathbf{v} = v_1 v_1 + v_2 v_2 + \cdots v_n v_n.
 \]</span> Now <span class="math display">\[
 v_i v_i =
@@ -571,13 +561,13 @@ v_i v_i =
     \end{cases}
 \]</span> It follows that <span class="math display">\[
 \mathbf{v} \cdot \mathbf{v} = v_1 + v_2 + \cdots v_n,
-\]</span> where of course those additions in <span class="math inline">\(\FF\)</span> are done modulo 2. Hence <span class="math display">\[
+\]</span> where of course those additions in <span class="math inline">\(\mathbb{F}_2\)</span> are done modulo 2. Hence <span class="math display">\[
 \mathbf{v} \cdot \mathbf{v} =
     \begin{cases}
         0 &amp; \text{if the number of ones in the vector is even}, \\
         1 &amp; \text{if the number of ones in the vector is odd}.
     \end{cases}
-\]</span> Half of all vectors over <span class="math inline">\(\FF\)</span> will be self-orthogonal!</p>
+\]</span> Half of all vectors over <span class="math inline">\(\mathbb{F}_2\)</span> will be self-orthogonal!</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -588,7 +578,7 @@ Gram-Schmidt doesn’t work
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Some of the best-known algorithms for linear algebra over <span class="math inline">\(\R\)</span> rely on <a href="https://en.wikipedia.org/wiki/Gram–Schmidt_process">Gram-Schmidt</a>. A critical step in Gram-Schmidt is to <em>normalize</em> a vector by simply <em>dividing</em> each element by the norm <span class="math inline">\(\lVert \mathbf{x}  \rVert = \sqrt{\mathbf{x} \cdot \mathbf{x}}\)</span>. However, this will never work in <span class="math inline">\(\FF\)</span> as that norm will be zero 50% of the time. All those algorithms must be modified to work for vectors and matrices over <span class="math inline">\(\FF\)</span>.</p>
+<p>Some of the best-known algorithms for linear algebra over <span class="math inline">\(\R\)</span> rely on <a href="https://en.wikipedia.org/wiki/Gram–Schmidt_process">Gram-Schmidt</a>. A critical step in Gram-Schmidt is to <em>normalize</em> a vector by simply <em>dividing</em> each element by the norm <span class="math inline">\(\lVert \mathbf{x}  \rVert = \sqrt{\mathbf{x} \cdot \mathbf{x}}\)</span>. However, this will never work in <span class="math inline">\(\mathbb{F}_2\)</span> as that norm will be zero 50% of the time. All those algorithms must be modified to work for vectors and matrices over <span class="math inline">\(\mathbb{F}_2\)</span>.</p>
 </div>
 </div>
 </section>
@@ -612,8 +602,8 @@ Add one row to another row.
 </dd>
 </dl>
 <hr>
-<p>However, in <span class="math inline">\(\FF\)</span>, the only non-zero scalar is one, and addition is the same as subtraction, so for matrices over <span class="math inline">\(\FF\)</span>, there are just <em>two</em> elementary row operations:</p>
-<p><span class="bt">Elementary Row Operations for <span class="math inline">\(\FF\)</span></span></p>
+<p>However, in <span class="math inline">\(\mathbb{F}_2\)</span>, the only non-zero scalar is one, and addition is the same as subtraction, so for matrices over <span class="math inline">\(\mathbb{F}_2\)</span>, there are just <em>two</em> elementary row operations:</p>
+<p><span class="bt">Elementary Row Operations for <span class="math inline">\(\mathbb{F}_2\)</span></span></p>
 <dl>
 <dt>swap rows:</dt>
 <dd>
@@ -626,10 +616,10 @@ Add one row to another row.
 </dl>
 <hr>
 </section>
-<section id="gaussian-elimination-in-ff" class="level2">
-<h2 class="anchored" data-anchor-id="gaussian-elimination-in-ff">Gaussian Elimination in <span class="math inline">\(\FF\)</span></h2>
-<p>Suppose that <span class="math inline">\(A\)</span> is an <span class="math inline">\(n \times n\)</span> matrix over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(b\)</span> is a compatibly sized bit-vector where we are interested in finding an <span class="math inline">\(x\)</span> satisfying <span class="math inline">\(A \cdot x = b\)</span>. Then the pseudocode for Gaussian elimination looks like:</p>
-<div id="alg-ge" class="pseudocode-container quarto-float" data-no-end="false" data-line-number-punc=":" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-line-number="true" data-pseudocode-number="1" data-indent-size="1.2em">
+<section id="gaussian-elimination-in-f2" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-elimination-in-f2">Gaussian Elimination in <span class="math inline">\(\mathbb{F}_2\)</span></h2>
+<p>Suppose that <span class="math inline">\(A\)</span> is an <span class="math inline">\(n \times n\)</span> matrix over <span class="math inline">\(\mathbb{F}_2\)</span> and <span class="math inline">\(b\)</span> is a compatibly sized bit-vector where we are interested in finding an <span class="math inline">\(x\)</span> satisfying <span class="math inline">\(A \cdot x = b\)</span>. Then the pseudocode for Gaussian elimination looks like:</p>
+<div id="alg-ge" class="pseudocode-container quarto-float" data-no-end="false" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-indent-size="1.2em">
 <div class="pseudocode">
 \begin{algorithm} \caption{Gaussian Elimination in $F_2$} \begin{algorithmic} \Procedure{Solve}{$A, b, n$} \For {$j = 0$ \To $n - 1$} \State $s = j$ \While {$A(s,j) = 0$} \State $s = s + 1$ \EndWhile \If {$s &gt; n$} \Continue \EndIf \If {$ s \ne j$} \State swap rows $s$ and $j$ in the matrix $A$ \State swap elements $s$ and $j$ in the vector $b$ \EndIf \For {$i = j+1$ \To $n$} \If {$A(i,j) == 1$} \State replace row $i$ in $A$ with the sum of rows $i$ and $j$ \State replace element $i$ in $b$ with the sum of elements $i$ and $j$ \EndIf \EndFor \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
@@ -659,6 +649,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1075,12 +1209,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/gf2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1089,13 +1220,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/notes/gf2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
     <script type="text/javascript">

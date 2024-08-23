@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The bitLibrary – Working in GF(2)</title>
+<title>The bitLibrary – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,10 +69,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -140,14 +142,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="The bitLibrary – Working in GF(2)">
+<meta property="og:title" content="The bitLibrary – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="The bitLibrary – Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -206,7 +204,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -216,7 +214,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -530,8 +528,8 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#why-use-bit" id="toc-why-use-bit" class="nav-link" data-scroll-target="#why-use-bit">Why Use <code>bit</code>?</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a>
   <ul class="collapse">
@@ -563,38 +561,77 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
-<div class="hidden">
-<p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
-\newcommand{\R}{\mathbb{R}}
-\]</span></p>
-</div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\FF\)</span>, the simplest <a href="https://en.wikipedia.org/wiki/Finite_field">Galois field</a> with just two elements 0 &amp; 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.</p>
-<p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="../pages/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="../pages/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="../pages/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\FF\)</span>.</p>
+<p><code>bit</code> is a header-only C++ library for numerical work in <em>bit-space</em> which mathematicians call <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a> or <span class="math inline">\(\mathbb{F}_2\)</span>. This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.</p>
+<p>The library provides vector and matrix classes for performing linear algebra in bit-space. The <a href="../pages/vector/index.html"><code>bit::vector</code></a> class represents <em>bit_vectors</em>, and the <a href="../pages/matrix/index.html"><code>bit::matrix</code></a> class represents <em>bit-matrices</em>. The library also has a <a href="../pages/polynomial/index.html"><code>bit::polynomial</code></a> class to represent <em>bit-polynomials</em> over <span class="math inline">\(\mathbb{F}_2\)</span>.</p>
 <p>These classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.</p>
-<p>Because arithmetic operations in <span class="math inline">\(\FF\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
-<p>The <code>bit</code> library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over <span class="math inline">\(\FF\)</span> and to look at the eigen-structure of bit-matrices. The <code>bit::polynomial</code> class has methods to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\FF\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
+<p>Because arithmetic operations in <span class="math inline">\(\mathbb{F}_2\)</span> are mod 2, addition/subtraction becomes the <code>XOR</code> operation, and multiplication/division becomes the <code>AND</code> operation. The <code>bit</code> library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.</p>
+<p>The <code>bit</code> library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over <span class="math inline">\(\mathbb{F}_2\)</span> and to look at the eigen-structure of bit-matrices. The <code>bit::polynomial</code> class has methods to compute <span class="math inline">\(x^N\bmod{P(x)}\)</span> where <span class="math inline">\(P(x)\)</span> is a polynomial over <span class="math inline">\(\mathbb{F}_2\)</span> and <span class="math inline">\(N\)</span> is a potentially huge integer.</p>
+</section>
+<section id="example" class="level2">
+<h2 class="anchored" data-anchor-id="example">Example</h2>
+<p>Here is a simple example of a program that uses <code>bit</code>:</p>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-5" class="code-annotation-target"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> c <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Bit-matrix M:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> M<span class="op">);</span></span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Characteristic poly c(x) = </span><span class="sc">{}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">);</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"c(M) yields:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">(</span>M<span class="op">));</span></span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="1">Creates a random <span class="math inline">\(6\times6\)</span> bit-matrix <span class="math inline">\(M\)</span> where 0 &amp; 1 are equally likely to occur.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="2">Computes its characteristic polynomial <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="8" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
+</dd>
+</dl>
+<p><span class="bt">Sample Output (varies from run to run):</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bit-matrix</span> M:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 1 0│</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 1 0 0│</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 1 0 1│</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 1 0 1 0│</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 0 0 1 1 1│</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> poly c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^2 + x^3 + x^5 + x^6</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">c</span><span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">yields:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The special nature of <span class="math inline">\(\mathbb{F}_2\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>bit</code> makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements—​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in <span class="math inline">\(\mathbb{F}_2\)</span>.</p>
+</div>
+</div>
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>This library is header-only, so there is nothing to compile and link. Drop the <code>bit</code> include directory somewhere convenient, and you are good to go.</p>
 <p>Alternatively, if you are using <code>CMake</code>, you can use the standard <code>FetchContent</code> module by adding a few lines to your project’s <code>CMakeLists.txt</code> file:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(bit <span class="ot">URL</span> https://github.com/nessan/bit/releases/download/current/bit.zip)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_MakeAvailable</span>(bit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(bit <span class="ot">URL</span> https://github.com/nessan/bit/releases/download/current/bit.zip)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_MakeAvailable</span>(bit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This command downloads and unpacks an archive of the current version of <code>bit</code> to your project’s build folder. You can then add a dependency on <code>bit::bit</code>, a <code>CMake</code> alias for <code>bit</code>. <code>FetchContent</code> will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.</p>
 <p>Used like this, <code>FetchContent</code> will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -611,84 +648,27 @@ Library versions
 </div>
 </div>
 </section>
-<section id="example" class="level2">
-<h2 class="anchored" data-anchor-id="example">Example</h2>
-<p>Here is a simple example of a program that uses <code>bit</code>:</p>
-<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> M <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-5" class="code-annotation-target"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> c <span class="op">=</span> bit<span class="op">::</span>characteristic_polynomial<span class="op">(</span>M<span class="op">);</span></span>
-<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Bit-matrix M:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> M<span class="op">);</span></span>
-<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"Characteristic poly c(x) = </span><span class="sc">{}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">);</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-8" class="code-annotation-target"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">"c(M) yields:</span><span class="sc">\n{:p}\n</span><span class="st">"</span><span class="op">,</span> c<span class="op">(</span>M<span class="op">));</span></span>
-<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="4" data-code-annotation="1">Creates a random <span class="math inline">\(6\times6\)</span> bit-matrix <span class="math inline">\(M\)</span> where 0 &amp; 1 are equally likely to occur.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="2">Computes its characteristic polynomial <span class="math inline">\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\)</span>.</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="8" data-code-annotation="3">Verifies that <span class="math inline">\(M\)</span> satisfies its own characteristic equation <span class="math inline">\(c(M) = 0\)</span>, as expected from the <a href="https://en.wikipedia.org/wiki/Cayley–Hamilton_theorem">Cayley Hamilton</a> theorem.</span>
-</dd>
-</dl>
-<p><span class="bt">Sample Output (varies from run to run):</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bit-matrix</span> M:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 0 1 1 0│</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 1│</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 1 1 1 0 0│</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 1 0 1│</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 1 1 0 1 0│</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│1</span> 0 0 1 1 1│</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Characteristic</span> poly c<span class="er">(</span><span class="ex">x</span><span class="kw">)</span> <span class="ex">=</span> x^1 + x^2 + x^3 + x^5 + x^6</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">c</span><span class="er">(</span><span class="ex">M</span><span class="kw">)</span> <span class="ex">yields:</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│0</span> 0 0 0 0 0│</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The special nature of <span class="math inline">\(\FF\)</span>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>bit</code> makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements—​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in <span class="math inline">\(\FF\)</span>.</p>
-</div>
-</div>
-</section>
 <section id="why-use-bit" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-bit">Why Use <code>bit</code>?</h2>
 <p>The standard library already has <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, an efficient <em>bitset</em> class that is familiar and well thought through, so our <code>bit::vector</code> class replicates and extends much of that interface.</p>
-<p>All <code>std::bitset</code> objects have a fixed size determined at compile time. The well-known <em>Boost</em> library does add a dynamic version <a href="https://www.boost.org/doc/libs/1_80_0/libs/dynamic_bitset/dynamic_bitset.html"><code>boost::dynamic_bitset</code></a>, where the bitset size can be set and changed at runtime.</p>
+<p>All <code>std::bitset</code> objects have a fixed size determined at compile time. The well-known <em>Boost</em> library does add a dynamic version [<code>boost::dynamic_bitset</code>], where the bitset size can be set and changed at runtime.</p>
 <p>However, as the two names suggest, those types are aimed at <em>bitsets</em> instead of <em>bit-vectors</em>. So, for example, they print in <em>bit-order</em> with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>.</p>
-<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\FF\)</span>. You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.</p>
-<p>For example, you might use <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page">Eigen</a> to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for <span class="math inline">\(\FF\)</span>. Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying <code>BitInt</code> type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.</p>
-<p>For linear algebra problems over <span class="math inline">\(\FF\)</span>, this specialized <code>bit</code> library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.</p>
+<p>On the other hand, several well-known linear algebra libraries, such as <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page"><code>Eigen</code></a>, exist. Those packages efficiently manage all the standard <em>numeric</em> types (floats, doubles, integers, etc.) but do not correctly handle <span class="math inline">\(\mathbb{F}_2\)</span>. You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.</p>
+<p>For example, you might use <a href="https://eigen.tuxfamily.org/overview.php?title=Main_Page"><code>Eigen</code></a> to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for <span class="math inline">\(\mathbb{F}_2\)</span>. Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying <code>BitInt</code> type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.</p>
+<p>For linear algebra problems over <span class="math inline">\(\mathbb{F}_2\)</span>, this specialized <code>bit</code> library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.</p>
 </section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
-<p>The project’s source code repository is <a href="https://github.com/nessan/bit">here</a>.<br>
-You can read the project’s documentation <a href="https://nessan.github.io/bit">here</a>.<br>
-The documentation site was generated using <a href="https://quarto.org">Quarto</a>.</p>
+<p>Here is a link to the project’s source code <a href="https://github.com/nessan/xoshiro">repository</a>.<br>
+This <a href="https://nessan.github.io/xoshiro">documentation</a> site was constructed using the static website generator <a href="https://quarto.org">Quarto</a>.</p>
 <section id="contact" class="level3">
 <h3 class="anchored" data-anchor-id="contact">Contact</h3>
-<p>You can contact me by email <a href="mailto:nzznfitz+gh@icloud.com">here</a>.</p>
+<p>You can contact me by <a href="mailto:nzznfitz+gh@icloud.com">email</a></p>
 </section>
 <section id="copyright-and-license" class="level3">
 <h3 class="anchored" data-anchor-id="copyright-and-license">Copyright and License</h3>
 <p>Copyright (c) 2022-present Nessan Fitzmaurice.<br>
-You can use this software under the <a href="https://opensource.org/license/mit/%5BMIT%20License%5D">MIT license</a>.</p>
+You can use this software under the <a href="https://opensource.org/license/mit">MIT License</a></p>
 
 
 </section>
@@ -715,6 +695,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1119,12 +1243,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1133,13 +1254,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
 

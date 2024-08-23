@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The bit::gauss Class – Working in GF(2)</title>
+<title>The bit::gauss Class – Bit Space/GF(2)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,10 +70,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -141,14 +143,10 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="The bit::gauss Class – Working in GF(2)">
+<meta property="og:title" content="The bit::gauss Class – Bit Space/GF(2)">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://nessan.github.io/bit/pages/gauss/assets/images/logo.jpg">
-<meta property="og:site_name" content="Working in GF(2)">
-<meta name="twitter:title" content="The bit::gauss Class – Working in GF(2)">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://nessan.github.io/bit/pages/gauss/assets/images/logo.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="Bit Space/GF(2)">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
@@ -207,7 +205,7 @@ window.Quarto = {
  <span class="dropdown-text">Report a Bug</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/nessan/bit/discussions"><i class="bi bi-chat-right-text" role="img">
+    <a class="dropdown-item" href="mailto:nzznfitz+gh@icloud.com"><i class="bi bi-chat-right-text" role="img">
 </i> 
  <span class="dropdown-text">Ask a Question</span></a>
   </li>  
@@ -217,7 +215,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/nessan/bit" title="GitHub repo" class="quarto-navigation-tool px-1" aria-label="GitHub repo"><i class="bi bi-github"></i></a>
-    <a href="https://twitter.com/nezzan" title="" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -566,29 +564,21 @@ window.Quarto = {
 </header>
 
 
-<!-- Links and shortcuts used throughout the documentation -->
-<!-- Math shortcuts we use frequently in the documentation -->
+<!-- Math shortcuts we sometimes use in the documentation -->
 <div class="hidden">
 <p><span class="math display">\[
-\newcommand{\FF}{\mathbb{F}_2}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}_2}
+\newcommand{\bold}[1]{\mathbf{#1}}
+\newcommand{\mod}[2]{ {#1 \, \mathrm{mod} \, #2}}
 \]</span></p>
 </div>
-<!-- bit_verify -->
-<!-- bit::vector -->
-<!-- bit::matrix -->
-<!-- bit::gauss -->
-<!-- bit::lu -->
-<!-- bit::polynomial -->
-<!-- The standard library -->
-<!-- Other software etc. -->
-<!-- Articles and Wikipedia pages -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>We use a <code>bit::gauss</code> object to find solutions for the system of linear equations <span class="math inline">\(A \cdot x = b\)</span> over <span class="math inline">\(\FF\)</span>.</p>
+<p>We use a <code>bit::gauss</code> object to find solutions for the system of linear equations <span class="math inline">\(A \cdot x = b\)</span> over <span class="math inline">\(\mathbb{F}_2\)</span>.</p>
 <p>Here, <span class="math inline">\(A\)</span> is a known bit-matrix, <span class="math inline">\(b\)</span> is a known right-hand side bit-vector, and <span class="math inline">\(x\)</span> is the unknown solution to the system. <span class="math inline">\(A\)</span> should be square, and the size of the <span class="math inline">\(b\)</span> should match the number of rows in <span class="math inline">\(A\)</span>.</p>
 <p>As the name suggests, the solution method is <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>, specifically Gauss-Jordan elimination.</p>
-<p>On construction, the <code>bit::gauss</code> object captures copies of <span class="math inline">\(A\)</span> and <span class="math inline">\(b\)</span>. Then, it uses <a href="https://en.wikipedia.org/wiki/Elementary_matrix#Operations">elementary row operations</a> to transform the left-hand side matrix to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row-echelon form</a> while simultaneously performing identical operations to the right-hand side vector. With those in place, the solver can quickly produce solutions <span class="math inline">\(x\)</span> by simple back-substitution.</p>
+<p>On construction, the <code>bit::gauss</code> object captures copies of <span class="math inline">\(A\)</span> and <span class="math inline">\(b\)</span>. Then, it uses <a href="https://en.wikipedia.org/wiki/Elementary_matrix#Operations">elementary row operations</a> to transform the left-hand side matrix to <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row echelon form</a> while simultaneously performing identical operations to the right-hand side vector. With those in place, the solver can quickly produce solutions <span class="math inline">\(x\)</span> by simple back-substitution.</p>
 <p>As well as getting solutions for the system <span class="math inline">\(A \cdot x = b\)</span>, the <code>bit::gauss</code> object can be queried for other helpful information, such as the <a href="https://en.wikipedia.org/wiki/Rank_(linear_algebra)">rank</a> of <span class="math inline">\(A\)</span>, whether the system is consistent (i.e., whether any solutions exist), and so on. See the complete list below.</p>
 <p>Recognizing that often one wants to find a solution to <span class="math inline">\(A \cdot x = b\)</span> with a minimum of palaver, there is a non-member function to do just that. It can be invoked as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> x <span class="op">=</span> bit<span class="op">::</span>solve<span class="op">(</span>A<span class="op">,</span>b<span class="op">);</span></span>
@@ -601,7 +591,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="multiple-solutions">Multiple Solutions</h2>
 <p>A system of linear equations over <span class="math inline">\(\R\)</span> has either no solutions, one solution, or infinite solutions. The latter situation arises if the system is under-determined so that there is one or more free variables.</p>
 <p>Generally, if you have <span class="math inline">\(m\)</span> independent and consistent equations for <span class="math inline">\(n\)</span> unknowns and <span class="math inline">\(n&gt;m\)</span>, there are <span class="math inline">\(f=n-m\)</span> free variables. Reducing the matrix to echelon form lets you determine how many independent equations exist and quickly check that the system is consistent. Over <span class="math inline">\(\R\)</span>, a free variable can take on any value; hence, there are infinite possible solutions to the system.</p>
-<p>Over <span class="math inline">\(\FF\)</span>, the situation is different because a free variable can only take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, if no free variables exist, a consistent system will have one unique solution.</p>
+<p>Over <span class="math inline">\(\mathbb{F}_2\)</span>, the situation is different because a free variable can only take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, if no free variables exist, a consistent system will have one unique solution.</p>
 <p>That <code>x</code> in the above example will be one of those <span class="math inline">\(2^f\)</span> possible solutions randomly picked. We also provide a way to iterate through many possible solutions (not necessarily all of them because if <span class="math inline">\(f\)</span> is large, the number of potential solutions will explode).</p>
 <p>If <code>solver</code> is a <code>bit::gauss</code> for the consistent system <span class="math inline">\(A \cdot x = b\)</span> with <span class="math inline">\(f\)</span> free variables, then the call <code>solver()</code> will return one of the possible <span class="math inline">\(2^f\)</span> solutions picked entirely randomly (calling solver() again may return a different but equally valid solution). On the other hand, a call to <code>solver(n)</code>, where <code>n</code> is a <code>std::size_t</code> and <span class="math inline">\(n &lt; 2^f\)</span>, will produce a specific solution. There are many ways to produce an ordering amongst the possible solutions, but in any case, calling the <code>solver(n)</code> will always return the same solution.</p>
 </section>
@@ -795,6 +785,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1208,12 +1342,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Copyright (c) Nessan Fitzmaurice</p>
+<p>© 2022 Nessan ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
     <div class="nav-footer-center">
-<p>Project is under the MIT License</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/gauss/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/nessan/bit">
@@ -1222,13 +1353,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/nezzan">
-      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+    <a class="nav-link" href="mailto:nzznfitz+gh@icloud.com">
+      <i class="bi bi-envelope" role="img" aria-label="EMail address">
 </i> 
     </a>
   </li>  
 </ul>
-    </div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nessan/bit/edit/main/docs/pages/gauss/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nessan/bit/issues/new/choose" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p><a href="https://opensource.org/license/mit">MIT Licensed</a></p>
+</div>
   </div>
 </footer>
 
