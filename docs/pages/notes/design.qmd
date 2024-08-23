@@ -4,13 +4,13 @@ title: "Library Design Notes"
 
 ## Motivation
 
-We want `bit` to be an _efficient_ linear algebra library for {GF2}, also known as {f2}, which is the set with just two elements 0 & 1.
+We want `bit` to be an _efficient_ linear algebra library for {gf2}, also known as {f2}, which is the set with just two elements 0 & 1.
 In {f2}, all arithmetic operations are mod 2 to keep everything closed in the set $\{0,1\}$.
 
 Because arithmetic is always mod 2, addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
 A primary goal of the `bit` library is to use those equivalences to perform most interactions on and between bit-vectors and bit-matrices very efficiently by working on whole blocks of elements at a time.
 
-Of course, there are already several very well-known linear algebra libraries in {{< var cpp >}} such as {Eigen}.
+Of course, there are already several very well-known linear algebra libraries in {cpp} such as {Eigen}.
 Those packages efficiently handle the standard _numeric_ types (floats, doubles, integers, etc.), but none handle {f2} all that well.
 They will allow you to create vectors and matrices of integers where all the elements are 0 or 1, but there is no built-in knowledge in those libraries that arithmetic in {f2}  is mod 2.
 
@@ -66,7 +66,7 @@ std::vector<Block, Allocator> m_block;      // <2>
 The number of blocks allocated depends on the size of the bit-vector.
 
 The `std::vector<Block>` data member handles any memory allocations and de-allocations.
-These days, it is often the case in {{< var cpp >}} that one can completely omit the need to manually manage memory using the `new` and `delete` operators and instead use one of the containers in the standard library.
+These days, it is often the case in {cpp} that one can completely omit the need to manually manage memory using the `new` and `delete` operators and instead use one of the containers in the standard library.
 
 ::: {.callout-note}
 In a `bit::vector`, if there are $d$ binary digits in a block where by default $d = 64$, then bit-vector element $v_i$ is located at bit `i%d` of the block indexed `i/d`.

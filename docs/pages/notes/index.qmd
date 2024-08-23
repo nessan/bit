@@ -4,7 +4,7 @@ title: Technical Notes
 
 ## Introduction
 
-There isn't a lot of material on the web devoted to computational work in {GF2}. \
+There isn't a lot of material on the web devoted to computational work in {gf2}. \
 We add some here:
 
 Paper                                              | Topic

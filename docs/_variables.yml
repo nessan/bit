@@ -28,7 +28,7 @@ elementary-row-ops: "[elementary row operations](https://en.wikipedia.org/wiki/E
 Frobenius-form: "[Frobenius form](https://encyclopediaofmath.org/wiki/Frobenius_matrix)"
 Galois-Field: "[Galois Field](https://en.wikipedia.org/wiki/Finite_field)"
 Gaussian-elimination: "[Gaussian elimination](https://en.wikipedia.org/wiki/Gaussian_elimination)"
-GF2: "[GF(2)](https://en.wikipedia.org/wiki/GF(2))"
+gf2: "[GF(2)](https://en.wikipedia.org/wiki/GF(2))"
 Gram-Schmidt: "[Gram-Schmidt](https://en.wikipedia.org/wiki/Gram–Schmidt_process)"
 Hessenberg: "[Hessenberg](https://en.wikipedia.org/wiki/Hessenberg_matrix)"
 LU-decomposition: "[LU decomposition](https://en.wikipedia.org/wiki/lu)"

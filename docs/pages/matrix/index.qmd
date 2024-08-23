@@ -4,7 +4,7 @@ title: "The `bit::matrix` Class"
 
 ## Introduction
 
-A `bit::matrix` represents a matrix over {GF2} (also known as {f2}) the simplest _Galois_ field that has just two elements usually denoted 0 & 1, or as booleans--true & false, or as bits--set & unset.
+A `bit::matrix` represents a matrix over {gf2} (also known as {f2}) the simplest _Galois_ field that has just two elements usually denoted 0 & 1, or as booleans--true & false, or as bits--set & unset.
 
 Arithmetic in {f2} is mod 2, which means that addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
 
@@ -34,7 +34,7 @@ We also define functions like `dot(lhs, rhs)` to handle matrix-vector, vector-ma
 
 There are methods to solve linear systems of equations $A \cdot x = b$.
 
-Danilevsky's method to compute characteristic polynomials (and the determinant) for a `bit::matrix` is available and works for quite large matrices (ones with millions of entries) that would choke a naive implementation that didn't take into account the nature of arithmetic over {GF2}.
+Danilevsky's method to compute characteristic polynomials (and the determinant) for a `bit::matrix` is available and works for quite large matrices (ones with millions of entries) that would choke a naive implementation that didn't take into account the nature of arithmetic over {gf2}.
 
 ## Declaration
 

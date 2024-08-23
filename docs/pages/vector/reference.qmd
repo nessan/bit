@@ -4,7 +4,7 @@ title: "`bit::vector::reference` --- Proxy Class"
 
 `bit::vector::reference` is a publicly accessible nested _proxy class_ that lets users interact with individual elements/bits in a bit-vector.
 
-It is needed because standard {{< var cpp >}}  types cannot target down to the bit level of precision.
+It is needed because standard {cpp}  types cannot target down to the bit level of precision.
 
 The primary use of this class is to provide an _l-value_ that can be returned from `operator[]` and `operator()` in the `bit::vector` class.
 

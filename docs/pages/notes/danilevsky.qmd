@@ -11,7 +11,7 @@ filters:
 
 It isn't well known, so we review how it works for real-valued matrices.
 
-We then go on to explain how it applies explicitly to bit-matrices, i.e., matrices over {GF2}, the simplest [Galois field] with just two elements 0 & 1 where addition/subtraction and multiplication/division operations are all done mod two which keeps everything closed in the set $\{0,1\}$.
+We then go on to explain how it applies explicitly to bit-matrices, i.e., matrices over {gf2}, the simplest [Galois field] with just two elements 0 & 1 where addition/subtraction and multiplication/division operations are all done mod two which keeps everything closed in the set $\{0,1\}$.
 
 ## Characteristic Polynomials
 

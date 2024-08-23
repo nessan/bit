@@ -4,7 +4,7 @@ title:  "The `bit::vector` Class"
 
 ## Introduction
 
-A {bit.vector} represents a vector over {GF2} (also known as {f2}) the simplest {Galois-Field} with just two elements usually denoted 0 & 1, as the booleans true & false, or as the bits set & unset.
+A {bit.vector} represents a vector over {gf2} (also known as {f2}) the simplest {Galois-Field} with just two elements usually denoted 0 & 1, as the booleans true & false, or as the bits set & unset.
 Arithmetic over {f2} is mod 2, so addition/subtraction becomes the `XOR` operation while multiplication/division becomes `AND`.
 
 The `bit::vector` class is a hybrid between a {std.vector} and a {std.bitset}, along with extra mathematical features to facilitate linear algebra.

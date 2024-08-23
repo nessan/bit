@@ -1,6 +1,6 @@
 /// @brief Verification macro that checks a condition and exit with a message if that check fails.
 /// @link  https://nessan.github.io/bit
-/// SPDX-FileCopyrightText:  2024 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
+/// SPDX-FileCopyrightText:  2023 Nessan Fitzmaurice <nzznfitz+gh@icloud.com>
 /// SPDX-License-Identifier: MIT
 #pragma once
 

@@ -12,22 +12,6 @@ The `bit` library provides a rich interface to set up and manipulate bit-vectors
 
 The `bit::polynomial` class has methods to compute $x^N\bmod{p(x)}$ where $p(x)$ is a polynomial over $\mathbb{F}_2$ and $N$ is a potentially huge integer.
 
-## Installation
-
-This library is header-only, so there is nothing to compile and link—drop the `bit` include directory somewhere convenient, and you're good to go.
-
-Alternatively, if you are using `CMake`, you can use the standard `FetchContent` module by adding a few lines to your project's `CMakeLists.txt` file:
-
-```cmake
-include(FetchContent)
-FetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/current/bit.zip)
-FetchContent_MakeAvailable(bit)
-```
-
-This command downloads and unpacks an archive of the current version of the `bit` library to your project's build folder. You can then add a dependency on `bit::bit`, a `CMake` alias for `bit`. `FetchContent` will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.
-
-Used like this, `FetchContent` will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.
-
 ## Example
 
 Here is a simple example of a program that uses `bit`:
@@ -68,6 +52,22 @@ The polynomial sum c(M) gives:
 ```
 
 **NOTE:** `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements. This problem chokes a naive implementation that needs to consider the unique nature of arithmetic in GF(2).
+
+## Installation
+
+This library is header-only, so there is nothing to compile and link—drop the `bit` include directory somewhere convenient, and you're good to go.
+
+Alternatively, if you are using `CMake`, you can use the standard `FetchContent` module by adding a few lines to your project's `CMakeLists.txt` file:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/current/bit.zip)
+FetchContent_MakeAvailable(bit)
+```
+
+This command downloads and unpacks an archive of the current version of the `bit` library to your project's build folder. You can then add a dependency on `bit::bit`, a `CMake` alias for `bit`. `FetchContent` will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.
+
+Used like this, `FetchContent` will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.
 
 ## Why Use `bit`?
 

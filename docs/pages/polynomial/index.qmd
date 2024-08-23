@@ -4,7 +4,7 @@ title:  "The `bit::polynomial` Class"
 
 ## Introduction
 
-A `bit::polynomial` represents a polynomial over {GF2} (also known as {f2}), the simplest {Galois-Field} that has just two elements 0 & 1, where arithmetic is mod 2.
+A `bit::polynomial` represents a polynomial over {gf2} (also known as {f2}), the simplest {Galois-Field} that has just two elements 0 & 1, where arithmetic is mod 2.
 
 If $p(x)$ is the bit-polynomial:
 $$

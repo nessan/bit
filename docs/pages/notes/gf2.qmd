@@ -7,10 +7,10 @@ filters:
 
 ## Introduction
 
-`bit` is a header-only {{< var cpp >}} library that provides classes for bit-vectors and bit-matrices.
+`bit` is a header-only {cpp} library that provides classes for bit-vectors and bit-matrices.
 
-In the jargon of professional mathematics, the classes make it possible to perform linear algebra over {GF2}, the simplest [Galois field] with just two elements 0 & 1.
-In {GF2}, also commonly known as {f2}, addition/subtraction and multiplication/division operations are all done mod two, which keeps everything closed in the set {0,1}.
+In the jargon of professional mathematics, the classes make it possible to perform linear algebra over {gf2}, the simplest [Galois field] with just two elements 0 & 1.
+In {gf2}, also commonly known as {f2}, addition/subtraction and multiplication/division operations are all done mod two, which keeps everything closed in the set {0,1}.
 
 This document contains some technical notes on the joys and travails of mathematics using vectors and matrices where the elements are all just zeros and ones and where all arithmetic is mod 2.
 
