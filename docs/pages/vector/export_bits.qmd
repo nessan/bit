@@ -26,14 +26,11 @@ constexpr void export_bits(std::bitset<N> &dst) const;        // <5>
 4. Initializes a vector of unsigned integers to zeros and fills it with as many bits as possible from the bit-vector.
 5. Sets all the bits in a `std::bitset` to zero and then fills it with as many bits as possible from the bit-vector.
 
-::: {.callout-note}
-# These do *not* resize the destination
-These methods do *_not_* resize the destination.
+NOTE: These methods do *_not_* resize the destination.
 We start sourcing bits from the beginning of the bit-vector.
 We stop when we run out of source bits or have no more space to put the bits.
 Note that the destination gets initialized to all zeros.
 Thus, if the source bit-vector is empty, the destination will be returned filled with zeros.
-:::
 
 In many applications, we use these `export_bits` functions to flip back and forth between bit-space and word-space.
 

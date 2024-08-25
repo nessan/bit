@@ -18,11 +18,8 @@ constexpr bit::matrix operator>>(std::size_t p) const; // <4>
 
 The first two methods are destructive (i.e., operate in-place) and return a reference to `*this` so they can be chained with other calls.
 
-::: {.callout-note}
-# Bit-order vs. vector-order
- Shifts in the `bit` library work in _vector-order_ so if a row is `[e0, e1, e2, e3]` then a left shift turns that into `[e1, e2, e3, 0]` and a right shift turns it into `[0, e0, e1, e2]`.
+ NOTE: Shifts in the `bit` library work in _vector-order_ so if a row is `[e0, e1, e2, e3]` then a left shift turns that into `[e1, e2, e3, 0]` and a right shift turns it into `[0, e0, e1, e2]`.
 Vector-order shifts are the opposite of bit-order shifts!
-:::
 
 [Example]{.bt}
 ```cpp

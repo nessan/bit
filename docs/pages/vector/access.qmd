@@ -28,12 +28,9 @@ constexpr reference back()
 6. Access the element at index `0`.
 7. Access the element at index `size() - 1`.
 
-::: {.callout-warning}
-# Bounds checking
-Generally, these methods do *not* check whether the index `i` is in bounds.
+WARNING: Generally, these methods do *not* check whether the index `i` is in bounds.
 The behaviour is undefined if it is out of bounds, but it will surely not be good!
 Set the `BIT_VERIFY` flag at compile time to check this condition. If it is violated, the program will abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

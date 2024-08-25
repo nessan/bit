@@ -20,10 +20,7 @@ constexpr bit::matrix unit_upper() const;        // <6>
 5. Returns a copy of the upper triangle with zeros on or below the diagonal.
 6. Returns a copy of the upper triangle with ones on the diagonal and zeros below.
 
-::: {.callout-note}
-# The starting point is always the top left
-These methods work with arbitrary rectangular bit-matrices, always starting with the top left `(0,0)` element as the anchor for the diagonal.
-:::
+NOTE: These methods work with arbitrary rectangular bit-matrices, always starting with the top left `(0,0)` element as the anchor for the diagonal.
 
 [Example]{.bt}
 ```cpp

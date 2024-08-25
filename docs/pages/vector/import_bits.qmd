@@ -31,10 +31,7 @@ constexpr vector& import_bits(const std::bitset<N> &src, bool add = false);     
 5. Imports the bits from a fixed array of unsigned integers.
 6. Imports the bits from a `std::bitset`.
 
-::: {.callout-note}
-# These resize the destination
-These functions all resize the destination bit-vector to make it absorb all the source bits.
-:::
+NOTE: These functions all resize the destination bit-vector to make it absorb all the source bits.
 
 ## Parameters
 

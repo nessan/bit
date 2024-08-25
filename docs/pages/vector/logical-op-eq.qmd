@@ -24,11 +24,8 @@ In GF(2), multiplication corresponds to the logical `AND` operation.
 
 These methods all return a reference to `*this` so they can be chained with other calls.
 
-::: {.callout-warning}
-# Size checking
-The two vectors in question must be of the same size. \
+WARNING: The two vectors in question must be of the same size. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 ```cpp
 constexpr bit::vector operator~() const;    // <1>

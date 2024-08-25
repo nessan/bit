@@ -11,12 +11,9 @@ from(std::string_view src, bool bit_order = false);   // <1>
 ```
 1. Attempts to parse a bit-matrix from a string and returns `std::nullopt` on failure.
 
-::: {.callout-note}
-# Bit-matrices are stored by row
-The input string should hold the bit-matrix row by row.
+NOTE: The input string should hold the bit-matrix row by row.
 Newlines, white spaces, commas, or semi-colons must separate the rows.
 Each row should be encoded in a string as documented in the {vec.constructors} page.
-:::
 
 [Example --- Binary strings]{.bt}
 ```cpp

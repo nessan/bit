@@ -21,10 +21,7 @@ For example, we can raise $M$ to the power $2^{128}$, which is not representable
 We use repeated squaring to compute the powers efficiently.
 It is also worth noting that all arithmetic in {f2} is mod 2, so there are no overflow issues even for large $n$.
 
-::: {.callout-warning}
-# The bit-matrix argument must be square
-The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
-:::
+WARNING: The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
 
 [Example]{.bt}
 ```cpp

@@ -11,12 +11,8 @@ constexpr bit::vector sub(int len) const;                               // <2>
 1. Returns a bit-vector of size `len`, a copy of the elements starting at `begin`.
 2. Returns a copy of the first `len` elements if `len > 0` or the final `abs(len)` elements if `len < 0`.
 
-::: {.callout-warning}
-# Range checking
-`begin` has to be a valid index, and `abs(len)` elements must be available for copying.
+WARNING: `begin` has to be a valid index, and `abs(len)` elements must be available for copying.
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
-
 
 [Example]{.bt}
 ```cpp

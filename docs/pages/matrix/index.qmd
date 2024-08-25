@@ -24,10 +24,7 @@ However, in that case, matrix operations would often need to be done element-by-
 Like bit-vectors, bit-matrices are sized dynamically at runtime, with the row elements packed into blocks of some unsigned integral type.
 That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type in some scenarios).
 
-::: {.callout-note}
-# Square matrices
-Arbitrary $m \times n$ bit-matrices are supported, but some functions only make sense for square matrices where $n = m$.
-:::
+NOTE: Arbitrary $m \times n$ bit-matrices are supported, but some functions only make sense for square matrices where $n = m$.
 
 The `bit::matrix` class has many of the same methods defined for {bit.vector}.
 We also define functions like `dot(lhs, rhs)` to handle matrix-vector, vector-matrix, and matrix-matrix multiplication.
@@ -75,11 +72,8 @@ Perhaps if the bit-matrices all fit in 32-bits, you might have code along the li
     matrix_type mat = ...
 ```
 
-::: callout-warning
-# Use a single `Block` type throughout your code!
-You should use just one `Block` type throughout your code.
+WARNING: You should use just one `Block` type throughout your code.
 In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::matrix<uint32_t>` and a `bit::vector<uint64_t>`, but doing so efficiently significantly increases code complexity, and the library doesn't support this.
-:::
 
 ## Class Types
 

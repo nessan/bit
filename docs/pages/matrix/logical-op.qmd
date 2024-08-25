@@ -30,11 +30,8 @@ operator*(const bit::matrix<Block, Alloc> &lhs,
 6. Returns a bit-matrix, the binary `AND` of `rhs` & `lhs`. \
    In {f2}, multiplication corresponds to `AND`.
 
-::: {.callout-warning}
-# Dimensions must match
-The two bit-matrices in question must have the same dimensions.
+WARNING: The two bit-matrices in question must have the same dimensions.
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

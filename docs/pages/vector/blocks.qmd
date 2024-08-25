@@ -7,10 +7,7 @@ As such, they should be considered *advanced* and a last resource!
 
 The primary use case is to implement functionality that should eventually make it into the core `bit::vector` interface.
 
-::: {.callout-caution}
-# Use these methods at your own risk
-Writing directly into the block store can leave the `bit::vector` in an illegitimate state.
-:::
+CAUTION: Writing directly into the block store can leave the `bit::vector` in an illegitimate state.
 
 ```cpp
 using block_store_type = std::vector<Block, Allocator>;         // <1>
@@ -66,10 +63,8 @@ explicit constexpr bit::vector(std::size_t n, T&& blocks, bool is_clean = false)
 ```
 1. Create a bit-vector by *copying* or *moving* a pre-filled container of blocks.
 
-::: {.callout-important}
-Your block store must match the `block_store_type` of the `bit::vector` you wish to construct.
+IMPORTANT: Your block store must match the `block_store_type` of the `bit::vector` you wish to construct.
 It must also have precisely the correct size --- if you are constructing a bit-vector of size `n`, the store size must equal the value returned from `blocks_needed(n)`.
-:::
 
 Suppose `my_store` is a prefilled store of bits you wish to use to construct a bit-vector of size `n`.
 If you invoke the constructor as:
@@ -86,11 +81,9 @@ bit::vector v(n, my_store);
 ```
 Then `my_store` is *copied* into the bit-vector and remains valid after the call, though unconnected from the bit-vector.
 
-::: {.callout-tip}
-The constructor takes an optional third `is_clean` argument.
+TIP: The constructor takes an optional third `is_clean` argument.
 If `false` (the default), the constructor cleans out any _junk_ bits in the final block of the store arguments.
 You can preempt that cleaning call if you are sure those bits are all zero.
-:::
 
 [Example]{.bt}
 ```cpp

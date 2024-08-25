@@ -29,10 +29,7 @@ That class is familiar and well thought through, sp our {bit.vector} replicates 
 However, all {std.bitset} objects have a fixed size determined at compile time, which is too restrictive for our use case.
 The well-known _Boost_ library adds a dynamic version [`boost::dynamic_bitset`] where the bitset size can be set and changed at runtime.
 
-::: {.callout-note}
-# Dynamic sizing
-Our {bit.vector} class is also dynamically sized at runtime.
-:::
+IMPORTANT: Our {bit.vector} class is also dynamically sized at runtime.
 
 The types defined in the standard library and _Boost_ are for _bitsets_ instead of _bit-vectors_.
 For example, they print in _bit-order_ with the least significant element/bit on the right.
@@ -68,9 +65,7 @@ The number of blocks allocated depends on the size of the bit-vector.
 The `std::vector<Block>` data member handles any memory allocations and de-allocations.
 These days, it is often the case in {cpp} that one can completely omit the need to manually manage memory using the `new` and `delete` operators and instead use one of the containers in the standard library.
 
-::: {.callout-note}
-In a `bit::vector`, if there are $d$ binary digits in a block where by default $d = 64$, then bit-vector element $v_i$ is located at bit `i%d` of the block indexed `i/d`.
-:::
+NOTE: In a `bit::vector`, if there are $d$ binary digits in a block where by default $d = 64$, then bit-vector element $v_i$ is located at bit `i%d` of the block indexed `i/d`.
 
 [Redundant storage]{.bt}
 It is worth pointing out that even though this is indeed a compact storage scheme for bit-vectors, some redundant bits are likely in our container of blocks.
@@ -81,10 +76,7 @@ If we are using the defaults, then $\mathbf{v}$ will take up two 64-bit blocks, 
 Most of the time, the space wasted in those extra bits is not material.
 If you create vast numbers, particularly of smaller bit-vectors, you can choose a different block type to minimize the wastage.
 
-::: {.callout-important}
-# Redundant bits need to be zeroed out
-No matter which block type is employed, for efficiency's sake, redundant bits must all be set to the value 0 initially and kept at 0 as the bit-vector is operated on.
-:::
+IMPORTANT: No matter which block type is employed, for efficiency's sake, redundant bits must all be set to the value 0 initially and kept at 0 as the bit-vector is operated on.
 
 ### Efficiency
 
@@ -167,11 +159,8 @@ That efficiently handles a large part of the shift for larger values of $p$.
 
 We then can finish by using the earlier ideas to shift $\mathbf{v}$ by less than a whole block $p \% d$ places.
 
-::: {.callout-tip}
-# The order matters
-We need to be careful to do things in the correct order.
+TIP: We need to be careful to do things in the correct order.
 In particular, for right shifts of bit-vectors, we are left shifting the bits we need to work through the block representation from the highest order index down.
-:::
 
 ## The Bit-Matrix Class
 
@@ -192,10 +181,7 @@ However, in that case, matrix operations would often need to be done element-by-
 Like bit-vectors, bit-matrices are sized dynamically at runtime, and the row elements are packed into blocks of some unsigned integral type.
 That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type if your use case involves the creation of many small matrices).
 
-::: {.callout-note}
-# Some methods only work on square matrices
-Arbitrary $m \times n$ bit-matrices are supported, but some methods only make sense for square matrices where $n = m$.
-:::
+NOTE: Arbitrary $m \times n$ bit-matrices are supported, but some methods only make sense for square matrices where $n = m$.
 
 ### Alternative Ideas
 

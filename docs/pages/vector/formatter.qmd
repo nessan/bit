@@ -23,11 +23,8 @@ std::format("{:x}", v)          // <4>
 3. Outputs $\mathbf{v}$ as a string in a "pretty" format $\lbrack v_0 \; v_1 \; v_2 \; \ldots \; v_{n-1} \rbrack$.
 4. Outputs $\mathbf{v}$ as a compact hex string.
 
-::: {.callout-note}
-# Specifier Errors
-Any unrecognized specifier will result in the bit-vector string showing an error message.
+WARNING: Any unrecognized specifier will result in the bit-vector string showing an error message.
 The sample program below has an example.
-:::
 
 ## String Encodings
 

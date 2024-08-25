@@ -12,10 +12,7 @@ double bit::matrix<>::probability_singular(std::size_t n);     // <2>
 1. Returns the probability that an $n \times n$ bit-matrix filled by flipping _fair_ coins is invertible.
 2. Returns the probability that an $n \times n$ bit-matrix filled by flipping _fair_ coins is singular (i.e. non-invertible).
 
-::: {.callout-warning}
-# Empty matrices are not allowed
-We throw an exception if the parameter `n` is zero.
-:::
+WARNING: We throw an exception if the parameter `n` is zero.
 
 The simplest case is a $1 \times 1$ matrix $A = [a_{11}]$.
 As $a_{11}$ is either 0 or 1, $A$ is invertible 50% of the time if the fill is fair.

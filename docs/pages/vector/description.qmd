@@ -18,10 +18,7 @@ constexpr void description(const std::string &head = "", +
 You can send along some arbitrary text that gets prepended or appended to the description of the bit-vector.
 See the example below.
 
-::: {.callout-warning}
-# Don't depend on the format
-The format of the output may change from time to time.
-:::
+WARNING: The format of the output may change from time to time.
 
 [Example]{.bt}
 ```cpp

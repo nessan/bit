@@ -35,13 +35,9 @@ with two trailing zero coefficients $p_4 = p_5 = 0$ so the polynomial has size 6
 Those can be eliminated by the {poly.make_monic} method.
 Even if there are lots of trailing zeros, internally the class methods remain efficient and ignore them.
 
-::: {.callout-note}
-# The zero polynomial
-The zero polynomial might have no coefficients so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
+NOTE: The zero polynomial might have no coefficients so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
 In either case, the degree will be the special "not a degree" constant `polynomial::ndeg`.
-
 Methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
-:::
 
 ## Resizing
 
@@ -62,10 +58,7 @@ A nonzero polynomial has at least `degree() + 1` coefficients but may have many 
 Beyond that, the coefficient bit-vector can have spare capacity that is only ever reachable by using the `resize()` method.
 Resizing up to capacity does not cause memory allocation, so it is very efficient. Of course, having lots of spare capacity can be resource-wasting.
 
-::: {.callout-note}
-# Memory footprint.
-To minimize the memory used by a polynomial, use the {poly.shrink_to_fit} method.
-:::
+NOTE: To minimize the memory used by a polynomial, use the {poly.shrink_to_fit} method.
 
 [Example]{.bt}
 ```cpp

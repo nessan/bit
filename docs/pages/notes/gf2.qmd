@@ -58,13 +58,10 @@ $$
 $$
 Half of all vectors over {f2} will be self-orthogonal!
 
-::: {.callout-note}
-# Gram-Schmidt doesn't work
-Some of the best-known algorithms for linear algebra over $\R$ rely on {Gram-Schmidt}.
+NOTE: Some of the best-known algorithms for linear algebra over $\R$ rely on {Gram-Schmidt}.
 A critical step in Gram-Schmidt is to _normalize_ a vector by simply _dividing_ each element by the norm $\lVert \mathbf{x}  \rVert = \sqrt{\mathbf{x} \cdot \mathbf{x}}$.
 However, this will never work in {f2} as that norm will be zero 50% of the time.
 All those algorithms must be modified to work for vectors and matrices over {f2}.
-:::
 
 ## Some things are simpler
 

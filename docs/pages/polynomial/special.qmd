@@ -14,13 +14,10 @@ constexpr bool constant()   const;      // <4>
 3. Returns `true` if this is the polynomial $p(x) = 1$.
 4. Returns `true` if this is either the zero or the one polynomial.
 
-::: {.callout-note}
-# The zero polynomial
-The zero polynomial might have no coefficients, so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
+NOTE: The zero polynomial might have no coefficients, so `size() == 0`, or it might have lots of zero coefficients and a `size() > 0`.
 In either case, the degree will be the special "not a degree" constant `polynomial::ndeg`.
-
 Methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
-:::
+
 
 ### See Also
 {poly.size}        \

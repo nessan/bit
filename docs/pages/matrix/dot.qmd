@@ -39,11 +39,8 @@ In the case of {f2}, the product is replaced by logical `AND`, and the sum by th
 
 The dot product is a critical operation in linear algebra, so it is fortunate that `AND`'ing and `XOR`'ing for bit-matrices and bit-vectors can be done very efficiently over blocks of elements simultaneously.
 
-::: {.callout-warning}
-# Range checking
-The function arguments must have compatible sizes. \
+WARNING: The function arguments must have compatible sizes. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

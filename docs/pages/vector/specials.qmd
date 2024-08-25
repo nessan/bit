@@ -17,11 +17,8 @@ static constexpr bit::vector checker_board(std::size_t n, int first = 1);   // <
 
 The $i^\mathrm{th}$ unit bit-vector of size $n$ is all zeros apart from the i'th element, which is 1.
 
-::: {.callout-warning}
-# Bounds checking
-The method `unit(n, i)` requires $i < n$.
+WARNING: The method `unit(n, i)` requires $i < n$.
 This condition is always checked *unless* the `NDEBUG` flag is set, as it generally is for release builds.
-:::
 
 [Example]{.bt}
 ```cpp

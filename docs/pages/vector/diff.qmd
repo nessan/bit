@@ -12,11 +12,8 @@ diff(const bit::vector<Block, Allocator> &u,
 ```
 1. Returns a bit-vector `w` where `w[i] = 1` if `u[i] != v[i]` and 0 otherwise.
 
-::: {.callout-warning}
-# Size checking
-The two vectors in question must be of the same size. \
+WARNING: The two vectors in question must be of the same size. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

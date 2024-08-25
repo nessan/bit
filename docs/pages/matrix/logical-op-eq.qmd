@@ -24,17 +24,14 @@ constexpr bit::matrix &operator*=(const bit::matrix &other);    // <6>
 
 These methods all return a reference to `*this` so they can be chained with other calls.
 
-::: {.callout-warning}
-# Dimensions must match
-The two bit-matrices in question must have the same dimensions.
+WARNING: The two bit-matrices in question must have the same dimensions.
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 There is one other bit-twiddling method:
 ```cpp
-constexpr bit::matrix operator~() const;    // <7>
+constexpr bit::matrix operator~() const;    // <1>
 ```
-7. Returns a copy of the bit-matrix with all the bits flipped
+1. Returns a copy of the bit-matrix with all the bits flipped
 
 [Example]{.bt}
 ```cpp

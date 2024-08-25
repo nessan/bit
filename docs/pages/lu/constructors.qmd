@@ -17,16 +17,10 @@ The permutation matrix $P$ is also stored compactly --- see {lu.permute}.
 
 The decomposition always works even if $A$ is singular, but other `lu` methods will not.
 
-::: {.callout-note}
-# Generalizations
-There are generalizations of the {LU-decomposition} that handle rectangular matrices, but we have not implemented those yet.
-:::
+NOTE: There are generalizations of the {LU-decomposition} that handle rectangular matrices, but we have not implemented those yet.
 
-::: {.callout-note}
-# Efficiency
-If $A$ is $n \times n$, then construction is an $\mathcal{O}(n^3)$ operation (though due to the nature of {f2}, things are done in blocks at a time).
+NOTE: If $A$ is $n \times n$, then construction is an $\mathcal{O}(n^3)$ operation (though due to the nature of {f2}, things are done in blocks at a time).
 There are sub-cubic ways of doing this work using various block-iterative methods, but those methods have not been implemented here yet.
-:::
 
 [Example]{.bt}
 ```cpp

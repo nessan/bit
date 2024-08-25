@@ -14,11 +14,8 @@ The size of the bit-vector will be the `std::sizeof` for the specific `std::unsi
 Note that there is _no_ requirement for the argument type and `Block` to be the same.
 The argument might be a 32-bit unsigned, creating a bit-vector of size 32 packed into the default 64-bit block.
 
-::: {.callout-note}
-# Why not a constructor with this argument type?
-This method isn't a constructor because we don't want `src` to be treated as the _number_ of vector elements.
+NOTE: This method isn't a constructor because we don't want `src` to be treated as the _number_ of vector elements.
 Instead, we copy the actual _bits_ from `src` into the bit-vector.
-:::
 
 [Example]{.bt}
 ```cpp

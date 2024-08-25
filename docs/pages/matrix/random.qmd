@@ -16,10 +16,7 @@ static bit::matrix random(std::size_t n);                                    // 
 The probability that an element in the bit-matrix is 1 is `prob_one`.
 The default probability value is `0.5`, so element values are determined by tossing a fair coin a total of `r x c` times.
 
-::: {.callout-warning}
-# Probability must be valid
-These throw a `std::invalid_argument` exception if `prob_one` is not in the valid range $[0, 1]$.
-:::
+WARNING: These throw a `std::invalid_argument` exception if `prob_one` is not in the valid range $[0, 1]$.
 
 [Example]{.bt}
 ```cpp

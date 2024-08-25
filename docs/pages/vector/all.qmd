@@ -11,11 +11,8 @@ constexpr bool none() const;    // <3>
 2. Returns `true` if any elements in the bit-vector are 1; otherwise, returns `false`.
 3. Returns `true` if none of the elements in the bit-vector are 1; otherwise, returns `false`.
 
-::: {.callout-caution}
-# Empty bit-vectors
-Calling these methods for an empty bit-vector is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
+CAUTION: Calling these methods for an empty bit-vector is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
 If the `BIT_VERIFY` flag is not set, `all()` and `none()` will both return `true`, while `any()` will return `false`.
-:::
 
 [Example]{.bt}
 

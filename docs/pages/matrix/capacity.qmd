@@ -11,10 +11,7 @@ constexpr std::size_t col_capacity() const;   // <2>
 1. How many rows can be added without a memory allocation?
 2. How many columns can be added without a memory allocation?
 
-::: {.callout-warning}
-# Each row is not checked.
-The rows may not all have the same capacity --- the `col_capacity()` method reports the capacity of the _first_ row.
-:::
+WARNING: The rows may not all have the same capacity --- the `col_capacity()` method reports the capacity of the _first_ row.
 
 [Example]{.bt}
 ```cpp

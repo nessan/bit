@@ -53,10 +53,7 @@ $$
 `I` is the identity matrix with identical dimensions to `M`.
 The sum uses [Horner's method](https://en.wikipedia.org/wiki/Horner%27s_method).
 
-::: {.callout-warning}
-# The bit-matrix argument must be square
-The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
-:::
+WARNING: The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
 
 [Example]{.bt}
 ```cpp

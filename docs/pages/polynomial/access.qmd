@@ -29,12 +29,9 @@ constexpr polynomial& set_coefficients(vector_type&& c);    // <10>
 9. Sets the polynomial coefficients by copying the passed-in bit-vector.
 10. Sets the polynomial coefficients by *moving* the passed-in bit-vector into place.
 
-::: {.callout-warning}
-# Bounds checking
-Generally, the methods do *not* check whether the index `i` is in bounds.
+WARNING: Generally, the methods do *not* check whether the index `i` is in bounds.
 The behaviour is undefined if it is out of bounds, but it will surely not be good!
 Set the `BIT_VERIFY` flag at compile time to check this condition. If it is violated, the program will abort with a helpful message.
-:::
 
 The `vector_type` is a {bit.vector} with the appropriate `Block` and `Allocator` template parameters.
 

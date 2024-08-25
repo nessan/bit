@@ -69,10 +69,7 @@ using poly_type= bit::polynomial<uint8_t>;
 poly_type p = ...
 ```
 
-::: callout-warning
-# Use a single `Block` type throughout your code!
-In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::polynomial<std::uint32_t>` and a `bit::polynomial<std::uint64_t>`, but doing so efficiently significantly increases code complexity, and the library doesn't support this.
-:::
+WARNING: In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::polynomial<std::uint32_t>` and a `bit::polynomial<std::uint64_t>`, but doing so efficiently significantly increases code complexity, and the library doesn't support this.
 
 ## Class Constants and Types
 

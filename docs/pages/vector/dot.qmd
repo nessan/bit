@@ -25,11 +25,8 @@ The dot product is a critical operation in linear algebra, so it is fortunate th
 
 The required result is just the one-liner `(lhs & rhs).parity()`.
 
-::: {.callout-warning}
-# Size checking
-The two vectors in question must be of the same size. \
+WARNING: The two vectors in question must be of the same size. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

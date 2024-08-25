@@ -12,13 +12,9 @@ constexpr polynomial& make_monic();         // <3>
 2. Returns true if the polynomial is *monic* --- i.e. has no trailing zero coefficients.
 3. Eliminates any trailing zero coefficients and returns a reference to this polynomial.
 
-::: {.callout-note}
-# The zero polynomial
-The zero polynomial has *no* degree, though by convention, it is often set to $-\infty$.
+NOTE: The zero polynomial has *no* degree, though by convention, it is often set to $-\infty$.
 Our polynomial class has a special "not a degree" constant for this purpose `polynomial::ndeg`.
-
 The `make_monic()` method does nothing to a zero polynomial.
-:::
 
 ## Degree versus Size
 
@@ -36,11 +32,8 @@ $$
 with two trailing zero coefficients $p_4 = p_5 = 0$ so the polynomial has size 6.
 In this case, the query `p.monic()` will return `false` and `p.make_monic()` will eliminate those.
 
-::: {.callout-important}
-# The `make_monic()` method does not alter the memory footprint
-Calling `make_monic` on a non-zero polynomial simply ensures that `size() == degree() + 1`.
+IMPORTANT: Calling `make_monic` on a non-zero polynomial simply ensures that `size() == degree() + 1`.
 This operation releases no memory --- see the {poly.shrink_to_fit} method.
-:::
 
 ## Efficiency
 

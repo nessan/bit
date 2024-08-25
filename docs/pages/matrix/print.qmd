@@ -70,11 +70,8 @@ In practice, each has all the appropriate template parameters (not shown here fo
 
 The delimiter string `delim` separates the various bit-matrices and bit-vectors in the output stream.
 
-::: {.callout-tip}
-# Utility function
-The need for this sort of printing turns up often enough to make it sensible to include the code in the library directly.
+TIP: The need for this sort of printing turns up often enough to make it sensible to include the code in the library directly.
 In particular, these functions gracefully handle cases where the number of rows in the arguments does not match.
-:::
 
 [Example]{.bt}
 ```cpp

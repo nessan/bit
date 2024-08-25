@@ -9,11 +9,8 @@ constexpr bit::vector &swap(std::size_t i, std::size_t j) const;       // <1>
 ```
 1. Swaps the values at element `i` and element `j`.
 
-::: {.callout-warning}
-# Range checking
-By default, the method does *not* check whether the indices are in bounds, and if they aren't, the behaviour is undefined (but bound to be bad)! \
+WARNING: By default, the method does *not* check whether the indices are in bounds, and if they aren't, the behaviour is undefined (but bound to be bad)! \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

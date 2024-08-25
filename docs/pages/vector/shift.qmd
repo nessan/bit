@@ -32,11 +32,8 @@ $$
 v \gg 1 = \left[0, v_0, v_1, \ldots, v_{n-2}, \right].
 $$
 
-::: {.callout-warning}
-# Vector-order vs. bit-order
-Thus, right shifts are equivalent to left shifts, considering the elements in _bit-order_.
+NOTE: Thus, right shifts are equivalent to left shifts, considering the elements in _bit-order_.
 Similarly, the left shifts are equivalent to right shifts, considering the elements in _bit-order_.
-:::
 
 [Example]{.bt}
 ```cpp

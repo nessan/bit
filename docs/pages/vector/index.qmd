@@ -70,10 +70,7 @@ using vector_type = bit::vector<uint8_t>;
 vector_type v = ...
 ```
 
-::: callout-warning
-# Use a single `Block` type throughout your code!
-In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::vector<std::uint32_t>` and a `bit::vector<std::uint64_t>`,  but doing so efficiently significantly increases code complexity, and the library doesn't support this.
-:::
+WARNING: In theory, there is no reason that one couldn't intermingle operations between, say, a `bit::vector<std::uint32_t>` and a `bit::vector<std::uint64_t>`,  but doing so efficiently significantly increases code complexity, and the library doesn't support this.
 
 ## Class Constants and Types
 

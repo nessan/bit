@@ -16,10 +16,7 @@ bit::matrix join(const bit::matrix& M, const bit::vector& V);   // <4>
 3. Returns a new matrix, the augmented $M|v$.
 4. Returns a new matrix, the augmented $M|V$.
 
-::: {.callout-warning}
-# Consistency
-The number of rows in `v` and `V` must match the number in `M`.
-:::
+WARNING: The number of rows in `v` and `V` must match the number in `M`.
 
 [Example]{.bt}
 ```cpp

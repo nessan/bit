@@ -30,11 +30,8 @@ In GF(2), subtraction corresponds to the logical `XOR` operation.
 1. Returns a bit-vector whose bits result from binary `AND` between the corresponding pairs of bits of `rhs` and `lhs`. \
 In GF(2), multiplication corresponds to the logical `AND` operation.
 
-::: {.callout-warning}
-# Size checking
-The two vectors in question must be of the same size. \
+WARNING: The two vectors in question must be of the same size. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

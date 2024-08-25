@@ -13,13 +13,10 @@ constexpr bit::matrix &swap_cols(std::size_t j0, std::size_t j1);    // <2>
 
 These methods return a reference to `*this`, so can be chained with other calls.
 
-::: {.callout-caution}
-# Bounds checking
-Generally, these methods do *not* check whether the indices are in bounds.
+CAUTION: Generally, these methods do *not* check whether the indices are in bounds.
 If they aren't, the behaviour is undefined (but bound to be wrong!)
 All of them will perform range checking if you set the `BIT_VERIFY` at compile time.
 See {bit.verify}.
-:::
 
 [Example]{.bt}
 ```cpp

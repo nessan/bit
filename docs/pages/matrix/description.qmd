@@ -18,11 +18,8 @@ constexpr void description(const std::string &head = "", +
 You can send along some arbitrary text that gets prepended or appended to the description of the bit-matrix.
 See the example below.
 
-::: {.callout-caution}
-# The output format may change
-The primary use for these methods is debugging. \
+CAUTION: The primary use for these methods is debugging. \
 The format of the descriptive data may change from time to time.
-:::
 
 [Example]{.bt}
 ```cpp

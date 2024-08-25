@@ -36,11 +36,8 @@ col(std::size_t j) const;                   // <6>
 5. Synonyms for the `row(i)` methods to allow for alternate `C` style indexing a la `matrix[i][j]`.
 6. Read-only access to the elements in column `i` of a bit-matrix.
 
-::: {.callout-warning}
-# Range checks
-In general, these methods do *not* check whether an index is in bounds, and if it isn't, the behaviour is undefined (but bound to be wrong!)
+WARNING: In general, these methods do *not* check whether an index is in bounds, and if it isn't, the behaviour is undefined (but bound to be wrong!)
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp

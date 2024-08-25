@@ -20,13 +20,9 @@ and $p_{n-1} = 1$.
 
 After a call to `make_monic()` any nonzero polynomial will have `size() = degree() + 1`.
 
-::: {.callout-note}
-# The zero polynomial
-The zero polynomial has *no* degree and is not monic.
-
+NOTE: The zero polynomial has *no* degree and is not monic.
 Polynomial methods usually need to treat the zero-polynomial as a *special*, generally trivial, edge case.
 The `make_monic()` method does nothing to a zero polynomial.
-:::
 
 [Example]{.bt}
 ```cpp

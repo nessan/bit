@@ -11,11 +11,8 @@ bit::vector operator()(std::size_t i) const;    // <2>
 1. Return a random solution amongst all the possible solutions for the system $A \cdot x = b$.
 2. Return a specific solution (solution number `i` if you like) for the system $A \cdot x = b$.
 
-::: {.callout-warning}
-# Beware of systems with no solutions
-Both these methods throw an exception if the system has no solutions.
+WARNING: Both these methods throw an exception if the system has no solutions.
 You can avoid that by first calling the {gauss.solution_count}method.
-:::
 
 If the system is consistent (so at least one solution) with $m$ independent equations for $n$ unknowns and $n > m$, then it has $f = n-m$ free variables.
 
@@ -35,10 +32,7 @@ It will return 0 for an inconsistent system, 1 for a full-rank system, and $\min
 
 If the solver is our Gauss object, then the call solver(n) will return the solution  "number" n, where `n` is one of those addressable solutions.
 
-::: {.callout-warning}
-# Range checking
-The `n` must be less than {gauss.solution_count}, or an exception is thrown.
-:::
+WARNING: The `n` must be less than {gauss.solution_count}, or an exception is thrown.
 
 [Example]{.bt}
 

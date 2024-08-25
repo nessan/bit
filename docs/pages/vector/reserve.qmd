@@ -19,10 +19,7 @@ These methods return `*this`, so you can chain them with other calls.
 These methods do _not_ change a bit-vector's `size()`.
 No elements are added or deleted.
 
-::: {.callout-warning}
-# References can disappear
-If the capacity changes, all the old values remain unchanged. However, any references are then invalidated.
-:::
+CAUTION: If the capacity changes, all the old values remain unchanged. However, any references are then invalidated.
 
 [Example]{.bt}
 ```cpp

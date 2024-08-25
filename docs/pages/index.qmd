@@ -58,10 +58,8 @@ c(M) yields:
 │0 0 0 0 0 0│
 │0 0 0 0 0 0│
 ```
-::: {.callout-note}
-# The special nature of {f2}
-`bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements---​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in {f2}.
-:::
+
+NOTE: `bit` makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements --- ​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in {f2}.
 
 ## Installation
 
@@ -77,11 +75,9 @@ This command downloads and unpacks an archive of the current version of `bit` to
 
 Used like this, `FetchContent` will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.
 
-::: {.callout-note}
-# Library versions
-The shown `URL` gets the `current` version of the library---whatever is in the main branch.
+NOTE: The shown `URL` gets the `current` version of the library---whatever is in the main branch.
 For a fixed, stable library version (say release `2.0.0`), use a `URL` parameter like `https://github.com/nessan/bit/releases/download/2.0.0/bit.zip`.
-:::
+
 
 ## Why Use `bit`?
 

@@ -48,10 +48,7 @@ bit::matrix(std::string &src, bool bit_order = false);          // <7>
     Newlines, white spaces, commas, or semi-colons must separate the rows.
     Each row should be encoded in a string as documented in the {vec.constructors} page.
 
-::: {.callout-note}
-# Exceptions
-If parse errors exist, these methods throw a `std::invalid_argument` exception.
-:::
+NOTE: If parse errors exist, these methods throw a `std::invalid_argument` exception.
 
 ###  Method Arguments
 

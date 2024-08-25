@@ -11,11 +11,8 @@ constexpr bit::vector &replace(const bit::vector &with);                  // <2>
 1. Starting at element `i0`, replace the bit-vector values with those from the bit-vector `with`.
 2. Starting at element 0, replace the bit-vector values with those from the bit-vector `with`.
 
-::: {.callout-warning}
-# Sizes must be compatible
-The sub-vector `with` we are copying from must fit inside the existing bit-vector! \
+WARNING: The sub-vector `with` we are copying from must fit inside the existing bit-vector! \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 Both methods return a reference to `*this` so can be chained with other calls.
 

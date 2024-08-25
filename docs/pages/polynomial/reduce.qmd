@@ -8,11 +8,8 @@ polynomial reduce(std::size_t N, bool N_is_exponent = false) const; // <1>
 ```
 1. If the second argument is `true` then we compute $x^{2^N} \textrm{ mod } p(x)$. This allows for huge powers like $2^{100}$ that overflow standard integer types.
 
-::: {.callout-warning}
-# Nonzero polynomials only
-This method only makes sense for nonzero polynomials.
+WARNING: This method only makes sense for nonzero polynomials.
 Calling it for a zero polynomial will cause a {std.invalid_argument} exception to be thrown.
-:::
 
 Let $p(x)$ be a polynomial of degree $n$ over {f2}
 $$
@@ -32,16 +29,10 @@ r(x) = x^N \textrm{ mod } p(x).
 $$
 Our method computes $r(x)$.
 
-::: {.callout-note}
-# Efficiency
-The method works by repeated squaring and multiplication and is efficient for large values of $N$.
-:::
+NOTE: The method works by repeated squaring and multiplication and is efficient for large values of $N$.
 
-::: {.callout-note}
-# Why would we ever need this?
-Computing $x^N \textrm{ mod } p(x)$ for very large $N$ can be used to jump far ahead in the random number streams produced by many
+NOTE: Computing $x^N \textrm{ mod } p(x)$ for very large $N$ can be used to jump far ahead in the random number streams produced by many
 pseudorandom generators --- see [this paper](https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf).
-:::
 
 [Example]{.bt}
 ```cpp

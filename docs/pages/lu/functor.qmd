@@ -18,11 +18,8 @@ If $A$ is $n \times n$ each system solution takes just $\mathcal{O}(n^2)$ operat
 These methods return {std.nullopt} if the underlying bit-matrix $A$ is singular.
 You can avoid that by first calling the {lu.singular} method.
 
-::: {.callout-warning}
-# Size checking
-Both methods throw an exception if the number of elements in $b$ or rows in $B$ does not match the number of rows in $A$.
+WARNING: Both methods throw an exception if the number of elements in $b$ or rows in $B$ does not match the number of rows in $A$.
 They could instead return a {std.nullopt}, but a dimension mismatch is likely an indication of a coding error somewhere.
-:::
 
 [Example]{.bt}
 ```cpp

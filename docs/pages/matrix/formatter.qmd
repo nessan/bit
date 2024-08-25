@@ -20,11 +20,9 @@ std::format("{:x}", M)          // <3>
 1. Outputs `M` row-by-row as bit-vectors in their default format.
 2. Outputs `M` in a "pretty" format.
 3. Outputs `M` row-by-row as bit-vectors in the hex format.`
-::: {.callout-note}
-# Specifier Errors
-Any unrecognized specifier will result in the bit-matrix string showing an error message.
+
+NOTE: Any unrecognized specifier will result in the bit-matrix string showing an error message.
 The sample program below has an example.
-:::
 
 [Example]{.bt}
 ```cpp

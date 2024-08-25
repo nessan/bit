@@ -15,10 +15,7 @@ The default probability value is `0.5`, so `n` coefficient values are determined
 
 At the extremes, if this parameter is `1.0`, the coefficients will all be 1; if it is `0.0`, the elements will all be 0.
 
-::: {.callout-warning}
-# The probability value needs to be valid
-This method throws a {std.invalid_argument} exception if the `prob_one` argument is not in the valid range $[0, 1]$.
-:::
+WARNING: This method throws a {std.invalid_argument} exception if the `prob_one` argument is not in the valid range $[0, 1]$.
 
 [Example]{.bt}
 ```cpp

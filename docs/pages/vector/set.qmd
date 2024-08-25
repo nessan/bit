@@ -22,12 +22,8 @@ constexpr bit::vector &flip();
 2.  Sets, resets, or flips the value of `len` elements starting at index `first`.
 3.  Sets, resets, or flips the elements' values.
 
-
-::: {.callout-warning}
-# Sizes must be compatible
- The `len` elements starting at `first` must fit in the valid range for the bit-vector. \
+WARNING: The `len` elements starting at `first` must fit in the valid range for the bit-vector. \
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 These methods return a reference to `*this`, so they can be chained with other calls.
 

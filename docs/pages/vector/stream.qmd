@@ -18,10 +18,7 @@ operator>>(std::istream &s, bit::vector<Block, Alloc> &rhs);         // <2>
 
 The input stream operator will throw a `std::invalid_argument` exception on parse failures.
 
-::: {.callout-note}
-# Vector-ordering
-Strings are written or read in _vector-order_ where the least significant element is on the _left_, so as v~0~v~1~v~2~...
-:::
+NOTE: Strings are written or read in _vector-order_ where the least significant element is on the _left_, so as v~0~v~1~v~2~...
 
 ## Valid Strings
 

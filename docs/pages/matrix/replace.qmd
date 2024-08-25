@@ -18,11 +18,9 @@ replace(const bit::matrix &with);                                   // <3>
 2. Starting at index pair `(i0,i0)`, replace the bit-matrix values with those from the bit-matrix `with`.
 3. Starting at index pair `(0,0)`, replace the bit-matrix values with those from the bit-matrix `with`.
 
-::: {.callout-warning}
-# Sizes must be compatible
-The sub-matrix `with` we are copying from must fit inside the existing bit-matrix!
+
+WARNING: The sub-matrix `with` we are copying from must fit inside the existing bit-matrix!
 Set the `BIT_VERIFY` flag at compile time to check this condition --- any violation will cause the program to abort with a helpful message.
-:::
 
 These methods return a reference to `*this` so they can be chained with other calls.
 

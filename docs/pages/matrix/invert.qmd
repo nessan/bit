@@ -13,17 +13,11 @@ bit::invert(const matrix<Block, Allocator> &M);
 If this method succeeds, it will return $M^{-1}$ wrapped in a `std::optional`.
 If the input matrix $M$ is singular, it will return `std::nullopt` instead.
 
-::: {.callout-note}
-# Bit-matrices are often singular
-Randomly filled matrices over {f2} are likely to be singular.
+NOTE: Randomly filled matrices over {f2} are likely to be singular.
 In fact, for matrices that are $10 \times 10$ or larger, there is a 71% chance the matrix is singular if the elements were set by flipping fair coins.
 Contrast that to matrices over the reals where, mathematically at least, matrices are almost surely invertible (though the numerics of the situation may not be so sure).
-:::
 
-::: {.callout-warning}
-# The bit-matrix argument must be square
-The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
-:::
+WARNING: The input matrix must be square, and, if the `BIT_VERIFY` flag is set at compile time, the {bit.verify} macro checks that pre-condition.
 
 [Example]{.bt}
 ```cpp

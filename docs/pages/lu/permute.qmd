@@ -34,11 +34,8 @@ This _row-swaps_ scheme gives swapping instructions to be applied one after the 
 Our example in this format becomes $[0, 2, 2, 4, 4]$.
 This vector can be interpreted as no swap on row 0, followed by a swap of rows 1 and 2, then no further swap on row 2, followed by a swap of rows 3 and 4, and finally, no further swap on row 4.
 
-::: {.callout-note}
-# This is for information only
-Internally, we store and use $P$ in the row-swaps instruction form.
+NOTE: Internally, we store and use $P$ in the row-swaps instruction form.
 The index permutation form is provided only for informational purposes.
-:::
 
 ### See Also
 {lu.operator()}

@@ -135,10 +135,8 @@ $$
 $$
 That is exactly the form we want.
 
-::: {.callout-note}
-You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row.
+NOTE: You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row.
 That is the version seen in some expositions.
-:::
 
 $C$ is a "companion" for the polynomial $c(\lambda)$ and is known as a {companion-matrix.
 
@@ -403,12 +401,9 @@ The algorithm just stores those coefficients and recurses using $A_1$ as the sma
 +
 It can then convolve the coefficients of $c_{A_1}(x)$ and $c_{A_3}(x)$ to return the coefficients for $c_{A}(x)$.
 
-::: {.callout-note}
-# There are no badly conditioned matrices in {f2}
-In the case of real valued matrices it can be that $a_{kk-1}$ is non-zero but still small.
+NOTE: In the case of real valued matrices it can be that $a_{kk-1}$ is non-zero but still small.
 Division by very small floating point numbers should be avoided as those operations tend to be [ill-conditioned](https://en.wikipedia.org/wiki/Floating-point_arithmetic).
 For that reason, step 2. might always be performed to find the $a_{kj}$ for $j < k-1$ that is largest in absolute value and then do the suggested row and column swaps to move that element into the all important $(k,k-1)$ slot.
-:::
 
 ## Danilevsky for Bit-Matrices
 
@@ -508,8 +503,5 @@ $$
 Store those coefficients and recurse using $A_1$ as the $(k-1) \times (k-1)$ input matrix.
 Convolve the coefficients of $c_{A_1}(x)$ and $c_{A_3}(x)$ to get the coefficients for $c_{A}(x)$.
 
-::: {.callout-note}
-# Recursion is to be expected here
-In {f2} any matrix element can only be $0$ or $1$.
+NOTE: In {f2} any matrix element can only be $0$ or $1$.
 Therefore, all things being equal, you'd expect to have to perform the recursive fourth step half the time.
-:::

@@ -17,11 +17,8 @@ On construction, a `gauss` computes the {reduced-row-echelon-form}  of $A$ by us
 It performs the same operations to a copy of the input bit-vector $b$.
 Once done, it can readily compute the rank of $A$, check the system for consistency, calculate the number of free variables, etc.
 
-::: {.callout-note}
-# Efficiency
-If $A$ is $n \times n$, then construction is an $\mathcal{O}(n^3)$ operation (though due to the nature of {f2}, things are done in blocks at a time).
+NOTE: If $A$ is $n \times n$, then construction is an $\mathcal{O}(n^3)$ operation (though due to the nature of {f2}, things are done in blocks at a time).
 There are potentially sub-cubic ways of doing this work using various block-iterative methods that have not yet been implemented.
-:::
 
 [Example]{.bt}
 ```cpp

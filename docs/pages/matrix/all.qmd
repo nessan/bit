@@ -13,11 +13,8 @@ constexpr bool none() const;    // <3>
 2. Return `true` if any elements in the bit-matrix are 1; otherwise, `false`.
 3. Return `true` if none of the elements in the bit-matrix are 1; otherwise, `false`.
 
-::: {.callout-caution}
-# Empty bit-matrices
-Calling these methods for an empty bit-matrix is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
+CAUTION: Calling these methods for an empty bit-matrix is likely an error --- if you set the `BIT_VERIFY` flag at compile time, we throw an exception with a helpful message.
 If the `BIT_VERIFY` flag is not set, `all()` and `none()` _both_ return `true` while `any()` will return `false`.
-:::
 
 [Example]{.bt}
 ```cpp

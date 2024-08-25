@@ -18,11 +18,8 @@ sub(std::size_t n) const const;                                             // <
 2. Returns an `r x c` bit-matrix, a copy from this bit-matrix starting at `(0, 0)`.
 3. Returns an `n x n` square bit-matrix, a copy from this bit-matrix starting at `(0, 0)`
 
-::: {.callout-warning}
-# Bounds checking
-`(i0, j0)` has to be a valid index pair, and the requested dimensions must fit as a valid sub-matrix.
+WARNING: `(i0, j0)` has to be a valid index pair, and the requested dimensions must fit as a valid sub-matrix.
 Set the `BIT_VERIFY` flag at compile time to check these conditions --- any violation will cause the program to abort with a helpful message.
-:::
 
 [Example]{.bt}
 ```cpp
