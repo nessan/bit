@@ -43,6 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
 <link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -81,6 +82,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -630,19 +632,13 @@ C =
 \]</span> The <a href="https://en.wikipedia.org/wiki/Minor_(linear_algebra)">co-factors</a> are all <span class="math inline">\((n-1) \times (n-1)\)</span> triangular so have readily computed determinants which means that: <span class="math display">\[
 |\lambda I - C| =  (\lambda + c_{n-1}) \lambda^{n-1} + c_{n-2} \lambda^{n-2} + \cdots + c_0.
 \]</span> That is exactly the form we want.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row. That is the version seen in some expositions.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+You can make the same determinant expansion argument if the polynomial coefficients were in the final column instead of the top row. That is the version seen in some expositions.
+</td></tr></tbody></table></div>
 <p><span class="math inline">\(C\)</span> is a “companion” for the polynomial <span class="math inline">\(c(\lambda)\)</span> and is known as a {companion-matrix.</p>
 <section id="frobenius-form" class="level3">
 <h3 class="anchored" data-anchor-id="frobenius-form">Frobenius Form</h3>
@@ -816,19 +812,13 @@ c_A(x) = c_{A_1}(x) c_{A_3}(x)
 \]</span> + and as <span class="math inline">\(A_3\)</span> is already in companion form we can easily read off the coefficients for <span class="math inline">\(c_{A_3}(x)\)</span> + <span class="math display">\[
 c_{A_3}(x) = 1 + a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
 \]</span> + The algorithm just stores those coefficients and recurses using <span class="math inline">\(A_1\)</span> as the smaller <span class="math inline">\((k-1) \times (k-1)\)</span> input matrix. + It can then convolve the coefficients of <span class="math inline">\(c_{A_1}(x)\)</span> and <span class="math inline">\(c_{A_3}(x)\)</span> to return the coefficients for <span class="math inline">\(c_{A}(x)\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-There are no badly conditioned matrices in <span class="math inline">\(\mathbb{F}_2\)</span>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In the case of real valued matrices it can be that <span class="math inline">\(a_{kk-1}\)</span> is non-zero but still small. Division by very small floating point numbers should be avoided as those operations tend to be <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">ill-conditioned</a>. For that reason, step 2. might always be performed to find the <span class="math inline">\(a_{kj}\)</span> for <span class="math inline">\(j &lt; k-1\)</span> that is largest in absolute value and then do the suggested row and column swaps to move that element into the all important <span class="math inline">\((k,k-1)\)</span> slot.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+In the case of real valued matrices it can be that <span class="math inline">\(a_{kk-1}\)</span> is non-zero but still small. Division by very small floating point numbers should be avoided as those operations tend to be <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">ill-conditioned</a>. For that reason, step 2. might always be performed to find the <span class="math inline">\(a_{kj}\)</span> for <span class="math inline">\(j &lt; k-1\)</span> that is largest in absolute value and then do the suggested row and column swaps to move that element into the all important <span class="math inline">\((k,k-1)\)</span> slot.
+</td></tr></tbody></table></div>
 </section>
 </section>
 <section id="danilevsky-for-bit-matrices" class="level2">
@@ -898,19 +888,13 @@ c_A(x) = c_{A_1}(x) c_{A_3}(x).
 c_{A_3}(x) = 1+ a_{kk} x + a_{kk+1} x^2 + \ldots + a_{kn} x^{n-k+1}.
 \]</span> Store those coefficients and recurse using <span class="math inline">\(A_1\)</span> as the <span class="math inline">\((k-1) \times (k-1)\)</span> input matrix. Convolve the coefficients of <span class="math inline">\(c_{A_1}(x)\)</span> and <span class="math inline">\(c_{A_3}(x)\)</span> to get the coefficients for <span class="math inline">\(c_{A}(x)\)</span>.</p></li>
 </ol>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Recursion is to be expected here
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In <span class="math inline">\(\mathbb{F}_2\)</span> any matrix element can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. Therefore, all things being equal, you’d expect to have to perform the recursive fourth step half the time.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+In <span class="math inline">\(\mathbb{F}_2\)</span> any matrix element can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. Therefore, all things being equal, you’d expect to have to perform the recursive fourth step half the time.
+</td></tr></tbody></table></div>
 
 
 </section>

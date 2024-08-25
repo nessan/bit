@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -564,19 +566,13 @@ window.Quarto = {
 </dl>
 <p>The [std::optional] return value can be safely dereferenced as a bit-vector if everything goes well. That bit-vector will be a solution <span class="math inline">\(x\)</span> to the system <span class="math inline">\(A \cdot x = b\)</span>. The solution may or may not be unique.</p>
 <p>If there is a problem, the return value will be a <a href="https://en.cppreference.com/w/cpp/utility/optional/nullopt"><code>std::nullopt</code></a>. This happens if the system of equations has no solution. It will also be the case if <code>A</code> is not square or if the size of <code>b</code> is not the same as the number of rows in <code>A</code>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The concept
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The idea is to get <em>one</em> solution for a system of equations with the least possible fuss. + Over <span class="math inline">\(\mathbb{F}_2\)</span>, any free variable can take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The <a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a> method iterates through potentially non-unique solutions if that is required.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+The idea is to get <em>one</em> solution for a system of equations with the least possible fuss. + Over <span class="math inline">\(\mathbb{F}_2\)</span>, any free variable can take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The <a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a> method iterates through potentially non-unique solutions if that is required.
+</td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>

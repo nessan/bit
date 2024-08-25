@@ -76,6 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,6 +113,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -569,19 +571,13 @@ window.Quarto = {
 <div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit_exit<span class="op">(</span>message<span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>bit_exit(message)</code> macro passes the <code>message</code> and the source code location of the failure to <code>bit::exit(...)</code>. That function prints the failure’s source code location along with the <code>message</code> payload and then <strong>exits</strong> the program.</p>
 <p>The <code>bit::exit</code> function needs source code location parameters (the filename, the line number, and the function name), and the <code>bit_exit</code> macro automatically adds those. You typically use the <code>message</code> argument to print the values of the variables that triggered the failure. The message can be anything that can be formatted using the facilities in <a href="https://en.cppreference.com/w/cpp/utility/format/format"><code>std::format</code></a>.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Microsoft compiler
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Microsoft’s old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine. Add the <code>/Zc:preprocessor</code> flag to use that upgrade at compile time. Our <code>CMake</code> module <code>compiler_init</code> does that automatically for you.</p>
-</div>
-</div>
+<div class="admonition tip">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-tip" title="Tip"></i></td>
+    <td class="content">
+    
+Microsoft’s old traditional preprocessor is not happy with these macros, but their newer cross-platform compatible one is fine. Add the <code>/Zc:preprocessor</code> flag to use that upgrade at compile time. Our <code>CMake</code> module <code>compiler_init</code> does that automatically for you.
+</td></tr></tbody></table></div>
 </section>
 <section id="compiler-flags" class="level2">
 <h2 class="anchored" data-anchor-id="compiler-flags">Compiler Flags</h2>
@@ -638,19 +634,13 @@ Microsoft compiler
 <p>This code checks that the two vector arguments have equal length — a necessary constraint for the dot product operation to make sense. If the requirement is not satisfied, the code will exit with an informative message that includes the size of the two vectors.</p>
 <p>The check here is <strong>off</strong> by default, and you need to do something special (i.e., define the <code>BIT_VERIFY</code> flag at compile time) to enable it. Production code may do many of these dot products; we do not generally want to pay for the check. However, enabling these sorts of checks may be very useful during development.</p>
 <p>The <code>bit_verify(...)</code> macro expands to nothing <strong>unless</strong> you set the <code>BIT_VERIFY</code> flag at compile time.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Macro-land
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither does <code>bit_verify</code>.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+We are in macro land here, so there are no namespaces. Typically, macros have names in caps, but the standard <code>assert</code> does not follow that custom, so neither does <code>bit_verify</code>.
+</td></tr></tbody></table></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
 <p><a href="https://www.cplusplus.com/reference/cassert/assert/"><code>assert</code></a></p>

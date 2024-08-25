@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -555,19 +557,13 @@ window.Quarto = {
 <span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">If the second argument is <code>true</code> then we compute <span class="math inline">\(x^{2^N} \textrm{ mod } p(x)\)</span>. This allows for huge powers like <span class="math inline">\(2^{100}\)</span> that overflow standard integer types.</span>
 </dd>
 </dl>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Nonzero polynomials only
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This method only makes sense for nonzero polynomials. Calling it for a zero polynomial will cause a <a href="https://en.cppreference.com/w/cpp/error/invalid_argument"><code>std::invalid_argument</code></a> exception to be thrown.</p>
-</div>
-</div>
+<div class="admonition warning">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-warning" title="Warning"></i></td>
+    <td class="content">
+    
+This method only makes sense for nonzero polynomials. Calling it for a zero polynomial will cause a <a href="https://en.cppreference.com/w/cpp/error/invalid_argument"><code>std::invalid_argument</code></a> exception to be thrown.
+</td></tr></tbody></table></div>
 <p>Let <span class="math inline">\(p(x)\)</span> be a polynomial of degree <span class="math inline">\(n\)</span> over <span class="math inline">\(\mathbb{F}_2\)</span> <span class="math display">\[
 p(x) = p_0 + p_1 x + \cdots + p_n x^n,
 \]</span> where <span class="math inline">\(p_n = 1\)</span>.</p>
@@ -577,32 +573,20 @@ x^N= q(x) p(x) + r(x),
 <p>In standard notation, we write <span class="math display">\[
 r(x) = x^N \textrm{ mod } p(x).
 \]</span> Our method computes <span class="math inline">\(r(x)\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Efficiency
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The method works by repeated squaring and multiplication and is efficient for large values of <span class="math inline">\(N\)</span>.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Why would we ever need this?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Computing <span class="math inline">\(x^N \textrm{ mod } p(x)\)</span> for very large <span class="math inline">\(N\)</span> can be used to jump far ahead in the random number streams produced by many pseudorandom generators — see <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf">this paper</a>.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+The method works by repeated squaring and multiplication and is efficient for large values of <span class="math inline">\(N\)</span>.
+</td></tr></tbody></table></div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+Computing <span class="math inline">\(x^N \textrm{ mod } p(x)\)</span> for very large <span class="math inline">\(N\)</span> can be used to jump far ahead in the random number streams produced by many pseudorandom generators — see <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/jumpmt.pdf">this paper</a>.
+</td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>

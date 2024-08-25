@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -590,25 +592,19 @@ In <span class="math inline">\(\mathbb{F}_2\)</span>, multiplication corresponds
 </dd>
 </dl>
 <p>These methods all return a reference to <code>*this</code> so they can be chained with other calls.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Dimensions must match
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The two bit-matrices in question must have the same dimensions. Set the <code>BIT_VERIFY</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.</p>
-</div>
-</div>
+<div class="admonition warning">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-warning" title="Warning"></i></td>
+    <td class="content">
+    
+The two bit-matrices in question must have the same dimensions. Set the <code>BIT_VERIFY</code> flag at compile time to check this condition — any violation will cause the program to abort with a helpful message.
+</td></tr></tbody></table></div>
 <p>There is one other bit-twiddling method:</p>
-<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="7" onclick="event.preventDefault();">7</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>matrix <span class="kw">operator</span><span class="op">~()</span> <span class="at">const</span><span class="op">;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> bit<span class="op">::</span>matrix <span class="kw">operator</span><span class="op">~()</span> <span class="at">const</span><span class="op">;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="7">7</dt>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="1" data-code-annotation="7">Returns a copy of the bit-matrix with all the bits flipped</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="1" data-code-annotation="1">Returns a copy of the bit-matrix with all the bits flipped</span>
 </dd>
 </dl>
 <p><span class="bt">Example</span></p>

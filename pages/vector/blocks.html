@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -558,19 +560,13 @@ window.Quarto = {
 
 <p>The methods referenced on this page allow you to access the implementation details of the <code>bit::vector</code> class. As such, they should be considered <em>advanced</em> and a last resource!</p>
 <p>The primary use case is to implement functionality that should eventually make it into the core <code>bit::vector</code> interface.</p>
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Use these methods at your own risk
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Writing directly into the block store can leave the <code>bit::vector</code> in an illegitimate state.</p>
-</div>
-</div>
+<div class="admonition caution">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-caution" title="Caution"></i></td>
+    <td class="content">
+    
+Writing directly into the block store can leave the <code>bit::vector</code> in an illegitimate state.
+</td></tr></tbody></table></div>
 <div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">block_store_type</span> <span class="op">=</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>Block<span class="op">,</span> Allocator<span class="op">&gt;;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
@@ -655,38 +651,26 @@ Use these methods at your own risk
 <span data-code-cell="annotated-cell-7" data-code-lines="3" data-code-annotation="1">Create a bit-vector by <em>copying</em> or <em>moving</em> a pre-filled container of blocks.</span>
 </dd>
 </dl>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Your block store must match the <code>block_store_type</code> of the <code>bit::vector</code> you wish to construct. It must also have precisely the correct size — if you are constructing a bit-vector of size <code>n</code>, the store size must equal the value returned from <code>blocks_needed(n)</code>.</p>
-</div>
-</div>
+<div class="admonition important">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-important" title="Important"></i></td>
+    <td class="content">
+    
+Your block store must match the <code>block_store_type</code> of the <code>bit::vector</code> you wish to construct. It must also have precisely the correct size — if you are constructing a bit-vector of size <code>n</code>, the store size must equal the value returned from <code>blocks_needed(n)</code>.
+</td></tr></tbody></table></div>
 <p>Suppose <code>my_store</code> is a prefilled store of bits you wish to use to construct a bit-vector of size <code>n</code>. If you invoke the constructor as:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">(</span>n<span class="op">,</span> <span class="bu">std::</span>move<span class="op">(</span>my_store<span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then <code>my_store</code> is <em>moved</em> directly into place as the bit-vector’s elements. This construction makes no copies of the blocks and will be very efficient. However, if you use this route, <code>my_store</code> will no longer be valid after the call.</p>
 <p>On the other hand, if you invoke the constructor as:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bit<span class="op">::</span>vector v<span class="op">(</span>n<span class="op">,</span> my_store<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then <code>my_store</code> is <em>copied</em> into the bit-vector and remains valid after the call, though unconnected from the bit-vector.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The constructor takes an optional third <code>is_clean</code> argument. If <code>false</code> (the default), the constructor cleans out any <em>junk</em> bits in the final block of the store arguments. You can preempt that cleaning call if you are sure those bits are all zero.</p>
-</div>
-</div>
+<div class="admonition tip">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-tip" title="Tip"></i></td>
+    <td class="content">
+    
+The constructor takes an optional third <code>is_clean</code> argument. If <code>false</code> (the default), the constructor cleans out any <em>junk</em> bits in the final block of the store arguments. You can preempt that cleaning call if you are sure those bits are all zero.
+</td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="annotated-cell-10"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="annotated-cell-10-2"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>

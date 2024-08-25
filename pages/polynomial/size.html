@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -594,20 +596,13 @@ p(x) = x + x^3,
 \]</span> has a degree 3 and a size that is <em>at least</em> 4. If we write out all the coefficients, it might be that <span class="math display">\[
 p(x) = 0 + 1*x + 0*x^2 + 1*x^3 + 0*x4 + 0*x5,
 \]</span> with two trailing zero coefficients <span class="math inline">\(p_4 = p_5 = 0\)</span> so the polynomial has size 6. Those can be eliminated by the <a href="../../pages/polynomial/monic.html"><code>polynomial::make_monic</code></a> method. Even if there are lots of trailing zeros, internally the class methods remain efficient and ignore them.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The zero polynomial
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The zero polynomial might have no coefficients so <code>size() == 0</code>, or it might have lots of zero coefficients and a <code>size() &gt; 0</code>. In either case, the degree will be the special “not a degree” constant <code>polynomial::ndeg</code>.</p>
-<p>Methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+The zero polynomial might have no coefficients so <code>size() == 0</code>, or it might have lots of zero coefficients and a <code>size() &gt; 0</code>. In either case, the degree will be the special “not a degree” constant <code>polynomial::ndeg</code>. Methods usually need to treat the zero-polynomial as a <em>special</em>, generally trivial, edge case.
+</td></tr></tbody></table></div>
 </section>
 <section id="resizing" class="level2">
 <h2 class="anchored" data-anchor-id="resizing">Resizing</h2>
@@ -619,19 +614,13 @@ The zero polynomial
 <h2 class="anchored" data-anchor-id="memory-usage">Memory Usage</h2>
 <p>The <code>capacity()</code> method returns the number of coefficients that a polynomial <em>can</em> have without causing any new memory allocation to happen. The method is a pass-through to the <a href="../../pages/vector/capacity.html"><code>vector::capacity</code></a> method for the underlying coefficient bit-vector.</p>
 <p>A nonzero polynomial has at least <code>degree() + 1</code> coefficients but may have many more that as trailing zeros. Beyond that, the coefficient bit-vector can have spare capacity that is only ever reachable by using the <code>resize()</code> method. Resizing up to capacity does not cause memory allocation, so it is very efficient. Of course, having lots of spare capacity can be resource-wasting.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Memory footprint.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>To minimize the memory used by a polynomial, use the <a href="../../pages/polynomial/shrink_to_fit.html"><code>polynomial::shrink_to_fit</code></a> method.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+To minimize the memory used by a polynomial, use the <a href="../../pages/polynomial/shrink_to_fit.html"><code>polynomial::shrink_to_fit</code></a> method.
+</td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>

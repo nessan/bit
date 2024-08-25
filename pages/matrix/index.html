@@ -76,6 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,6 +113,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -583,19 +585,13 @@ window.Quarto = {
 <p>The aim is to facilitate efficient linear algebra over <span class="math inline">\(\mathbb{F}_2\)</span> where the bit-vector class is <a href="../../pages/vector/index.html"><code>bit::vector</code></a>.</p>
 <p>This bit-matrix class is a <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a> of rows where each row is a single bit-vector. If, instead, the primary aim was to minimize storage, one would store the bit-matrix as a single long bit-vector with appropriate index operations. However, in that case, matrix operations would often need to be done element-by-element, which is much slower than doing things block-by-block, as we do here.</p>
 <p>Like bit-vectors, bit-matrices are sized dynamically at runtime, with the row elements packed into blocks of some unsigned integral type. That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type in some scenarios).</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Square matrices
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Arbitrary <span class="math inline">\(m \times n\)</span> bit-matrices are supported, but some functions only make sense for square matrices where <span class="math inline">\(n = m\)</span>.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+Arbitrary <span class="math inline">\(m \times n\)</span> bit-matrices are supported, but some functions only make sense for square matrices where <span class="math inline">\(n = m\)</span>.
+</td></tr></tbody></table></div>
 <p>The <code>bit::matrix</code> class has many of the same methods defined for <a href="../../pages/vector/index.html"><code>bit::vector</code></a>. We also define functions like <code>dot(lhs, rhs)</code> to handle matrix-vector, vector-matrix, and matrix-matrix multiplication.</p>
 <p>There are methods to solve linear systems of equations <span class="math inline">\(A \cdot x = b\)</span>.</p>
 <p>Danilevsky’s method to compute characteristic polynomials (and the determinant) for a <code>bit::matrix</code> is available and works for quite large matrices (ones with millions of entries) that would choke a naive implementation that didn’t take into account the nature of arithmetic over <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a>.</p>
@@ -644,19 +640,13 @@ Square matrices
 <p>The default [<code>std::unsigned</code>] for a <code>Block</code> is 64-bits, the <em>native</em> size for many modern CPUs. Of course, if you need to use many smaller bit-matrices and have concerns about conserving space, you might use a different <code>Block</code>. Perhaps if the bit-matrices all fit in 32-bits, you might have code along the lines</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> <span class="dt">matrix_type</span> <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;</span><span class="dt">uint32_t</span><span class="op">&gt;;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">matrix_type</span> mat <span class="op">=</span> <span class="op">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Use a single <code>Block</code> type throughout your code!
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You should use just one <code>Block</code> type throughout your code. In theory, there is no reason that one couldn’t intermingle operations between, say, a <code>bit::matrix&lt;uint32_t&gt;</code> and a <code>bit::vector&lt;uint64_t&gt;</code>, but doing so efficiently significantly increases code complexity, and the library doesn’t support this.</p>
-</div>
-</div>
+<div class="admonition warning">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-warning" title="Warning"></i></td>
+    <td class="content">
+    
+You should use just one <code>Block</code> type throughout your code. In theory, there is no reason that one couldn’t intermingle operations between, say, a <code>bit::matrix&lt;uint32_t&gt;</code> and a <code>bit::vector&lt;uint64_t&gt;</code>, but doing so efficiently significantly increases code complexity, and the library doesn’t support this.
+</td></tr></tbody></table></div>
 </section>
 </section>
 <section id="class-types" class="level2">

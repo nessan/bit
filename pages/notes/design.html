@@ -77,6 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,6 +114,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -578,19 +580,13 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="the-bit-vector-class">The Bit-Vector Class</h2>
 <p>The standard library already has <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a>, an efficient <em>bitset</em> class. That class is familiar and well thought through, sp our <a href="../../pages/vector/index.html"><code>bit::vector</code></a> replicates and extends much of that primary interface.</p>
 <p>However, all <a href="https://en.cppreference.com/w/cpp/utility/bitset"><code>std::bitset</code></a> objects have a fixed size determined at compile time, which is too restrictive for our use case. The well-known <em>Boost</em> library adds a dynamic version [<code>boost::dynamic_bitset</code>] where the bitset size can be set and changed at runtime.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Dynamic sizing
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Our <a href="../../pages/vector/index.html"><code>bit::vector</code></a> class is also dynamically sized at runtime.</p>
-</div>
-</div>
+<div class="admonition important">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-important" title="Important"></i></td>
+    <td class="content">
+    
+Our <a href="../../pages/vector/index.html"><code>bit::vector</code></a> class is also dynamically sized at runtime.
+</td></tr></tbody></table></div>
 <p>The types defined in the standard library and <em>Boost</em> are for <em>bitsets</em> instead of <em>bit-vectors</em>. For example, they print in <em>bit-order</em> with the least significant element/bit on the right.</p>
 <p>More importantly, those classes don’t have any methods for linear algebra. Neither does the standard library’s vector class <a href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>.</p>
 <section id="storage" class="level3">
@@ -615,35 +611,23 @@ Dynamic sizing
 </dl>
 <p>The number of blocks allocated depends on the size of the bit-vector.</p>
 <p>The <code>std::vector&lt;Block&gt;</code> data member handles any memory allocations and de-allocations. These days, it is often the case in C++ that one can completely omit the need to manually manage memory using the <code>new</code> and <code>delete</code> operators and instead use one of the containers in the standard library.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In a <code>bit::vector</code>, if there are <span class="math inline">\(d\)</span> binary digits in a block where by default <span class="math inline">\(d = 64\)</span>, then bit-vector element <span class="math inline">\(v_i\)</span> is located at bit <code>i%d</code> of the block indexed <code>i/d</code>.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+In a <code>bit::vector</code>, if there are <span class="math inline">\(d\)</span> binary digits in a block where by default <span class="math inline">\(d = 64\)</span>, then bit-vector element <span class="math inline">\(v_i\)</span> is located at bit <code>i%d</code> of the block indexed <code>i/d</code>.
+</td></tr></tbody></table></div>
 <p><span class="bt">Redundant storage</span> It is worth pointing out that even though this is indeed a compact storage scheme for bit-vectors, some redundant bits are likely in our container of blocks.</p>
 <p>For example, if <span class="math inline">\(\mathbf{v}\)</span> has, say, <span class="math inline">\(75\)</span> elements, it will inevitably consume multiple words of storage. If we are using the defaults, then <span class="math inline">\(\mathbf{v}\)</span> will take up two 64-bit blocks, and hence there will be <span class="math inline">\(2*64 - 75 = 53\)</span> bits of surplus storage.</p>
 <p>Most of the time, the space wasted in those extra bits is not material. If you create vast numbers, particularly of smaller bit-vectors, you can choose a different block type to minimize the wastage.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Redundant bits need to be zeroed out
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>No matter which block type is employed, for efficiency’s sake, redundant bits must all be set to the value 0 initially and kept at 0 as the bit-vector is operated on.</p>
-</div>
-</div>
+<div class="admonition important">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-important" title="Important"></i></td>
+    <td class="content">
+    
+No matter which block type is employed, for efficiency’s sake, redundant bits must all be set to the value 0 initially and kept at 0 as the bit-vector is operated on.
+</td></tr></tbody></table></div>
 </section>
 <section id="efficiency" class="level3">
 <h3 class="anchored" data-anchor-id="efficiency">Efficiency</h3>
@@ -683,19 +667,13 @@ Redundant bits need to be zeroed out
 <p><span class="bt">Shifting by an arbitrary number of places:</span> Each block has <span class="math inline">\(d\)</span> binary digits. Shifting <span class="math inline">\(\mathbf{v}\)</span> by an arbitrary number of places, <span class="math inline">\(p\)</span>, to the right, can be split into two stages.</p>
 <p>If <span class="math inline">\(p\)</span> is large enough, we can start by first left-shifting whole blocks at once by <span class="math inline">\(\pi = p/d\)</span> slots. So for each block <span class="math inline">\(B_k\)</span> we set <span class="math inline">\(B_k \leftarrow B_{k-\pi}\)</span>. That efficiently handles a large part of the shift for larger values of <span class="math inline">\(p\)</span>.</p>
 <p>We then can finish by using the earlier ideas to shift <span class="math inline">\(\mathbf{v}\)</span> by less than a whole block <span class="math inline">\(p \% d\)</span> places.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The order matters
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>We need to be careful to do things in the correct order. In particular, for right shifts of bit-vectors, we are left shifting the bits we need to work through the block representation from the highest order index down.</p>
-</div>
-</div>
+<div class="admonition tip">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-tip" title="Tip"></i></td>
+    <td class="content">
+    
+We need to be careful to do things in the correct order. In particular, for right shifts of bit-vectors, we are left shifting the bits we need to work through the block representation from the highest order index down.
+</td></tr></tbody></table></div>
 </section>
 </section>
 <section id="the-bit-matrix-class" class="level2">
@@ -706,19 +684,13 @@ The order matters
 <p>So a <code>bit::matrix</code> is stored in <em>row-major</em> mode where each row is a single <a href="../../pages/vector/index.html"><code>bit::vector</code></a>. Therefore, arranging computations to work row by row instead of column by column is typically much more efficient. The library’s many instance methods and free functions involving bit-matrices take this into account.</p>
 <p>Remember that our primary aim is doing linear algebra over <span class="math inline">\(\mathbb{F}_2\)</span>. If, instead, the aim was to minimize storage, one would store the bit-matrix as a single long bit-vector with appropriate index operations. However, in that case, matrix operations would often need to be done element-by-element, which is much slower than doing things block-by-block as we do in <code>bit</code>.</p>
 <p>Like bit-vectors, bit-matrices are sized dynamically at runtime, and the row elements are packed into blocks of some unsigned integral type. That template parameter defaults to 64-bit words (it might be reasonable to use a smaller type if your use case involves the creation of many small matrices).</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Some methods only work on square matrices
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Arbitrary <span class="math inline">\(m \times n\)</span> bit-matrices are supported, but some methods only make sense for square matrices where <span class="math inline">\(n = m\)</span>.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+Arbitrary <span class="math inline">\(m \times n\)</span> bit-matrices are supported, but some methods only make sense for square matrices where <span class="math inline">\(n = m\)</span>.
+</td></tr></tbody></table></div>
 <section id="alternative-ideas" class="level3">
 <h3 class="anchored" data-anchor-id="alternative-ideas">Alternative Ideas</h3>
 <p>Apart from using column-major versus row-major mode, the other potentially sensible idea would be to base the whole library on bit-matrices where bit-vectors are either <span class="math inline">\(n \times 1\)</span> or <span class="math inline">\(1 \times n\)</span> bit-matrices.</p>

@@ -75,6 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,6 +112,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -563,19 +565,13 @@ window.Quarto = {
 </dl>
 <p>These construct a <code>gauss</code> object for the system <span class="math inline">\(A \cdot x = b\)</span> where <span class="math inline">\(A\)</span> is a <em>square</em> bit-matrix, and <span class="math inline">\(b\)</span> is a bit-vector of the same size as there are rows in <span class="math inline">\(A\)</span>.</p>
 <p>On construction, a <code>gauss</code> computes the <a href="https://en.wikipedia.org/wiki/Row_echelon_form">reduced row echelon form</a> of <span class="math inline">\(A\)</span> by using <a href="https://en.wikipedia.org/wiki/Elementary_matrix#Operations">elementary row operations</a>. It performs the same operations to a copy of the input bit-vector <span class="math inline">\(b\)</span>. Once done, it can readily compute the rank of <span class="math inline">\(A\)</span>, check the system for consistency, calculate the number of free variables, etc.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Efficiency
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If <span class="math inline">\(A\)</span> is <span class="math inline">\(n \times n\)</span>, then construction is an <span class="math inline">\(\mathcal{O}(n^3)\)</span> operation (though due to the nature of <span class="math inline">\(\mathbb{F}_2\)</span>, things are done in blocks at a time). There are potentially sub-cubic ways of doing this work using various block-iterative methods that have not yet been implemented.</p>
-</div>
-</div>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+If <span class="math inline">\(A\)</span> is <span class="math inline">\(n \times n\)</span>, then construction is an <span class="math inline">\(\mathcal{O}(n^3)\)</span> operation (though due to the nature of <span class="math inline">\(\mathbb{F}_2\)</span>, things are done in blocks at a time). There are potentially sub-cubic ways of doing this work using various block-iterative methods that have not yet been implemented.
+</td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>

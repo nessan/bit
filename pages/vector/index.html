@@ -76,6 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/admonitions-1.0.0/admonitions.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,6 +113,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-G40Q4SR3K4', { 'anonymize_ip': true});
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -621,19 +623,13 @@ window.Quarto = {
 <p>If you need to use many smaller bit-vectors and have concerns about conserving space, you might use a different <code>Block</code>. Perhaps if the bit-vectors all fit in 8 bits, you might have code along the lines:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="dt">vector_type</span> <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;</span><span class="dt">uint8_t</span><span class="op">&gt;;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">vector_type</span> v <span class="op">=</span> <span class="op">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Use a single <code>Block</code> type throughout your code!
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In theory, there is no reason that one couldn’t intermingle operations between, say, a <code>bit::vector&lt;std::uint32_t&gt;</code> and a <code>bit::vector&lt;std::uint64_t&gt;</code>, but doing so efficiently significantly increases code complexity, and the library doesn’t support this.</p>
-</div>
-</div>
+<div class="admonition warning">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-warning" title="Warning"></i></td>
+    <td class="content">
+    
+In theory, there is no reason that one couldn’t intermingle operations between, say, a <code>bit::vector&lt;std::uint32_t&gt;</code> and a <code>bit::vector&lt;std::uint64_t&gt;</code>, but doing so efficiently significantly increases code complexity, and the library doesn’t support this.
+</td></tr></tbody></table></div>
 </section>
 </section>
 <section id="class-constants-and-types" class="level2">
