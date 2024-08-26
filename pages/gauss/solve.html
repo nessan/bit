@@ -564,67 +564,71 @@ window.Quarto = {
 <span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1"><code>A</code> must be square, and <code>b</code> must be the same size as the number of rows in <code>A</code>.</span>
 </dd>
 </dl>
-<p>The [std::optional] return value can be safely dereferenced as a bit-vector if everything goes well. That bit-vector will be a solution <span class="math inline">\(x\)</span> to the system <span class="math inline">\(A \cdot x = b\)</span>. The solution may or may not be unique.</p>
+<p>The <a href="https://en.cppreference.com/w/cpp/utility/optiona"><code>std::optional</code></a> return value can be safely dereferenced as a bit-vector if everything goes well. That bit-vector will be a solution <span class="math inline">\(x\)</span> to the system <span class="math inline">\(A \cdot x = b\)</span>. The solution may or may not be unique.</p>
 <p>If there is a problem, the return value will be a <a href="https://en.cppreference.com/w/cpp/utility/optional/nullopt"><code>std::nullopt</code></a>. This happens if the system of equations has no solution. It will also be the case if <code>A</code> is not square or if the size of <code>b</code> is not the same as the number of rows in <code>A</code>.</p>
 <div class="admonition note">
     <table><tbody><tr>
     <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
     <td class="content">
     
-The idea is to get <em>one</em> solution for a system of equations with the least possible fuss. + Over <span class="math inline">\(\mathbb{F}_2\)</span>, any free variable can take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The <a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a> method iterates through potentially non-unique solutions if that is required.
+We wan to get <em>one</em> solution for a system of equations with very little fuss.<br>
+Over <span class="math inline">\(\mathbb{F}_2\)</span>, any free variable can take on one of the values 0 and 1. Hence, if the system is consistent and has <span class="math inline">\(f\)</span> free variables, it will have <span class="math inline">\(2^f\)</span> possible solutions. So, a consistent system will have a unique solution only if <span class="math inline">\(A\)</span> has full-rank. The <a href="../../pages/gauss/functor.html"><code>gauss::operator(i)</code></a> method iterates through potentially non-unique solutions if that is required.
 </td></tr></tbody></table></div>
 <p><span class="bt">Example</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bit/bit.h&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>main<span class="op">()</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t m <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> A <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span>m<span class="op">);</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> b <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;&gt;::</span>random<span class="op">(</span>m<span class="op">);</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> x <span class="op">=</span> bit<span class="op">::</span>solve<span class="op">(</span>A<span class="op">,</span> b<span class="op">);</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Check that x is indeed a solution by computing A.x and comparing that to b</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">auto</span> Ax <span class="op">=</span> bit<span class="op">::</span>dot<span class="op">(</span>A<span class="op">,</span> <span class="op">*</span>x<span class="op">);</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"bit::matrix A, solution vector x, product A.x, and right hand side b</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t m <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> A <span class="op">=</span> bit<span class="op">::</span>matrix<span class="op">&lt;&gt;::</span>random<span class="op">(</span>m<span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> b <span class="op">=</span> bit<span class="op">::</span>vector<span class="op">&lt;&gt;::</span>random<span class="op">(</span>m<span class="op">);</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> x <span class="op">=</span> bit<span class="op">::</span>solve<span class="op">(</span>A<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Check that x is indeed a solution by computing A.x and comparing that to b</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">auto</span> Ax <span class="op">=</span> bit<span class="op">::</span>dot<span class="op">(</span>A<span class="op">,</span> <span class="op">*</span>x<span class="op">);</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"bit::matrix A, solution vector x, product A.x, and right hand side b:</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"      A         x      A.x      b</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        bit<span class="op">::</span>print<span class="op">(</span>A<span class="op">,</span> <span class="op">*</span>x<span class="op">,</span> Ax<span class="op">,</span> b<span class="op">);</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"So A.x == b? "</span> <span class="op">&lt;&lt;</span> <span class="op">(</span>Ax <span class="op">==</span> b <span class="op">?</span> <span class="st">"YES"</span> <span class="op">:</span> <span class="st">"NO"</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"System A.x = b has NO solutions for A and b as follows</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        bit<span class="op">::</span>print<span class="op">(</span>A<span class="op">,</span> b<span class="op">);</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="bt">Output for a consistent system (details depend on the values of the random inputs)</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bit::matrix</span> A, solution vector x, product A.x, and right hand side b</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">011000011001</span>    0       0       0</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">000100011010</span>    0       0       0</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">100001011010</span>    0       0       0</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">111111010000</span>    1       1       1</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">101011100101</span>    1       1       1</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">100001111100</span>    1       0       0</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">111100111110</span>    0       0       0</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">101111011010</span>    0       0       0</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">111100010110</span>    1       1       1</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">011011010000</span>    0       0       0</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">010011100101</span>    0       1       1</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">000111101001</span>    1       1       1</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">So</span> A.x == b<span class="pp">?</span> YES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="bt">Output for an inconsistent system (details depend on the values of the random inputs)</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">System</span> A.x = b has NO solutions for A and b as follows</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">110000000111</span>    0</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">011111100001</span>    1</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">011111000101</span>    0</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">110110111011</span>    1</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">100111001101</span>    0</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">000010010010</span>    1</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">001110011110</span>    0</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">100010000001</span>    0</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">110001110110</span>    1</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">000100100010</span>    0</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ex">001101100010</span>    0</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">000000110000</span>    0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"System A.x = b has NO solutions for A and b as follows:</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"      A         x</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        bit<span class="op">::</span>print<span class="op">(</span>A<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="bt">Output for a consistent system (varies on each run)</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bit::matrix</span> A, solution vector x, product A.x, and right hand side b:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="ex">A</span>         x      A.x      b</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">001110110111</span>    0       0       0</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">100011110000</span>    0       1       1</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">110010110000</span>    0       0       0</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">011101011001</span>    0       0       0</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">011001111001</span>    1       0       0</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">011010011110</span>    1       0       0</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">110110110101</span>    0       0       0</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">100000010101</span>    1       1       1</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">010101000101</span>    1       1       1</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">110000011111</span>    1       0       0</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">001010000011</span>    0       0       0</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">110111110111</span>    1       1       1</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">So</span> A.x == b<span class="pp">?</span> YES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="bt">Output for an inconsistent system (varies on each run)</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">System</span> A.x = b has NO solutions for A and b as follows:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="ex">A</span>         x</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">010100100011</span>    1</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">000010010000</span>    1</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">000111111011</span>    1</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">000111111011</span>    1</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">001101110011</span>    1</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">111001110111</span>    1</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">010001010111</span>    1</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">101011000001</span>    0</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">110101110111</span>    0</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ex">111000010000</span>    0</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">011011010100</span>    1</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ex">011001110010</span>    0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="see-also" class="level3">
 <h3 class="anchored" data-anchor-id="see-also">See Also</h3>
 <p><a href="../../pages/gauss/functor.html"><code>gauss::operator()</code></a><br>
