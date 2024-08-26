@@ -890,7 +890,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "",
     "text": "bit is a header-only C++ library for numerical work in bit-space which mathematicians call GF(2) or \\(\\mathbb{F}_2\\). This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.\nThe library provides vector and matrix classes for performing linear algebra in bit-space. The bit::vector class represents bit_vectors, and the bit::matrix class represents bit-matrices. The library also has a bit::polynomial class to represent bit-polynomials over \\(\\mathbb{F}_2\\).\nThese classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.\nBecause arithmetic operations in \\(\\mathbb{F}_2\\) are mod 2, addition/subtraction becomes the XOR operation, and multiplication/division becomes the AND operation. The bit library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.\nThe bit library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over \\(\\mathbb{F}_2\\) and to look at the eigen-structure of bit-matrices. The bit::polynomial class has methods to compute \\(x^N\\bmod{P(x)}\\) where \\(P(x)\\) is a polynomial over \\(\\mathbb{F}_2\\) and \\(N\\) is a potentially huge integer.",
     "crumbs": [
@@ -901,7 +901,7 @@
   {
     "objectID": "index.html#introduction",
     "href": "index.html#introduction",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "",
     "text": "bit is a header-only C++ library for numerical work in bit-space which mathematicians call GF(2) or \\(\\mathbb{F}_2\\). This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.\nThe library provides vector and matrix classes for performing linear algebra in bit-space. The bit::vector class represents bit_vectors, and the bit::matrix class represents bit-matrices. The library also has a bit::polynomial class to represent bit-polynomials over \\(\\mathbb{F}_2\\).\nThese classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.\nBecause arithmetic operations in \\(\\mathbb{F}_2\\) are mod 2, addition/subtraction becomes the XOR operation, and multiplication/division becomes the AND operation. The bit library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.\nThe bit library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over \\(\\mathbb{F}_2\\) and to look at the eigen-structure of bit-matrices. The bit::polynomial class has methods to compute \\(x^N\\bmod{P(x)}\\) where \\(P(x)\\) is a polynomial over \\(\\mathbb{F}_2\\) and \\(N\\) is a potentially huge integer.",
     "crumbs": [
@@ -912,7 +912,7 @@
   {
     "objectID": "index.html#example",
     "href": "index.html#example",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Example",
     "text": "Example\nHere is a simple example of a program that uses bit:\n#include &lt;bit/bit.h&gt;\nint main()\n{\n1    auto M = bit::matrix&lt;&gt;::random(6, 6);\n2    auto c = bit::characteristic_polynomial(M);\n    std::cout &lt;&lt; std::format(\"Bit-matrix M:\\n{:p}\\n\", M);\n    std::cout &lt;&lt; std::format(\"Characteristic poly c(x) = {}\\n\", c);\n3    std::cout &lt;&lt; std::format(\"c(M) yields:\\n{:p}\\n\", c(M));\n}\n\n1\n\nCreates a random \\(6\\times6\\) bit-matrix \\(M\\) where 0 & 1 are equally likely to occur.\n\n2\n\nComputes its characteristic polynomial \\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\\).\n\n3\n\nVerifies that \\(M\\) satisfies its own characteristic equation \\(c(M) = 0\\), as expected from the Cayley Hamilton theorem.\n\n\nSample Output (varies from run to run):\nBit-matrix M:\n│1 1 0 1 1 0│\n│0 0 0 0 0 1│\n│0 1 1 1 0 0│\n│0 0 0 1 0 1│\n│1 1 1 0 1 0│\n│1 0 0 1 1 1│\nCharacteristic poly c(x) = x^1 + x^2 + x^3 + x^5 + x^6\nc(M) yields:\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n\n    \n     \n    \n    \nbit makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements — ​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in \\(\\mathbb{F}_2\\).",
     "crumbs": [
@@ -923,7 +923,7 @@
   {
     "objectID": "index.html#installation",
     "href": "index.html#installation",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Installation",
     "text": "Installation\nThis library is header-only, so there is nothing to compile and link. Drop the bit include directory somewhere convenient, and you are good to go.\nAlternatively, if you are using CMake, you can use the standard FetchContent module by adding a few lines to your project’s CMakeLists.txt file:\ninclude(FetchContent)\nFetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/current/bit.zip)\nFetchContent_MakeAvailable(bit)\nThis command downloads and unpacks an archive of the current version of bit to your project’s build folder. You can then add a dependency on bit::bit, a CMake alias for bit. FetchContent will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.\nUsed like this, FetchContent will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.\n\n    \n     \n    \n    \nThe shown URL gets the current version of the library—whatever is in the main branch. For a fixed, stable library version (say release 2.0.0), use a URL parameter like https://github.com/nessan/bit/releases/download/2.0.0/bit.zip.",
     "crumbs": [
@@ -934,7 +934,7 @@
   {
     "objectID": "index.html#why-use-bit",
     "href": "index.html#why-use-bit",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Why Use bit?",
     "text": "Why Use bit?\nThe standard library already has std::bitset, an efficient bitset class that is familiar and well thought through, so our bit::vector class replicates and extends much of that interface.\nAll std::bitset objects have a fixed size determined at compile time. The well-known Boost library does add a dynamic version [boost::dynamic_bitset], where the bitset size can be set and changed at runtime.\nHowever, as the two names suggest, those types are aimed at bitsets instead of bit-vectors. So, for example, they print in bit-order with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class std::vector.\nOn the other hand, several well-known linear algebra libraries, such as Eigen, exist. Those packages efficiently manage all the standard numeric types (floats, doubles, integers, etc.) but do not correctly handle \\(\\mathbb{F}_2\\). You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.\nFor example, you might use Eigen to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for \\(\\mathbb{F}_2\\). Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying BitInt type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.\nFor linear algebra problems over \\(\\mathbb{F}_2\\), this specialized bit library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation.",
     "crumbs": [
@@ -945,7 +945,7 @@
   {
     "objectID": "index.html#documentation",
     "href": "index.html#documentation",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Documentation",
     "text": "Documentation\nHere is a link to the project’s source code repository.\nThis documentation site was constructed using the static website generator Quarto.\n\nContact\nYou can contact me by email\n\n\nCopyright and License\nCopyright (c) 2022-present Nessan Fitzmaurice.\nYou can use this software under the MIT License",
     "crumbs": [
@@ -1518,42 +1518,42 @@
   {
     "objectID": "pages/index.html",
     "href": "pages/index.html",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "",
     "text": "bit is a header-only C++ library for numerical work in bit-space which mathematicians call GF(2) or \\(\\mathbb{F}_2\\). This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.\nThe library provides vector and matrix classes for performing linear algebra in bit-space. The bit::vector class represents bit_vectors, and the bit::matrix class represents bit-matrices. The library also has a bit::polynomial class to represent bit-polynomials over \\(\\mathbb{F}_2\\).\nThese classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.\nBecause arithmetic operations in \\(\\mathbb{F}_2\\) are mod 2, addition/subtraction becomes the XOR operation, and multiplication/division becomes the AND operation. The bit library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.\nThe bit library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over \\(\\mathbb{F}_2\\) and to look at the eigen-structure of bit-matrices. The bit::polynomial class has methods to compute \\(x^N\\bmod{P(x)}\\) where \\(P(x)\\) is a polynomial over \\(\\mathbb{F}_2\\) and \\(N\\) is a potentially huge integer."
   },
   {
     "objectID": "pages/index.html#introduction",
     "href": "pages/index.html#introduction",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "",
     "text": "bit is a header-only C++ library for numerical work in bit-space which mathematicians call GF(2) or \\(\\mathbb{F}_2\\). This is the simplest Galois field with just two elements, 0 and 1. All arithmetic operations in bit-space are mod 2, so what starts in bit-space stays in bit-space.\nThe library provides vector and matrix classes for performing linear algebra in bit-space. The bit::vector class represents bit_vectors, and the bit::matrix class represents bit-matrices. The library also has a bit::polynomial class to represent bit-polynomials over \\(\\mathbb{F}_2\\).\nThese classes are efficient and pack the individual bit elements into natural word blocks. You can size/resize the classes at run-time.\nBecause arithmetic operations in \\(\\mathbb{F}_2\\) are mod 2, addition/subtraction becomes the XOR operation, and multiplication/division becomes the AND operation. The bit library uses those equivalences to efficiently perform most interactions on and between bit-vectors and bit-matrices by simultaneously working on whole blocks of elements.\nThe bit library provides a rich interface to set up and manipulate bit-vectors and bit-matrices in various ways. Amongst other things, the interface includes methods to solve systems of linear equations over \\(\\mathbb{F}_2\\) and to look at the eigen-structure of bit-matrices. The bit::polynomial class has methods to compute \\(x^N\\bmod{P(x)}\\) where \\(P(x)\\) is a polynomial over \\(\\mathbb{F}_2\\) and \\(N\\) is a potentially huge integer."
   },
   {
     "objectID": "pages/index.html#example",
     "href": "pages/index.html#example",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Example",
     "text": "Example\nHere is a simple example of a program that uses bit:\n#include &lt;bit/bit.h&gt;\nint main()\n{\n1    auto M = bit::matrix&lt;&gt;::random(6, 6);\n2    auto c = bit::characteristic_polynomial(M);\n    std::cout &lt;&lt; std::format(\"Bit-matrix M:\\n{:p}\\n\", M);\n    std::cout &lt;&lt; std::format(\"Characteristic poly c(x) = {}\\n\", c);\n3    std::cout &lt;&lt; std::format(\"c(M) yields:\\n{:p}\\n\", c(M));\n}\n\n1\n\nCreates a random \\(6\\times6\\) bit-matrix \\(M\\) where 0 & 1 are equally likely to occur.\n\n2\n\nComputes its characteristic polynomial \\(c(x) = c_0 + c_1 x + c_2 x^2 + ... + c_6 x^6\\).\n\n3\n\nVerifies that \\(M\\) satisfies its own characteristic equation \\(c(M) = 0\\), as expected from the Cayley Hamilton theorem.\n\n\nSample Output (varies from run to run):\nBit-matrix M:\n│1 1 0 1 1 0│\n│0 0 0 0 0 1│\n│0 1 1 1 0 0│\n│0 0 0 1 0 1│\n│1 1 1 0 1 0│\n│1 0 0 1 1 1│\nCharacteristic poly c(x) = x^1 + x^2 + x^3 + x^5 + x^6\nc(M) yields:\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n│0 0 0 0 0 0│\n\n    \n     \n    \n    \nbit makes it possible to quickly extract the characteristic polynomial for a bit-matrix with millions of elements — ​a problem that chokes a naive implementation that does not consider the special nature of arithmetic in \\(\\mathbb{F}_2\\)."
   },
   {
     "objectID": "pages/index.html#installation",
     "href": "pages/index.html#installation",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Installation",
     "text": "Installation\nThis library is header-only, so there is nothing to compile and link. Drop the bit include directory somewhere convenient, and you are good to go.\nAlternatively, if you are using CMake, you can use the standard FetchContent module by adding a few lines to your project’s CMakeLists.txt file:\ninclude(FetchContent)\nFetchContent_Declare(bit URL https://github.com/nessan/bit/releases/download/current/bit.zip)\nFetchContent_MakeAvailable(bit)\nThis command downloads and unpacks an archive of the current version of bit to your project’s build folder. You can then add a dependency on bit::bit, a CMake alias for bit. FetchContent will automatically ensure the build system knows where to find the downloaded header files and any needed compiler flags.\nUsed like this, FetchContent will only download a minimal library version without any redundant test code, sample programs, documentation files, etc.\n\n    \n     \n    \n    \nThe shown URL gets the current version of the library—whatever is in the main branch. For a fixed, stable library version (say release 2.0.0), use a URL parameter like https://github.com/nessan/bit/releases/download/2.0.0/bit.zip."
   },
   {
     "objectID": "pages/index.html#why-use-bit",
     "href": "pages/index.html#why-use-bit",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Why Use bit?",
     "text": "Why Use bit?\nThe standard library already has std::bitset, an efficient bitset class that is familiar and well thought through, so our bit::vector class replicates and extends much of that interface.\nAll std::bitset objects have a fixed size determined at compile time. The well-known Boost library does add a dynamic version [boost::dynamic_bitset], where the bitset size can be set and changed at runtime.\nHowever, as the two names suggest, those types are aimed at bitsets instead of bit-vectors. So, for example, they print in bit-order with the least significant element/bit on the right. More importantly, those classes don’t have any particular methods aimed at linear algebra. Neither does the standard library’s vector class std::vector.\nOn the other hand, several well-known linear algebra libraries, such as Eigen, exist. Those packages efficiently manage all the standard numeric types (floats, doubles, integers, etc.) but do not correctly handle \\(\\mathbb{F}_2\\). You can create matrices of integers where all the elements are 0 or 1, but those libraries do not have built-in knowledge that arithmetic is mod 2.\nFor example, you might use Eigen to create an integer matrix of all 0’s and 1’s and then use a built-in function from that library to extract the characteristic polynomial. Modding the coefficients of that polynomial with 2 gets the appropriate version for \\(\\mathbb{F}_2\\). Technically, this works, but you will have overflow problems for even relatively modest-sized matrices with just a few hundred rows and columns. Of course, you might use an underlying BitInt type that never overflows, but the calculations become dog slow for larger bit-matrices, which doesn’t help much.\nFor linear algebra problems over \\(\\mathbb{F}_2\\), this specialized bit library is a better way to go and one to consider if, for example, your interest is in some areas of cryptography or random number generation."
   },
   {
     "objectID": "pages/index.html#documentation",
     "href": "pages/index.html#documentation",
-    "title": "The bitLibrary",
+    "title": "The bit Library",
     "section": "Documentation",
     "text": "Documentation\nHere is a link to the project’s source code repository.\nThis documentation site was constructed using the static website generator Quarto.\n\nContact\nYou can contact me by email\n\n\nCopyright and License\nCopyright (c) 2022-present Nessan Fitzmaurice.\nYou can use this software under the MIT License"
   },
