@@ -18,7 +18,7 @@ If there is a problem, the return value will be a {std.nullopt}.
 This happens if the system of equations has no solution.
 It will also be the case if `A` is not square or if the size of `b` is not the same as the number of rows in `A`.
 
-NOTE: We wan to get _one_ solution for a system of equations with very little fuss. \
+NOTE: We want to get _one_ solution for a system of equations with very little fuss. \
 Over {f2}, any free variable can take on one of the values 0 and 1.
 Hence, if the system is consistent and has $f$ free variables, it will have $2^f$ possible solutions.
 So, a consistent system will have a unique solution only if $A$ has full-rank.
