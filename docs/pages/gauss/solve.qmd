@@ -10,7 +10,7 @@ bit::solve(const bit::matrix &A, const bit::vector &b)  // <1>
 ```
 1. `A` must be square, and `b` must be the same size as the number of rows in `A`.
 
-The [std::optional] return value can be safely dereferenced as a bit-vector if everything goes well.
+The {std.optional} return value can be safely dereferenced as a bit-vector if everything goes well.
 That bit-vector will be a solution $x$ to the system $A \cdot x = b$.
 The solution may or may not be unique.
 
@@ -18,7 +18,7 @@ If there is a problem, the return value will be a {std.nullopt}.
 This happens if the system of equations has no solution.
 It will also be the case if `A` is not square or if the size of `b` is not the same as the number of rows in `A`.
 
-NOTE: The idea is to get _one_ solution for a system of equations with the least possible fuss. +
+NOTE: We wan to get _one_ solution for a system of equations with very little fuss. \
 Over {f2}, any free variable can take on one of the values 0 and 1.
 Hence, if the system is consistent and has $f$ free variables, it will have $2^f$ possible solutions.
 So, a consistent system will have a unique solution only if $A$ has full-rank.
@@ -27,8 +27,7 @@ The {gauss.operator(i)} method iterates through potentially non-unique solutions
 [Example]{.bt}
 ```cpp
 #include <bit/bit.h>
-int
-main()
+int main()
 {
     std::size_t m = 12;
 
@@ -36,53 +35,57 @@ main()
     auto b = bit::vector<>::random(m);
     auto x = bit::solve(A, b);
 
-    if(x) {
+    if (x) {
         // Check that x is indeed a solution by computing A.x and comparing that to b
         auto Ax = bit::dot(A, *x);
-        std::cout << "bit::matrix A, solution vector x, product A.x, and right hand side b\n";
+        std::cout << "bit::matrix A, solution vector x, product A.x, and right hand side b:\n";
+        std::cout << "      A         x      A.x      b\n";
         bit::print(A, *x, Ax, b);
         std::cout << "So A.x == b? " << (Ax == b ? "YES" : "NO") << '\n';
     }
     else {
-        std::cout << "System A.x = b has NO solutions for A and b as follows\n";
+        std::cout << "System A.x = b has NO solutions for A and b as follows:\n";
+        std::cout << "      A         x\n";
         bit::print(A, b);
     }
 }
 ```
 
-[Output for a consistent system (details depend on the values of the random inputs)]{.bt}
+[Output for a consistent system (varies on each run)]{.bt}
 ```bash
-bit::matrix A, solution vector x, product A.x, and right hand side b
-011000011001    0       0       0
-000100011010    0       0       0
-100001011010    0       0       0
-111111010000    1       1       1
-101011100101    1       1       1
-100001111100    1       0       0
-111100111110    0       0       0
-101111011010    0       0       0
-111100010110    1       1       1
-011011010000    0       0       0
-010011100101    0       1       1
-000111101001    1       1       1
+bit::matrix A, solution vector x, product A.x, and right hand side b:
+      A         x      A.x      b
+001110110111    0       0       0
+100011110000    0       1       1
+110010110000    0       0       0
+011101011001    0       0       0
+011001111001    1       0       0
+011010011110    1       0       0
+110110110101    0       0       0
+100000010101    1       1       1
+010101000101    1       1       1
+110000011111    1       0       0
+001010000011    0       0       0
+110111110111    1       1       1
 So A.x == b? YES
 ```
 
-[Output for an inconsistent system (details depend on the values of the random inputs)]{.bt}
+[Output for an inconsistent system (varies on each run)]{.bt}
 ```bash
-System A.x = b has NO solutions for A and b as follows
-110000000111    0
-011111100001    1
-011111000101    0
-110110111011    1
-100111001101    0
-000010010010    1
-001110011110    0
-100010000001    0
-110001110110    1
-000100100010    0
-001101100010    0
-000000110000    0
+System A.x = b has NO solutions for A and b as follows:
+      A         x
+010100100011    1
+000010010000    1
+000111111011    1
+000111111011    1
+001101110011    1
+111001110111    1
+010001010111    1
+101011000001    0
+110101110111    0
+111000010000    0
+011011010100    1
+011001110010    0
 ```
 
 ### See Also
