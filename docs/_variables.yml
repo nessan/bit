@@ -11,8 +11,8 @@ f2: $\mathbb{F}_2$
 # Links to software tools, etc.:
 mit-license: "[MIT License](https://opensource.org/license/mit)"
 quarto: "[Quarto](https://quarto.org)"
-repo: "[repository](https://github.com/nessan/xoshiro)"
-docs: "[documentation](https://nessan.github.io/xoshiro)"
+repo: "[repository](https://github.com/nessan/bit)"
+docs: "[documentation](https://nessan.github.io/bit)"
 email: "[email](mailto:nzznfitz+gh@icloud.com)"
 Eigen: "[`Eigen`](https://eigen.tuxfamily.org/overview.php?title=Main_Page)"
 LAPACK: "[`LAPACK`](https://en.wikipedia.org/wiki/LAPACK)"
