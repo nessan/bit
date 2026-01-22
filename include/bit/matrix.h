@@ -48,7 +48,7 @@ public:
         std::size_t s = v.size();
         if (s == 0) return;
 
-        // We intepret r = 0 as a command to make a one colum bit-matrix (so v.size() rows)
+        // We intepret r = 0 as a command to make a one column bit-matrix (so v.size() rows)
         if (r == 0) r = s;
 
         // We only allow reshapes that consume all of v

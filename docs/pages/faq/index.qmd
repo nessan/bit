@@ -1,5 +1,0 @@
----
-title: FAQ
----
-
-This eventually will be a list of FAQ's
